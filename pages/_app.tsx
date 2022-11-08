@@ -1,11 +1,11 @@
-import React from 'react';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import '@/src/styles/default.css';
-import PropTypes from 'prop-types';
-import Head from 'next/head';
-import NextNprogress from 'nextjs-progressbar';
+import React from 'react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import '@/src/styles/default.css'
+import PropTypes from 'prop-types'
+import Head from 'next/head'
+import NextNprogress from 'nextjs-progressbar'
 
-import 'nprogress/nprogress.css';
+import 'nprogress/nprogress.css'
 
 const theme = extendTheme({
   colors: {
@@ -21,25 +21,25 @@ const theme = extendTheme({
     feature: '#61bd4f',
     information: '#ff9f1a'
   }
-});
+})
 
-const TrelloApp = ({ Component, pageProps }) => {
+const TrelloApp = ({ Component, pageProps }): JSX.Element => {
   return (
     <>
       <Head>
-        <title>Trello clone</title>
-        <link rel="shortcut icon" href="/trello-icon.svg"></link>
+        <title>AI Assessment Tool</title>
+        <link rel='shortcut icon' href='/trello-icon.svg' />
       </Head>
-      <NextNprogress color="#0079bf" startPosition={0.3} stopDelayMs={200} height={4} />
+      <NextNprogress color='#0079bf' startPosition={0.3} stopDelayMs={200} height={4} />
       <ChakraProvider theme={theme}>
         <Component {...pageProps} />
       </ChakraProvider>
     </>
-  );
-};
+  )
+}
 
 TrelloApp.propTypes = {
   pageProps: PropTypes.object
-};
+}
 
-export default TrelloApp;
+export default TrelloApp

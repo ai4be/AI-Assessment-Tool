@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 
-const Error = () => {
+const Error = (): JSX.Element => {
   return (
     <h1>
       Galti ho gyi
-      <span role="img" aria-label="pray">
+      <span role='img' aria-label='pray'>
         🙏🏻
       </span>
     </h1>
-  );
-};
+  )
+}
 
-export default Error;
+export default Error

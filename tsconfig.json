@@ -7,6 +7,7 @@
       "@/src/*": ["src/*"],
       "@/util/*": ["util/*"]
     },
+    "strictNullChecks": true ,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -16,6 +17,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "removeComments": false,
     "isolatedModules": true,
     "jsx": "preserve"
   },

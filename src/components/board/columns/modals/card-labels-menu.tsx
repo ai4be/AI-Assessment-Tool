@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC } from 'react'
 import {
   Button,
   Text,
@@ -9,16 +9,16 @@ import {
   MenuButton,
   MenuList,
   MenuItem
-} from '@chakra-ui/react';
-import { MdLabelOutline } from 'react-icons/md';
-import { updateCard } from '@/src/slices/cards';
-import { useDispatch } from 'react-redux';
-import { Label } from '@/src/types/cards';
+} from '@chakra-ui/react'
+import { MdLabelOutline } from 'react-icons/md'
+import { updateCard } from '@/src/slices/cards'
+import { useDispatch } from 'react-redux'
+import { Label } from '@/src/types/cards'
 
-type IProps = {
-  id: string;
-  boardId: string;
-};
+interface IProps {
+  id: string
+  boardId: string
+}
 
 const cardLabels = [
   {
@@ -41,40 +41,41 @@ const cardLabels = [
     type: 'warning',
     bg: '#f2d600'
   }
-];
+]
 
 const CardLabel: FC<IProps> = ({ id, boardId }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const handleClick = async (label: Label) => {
     const data = {
       _id: id,
       boardId,
       label
-    };
+    }
 
-    await dispatch(updateCard(data));
-  };
+    await dispatch(updateCard(data))
+  }
 
   return (
-    <Box marginTop="2rem" flexDirection="column" width="20%">
-      <Text as="samp" whiteSpace="nowrap">
+    <Box marginTop='2rem' flexDirection='column' width='20%'>
+      <Text as='samp' whiteSpace='nowrap'>
         ADD TO CARD
       </Text>
-      <List spacing={3} p="5px">
+      <List spacing={3} p='5px'>
         <ListItem>
-          <Menu size="xs">
-            <MenuButton leftIcon={<MdLabelOutline />} size="xs" whiteSpace="nowrap" as={Button}>
+          <Menu size='xs'>
+            <MenuButton leftIcon={<MdLabelOutline />} size='xs' whiteSpace='nowrap' as={Button}>
               Labels
             </MenuButton>
-            <MenuList padding="5px">
+            <MenuList padding='5px'>
               {cardLabels.map((item, index) => (
                 <MenuItem
                   bg={item.bg}
-                  marginBottom="5px"
+                  marginBottom='5px'
                   key={index}
-                  onClick={() => handleClick(item)}>
-                  <Box minH="20px"></Box>
+                  onClick={async () => await handleClick(item)}
+                >
+                  <Box minH='20px' />
                 </MenuItem>
               ))}
             </MenuList>
@@ -82,7 +83,7 @@ const CardLabel: FC<IProps> = ({ id, boardId }) => {
         </ListItem>
       </List>
     </Box>
-  );
-};
+  )
+}
 
-export default CardLabel;
+export default CardLabel

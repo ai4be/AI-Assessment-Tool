@@ -1,10 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
-import boardsSlice from '@/src/slices/boards';
-import userSlice from '@/src/slices/user';
-import boardSlice from '@/src/slices/board';
-import columnsSlice from '@/src/slices/columns';
-import cardsSlice from '@/src/slices/cards';
-import usersSlice from '@/src/slices/users';
+import { configureStore } from '@reduxjs/toolkit'
+import boardsSlice from '@/src/slices/boards'
+import userSlice from '@/src/slices/user'
+import boardSlice from '@/src/slices/board'
+import columnsSlice from '@/src/slices/columns'
+import cardsSlice from '@/src/slices/cards'
+import usersSlice from '@/src/slices/users'
 
 const createStore = (preloadedState = {}) => {
   return configureStore({
@@ -17,8 +17,8 @@ const createStore = (preloadedState = {}) => {
       users: usersSlice
     },
     preloadedState
-  });
-};
+  })
+}
 
 const store = configureStore({
   reducer: {
@@ -29,9 +29,9 @@ const store = configureStore({
     cards: cardsSlice,
     users: usersSlice
   }
-});
+})
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 
-export default createStore;
+export default createStore

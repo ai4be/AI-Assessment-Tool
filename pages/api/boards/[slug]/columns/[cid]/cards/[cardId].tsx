@@ -1,13 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '@/util/mongodb';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { connectToDatabase } from '@/util/mongodb'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { cardId, cid } = req.query;
+export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const { cardId, cid } = req.query
 
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase()
 
   if (client.isConnected()) {
-    const requestType = req.method;
+    const requestType = req.method
 
     switch (requestType) {
       // case 'PATCH': {
@@ -26,18 +26,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // }
 
       case 'DELETE': {
-        await db.collection('cards').deleteOne({ _id: cardId, columnId: cid });
+        await db.collection('cards').deleteOne({ _id: cardId, columnId: cid })
 
-        res.send({ messsage: 'Deleted' });
+        res.send({ messsage: 'Deleted' })
 
-        break;
+        break
       }
 
       default:
-        res.send({ message: 'Invalid request type' });
-        break;
+        res.send({ message: 'Invalid request type' })
+        break
     }
   } else {
-    res.send({ msg: 'DB connection error', status: 400 });
+    res.send({ msg: 'DB connection error', status: 400 })
   }
 }

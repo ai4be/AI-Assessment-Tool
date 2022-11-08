@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   Modal,
   ModalBody,
@@ -10,41 +10,38 @@ import {
   Button,
   useDisclosure,
   Input
-} from '@chakra-ui/react';
-import checkEnvironment from '@/util/check-environment';
-import { useAppSelector } from '@/src/hooks';
-
-const host = checkEnvironment();
+} from '@chakra-ui/react'
+import { useAppSelector } from '@/src/hooks'
 
 const InviteModal = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [email, setEmail] = useState('');
-  const [emailErr, setEmailErr] = useState(false);
-  const [isMailSending, setMailSending] = useState(false);
-  const board = useAppSelector((state) => state.board.board);
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [email, setEmail] = useState('')
+  const [emailErr, setEmailErr] = useState(false)
+  const [isMailSending, setMailSending] = useState(false)
+  const board = useAppSelector((state) => state.board.board)
 
-  const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
+  const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$')
 
   const handleClick = async () => {
-    setMailSending(true);
-    await sendEmail();
-    setMailSending(false);
-  };
+    setMailSending(true)
+    await sendEmail()
+    setMailSending(false)
+  }
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    validate();
-  };
+    setEmail(e.target.value)
+    validate()
+  }
   const validate = () => {
     if (!validEmail.test(email)) {
-      setEmailErr(true);
+      setEmailErr(true)
     } else {
-      setEmailErr(false);
+      setEmailErr(false)
     }
-  };
+  }
 
   const sendEmail = async () => {
-    const url = `${host}/api/mail`;
+    const url = '/api/mail'
 
     const response = await fetch(url, {
       method: 'POST',
@@ -57,19 +54,19 @@ const InviteModal = () => {
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
       body: JSON.stringify({ email, boardId: board._id })
-    });
+    })
 
-    const inJSON = await response.json();
+    const inJSON = await response.json()
 
     if (inJSON.status === 200) {
-      onClose();
-      setEmail('');
+      onClose()
+      setEmail('')
     }
-  };
+  }
 
   return (
     <>
-      <Button onClick={onOpen} size="xs" ml="5px">
+      <Button onClick={onOpen} size='xs' ml='5px'>
         Invite
       </Button>
       <Modal onClose={onClose} isOpen={isOpen}>
@@ -79,28 +76,29 @@ const InviteModal = () => {
           <ModalCloseButton />
           <ModalBody>
             <Input
-              type="email"
+              type='email'
               value={email}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder='Enter your email'
             />
           </ModalBody>
           {emailErr && <p>{emailErr}</p>}
           <ModalFooter>
             <Button
               disabled={!validEmail.test(email)}
-              colorScheme="blue"
+              colorScheme='blue'
               mr={3}
               onClick={handleClick}
               isLoading={isMailSending}
-              loadingText="Sending">
+              loadingText='Sending'
+            >
               Invite
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default InviteModal;
+export default InviteModal

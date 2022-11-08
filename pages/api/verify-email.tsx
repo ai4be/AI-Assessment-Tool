@@ -1,39 +1,39 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '@/util/mongodb';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { connectToDatabase } from '@/util/mongodb'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { email } = req.query;
+export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const { email } = req.query
 
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase()
 
   if (client.isConnected()) {
-    const requestType = req.method;
+    const requestType = req.method
 
     switch (requestType) {
       case 'GET': {
-        const user = await db.collection('users').findOne({ email });
+        const user = await db.collection('users').findOne({ email })
         if (user) {
-          res.send({ status: 200, message: 'Found' });
+          res.send({ status: 200, message: 'Found' })
         } else {
-          res.send({ status: 404, message: 'Not found' });
+          res.send({ status: 404, message: 'Not found' })
         }
 
-        break;
+        break
       }
 
       case 'PATCH': {
-        break;
+        break
       }
 
       case 'DELETE': {
-        break;
+        break
       }
 
       default:
-        res.send({ message: 'DB error' });
-        break;
+        res.send({ message: 'DB error' })
+        break
     }
   } else {
-    res.send({ msg: 'DB connection error', status: 400 });
+    res.send({ msg: 'DB connection error', status: 400 })
   }
 }

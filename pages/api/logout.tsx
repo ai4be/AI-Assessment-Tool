@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { serialize } from 'cookie';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { serialize } from 'cookie'
 
-export default function handler(req: NextApiRequest, res: NextApiResponse): void {
+export default function handler (req: NextApiRequest, res: NextApiResponse): void {
   res.setHeader(
     'Set-Cookie',
     serialize('token', req.body.token, {
@@ -11,7 +11,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse): void
       sameSite: 'strict',
       path: '/'
     })
-  );
+  )
 
-  res.send({ message: 'success' });
+  res.send({ message: 'success' })
 }

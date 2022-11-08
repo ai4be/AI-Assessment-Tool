@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
-import PropTypes from 'prop-types';
-import { CardDetail } from '@/src/types/cards';
-import Card from '@/src/components/board/columns/card';
+import React, { FC } from 'react'
+import PropTypes from 'prop-types'
+import { CardDetail } from '@/src/types/cards'
+import Card from '@/src/components/board/columns/card'
 
-type Props = {
-  cards: CardDetail[];
-  showCardDetail: (cardId: string) => void;
-};
+interface Props {
+  cards: CardDetail[]
+  showCardDetail: (cardId: string) => void
+}
 
 const Cards: FC<Props> = ({ cards, showCardDetail }) => {
   return (
@@ -15,11 +15,11 @@ const Cards: FC<Props> = ({ cards, showCardDetail }) => {
         <Card key={index} card={card} cardIndex={index} showCardDetail={showCardDetail} />
       ))}
     </>
-  );
-};
+  )
+}
 
 Cards.propTypes = {
   showCardDetail: PropTypes.func
-};
+}
 
-export default Cards;
+export default Cards

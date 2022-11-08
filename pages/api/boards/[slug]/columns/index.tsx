@@ -1,20 +1,20 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '@/util/mongodb';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { connectToDatabase } from '@/util/mongodb'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { slug } = req.query;
+export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const { slug } = req.query
 
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase()
 
   if (client.isConnected()) {
-    const requestType = req.method;
+    const requestType = req.method
 
     switch (requestType) {
       case 'GET': {
-        const columns = await db.collection('columns').find({ boardId: slug }).toArray();
-        res.send(columns);
+        const columns = await db.collection('columns').find({ boardId: slug }).toArray()
+        res.send(columns)
 
-        return;
+        return
       }
 
       case 'POST': {
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           userId,
           cards,
           sequence
-        } = req.body;
+        } = req.body
 
         const data = {
           _id: id,
@@ -37,19 +37,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dateCreated,
           userId,
           sequence
-        };
+        }
 
-        const board = await db.collection('columns').insertOne(data);
-        res.send(board);
+        const board = await db.collection('columns').insertOne(data)
+        res.send(board)
 
-        return;
+        return
       }
 
       default:
-        res.send({ message: 'DB error' });
-        break;
+        res.send({ message: 'DB error' })
+        break
     }
   } else {
-    res.send({ msg: 'DB connection error', status: 400 });
+    res.send({ msg: 'DB connection error', status: 400 })
   }
 }

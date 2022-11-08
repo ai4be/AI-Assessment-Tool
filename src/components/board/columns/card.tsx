@@ -1,29 +1,29 @@
-import React, { FC } from 'react';
-import { Box, Badge, Avatar } from '@chakra-ui/react';
-import { Draggable } from 'react-beautiful-dnd';
-import { CardDetail } from '@/src/types/cards';
-import { useAppSelector } from '@/src/hooks';
+import React, { FC } from 'react'
+import { Box, Badge, Avatar } from '@chakra-ui/react'
+import { Draggable } from 'react-beautiful-dnd'
+import { CardDetail } from '@/src/types/cards'
+import { useAppSelector } from '@/src/hooks'
 
-type Props = {
-  showCardDetail: (cardId: string) => void;
-  cardIndex: number;
-  card: CardDetail;
-};
+interface Props {
+  showCardDetail: (cardId: string) => void
+  cardIndex: number
+  card: CardDetail
+}
 
 const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
-  const users = useAppSelector((state) => state.users.users);
+  const users = useAppSelector((state) => state.users.users)
 
   const loadAssignedToUser = () => {
-    if (!card.assignedTo) return;
+    if (!card.assignedTo) return
 
-    const user = users.filter((user) => user._id === card.assignedTo);
+    const user = users.filter((user) => user._id === card.assignedTo)
 
     return (
-      <Box display="flex" justifyContent="flex-end">
-        <Avatar size="xs" name={user[0]?.fullName} />
+      <Box display='flex' justifyContent='flex-end'>
+        <Avatar size='xs' name={user[0]?.fullName} />
       </Box>
-    );
-  };
+    )
+  }
 
   return (
     // https://github.com/atlassian/react-beautiful-dnd/issues/1767
@@ -33,21 +33,22 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          m="5px"
-          p="10px"
+          m='5px'
+          p='10px'
           id={card._id}
-          minHeight="80px"
-          borderWidth="1px"
-          bg="white"
-          cursor="pointer"
-          borderRadius="md"
-          overflow="auto"
+          minHeight='80px'
+          borderWidth='1px'
+          bg='white'
+          cursor='pointer'
+          borderRadius='md'
+          overflow='auto'
           _hover={{
             backgroundColor: 'lightblue'
           }}
-          onClick={() => showCardDetail(card._id)}>
-          {card.label && (
-            <Badge bg={card.label.type} color="white">
+          onClick={() => showCardDetail(card._id)}
+        >
+          {(card.label != null) && (
+            <Badge bg={card.label.type} color='white'>
               {card.label.type}
             </Badge>
           )}
@@ -56,7 +57,7 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
         </Box>
       )}
     </Draggable>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card

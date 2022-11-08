@@ -1,12 +1,10 @@
-import checkEnvironment from '@/util/check-environment';
 
 const verifyToken = async ({ email, boardId }) => {
-  const host = checkEnvironment();
-  const URL = `${host}/api/invite-user`;
+  const URL = '/api/invite-user'
   const data = {
     email,
     boardId
-  };
+  }
 
   const response = await fetch(URL, {
     method: 'PATCH',
@@ -19,15 +17,15 @@ const verifyToken = async ({ email, boardId }) => {
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
     body: JSON.stringify(data)
-  });
+  })
 
-  const json = await response.json();
+  const json = await response.json()
 
   if (json.message === 'Invited') {
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
-};
+}
 
-export default verifyToken;
+export default verifyToken

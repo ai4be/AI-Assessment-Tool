@@ -1,19 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '@/util/mongodb';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { connectToDatabase } from '@/util/mongodb'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { slug } = req.query;
+export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const { slug } = req.query
 
-  const { db, client } = await connectToDatabase();
+  const { db, client } = await connectToDatabase()
 
   if (client.isConnected()) {
-    const requestType = req.method;
+    const requestType = req.method
 
     switch (requestType) {
       case 'GET': {
-        const columns = await db.collection('cards').find({ boardId: slug }).toArray();
-        res.send(columns);
-        return;
+        const columns = await db.collection('cards').find({ boardId: slug }).toArray()
+        res.send(columns)
+        return
       }
 
       case 'POST': {
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           type,
           description,
           sequence
-        } = req.body;
+        } = req.body
 
         const data = {
           _id: id,
@@ -39,28 +39,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           userId,
           sequence,
           description
-        };
+        }
 
-        const card = await db.collection('cards').insertOne(data);
-        res.send(card);
+        const card = await db.collection('cards').insertOne(data)
+        res.send(card)
 
-        return;
+        return
       }
 
       case 'DELETE': {
-        const { slug } = req.query;
+        const { slug } = req.query
 
-        await db.collection('columns').remove({ boardId: slug });
-        res.send({ message: 'All columns deleted' });
+        await db.collection('columns').remove({ boardId: slug })
+        res.send({ message: 'All columns deleted' })
 
-        return;
+        return
       }
 
       default:
-        res.send({ message: 'DB error' });
-        break;
+        res.send({ message: 'DB error' })
+        break
     }
   } else {
-    res.send({ msg: 'DB connection error', status: 400 });
+    res.send({ msg: 'DB connection error', status: 400 })
   }
 }
