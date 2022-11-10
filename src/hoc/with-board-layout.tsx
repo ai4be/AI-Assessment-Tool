@@ -5,13 +5,9 @@ import { fetchBoard } from '@/src/slices/board'
 import { fetchCards } from '@/src/slices/cards'
 import { resetServerContext } from 'react-beautiful-dnd'
 
-const WithBoardLayout = (App) => {
+const WithBoardLayout = (App: Component) => {
   return class AppWithBoardLayout extends Component {
-    constructor (props) {
-      super(props)
-    }
-
-    static async getInitialProps (ctx) {
+    static async getInitialProps (ctx): Promise<any> {
       let appProps = {}
 
       // This is important for react-beautifull-dnd to work
@@ -37,7 +33,7 @@ const WithBoardLayout = (App) => {
       }
     }
 
-    render () {
+    render (): JSX.Element  {
       return <App />
     }
   }

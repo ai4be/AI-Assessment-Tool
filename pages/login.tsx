@@ -1,26 +1,23 @@
 import Login from '@/src/components/login'
-import { setOrGetStore } from '@/util/initialise-store'
-import withStore from '@/src/hoc/with-store'
-import isValidUser from '@/util/is-valid-user'
+import { getSession } from 'next-auth/react'
 
-const LoginPageWithStore = withStore(Login)
+export default function LoginPage ({ session }) {
+  return (<Login></Login>)
+}
 
-LoginPageWithStore.getInitialProps = async (ctx) => {
-  const reduxStore = setOrGetStore()
+export async function getServerSideProps (context) {
+  const session = await getSession(context)
 
-  const userDetails = isValidUser(ctx)
-
-  if (userDetails && userDetails.isValid) {
-    ctx.res.writeHead(307, {
-      Location: '/home'
-    })
-
-    ctx.res.end()
+  if (session != null) {
+    return {
+      redirect: {
+        destination: '/home',
+        permanent: false
+      }
+    }
   }
 
   return {
-    reduxState: reduxStore.getState()
+    props: { session }
   }
 }
-
-export default LoginPageWithStore

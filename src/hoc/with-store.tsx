@@ -9,7 +9,7 @@ interface Props {
 
 const WithStore = (App) => {
   class AppWithStore extends Component<Props> {
-    static async getInitialProps (ctx) {
+    static async getInitialProps (ctx): Promise<any> {
       let appProps = {}
       if (App.getInitialProps) {
         appProps = await App.getInitialProps(ctx)

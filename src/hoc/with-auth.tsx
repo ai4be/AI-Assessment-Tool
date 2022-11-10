@@ -39,7 +39,7 @@ const WithAuth = (App) => {
       }
     }
 
-    render () {
+    render (): JSX.Element {
       return <App />
     }
   }

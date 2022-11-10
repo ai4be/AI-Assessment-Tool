@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { signIn } from 'next-auth/react'
 import {
   Flex,
   Box,
@@ -37,38 +38,28 @@ const Login = () => {
       password: values.password
     }
 
-    const url = '/api/login'
-
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify(data)
+    const result = await signIn('credentials', {
+      redirect: false,
+      email: values.email,
+      password: values.password,
     })
 
-    const result = await response.json()
     setIsFetching(false)
 
     const { email: inviteEmail, token, boardId } = router.query
     const isInvitedUser = inviteEmail && token && boardId
 
-    if (isInvitedUser && result.message === 'success') {
+    if (isInvitedUser && result?.ok === true) {
       const hasInvited = await inviteUser({ email: inviteEmail, boardId })
 
       if (hasInvited) {
-        window.location.href = `${window.location.origin}/home`
+        router.push('/home')
       }
-    } else if (result.message === 'success') {
-      window.location.href = `${window.location.origin}/home`
+    } else if (result?.ok === true) {
+      router.push('/home')
     }
 
-    if (response.status === 404) {
+    if (result?.status === 404 || result?.status === 401) {
       setErrorState(true)
     }
   }

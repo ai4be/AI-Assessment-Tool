@@ -14,7 +14,7 @@ const withSidebar = (App, props) => {
     static async getInitialProps (ctx) {
       let appProps = {}
 
-      if (App.getInitialProps) {
+      if (App.getInitialProps != null) {
         appProps = await App.getInitialProps(ctx)
       }
 
@@ -23,7 +23,7 @@ const withSidebar = (App, props) => {
       }
     }
 
-    render () {
+    render (): JSX.Element {
       const { page } = props
 
       const sidebarMenu = [

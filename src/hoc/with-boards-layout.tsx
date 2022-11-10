@@ -4,10 +4,6 @@ import { fetchBoards } from '@/src/slices/boards'
 
 const WithBoardsLayout = (App) => {
   return class AppWithBoardsLayout extends Component {
-    constructor (props) {
-      super(props)
-    }
-
     static async getInitialProps (ctx) {
       let appProps = {}
 

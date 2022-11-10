@@ -1,9 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
 import { connectToDatabase } from '@/util/mongodb'
+import { getSession } from 'next-auth/react'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const session = await getSession({ req })
   const { db, client } = await connectToDatabase()
+
+  if (session == null) {
+    res.send({ error: 'You must be signed in to access this api route' })
+    return
+  }
+
 
   if (client.isConnected()) {
     const requestType = req.method

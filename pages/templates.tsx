@@ -1,4 +1,4 @@
-import Templates from '@/src/components/templates'
+import Templates from '@/src/components/templats'
 import withSidebar from '@/src/hoc/with-sidebar'
 import withStore from '@/src/hoc/with-store'
 import withAuth from '@/src/hoc/with-auth'
