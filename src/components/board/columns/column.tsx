@@ -15,26 +15,26 @@ import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import Cards from '@/src/components/board/columns/cards'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import { useDispatch } from 'react-redux'
 import { GrDrag } from 'react-icons/gr'
-
-import { deleteColumn, fetchColumns, updateColumn } from '@/src/slices/columns'
-import { addCard, fetchCards } from '@/src/slices/cards'
 import debounce from 'lodash.debounce'
 import { CardDetail } from '@/src/types/cards'
-import { useAppSelector } from '@/src/hooks'
+import { addCard } from '@/util/cards'
+import { useSession } from 'next-auth/react'
+import { deleteColumn, updateColumn } from '@/util/columns'
 
-const Column = ({ showCardDetail, column, index, id, cards }): JSX.Element => {
-  const dispatch = useDispatch()
+const Column = ({ showCardDetail, column, index, id, cards, boardId, fetchColumns, fetchCards }): JSX.Element => {
+  const { data } = useSession()
   const [showEditBox, setEditBoxVisibility] = useState<boolean>(false)
-  const cardRequest = useAppSelector((state) => state.cards.isRequesting)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const user: any = data?.user
 
   const [columnName, setColumnName] = useState<string>(column.columnName)
   const cardsInSortedSequence = cards.sort(
     (cardA: CardDetail, cardB: CardDetail) => cardA.sequence - cardB.sequence
   )
 
-  const loadColumnTitle = (draggableProps) => {
+  const loadColumnTitle = (draggableProps): JSX.Element => {
     if (showEditBox) {
       return (
         <Input
@@ -59,26 +59,30 @@ const Column = ({ showCardDetail, column, index, id, cards }): JSX.Element => {
     )
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e): void => {
     if (e.keyCode === 13) {
       e.preventDefault()
       setEditBoxVisibility(false)
     }
   }
 
-  const handleCardAdd = async () => {
-    await dispatch(addCard(column._id))
-    await dispatch(fetchCards())
+  const handleCardAdd = async (): Promise<void> => {
+    setIsLoading(true)
+    await addCard(id, boardId, user.id, cards)
+    await fetchCards()
+    setIsLoading(false)
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e): void => {
     setColumnName(e.target.value)
     handleColumnNameChange(e.target.value)
   }
 
-  const handleColumnDelete = async () => {
-    await dispatch(deleteColumn(id))
-    await dispatch(fetchColumns())
+  const handleColumnDelete = async (): Promise<void> => {
+    setIsLoading(true)
+    await deleteColumn(id, boardId)
+    await fetchColumns()
+    setIsLoading(false)
   }
 
   const handleColumnNameChange = useCallback(
@@ -86,13 +90,15 @@ const Column = ({ showCardDetail, column, index, id, cards }): JSX.Element => {
     []
   )
 
-  const nameChange = async (value) => {
+  const nameChange = async (value): Promise<void> => {
+    setIsLoading(true)
     const data = {
       columnName: value,
-      columnId: column._id
+      columnId: column._id,
+      boardId
     }
-
-    await dispatch(updateColumn(data))
+    await updateColumn(data)
+    setIsLoading(false)
   }
 
   return (
@@ -146,8 +152,8 @@ const Column = ({ showCardDetail, column, index, id, cards }): JSX.Element => {
               width='80%'
               color='black'
               variant='ghost'
-              disabled={cardRequest}
-              isLoading={cardRequest}
+              disabled={isLoading}
+              isLoading={isLoading}
               display='flex'
               loadingText='Adding card'
               onClick={handleCardAdd}

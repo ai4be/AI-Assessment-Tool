@@ -11,8 +11,6 @@ import {
   MenuItem
 } from '@chakra-ui/react'
 import { MdLabelOutline } from 'react-icons/md'
-import { updateCard } from '@/src/slices/cards'
-import { useDispatch } from 'react-redux'
 import { Label } from '@/src/types/cards'
 
 interface IProps {
@@ -44,16 +42,26 @@ const cardLabels = [
 ]
 
 const CardLabel: FC<IProps> = ({ id, boardId }) => {
-  const dispatch = useDispatch()
-
-  const handleClick = async (label: Label) => {
+  const handleClick = async (label: Label): Promise<void> => {
     const data = {
       _id: id,
       boardId,
       label
     }
-
-    await dispatch(updateCard(data))
+    const url = `/api/boards/${boardId}/cards/${data._id}`
+    const response = await fetch(url, {
+      method: 'PATCH',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify(data)
+    })
+    const inJSON = await response.json()
   }
 
   return (

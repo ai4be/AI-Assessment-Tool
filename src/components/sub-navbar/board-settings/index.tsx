@@ -31,7 +31,7 @@ const BoardSettings = ({ board }): JSX.Element => {
   const handleSave = async () => {
     setIsLoading(true)
     const data = {
-      _id: board._id,
+      _id: board._id as string,
       name: board.name,
       dateCreated: board.dateCreated,
       createdBy: board.createdBy,

@@ -6,18 +6,18 @@ import { useRouter } from 'next/router'
 
 const fetcher = url => fetch(url).then(r => r.json())
 
-function BoardPage ({ session }) {
+function BoardPage ({ session }): JSX.Element {
   const router = useRouter()
-  const { data, error } = useSWR(`/api/boards/${router.query.slug}`, fetcher)
+  const { data, error } = useSWR(`/api/boards/${String(router.query.slug)}`, fetcher)
   return (
-    <Board board={data} />
+    <Board board={data} session={session} />
   )
 }
 
-export async function getServerSideProps (context) {
+export async function getServerSideProps (context): Promise<any> {
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
 
-  if (!session) {
+  if (session == null) {
     return {
       redirect: {
         destination: '/login',
@@ -29,7 +29,7 @@ export async function getServerSideProps (context) {
   return {
     props: {
       session: JSON.parse(JSON.stringify(session))
-   }
+    }
   }
 }
 

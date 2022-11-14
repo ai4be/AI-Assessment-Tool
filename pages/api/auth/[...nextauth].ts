@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
         )
         if (!isValid) throw new Error('Wrong credentials')
 
-        return { email: user.email }
+        return { email: user.email, id: user._id }
       }
     })
   ],

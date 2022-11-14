@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { createApi } from 'unsplash-js'
-import { updateBoardDetail } from '@/src/slices/board'
-import { useDispatch } from 'react-redux'
 import { Box, InputGroup, Input, InputRightElement, Button } from '@chakra-ui/react'
 
 const Unsplash = () => {
@@ -10,15 +8,14 @@ const Unsplash = () => {
   const [images, setImages] = useState<any[]>([])
   const [currentPage, setCurrentPage] = useState(1)
 
-  const dispatch = useDispatch()
   const unsplash = createApi({ accessKey: process.env.NEXT_PUBLIC_UNSPLASH_API })
 
   useEffect(() => {
-    async function fetchImages () {
+    async function fetchImages (): Promise<void> {
       await findImages()
     }
 
-    fetchImages()
+    void fetchImages()
   }, [])
 
   const findImages = async (value = 'nature') => {
@@ -57,8 +54,8 @@ const Unsplash = () => {
       type: 'backgroundImage',
       value: imageURL
     }
-
-    await dispatch(updateBoardDetail(data))
+    // TODO
+    // await updateBoardDetail(data)
   }
 
   return (

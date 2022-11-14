@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import {
   Modal,
   ModalBody,
@@ -15,39 +15,70 @@ import {
   MenuList,
   Badge
 } from '@chakra-ui/react'
-import { useDispatch } from 'react-redux'
 import { CardDetail } from '@/src/types/cards'
-import { deleteCard, fetchCards, updateCard } from '@/src/slices/cards'
-import { useAppSelector } from '@/src/hooks'
 import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
 import { GrTextAlignFull } from 'react-icons/gr'
 import CardLabel from '@/src/components/board/columns/modals/card-labels-menu'
 import QuillEditor from '@/src/components/quill-editor'
+import BoardContext from '@/src/store/board-context'
+import { fetchUsers } from '@/util/users'
+import { updateCard } from '@/util/cards'
 
 interface Props {
   onClose: () => void
   isOpen: boolean
   card: CardDetail
+  boardId: string
+  fetchCards: () => any
 }
 
-const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
-  const dispatch = useDispatch()
+const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, boardId, fetchCards }) => {
   const [title, setTitle] = useState(card?.title)
   const [description, setDescription] = useState(card?.description)
   const [assigned, assignUser] = useState(card?.assignedTo)
+  const [isLoading, setIsLoading] = useState(false)
+  const boardContext = useContext(BoardContext)
 
-  const cardRequest = useAppSelector((state) => state.cards.isRequesting)
-  const cardDelete = useAppSelector((state) => state.cards.isDeleting)
-  const users = useAppSelector((state) => state.users.users)
+  const [users, setUsers] = useState<any[]>([])
 
-  const handleCardDelete = async () => {
-    await dispatch(deleteCard(card._id))
-    await dispatch(fetchCards())
+  useEffect(async (): Promise<void> => {
+    const userIds = boardContext.board?.users
+    if (Array.isArray(userIds) && userIds.length > 0) {
+      const usersData = await fetchUsers(userIds)
+      setUsers(usersData)
+    } else {
+      setUsers((prevState) => {
+        if (Array.isArray(prevState) && prevState.length === 0) return prevState
+        else return []
+      })
+    }
+  }, [boardContext.board?.users])
 
+  const handleCardDelete = async (): Promise<void> => {
+    setIsLoading(true)
+    const url = `/api/boards/${boardId}/cards/${card._id}`
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer'
+    })
+
+    const inJSON = await response.json()
+    console.log('handleCardDelete', inJSON)
+    setIsLoading(false)
+    await fetchCards()
     onClose()
   }
 
-  const handleModalClose = async () => {
+  const handleModalClose = async (): Promise<void> => {
+    setIsLoading(true)
     const data = {
       _id: card._id,
       title,
@@ -56,13 +87,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
       assignedTo: assigned
     }
 
-    await dispatch(updateCard(data))
-    await dispatch(fetchCards())
-
+    await updateCard(data, boardId)
+    await fetchCards()
+    setIsLoading(false)
     onClose()
   }
 
-  const handleClick = async (userId) => {
+  const handleClick = async (userId: string): Promise<void> => {
+    setIsLoading(true)
     assignUser(userId)
 
     const data = {
@@ -73,10 +105,11 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
       assignedTo: userId
     }
 
-    await dispatch(updateCard(data))
+    await updateCard(data, boardId)
+    setIsLoading(false)
   }
 
-  const assignToMenu = () => {
+  const assignToMenu = (): JSX.Element => {
     return (
       <Menu>
         <MenuButton as={Button} size='xs' rightIcon={<AiOutlineDown />}>
@@ -139,8 +172,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
               size='xs'
               marginRight='1rem'
               onClick={handleCardDelete}
-              disabled={cardDelete}
-              isLoading={cardDelete}
+              disabled={isLoading}
+              isLoading={isLoading}
               loadingText='Deleting'
               bg='red.500'
               color='white'
@@ -153,8 +186,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
             <Button
               size='xs'
               onClick={handleModalClose}
-              disabled={cardRequest}
-              isLoading={cardRequest}
+              disabled={isLoading}
+              isLoading={isLoading}
               loadingText='Updating'
             >
               <AiOutlineClose /> Close

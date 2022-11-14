@@ -1,8 +1,9 @@
-import React, { FC } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import { Box, Badge, Avatar } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import { CardDetail } from '@/src/types/cards'
-import { useAppSelector } from '@/src/hooks'
+import BoardContext from '@/src/store/board-context'
+import { fetchUsers } from '@/util/users'
 
 interface Props {
   showCardDetail: (cardId: string) => void
@@ -11,10 +12,23 @@ interface Props {
 }
 
 const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
-  const users = useAppSelector((state) => state.users.users)
+  const boardContext = useContext(BoardContext)
+  const [users, setUsers] = useState<any[]>([])
 
-  const loadAssignedToUser = () => {
-    if (!card.assignedTo) return
+  useEffect(async (): Promise<void> => {
+    if (boardContext.board?.users != null) {
+      const usersData = await fetchUsers(boardContext.board?.users)
+      setUsers(usersData)
+    } else {
+      setUsers((prevValue) => {
+        if (prevValue.length === 0) return prevValue
+        return []
+      })
+    }
+  }, [boardContext.board?.users])
+
+  const loadAssignedToUser = (): JSX.Element => {
+    if (card.assignedTo == null) return
 
     const user = users.filter((user) => user._id === card.assignedTo)
 

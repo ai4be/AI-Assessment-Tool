@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Box, Button } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
-import { useAppSelector } from '@/src/hooks'
 
 interface Props {
   addColumn: () => void
@@ -10,6 +9,7 @@ interface Props {
 const AddColumnButton: FC<Props> = ({ addColumn }) => {
   const [isLoading, setIsLoading] = useState(false)
 
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <Box
       rounded='lg'
@@ -30,7 +30,7 @@ const AddColumnButton: FC<Props> = ({ addColumn }) => {
           try {
             setIsLoading(true)
             await addColumn()
-          } finally{
+          } finally {
             setIsLoading(false)
           }
         }}

@@ -6,19 +6,20 @@ import useSWR from 'swr'
 
 const fetcher = url => fetch(url).then(r => r.json())
 
-function BoardsPage ({ session }) {
+function BoardsPage ({ session }): JSX.Element {
   const { data, error } = useSWR('/api/boards', fetcher)
+  console.log('BoardsPage', session)
   return (
     <SideBar page={'boards'}>
-      <Boards boards={data || []} />
+      <Boards boards={data || []} session={session} />
     </SideBar>
   )
 }
 
-export async function getServerSideProps (context) {
+export async function getServerSideProps (context): Promise<any> {
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
 
-  if (!session) {
+  if (session == null) {
     return {
       redirect: {
         destination: '/login',
@@ -29,7 +30,7 @@ export async function getServerSideProps (context) {
   return {
     props: {
       session: JSON.parse(JSON.stringify(session))
-   }
+    }
   }
 }
 

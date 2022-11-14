@@ -1,5 +1,13 @@
 
-const verifyToken = async ({ email, boardId }) => {
+export const fetchUsers = async (userIds: string[]): Promise<any[]> => {
+  const promises: Array<Promise<Response>> = userIds.map(uid => fetch(`/api/users/${uid}`))
+  const responses = await Promise.all(promises)
+  const jsonPromises = responses.map(r => r.json())
+  const usersData = await Promise.all(jsonPromises)
+  return usersData
+}
+
+const verifyToken = async ({ email, boardId }): Promise<boolean> => {
   const URL = '/api/invite-user'
   const data = {
     email,

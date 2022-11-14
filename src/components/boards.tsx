@@ -74,7 +74,7 @@ const Boards = (props: any[]): JSX.Element => {
     )
   }
 
-  const loadExistingBoards = () => {
+  const loadExistingBoards = (): JSX.Element => {
     return (
       <Box mt='1rem' minWidth='50vw' display='flex' flexWrap='wrap'>
         {boards.map((board, index) => (
@@ -131,6 +131,5 @@ const Boards = (props: any[]): JSX.Element => {
 Boards.propTypes = {
   boards: PropType.array
 }
-
 
 export default Boards
