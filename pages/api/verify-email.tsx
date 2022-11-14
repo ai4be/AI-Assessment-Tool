@@ -20,15 +20,12 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 
         break
       }
-
       case 'PATCH': {
         break
       }
-
       case 'DELETE': {
         break
       }
-
       default:
         res.send({ message: 'DB error' })
         break

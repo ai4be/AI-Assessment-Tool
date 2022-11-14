@@ -13,8 +13,6 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async (obj, { get
   let users = board.board.users
   const createdBy = board.board.createdBy
 
-  console.log('fetching users', users)
-
   users = [...users, createdBy]
 
   let userPromise: any[] = []

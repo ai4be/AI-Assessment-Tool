@@ -17,11 +17,8 @@ const initialState: UserDetail = {
 
 export const fetchUser = createAsyncThunk('users/fetchUser', async (obj, { getState }) => {
   const { user } = getState() as { user: UserDetail }
-  console.log('getting user', user)
   const response = await fetch(`/api/users/${user.id}`)
   const responseInjson = await response.json()
-
-  console.log('getting user responseInjson', responseInjson)
   return responseInjson
 })
 

@@ -1,7 +1,7 @@
 import cookie from 'cookie'
 import { verify } from 'jsonwebtoken'
 
-const KEY = process.env.JWT_SECRET_KEY
+const KEY = String(process.env.JWT_SECRET_KEY)
 
 interface UserValidProps {
   isValid: boolean

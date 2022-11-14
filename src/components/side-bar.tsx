@@ -10,7 +10,7 @@ import Link from 'next/link'
 import NavBar from '@/src/components/navbar'
 
 const SideBar = (props) => {
-  const { board, page } = props
+  const { page } = props
 
   const sidebarMenu = [
     { path: '/home', buttonName: 'Home', page: 'home', icon: AiOutlineHome },

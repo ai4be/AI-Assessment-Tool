@@ -1,10 +1,36 @@
 import Board from '@/src/components/board'
-import withAuth from '@/src/hoc/with-auth'
-import withStore from '@/src/hoc/with-store'
-import withBoardLayout from '@/src/hoc/with-board-layout'
+import { unstable_getServerSession } from 'next-auth/next'
+import { authOptions } from '../api/auth/[...nextauth]'
+import useSWR from 'swr'
+import { useRouter } from 'next/router'
 
-const BoardPageWithAuth = withAuth(Board)
-const BoardPageWithLayout = withBoardLayout(BoardPageWithAuth)
-const BoardPageWithStore = withStore(BoardPageWithLayout)
+const fetcher = url => fetch(url).then(r => r.json())
 
-export default BoardPageWithStore
+function BoardPage ({ session }) {
+  const router = useRouter()
+  const { data, error } = useSWR(`/api/boards/${router.query.slug}`, fetcher)
+  return (
+    <Board board={data} />
+  )
+}
+
+export async function getServerSideProps (context) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      session: JSON.parse(JSON.stringify(session))
+   }
+  }
+}
+
+export default BoardPage

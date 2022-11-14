@@ -51,10 +51,7 @@ const Login = () => {
 
     if (isInvitedUser && result?.ok === true) {
       const hasInvited = await inviteUser({ email: inviteEmail, boardId })
-
-      if (hasInvited) {
-        router.push('/home')
-      }
+      if (hasInvited) router.push('/home')
     } else if (result?.ok === true) {
       router.push('/home')
     }

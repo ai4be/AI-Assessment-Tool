@@ -1,5 +1,5 @@
 
-const verifyToken = async (ctx) => {
+const verifyEmail = async (ctx) => {
   const { email } = ctx.query
   const isTokenValid = await fetch(`/api/verify-email?email=${email}`)
   const json = await isTokenValid.json()
@@ -10,4 +10,4 @@ const verifyToken = async (ctx) => {
   } else return false
 }
 
-export default verifyToken
+export default verifyEmail

@@ -1,20 +1,22 @@
 import Boards from '@/src/components/boards'
-import { getSession } from 'next-auth/react'
+import { unstable_getServerSession } from 'next-auth/next'
+import { authOptions } from '../api/auth/[...nextauth]'
 import SideBar from '@/src/components/side-bar'
 import useSWR from 'swr'
 
+const fetcher = url => fetch(url).then(r => r.json())
+
 function BoardsPage ({ session }) {
-  const { data, error } = useSWR('/api/boards')
-  console.log(data, error)
+  const { data, error } = useSWR('/api/boards', fetcher)
   return (
     <SideBar page={'boards'}>
-      <Boards />
+      <Boards boards={data || []} />
     </SideBar>
   )
 }
 
 export async function getServerSideProps (context) {
-  const session = await getSession(context)
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
 
   if (!session) {
     return {
@@ -24,9 +26,10 @@ export async function getServerSideProps (context) {
       }
     }
   }
-
   return {
-    props: { session }
+    props: {
+      session: JSON.parse(JSON.stringify(session))
+   }
   }
 }
 

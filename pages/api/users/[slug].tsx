@@ -12,20 +12,15 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
     switch (requestType) {
       case 'GET': {
         const user = await db.collection('users').findOne({ _id: slug })
-
         res.send(user)
-
         break
       }
-
       case 'PATCH': {
         break
       }
-
       case 'DELETE': {
         break
       }
-
       default:
         res.send({ message: 'DB error' })
         break

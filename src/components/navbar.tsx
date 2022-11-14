@@ -1,42 +1,32 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Button, Image, Flex, Box, Spacer } from '@chakra-ui/react'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
-import { useAppSelector } from '@/src/hooks'
 import { GrLogout } from 'react-icons/gr'
+import { useSession } from 'next-auth/react'
+import { signOut } from "next-auth/react"
+import { useRouter } from 'next/router'
 
 interface IProps {
   bg?: string
 }
 
 const NavBar: FC<IProps> = ({ bg }) => {
-  const user = useAppSelector((state) => state.user)
+  const [session, setSession] = useState(undefined)
+  const { data } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (data != null) setSession(data)
+  }, [data])
 
   const logout = async () => {
-    const URL = '/api/logout'
-
-    const response = await fetch(URL, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify({})
-    })
-
-    const responseInJson = await response.json()
-
-    if (responseInJson.message === 'success') {
-      window.location.href = `${window.location.origin}/login`
-    }
+    const response = await signOut({ redirect: false })
+    router.push('/')
   }
 
   const renderButtons = () => {
-    if (user?.isValid) {
+    if (session != null) {
       return (
         <Button
           fontSize='20'

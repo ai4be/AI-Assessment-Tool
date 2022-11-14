@@ -28,10 +28,8 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
             res.send({ status: 404, message: 'Some issues' })
           }
         }
-
         break
       }
-
       default:
         res.send({ message: 'DB error' })
         break

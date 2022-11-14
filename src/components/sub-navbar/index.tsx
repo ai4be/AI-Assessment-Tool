@@ -3,25 +3,22 @@ import { Box, Heading, Avatar, Tooltip } from '@chakra-ui/react'
 import PropType from 'prop-types'
 import BoardSettings from '@/src/components/sub-navbar/board-settings'
 import InviteModal from '@/src/components/sub-navbar/invite-user/modal'
-import React, { useEffect } from 'react'
-import { useAppSelector } from '@/src/hooks'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
 import { fetchUsers } from '@/src/slices/users'
 
 import UnsplashDrawer from '@/src/components/sub-navbar/unsplash-in-drawer'
 
-const SubNavbar = (): JSX.Element => {
-  const board = useAppSelector((state) => state.board.board)
-  const users = useAppSelector((state) => state.users.users)
-
-  const dispatch = useDispatch()
+const SubNavbar = (props: any): JSX.Element => {
+  const board = props.board
+  const [users, setUsers]: [any[], Function] = useState([])
 
   useEffect(() => {
-    async function fetchMyAPI () {
-      await dispatch(fetchUsers())
-    }
-    fetchMyAPI()
-  }, [])
+    const usersIds = [...board.users, board.createdBy]
+    const userPromise: Promise<any>[] = usersIds.map(uId => fetch(`/api/users/${uId}`))
+    Promise.all(userPromise)
+      .then(results => Promise.all(results.map(r => r.json())))
+      .then(usersData => setUsers(usersData))
+  }, [board])
 
   const loadBoardUsers = () => {
     return users.map((user, index) => (
@@ -44,8 +41,8 @@ const SubNavbar = (): JSX.Element => {
       </Heading>
       <Box>{loadBoardUsers()}</Box>
       <Box>
-        <InviteModal />
-        <BoardSettings />
+        <InviteModal board={board} />
+        <BoardSettings board={board} />
         <UnsplashDrawer />
       </Box>
     </Box>

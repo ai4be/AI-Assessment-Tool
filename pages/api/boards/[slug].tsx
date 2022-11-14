@@ -16,7 +16,6 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 
         break
       }
-
       case 'PATCH': {
         const { _id, name, dateCreated, createdBy, backgroundImage } = req.body
 
@@ -30,20 +29,16 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 
         const board = await db.collection('boards').updateOne({ _id: slug }, { $set: data })
         res.send(board)
-
         break
       }
-
       case 'DELETE': {
         await db.collection('cards').remove({ boardId: slug })
         await db.collection('columns').remove({ boardId: slug })
         await db.collection('boards').deleteOne({ _id: slug })
 
         res.send({ messsage: 'Delete boards with columns and cards' })
-
         break
       }
-
       default:
         res.send({ message: 'DB error' })
         break

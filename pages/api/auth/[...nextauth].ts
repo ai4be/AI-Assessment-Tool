@@ -1,14 +1,13 @@
-import NextAuth from 'next-auth'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
 import { verifyPassword } from '@/util/auth'
 import { connectToDatabase } from '@/util/mongodb'
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     Credentials({
       async authorize (credentials: any, req) {
-        console.log(credentials)
         // Check any field is empty
         if (!credentials.email || !credentials.password) throw new Error('email or password is missing')
 
@@ -31,4 +30,6 @@ export default NextAuth({
     })
   ],
   secret: process.env.JWT_SECRET_KEY
-})
+}
+
+export default NextAuth(authOptions)

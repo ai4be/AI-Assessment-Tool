@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Box, Button } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
 import { useAppSelector } from '@/src/hooks'
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const AddColumnButton: FC<Props> = ({ addColumn }) => {
-  const columnRequest = useAppSelector((state) => state.columns.isRequesting)
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <Box
@@ -26,9 +26,16 @@ const AddColumnButton: FC<Props> = ({ addColumn }) => {
         mx='5px'
         backgroundColor='primary'
         color='black'
-        onClick={addColumn}
-        isLoading={columnRequest}
-        disabled={columnRequest}
+        onClick={async () => {
+          try {
+            setIsLoading(true)
+            await addColumn()
+          } finally{
+            setIsLoading(false)
+          }
+        }}
+        isLoading={isLoading}
+        disabled={isLoading}
         loadingText='Adding column'
       >
         + Add a Column

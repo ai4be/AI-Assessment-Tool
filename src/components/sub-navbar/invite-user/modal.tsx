@@ -13,12 +13,11 @@ import {
 } from '@chakra-ui/react'
 import { useAppSelector } from '@/src/hooks'
 
-const InviteModal = () => {
+const InviteModal = ({ board }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [email, setEmail] = useState('')
   const [emailErr, setEmailErr] = useState(false)
   const [isMailSending, setMailSending] = useState(false)
-  const board = useAppSelector((state) => state.board.board)
 
   const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$')
 

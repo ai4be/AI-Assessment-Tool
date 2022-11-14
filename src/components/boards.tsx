@@ -1,4 +1,5 @@
 import React from 'react'
+import PropType from 'prop-types'
 import {
   Box,
   Button,
@@ -14,34 +15,18 @@ import {
   Text
 } from '@chakra-ui/react'
 import Link from 'next/link'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from '@/src/hooks'
-import { updateBoardDetail, resetBoard } from '@/src/slices/board'
-import { createBoard, fetchBoards } from '@/src/slices/boards'
 import { AiOutlinePlus } from 'react-icons/ai'
-
 import shortId from 'shortid'
 
-const Boards = (): JSX.Element => {
+const Boards = (props: any[]): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const boards = useAppSelector((state) => state.boards.boards)
-
-  const dispatch = useDispatch()
-  const board = useAppSelector((state) => state.board.board)
-
-  const boardRequest = useAppSelector((state) => state.boards.isRequesting)
-
+  const board: any = {}
+  const boardRequest: any = {}
+  const { boards = [] }: {boards: any[]} = props
   const handleCreate = async () => {
     const id = shortId.generate()
     const date = new Date().toLocaleString()
-
-    dispatch(updateBoardDetail({ type: '_id', value: id }))
-    dispatch(updateBoardDetail({ type: 'dateCreated', value: date }))
-
-    await dispatch(createBoard())
-    await dispatch(fetchBoards())
-    await dispatch(resetBoard())
-
+    // TODO
     onClose()
   }
 
@@ -51,7 +36,7 @@ const Boards = (): JSX.Element => {
       value: e.target.value
     }
 
-    dispatch(updateBoardDetail(data))
+    // TODO
   }
 
   const createBoardModal = () => {
@@ -142,5 +127,10 @@ const Boards = (): JSX.Element => {
     </Box>
   )
 }
+
+Boards.propTypes = {
+  boards: PropType.array
+}
+
 
 export default Boards

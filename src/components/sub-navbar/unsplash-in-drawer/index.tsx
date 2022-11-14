@@ -9,26 +9,45 @@ import {
   DrawerCloseButton,
   useDisclosure
 } from '@chakra-ui/react'
-import { useDispatch } from 'react-redux'
-import { saveBoard } from '@/src/slices/board'
-
 import PropType from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import { BsImages } from 'react-icons/bs'
 import Unsplash from '@/src/components/sub-navbar/unsplash-in-drawer/unsplash'
-import { useAppSelector } from '@/src/hooks'
 
-const SubNavbar = (): JSX.Element => {
+const SubNavbar = ({ board }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const board = useAppSelector((state) => state.board)
-
-  const dispatch = useDispatch()
-
+  const [isLoading, setIsLoading] = useState(false)
   const btnRef = React.useRef()
 
   const handleSave = async () => {
-    await dispatch(saveBoard())
+    setIsLoading(true)
+    const data = {
+      _id: board._id,
+      name: board.name,
+      dateCreated: board.dateCreated,
+      createdBy: board.createdBy,
+      backgroundImage: board.backgroundImage
+    }
+
+    const url = `/api/boards/${data._id}`
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify(data)
+    })
+
+    const json = await response.json()
+    // TODO use context to set board
     onClose()
+    setIsLoading(false)
   }
 
   return (
@@ -49,7 +68,7 @@ const SubNavbar = (): JSX.Element => {
               colorScheme='blue'
               onClick={handleSave}
               loadingText='Saving'
-              isLoading={board.isLoading}
+              isLoading={isLoading}
             >
               Save
             </Button>

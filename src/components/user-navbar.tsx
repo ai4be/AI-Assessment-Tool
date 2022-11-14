@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import {
   Button,
   Box,
@@ -12,45 +12,35 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
-import { useAppSelector } from '@/src/hooks'
+import { signOut } from "next-auth/react"
+import { useRouter } from 'next/router'
 import { AiOutlineHome } from 'react-icons/ai'
 import { SiTrello } from 'react-icons/si'
+import { useSession } from 'next-auth/react'
 
 const UserNavBar: FC = () => {
-  const user = useAppSelector((state) => state.user)
+  const [session, setSession] = useState(undefined)
+  const { data } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (data != null) setSession(data)
+  }, [data])
 
   const logout = async () => {
-    const URL = '/api/logout'
-
-    const response = await fetch(URL, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify({})
-    })
-
-    const responseInJson = await response.json()
-
-    if (responseInJson.message === 'success') {
-      window.location.href = `${window.location.origin}/login`
-    }
+    const response = await signOut({ redirect: false })
+    router.push('/')
   }
 
   const renderButtons = () => {
-    if (user?.isValid) {
+    if (session != null) {
       return (
         <>
           <Menu>
             <MenuButton size='xs' mr='5px'>
               <Avatar
                 size='sm'
-                name={user?.fullName}
+                name={session.user.email}
                 color='white'
                 src='https://bit.ly/tioluwani-kolawole'
               />

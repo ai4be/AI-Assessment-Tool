@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Input,
@@ -20,31 +20,62 @@ import {
   Tab,
   TabPanel
 } from '@chakra-ui/react'
-import { useAppSelector } from '@/src/hooks'
-import { useDispatch } from 'react-redux'
-import { updateBoardDetail, saveBoard, fetchBoard, deleteBoard } from '@/src/slices/board'
 import { AiFillSetting, AiOutlineDelete, AiOutlineCheck } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 
-const BoardSettings = (): JSX.Element => {
+const BoardSettings = ({ board }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const board = useAppSelector((state) => state.board.board)
-  const boardDetail = useAppSelector((state) => state.board)
-  const boardDelete = useAppSelector((state) => state.board.isLoading)
-  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
   const handleSave = async () => {
-    await dispatch(saveBoard())
-    await dispatch(fetchBoard(board._id))
+    setIsLoading(true)
+    const data = {
+      _id: board._id,
+      name: board.name,
+      dateCreated: board.dateCreated,
+      createdBy: board.createdBy,
+      backgroundImage: board.backgroundImage
+    }
 
+    const url = `/api/boards/${data._id}`
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify(data)
+    })
+
+    const json = await response.json()
+    // TODO use context to set board
     onClose()
+    setIsLoading(false)
   }
 
   const handleDelete = async () => {
-    await dispatch(deleteBoard())
-
-    if (boardDetail.status === 'success') {
+    setIsLoading(true)
+    const _id = board._id
+    const url = `/api/boards/${_id}`
+    const response = await fetch(url, {
+      method: 'DELETE',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer'
+    })
+    setIsLoading(false)
+    if (response.ok) {
       router.push('/boards')
     }
   }
@@ -71,8 +102,7 @@ const BoardSettings = (): JSX.Element => {
                     <FormLabel>Board name</FormLabel>
                     <Input
                       value={board.name}
-                      onChange={(e) =>
-                        dispatch(updateBoardDetail({ type: 'name', value: e.target.value }))}
+                      onChange={(e) => (board.name = e.target.value)}
                     />
                     <FormHelperText>You can change this any time</FormHelperText>
                   </FormControl>
@@ -81,7 +111,7 @@ const BoardSettings = (): JSX.Element => {
                       backgroundColor='success'
                       color='white'
                       onClick={handleSave}
-                      isLoading={boardDetail.isLoading}
+                      isLoading={isLoading}
                     >
                       <AiOutlineCheck /> &nbsp; Save
                     </Button>
@@ -97,7 +127,7 @@ const BoardSettings = (): JSX.Element => {
                       _hover={{
                         backgroundColor: 'red.600'
                       }}
-                      isLoading={boardDelete}
+                      isLoading={isLoading}
                       loadingText='Deleting'
                     >
                       <AiOutlineDelete /> &nbsp;Delete

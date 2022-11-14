@@ -1,48 +1,43 @@
-import React, { useState, FC } from 'react'
+import React, { useState, FC, useEffect } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import AddColumnButton from '@/src/components/board/columns/buttons/add-column-button'
 import CardDetailsModal from '@/src/components/board/columns/modals/card-details-modal'
 import Column from '@/src/components/board/columns/column'
 import { CardDetail } from '@/src/types/cards'
-import { useAppSelector } from '@/src/hooks'
-import { useDispatch } from 'react-redux'
-import {
-  addColumnToBoard,
-  fetchColumns,
-  updateColumnSequenceToLocalState,
-  updateColumnSequence
-} from '@/src/slices/columns'
-import { updateCardSequence, updateCardSequenceToLocalState } from '@/src/slices/cards'
-
 import shortId from 'shortid'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import useSWR from 'swr'
 
-const BoardColumns: FC = (): JSX.Element => {
-  const dispatch = useDispatch()
+const fetcher = url => fetch(url).then(r => r.json())
 
-  const columns = useAppSelector((state) => state.columns.columns)
-  const cards = useAppSelector((state) => state.cards.cards)
+const BoardColumns: FC = ({ boardId }): JSX.Element => {
+  const { data, error } = useSWR(`/api/boards/${boardId}/columns`)
+  const { data: dataCards, error: errorCards } = useSWR(`/api/boards/${boardId}/cards`)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [cardDetail, setCardDetail] = useState<CardDetail>({ _id: '', title: '', description: '' })
 
+  const [columns, setColumns] = useState([])
+  const [cards, setCards] = useState([])
+
+  useEffect(() => setColumns(data), [data])
+  useEffect(() => setColumns(dataCards), [dataCards])
+
   const showCardDetail = (cardId: string) => {
     const card = cards.filter((card) => card._id === cardId)
-
     setCardDetail(card[0])
     onOpen()
   }
 
   const addColumn = async () => {
     const columnId = shortId.generate()
-
-    await dispatch(addColumnToBoard(columnId))
-    await dispatch(fetchColumns())
+    // TODO
+    // await dispatch(addColumnToBoard(columnId))
+    // await dispatch(fetchColumns())
   }
 
   const filterCards = (columnId: string) => {
     const filteredCards = cards.filter((card) => card.columnId === columnId)
-
     return filteredCards
   }
 
@@ -90,8 +85,9 @@ const BoardColumns: FC = (): JSX.Element => {
 
     // This is just for updating local state so that there won't be any lag after saving the sequence and fetching again
     // Now we don't to fetch the cards again
-    await dispatch(updateCardSequenceToLocalState(patchCard))
-    await dispatch(updateCardSequence(patchCard))
+    // TODO
+    // await dispatch(updateCardSequenceToLocalState(patchCard))
+    // await dispatch(updateCardSequence(patchCard))
 
     for (let i = destinationIndex; i < sortedCards.length; i++) {
       const card = sortedCards[i]
@@ -102,9 +98,9 @@ const BoardColumns: FC = (): JSX.Element => {
         sequence,
         columnId: destinationColumnId
       }
-
-      await dispatch(updateCardSequenceToLocalState(patchCard))
-      await dispatch(updateCardSequence(patchCard))
+      // TODO
+      // await dispatch(updateCardSequenceToLocalState(patchCard))
+      // await dispatch(updateCardSequence(patchCard))
     }
   }
 
@@ -121,22 +117,21 @@ const BoardColumns: FC = (): JSX.Element => {
       sequence
     }
 
+    // TODO
     // This is just for updating local state so that there won't be any lag after saving the sequence and fetching again
-    await dispatch(updateColumnSequenceToLocalState(patchColumn))
-    await dispatch(updateColumnSequence(patchColumn))
+    // await dispatch(updateColumnSequenceToLocalState(patchColumn))
+    // await dispatch(updateColumnSequence(patchColumn))
 
     for (let i = destinationIndex; i < sortedColumns.length; i++) {
       const column = sortedColumns[i]
-
       sequence += 1
-
       const patchColumn = {
         _id: column._id,
         sequence
       }
-
-      await dispatch(updateColumnSequenceToLocalState(patchColumn))
-      await dispatch(updateColumnSequence(patchColumn))
+      // TODO
+      // await dispatch(updateColumnSequenceToLocalState(patchColumn))
+      // await dispatch(updateColumnSequence(patchColumn))
     }
 
     // Added temporarily to refresh the page on column, otherwise it will not reflect the changes
