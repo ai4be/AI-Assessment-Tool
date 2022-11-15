@@ -28,7 +28,7 @@ const BoardSettings = ({ board }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     setIsLoading(true)
     const data = {
       _id: board._id as string,
@@ -59,7 +59,7 @@ const BoardSettings = ({ board }): JSX.Element => {
     setIsLoading(false)
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (): Promise<void> => {
     setIsLoading(true)
     const _id = board._id
     const url = `/api/boards/${_id}`
@@ -74,10 +74,10 @@ const BoardSettings = ({ board }): JSX.Element => {
       redirect: 'follow',
       referrerPolicy: 'no-referrer'
     })
-    setIsLoading(false)
     if (response.ok) {
-      router.push('/boards')
+      await router.push('/boards')
     }
+    setIsLoading(false)
   }
 
   return (

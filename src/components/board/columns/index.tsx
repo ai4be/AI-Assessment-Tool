@@ -9,6 +9,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
 import { updateColumn } from '@/util/columns'
+import useRenderingTrace from '@/src/hooks'
 
 const fetcher = async (url: string): Promise<any> => await fetch(url).then(async r => await r.json())
 
@@ -24,21 +25,24 @@ const BoardColumns: FC<IProps> = ({ boardId, session }: { boardId: string, sessi
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [cardDetail, setCardDetail] = useState<CardDetail>({ _id: '', title: '', description: '' })
 
-  const [columns, setColumns] = useState([])
-  const [cards, setCards] = useState([])
+  const [columns, setColumns] = useState<any[]>([])
+  const [cards, setCards] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  // useRenderingTrace('BoardColumns', { boardId, session, columns, cards, isLoading, cardDetail }, 'log')
 
   useEffect(() => {
     if (Array.isArray(data)) {
-      data.sort((a, b) => a.sequence - b.sequence)
-      setColumns(data)
+      setColumnsSorted(data)
     } else {
       setColumns([])
     }
   }, [data])
   useEffect(() => setCards(dataCards || []), [dataCards])
 
-  console.log('IN HEREEE')
+  const setColumnsSorted = (cols: any[]): void => {
+    cols.sort((a, b) => a.sequence - b.sequence)
+    setColumns(cols)
+  }
 
   const showCardDetail = (cardId: string): void => {
     const card = cards.filter((card) => card._id === cardId)
@@ -83,21 +87,15 @@ const BoardColumns: FC<IProps> = ({ boardId, session }: { boardId: string, sessi
   }
 
   const filterCards = (columnId: string): any[] => {
-    const filteredCards = cards.filter((card) => card.columnId === columnId)
-    return filteredCards
+    return cards.filter(card => card.columnId === columnId)
   }
 
   const onDragEnd = async (result): Promise<void> => {
     const { destination, source, draggableId, type } = result
-    console.log('onDragEnd', destination, source, draggableId, type)
     // Don't do anything where there is not destination
-    if (destination == null) {
-      return
-    }
+    if (destination == null) return
     // Do nothing if the card is put back where it was
-    if (destination.droppableId === source.droppableId && destination.index === source.index) {
-      return
-    }
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return
     // If card is being dragged
     if (type === 'card') {
       await saveCardSequence(destination.index, destination.droppableId, draggableId)
@@ -109,7 +107,7 @@ const BoardColumns: FC<IProps> = ({ boardId, session }: { boardId: string, sessi
   }
 
   const saveCardSequence = async (destinationIndex: number, destinationColumnId: string, cardId: string): Promise<void> => {
-    const cardsFromColumn = cards.filter(
+    const cardsFromColumn: any[] = cards.filter(
       (card) => card.columnId === destinationColumnId && card._id !== cardId
     )
     const sortedCards = cardsFromColumn.sort((a, b) => a.sequence - b.sequence)
@@ -120,12 +118,10 @@ const BoardColumns: FC<IProps> = ({ boardId, session }: { boardId: string, sessi
       sequence,
       columnId: destinationColumnId
     }
-    const cardToPatch = cards.find(card => card._id === cardId)
-    if (cardToPatch != null) {
-      cardToPatch.sequence = sequence
-      cardToPatch.columnId = destinationColumnId
-    }
-
+    const cardToPatch: any = cards.find(card => card._id === cardId)
+    if (cardToPatch == null) return
+    cardToPatch.sequence = sequence
+    cardToPatch.columnId = destinationColumnId
     const promises: Array<Promise<any>> = [updateCard(patchCard, boardId)]
     for (let i = destinationIndex; i < sortedCards.length; i++) {
       const card = sortedCards[i]
@@ -139,20 +135,25 @@ const BoardColumns: FC<IProps> = ({ boardId, session }: { boardId: string, sessi
       }
       promises.push(updateCard(patchCard, boardId))
     }
+    setCards([...cards])
     await Promise.all(promises)
-    await mutateCards()
+    // await mutateCards()
   }
 
   const saveColumnSequence = async (destinationIndex: number, columnId: string): Promise<void> => {
     // Remove the column which is dragged from the list
-    const filteredColumns = columns.filter((column) => column._id !== columnId)
+    const filteredColumns: any[] = columns.filter((column) => column._id !== columnId)
     const sortedColumns = filteredColumns.sort((a, b) => a.sequence - b.sequence)
     let sequence = +(destinationIndex === 0 ? 1 : sortedColumns[destinationIndex - 1].sequence + 1)
 
+    const column = columns.find(c => c._id === columnId)
+    if (column == null) return
+    column.sequence = sequence
     const promises: Array<Promise<any>> = [updateColumn({ columnId, boardId, sequence })]
     for (let i = destinationIndex; i < sortedColumns.length; i++) {
       const column = sortedColumns[i]
       sequence += 1
+      column.sequence = sequence
       const patchColumn = {
         columnId: column._id,
         sequence,
@@ -160,8 +161,9 @@ const BoardColumns: FC<IProps> = ({ boardId, session }: { boardId: string, sessi
       }
       promises.push(updateColumn(patchColumn))
     }
+    setColumnsSorted([...columns])
     await Promise.all(promises)
-    await mutate()
+    // await mutate()
   }
 
   return (

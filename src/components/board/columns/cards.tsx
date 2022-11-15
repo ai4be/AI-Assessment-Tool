@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import PropTypes from 'prop-types'
 import { CardDetail } from '@/src/types/cards'
 import Card from '@/src/components/board/columns/card'
 
@@ -16,10 +15,6 @@ const Cards: FC<Props> = ({ cards, showCardDetail }) => {
       ))}
     </>
   )
-}
-
-Cards.propTypes = {
-  showCardDetail: PropTypes.func
 }
 
 export default Cards
