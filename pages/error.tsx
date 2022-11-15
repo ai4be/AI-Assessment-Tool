@@ -1,6 +1,6 @@
 import { Box, Image, Text } from '@chakra-ui/react'
 
-const ErrorPage = () => {
+const ErrorPage = (): JSX.Element => {
   return (
     <>
       <Box display='flex' marginTop='100px'>

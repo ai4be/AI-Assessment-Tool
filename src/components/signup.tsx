@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import shortId from 'shortid'
 import { useRouter } from 'next/router'
+import { AI4BelgiumIcon } from './navbar'
 
 const SignUp = (): JSX.Element => {
   const [values, setValues] = useState({
@@ -117,8 +118,8 @@ const SignUp = (): JSX.Element => {
     }, 3000)
   }
 
-  const showSignUpError = () => {
-    if (!hasError) return
+  const showSignUpError = (): JSX.Element => {
+    if (!hasError) return (<></>)
 
     return (
       <Alert status='error'>
@@ -135,7 +136,7 @@ const SignUp = (): JSX.Element => {
     )
   }
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const { name, value } = e.target
     setValues({
       ...values,
@@ -145,7 +146,7 @@ const SignUp = (): JSX.Element => {
     validate()
   }
 
-  const isButtonDisabled = () => {
+  const isButtonDisabled = (): boolean => {
     const isValidPassword = values.password !== values.confirmPassword
     const isDisabled = !values.email || !values.fullName
 
@@ -154,16 +155,8 @@ const SignUp = (): JSX.Element => {
 
   return (
     <>
-      <Box display='flex'>
-        <Image
-          height='30px'
-          ml='auto'
-          mr='auto'
-          my='40px'
-          src='/trello-logo.svg'
-          display='inline-block'
-          alt='brand logo'
-        />
+      <Box display='flex' alignItems='center' justifyContent='center'>
+        <AI4BelgiumIcon />
       </Box>
       <Flex
         alignItems='center'
@@ -203,7 +196,7 @@ const SignUp = (): JSX.Element => {
             fontWeight='semibold'
             lineHeight='normal'
           >
-            <h1>Sign up for your account</h1>
+            <h1>Sign up</h1>
           </Box>
           <Box my={4} textAlign='left'>
             <FormControl isRequired>

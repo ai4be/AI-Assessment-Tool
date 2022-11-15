@@ -4,11 +4,11 @@ import verifyToken from '@/util/verify-token'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from './api/auth/[...nextauth]'
 
-export default function SignUpPage ({ session }) {
-  return (<SignUp></SignUp>)
+export default function SignUpPage ({ session }): JSX.Element {
+  return (<SignUp />)
 }
 
-export async function getServerSideProps (ctx) {
+export async function getServerSideProps (ctx): Promise<any> {
   const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
   const { token, email, boardId } = ctx.query
   if (token && email && boardId) {

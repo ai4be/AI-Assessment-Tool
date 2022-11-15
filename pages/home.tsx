@@ -1,11 +1,10 @@
 import Home from '@/src/components/home'
 import { getSession } from 'next-auth/react'
 import SideBar from '@/src/components/side-bar'
-// import useSWR from 'swr'
 
 const PAGE = 'home'
 
-export default function HomePage ({ session }) {
+export default function HomePage ({ session }): JSX.Element {
   return (
     <SideBar page={PAGE}>
       <Home />
@@ -13,10 +12,10 @@ export default function HomePage ({ session }) {
   )
 }
 
-export async function getServerSideProps (context) {
+export async function getServerSideProps (context): Promise<any> {
   const session = await getSession(context)
 
-  if (!session) {
+  if (session == null) {
     return {
       redirect: {
         destination: '/login',
