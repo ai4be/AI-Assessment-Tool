@@ -6,7 +6,7 @@ const WelcomeScreen = (): JSX.Element => {
   return (
     <>
       <Box bgGradient='linear(darkblue, white)' height='100vh'>
-        <NavBar bg={'white'} />
+        <NavBar bg='white' />
         <Flex
           alignItems='center'
           flexDirection={['column', 'column', 'row', 'row']}
