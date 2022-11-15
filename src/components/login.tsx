@@ -34,15 +34,10 @@ const Login = (): JSX.Element => {
     e.preventDefault()
     setIsFetching(true)
 
-    const data: any = {
-      email: values.email,
-      password: values.password
-    }
-
     const result = await signIn('credentials', {
       redirect: false,
       email: values.email,
-      password: values.password,
+      password: values.password
     })
 
     setIsFetching(false)

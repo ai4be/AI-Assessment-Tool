@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Box, Button } from '@chakra-ui/react'
 import {
   AiOutlineHome,
@@ -9,7 +9,7 @@ import {
 import Link from 'next/link'
 import NavBar from '@/src/components/navbar'
 
-const SideBar = (props) => {
+const SideBar = (props): JSX.Element => {
   const { page } = props
 
   const sidebarMenu = [

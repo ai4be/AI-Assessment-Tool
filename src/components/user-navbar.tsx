@@ -12,11 +12,10 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
-import { signOut } from "next-auth/react"
 import { useRouter } from 'next/router'
 import { AiOutlineHome } from 'react-icons/ai'
 import { SiTrello } from 'react-icons/si'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 
 const UserNavBar: FC = () => {
   const [session, setSession] = useState(undefined)
@@ -27,12 +26,13 @@ const UserNavBar: FC = () => {
     if (data != null) setSession(data)
   }, [data])
 
-  const logout = async () => {
-    const response = await signOut({ redirect: false })
-    router.push('/')
+  const logout = async (): Promise<void> => {
+    // const response =
+    await signOut({ redirect: false })
+    await router.push('/')
   }
 
-  const renderButtons = () => {
+  const renderButtons = (): JSX.Element => {
     if (session != null) {
       return (
         <>

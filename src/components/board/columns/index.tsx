@@ -10,9 +10,14 @@ import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
 import { updateColumn } from '@/util/columns'
 
-const fetcher = url => fetch(url).then(r => r.json())
+const fetcher = async (url: string): Promise<any> => await fetch(url).then(async r => await r.json())
 
-const BoardColumns: FC = ({ boardId, session }: { boardId: string, session: any }): JSX.Element => {
+interface IProps {
+  boardId: string
+  session: any
+}
+
+const BoardColumns: FC<IProps> = ({ boardId, session }: { boardId: string, session: any }): JSX.Element => {
   const { data, error, mutate } = useSWR(`/api/boards/${boardId}/columns`, fetcher)
   const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/boards/${boardId}/cards`, fetcher)
 

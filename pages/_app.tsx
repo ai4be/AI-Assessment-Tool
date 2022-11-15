@@ -24,7 +24,7 @@ const theme = extendTheme({
   }
 })
 
-const TrelloApp = ({ Component, pageProps }): JSX.Element => {
+const App = ({ Component, pageProps }): JSX.Element => {
   return (
     <>
       <Head>
@@ -41,8 +41,8 @@ const TrelloApp = ({ Component, pageProps }): JSX.Element => {
   )
 }
 
-TrelloApp.propTypes = {
+App.propTypes = {
   pageProps: PropTypes.object
 }
 
-export default TrelloApp
+export default App

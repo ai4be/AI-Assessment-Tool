@@ -4,7 +4,7 @@ import { Box } from '@chakra-ui/react'
 // https://github.com/zenoamaro/react-quill/issues/122
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false
 
-const QuillEditor = ({ value, onChange }) => {
+const QuillEditor = ({ value, onChange }): JSX.Element => {
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],

@@ -6,29 +6,25 @@ import BoardColumns from '@/src/components/board/columns'
 import PropType from 'prop-types'
 import BoardContext, { BoardContextProvider } from '@/src/store/board-context'
 
-const Board = (props): JSX.Element => {
-  const {
-    board,
-    session
-  } = props
+const Board = ({ board, session }): JSX.Element => {
   const boardContext = useContext(BoardContext)
   boardContext.setBoard(board)
-
-  console.log('in here')
+  // console.log('in here')
 
   return (
     <Box
-      backgroundImage={`url('${board?.backgroundImage}')`}
+      backgroundImage={`url('${String(board?.backgroundImage)}')`}
       backgroundPosition='center'
       h='100vh'
       backgroundRepeat='no-repeat'
       backgroundSize='cover'
     >
-      {board != null && <BoardContextProvider>
-        <UserNavbar />
-        <SubNavbar board={board} />
-        <BoardColumns boardId={board._id} session={session} />
-      </BoardContextProvider>}
+      {board != null &&
+        <BoardContextProvider>
+          <UserNavbar />
+          <SubNavbar board={board} />
+          <BoardColumns boardId={board._id} session={session} />
+        </BoardContextProvider>}
     </Box>
   )
 }
