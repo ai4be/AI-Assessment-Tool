@@ -10,7 +10,7 @@ function BoardsPage ({ session }): JSX.Element {
   const { data, error } = useSWR('/api/boards', fetcher)
   console.log('BoardsPage', session)
   return (
-    <SideBar page={'boards'}>
+    <SideBar page='boards'>
       <Boards boards={data || []} session={session} />
     </SideBar>
   )

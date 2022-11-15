@@ -1,10 +1,32 @@
 import Templates from '@/src/components/templats'
-import withSidebar from '@/src/hoc/with-sidebar'
-import withStore from '@/src/hoc/with-store'
-import withAuth from '@/src/hoc/with-auth'
+import SideBar from '@/src/components/side-bar'
+import { unstable_getServerSession } from 'next-auth/next'
+import { authOptions } from './api/auth/[...nextauth]'
 
-const TemplatesPageWithSidebar = withSidebar(Templates, { page: 'templates' })
-const HomePageWithAuth = withAuth(TemplatesPageWithSidebar)
-const HomePageWithStore = withStore(HomePageWithAuth)
+const PAGE = 'templates'
 
-export default HomePageWithStore
+export default function TemplatesPage ({ session }): JSX.Element {
+  return (
+    <SideBar page={PAGE}>
+      <Templates />
+    </SideBar>
+  )
+}
+
+export async function getServerSideProps (context): Promise<any> {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+
+  if (session == null) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+  return {
+    props: {
+      session: JSON.parse(JSON.stringify(session))
+    }
+  }
+}
