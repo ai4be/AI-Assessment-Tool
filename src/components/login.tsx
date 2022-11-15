@@ -16,9 +16,10 @@ import {
   AlertIcon
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import inviteUser from '@/util/invite-user'
+import { inviteUser } from '@/util/users'
+import { AI4BelgiumIcon } from './navbar'
 
-const Login = () => {
+const Login = (): JSX.Element => {
   const [values, setValues] = useState({
     email: '',
     password: ''
@@ -29,11 +30,11 @@ const Login = () => {
 
   const router = useRouter()
 
-  const loginUser = async (e) => {
+  const loginUser = async (e): Promise<void> => {
     e.preventDefault()
     setIsFetching(true)
 
-    const data = {
+    const data: any = {
       email: values.email,
       password: values.password
     }
@@ -51,9 +52,9 @@ const Login = () => {
 
     if (isInvitedUser && result?.ok === true) {
       const hasInvited = await inviteUser({ email: inviteEmail, boardId })
-      if (hasInvited) router.push('/home')
+      if (hasInvited) await router.push('/home')
     } else if (result?.ok === true) {
-      router.push('/home')
+      await router.push('/home')
     }
 
     if (result?.status === 404 || result?.status === 401) {
@@ -69,8 +70,8 @@ const Login = () => {
     })
   }
 
-  const showLoginError = () => {
-    if (!hasError) return
+  const showLoginError = (): JSX.Element => {
+    if (!hasError) return (<></>)
 
     return (
       <Alert status='error'>
@@ -90,10 +91,7 @@ const Login = () => {
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' my='40px'>
-        <Image height='20px' mt='2' src='/trello-icon.svg' alt='brand logo' />
-        <Text fontWeight='bold' fontSize='28px' m='4px'>
-          Trello
-        </Text>
+        <AI4BelgiumIcon />
       </Box>
 
       <Flex
@@ -134,7 +132,7 @@ const Login = () => {
             fontWeight='semibold'
             lineHeight='normal'
           >
-            <h1>Log in to Trello</h1>
+            <h1>Log in</h1>
           </Box>
           <Box my={4} textAlign='left'>
             <form>

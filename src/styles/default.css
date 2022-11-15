@@ -3,3 +3,15 @@ body {
   margin: 0px;
   height: 100%;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.icon-blue-color {
+  color: #0000E6;
+}
+
+.icon-grey-color {
+  color: #1B1819;
+}

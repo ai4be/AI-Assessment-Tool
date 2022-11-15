@@ -7,7 +7,7 @@ export const fetchUsers = async (userIds: string[]): Promise<any[]> => {
   return usersData
 }
 
-const verifyToken = async ({ email, boardId }): Promise<boolean> => {
+export const inviteUser = async ({ email, boardId }): Promise<boolean> => {
   const URL = '/api/invite-user'
   const data = {
     email,
@@ -35,5 +35,3 @@ const verifyToken = async ({ email, boardId }): Promise<boolean> => {
     return false
   }
 }
-
-export default verifyToken
