@@ -9,20 +9,20 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 
     switch (requestType) {
       case 'PATCH': {
-        const { email, boardId } = req.body
+        const { email, projectId } = req.body
         const user = await db.collection('users').findOne({ email })
-        const boardData = await db.collection('boards').findOne({ _id: boardId })
+        const projectData = await db.collection('projects').findOne({ _id: projectId })
 
-        const isExistingUser = boardData.users.indexOf(user._id)
+        const isExistingUser = projectData.users.indexOf(user._id)
 
         if (isExistingUser > -1) {
-          res.status(400).send({ message: 'User is already added to the board' })
+          res.status(400).send({ message: 'User is already added to the project' })
         } else {
-          const board = await db
-            .collection('boards')
-            .updateOne({ _id: boardId }, { $push: { users: user?._id } })
+          const project = await db
+            .collection('projects')
+            .updateOne({ _id: projectId }, { $push: { users: user?._id } })
 
-          if (board) {
+          if (project != null && project.result.ok === 1) {
             res.send({ status: 200, message: 'Invited' })
           } else {
             res.send({ status: 404, message: 'Some issues' })

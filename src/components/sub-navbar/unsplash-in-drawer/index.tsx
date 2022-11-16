@@ -14,7 +14,7 @@ import React, { useState } from 'react'
 import { BsImages } from 'react-icons/bs'
 import Unsplash from '@/src/components/sub-navbar/unsplash-in-drawer/unsplash'
 
-const SubNavbar = ({ board }): JSX.Element => {
+const SubNavbar = ({ project }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isLoading, setIsLoading] = useState(false)
   const btnRef = React.useRef()
@@ -22,14 +22,14 @@ const SubNavbar = ({ board }): JSX.Element => {
   const handleSave = async () => {
     setIsLoading(true)
     const data = {
-      _id: board._id,
-      name: board.name,
-      dateCreated: board.dateCreated,
-      createdBy: board.createdBy,
-      backgroundImage: board.backgroundImage
+      _id: project._id,
+      name: project.name,
+      dateCreated: project.dateCreated,
+      createdBy: project.createdBy,
+      backgroundImage: project.backgroundImage
     }
 
-    const url = `/api/boards/${data._id}`
+    const url = `/api/projects/${data._id}`
 
     const response = await fetch(url, {
       method: 'PATCH',
@@ -45,7 +45,7 @@ const SubNavbar = ({ board }): JSX.Element => {
     })
 
     const json = await response.json()
-    // TODO use context to set board
+    // TODO use context to set project
     onClose()
     setIsLoading(false)
   }
@@ -80,7 +80,7 @@ const SubNavbar = ({ board }): JSX.Element => {
 }
 
 SubNavbar.propTypes = {
-  board: PropType.object
+  project: PropType.object
 }
 
 export default SubNavbar

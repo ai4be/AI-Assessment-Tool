@@ -11,9 +11,8 @@ import {
   useDisclosure,
   Input
 } from '@chakra-ui/react'
-import { useAppSelector } from '@/src/hooks'
 
-const InviteModal = ({ board }) => {
+const InviteModal = ({ project }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [email, setEmail] = useState('')
   const [emailErr, setEmailErr] = useState(false)
@@ -21,17 +20,17 @@ const InviteModal = ({ board }) => {
 
   const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$')
 
-  const handleClick = async () => {
+  const handleClick = async (): Promise<void> => {
     setMailSending(true)
     await sendEmail()
     setMailSending(false)
   }
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     setEmail(e.target.value)
     validate()
   }
-  const validate = () => {
+  const validate = (): void => {
     if (!validEmail.test(email)) {
       setEmailErr(true)
     } else {
@@ -52,7 +51,7 @@ const InviteModal = ({ board }) => {
       },
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
-      body: JSON.stringify({ email, boardId: board._id })
+      body: JSON.stringify({ email, projectId: project._id })
     })
 
     const inJSON = await response.json()

@@ -7,11 +7,11 @@ export const fetchUsers = async (userIds: string[]): Promise<any[]> => {
   return usersData
 }
 
-export const inviteUser = async ({ email, boardId }): Promise<boolean> => {
+export const inviteUser = async ({ email, projectId }): Promise<boolean> => {
   const URL = '/api/invite-user'
   const data = {
     email,
-    boardId
+    projectId
   }
 
   const response = await fetch(URL, {

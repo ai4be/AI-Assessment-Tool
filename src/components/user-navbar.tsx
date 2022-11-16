@@ -72,9 +72,9 @@ const UserNavBar: FC = () => {
           <AiOutlineHome />
         </Button>
       </Link>
-      <Link href='/boards'>
+      <Link href='/projects'>
         <Button size='xs' ml='5px' mr='10px' my='5px'>
-          Boards
+          Projects
         </Button>
       </Link>
       <Spacer />

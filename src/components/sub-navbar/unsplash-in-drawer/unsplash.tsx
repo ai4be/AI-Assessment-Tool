@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { createApi } from 'unsplash-js'
 import { Box, InputGroup, Input, InputRightElement, Button } from '@chakra-ui/react'
 
-const Unsplash = () => {
+const Unsplash = (): JSX.Element => {
   const [value, setValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [images, setImages] = useState<any[]>([])
@@ -55,7 +55,7 @@ const Unsplash = () => {
       value: imageURL
     }
     // TODO
-    // await updateBoardDetail(data)
+    // await updateProjectDetail(data)
   }
 
   return (

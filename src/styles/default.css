@@ -1,3 +1,6 @@
+:root {
+  --main-blue: #0000E6;
+}
 html,
 body {
   margin: 0px;
@@ -8,8 +11,17 @@ body {
 @tailwind components;
 @tailwind utilities;
 
+
+.text-blue {
+  color: var(--main-blue) !important;
+}
+
+.background-blue {
+  background-color: var(--main-blue) !important;
+}
+
 .icon-blue-color {
-  color: #0000E6;
+  color: var(--main-blue);
 }
 
 .icon-grey-color {

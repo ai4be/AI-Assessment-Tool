@@ -1,13 +1,13 @@
 
-export const fetchColumns = async (boardId: string): Promise<any> => {
-  const response = await fetch(`/api/boards/${boardId}/columns`).then(async (response) =>
+export const fetchColumns = async (projectId: string): Promise<any> => {
+  const response = await fetch(`/api/projects/${projectId}/columns`).then(async (response) =>
     await response.json()
   )
   return response
 }
 
-export const deleteColumn = async (columnId: string, boardId: string): Promise<any> => {
-  const url = `$/api/boards/${boardId}/columns/${columnId}`
+export const deleteColumn = async (columnId: string, projectId: string): Promise<any> => {
+  const url = `$/api/projects/${projectId}/columns/${columnId}`
 
   const response = await fetch(url, {
     method: 'DELETE',
@@ -26,7 +26,7 @@ export const deleteColumn = async (columnId: string, boardId: string): Promise<a
   return inJSON
 }
 
-export const addColumnToBoard = async (columnId: string, boardId: string, columns: any[]): Promise<any> => {
+export const addColumnToProject = async (columnId: string, projectId: string, columns: any[]): Promise<any> => {
   let sequence = 1
 
   if (columns.length > 0) {
@@ -35,13 +35,13 @@ export const addColumnToBoard = async (columnId: string, boardId: string, column
 
   const data = {
     id: columnId,
-    boardId,
+    projectId,
     columnName: 'Add title',
     dateCreated: new Date().toLocaleString(),
     sequence
   }
 
-  const url = `/api/boards/${data.boardId}/columns`
+  const url = `/api/projects/${data.projectId}/columns`
 
   const response = await fetch(url, {
     method: 'POST',
@@ -61,7 +61,7 @@ export const addColumnToBoard = async (columnId: string, boardId: string, column
   return inJSON
 }
 
-export const updateColumn = async (obj: { sequence?: number, columnName?: string, columnId: string, boardId: string }): Promise<any> => {
+export const updateColumn = async (obj: { sequence?: number, columnName?: string, columnId: string, projectId: string }): Promise<any> => {
   const data: any = {
     _id: obj.columnId
   }
@@ -69,7 +69,7 @@ export const updateColumn = async (obj: { sequence?: number, columnName?: string
   if (obj.columnName != null) data.columnName = obj.columnName
   if (Object.keys(data).length === 1) return
 
-  const url = `/api/boards/${obj.boardId}/columns/${obj.columnId}`
+  const url = `/api/projects/${obj.projectId}/columns/${obj.columnId}`
 
   const response = await fetch(url, {
     method: 'PATCH',

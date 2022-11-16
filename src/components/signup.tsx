@@ -98,11 +98,11 @@ const SignUp = (): JSX.Element => {
       setErrorState(true)
     }
 
-    const { email: inviteEmail, token, boardId } = router.query
-    const isInvitedUser = inviteEmail && token && boardId
+    const { email: inviteEmail, token, projectId } = router.query
+    const isInvitedUser = inviteEmail && token && projectId
 
     if (isInvitedUser && result.message === 'success') {
-      redirectToLoginPage(`/login?token=${token}&email=${inviteEmail}&boardId=${boardId}`)
+      redirectToLoginPage(`/login?token=${token}&email=${inviteEmail}&projectId=${projectId}`)
     } else {
       if (result.message === 'success') {
         redirectToLoginPage()

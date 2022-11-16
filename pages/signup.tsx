@@ -10,8 +10,8 @@ export default function SignUpPage ({ session }): JSX.Element {
 
 export async function getServerSideProps (ctx): Promise<any> {
   const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
-  const { token, email, boardId } = ctx.query
-  if (token && email && boardId) {
+  const { token, email, projectId } = ctx.query
+  if (token && email && projectId) {
     // If token is invalid then redirect to error page
     const isTokenValid = await verifyToken(ctx)
 
@@ -30,7 +30,7 @@ export async function getServerSideProps (ctx): Promise<any> {
     if (isExistingUser) {
       return {
         redirect: {
-          destination: `/login?token=${token}&email=${email}&boardId=${boardId}`,
+          destination: `/login?token=${token}&email=${email}&projectId=${projectId}`,
           permanent: false,
         }
       }

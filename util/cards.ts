@@ -10,7 +10,7 @@ interface CardPatch {
   sequence?: number
 }
 
-export const addCard = async (columnId: string, boardId: string, userId: string, cards): Promise<any> => {
+export const addCard = async (columnId: string, projectId: string, userId: string, cards): Promise<any> => {
   const filteredCards = cards.filter((card) => card.columnId === columnId)
   let sequence = 1
   if (filteredCards.length > 0) {
@@ -22,7 +22,7 @@ export const addCard = async (columnId: string, boardId: string, userId: string,
   const data = {
     id: cardId,
     columnId,
-    boardId,
+    projectId,
     title: 'Add title',
     type: '',
     description: '',
@@ -32,7 +32,7 @@ export const addCard = async (columnId: string, boardId: string, userId: string,
     sequence
   }
 
-  const url = `/api/boards/${boardId}/columns/${columnId}/cards`
+  const url = `/api/projects/${projectId}/columns/${columnId}/cards`
 
   const response = await fetch(url, {
     method: 'POST',
@@ -52,8 +52,8 @@ export const addCard = async (columnId: string, boardId: string, userId: string,
   return inJSON
 }
 
-export const updateCard = async (obj: CardPatch, boardId: string): Promise<any> => {
-  const url = `/api/boards/${boardId}/cards/${obj._id}`
+export const updateCard = async (obj: CardPatch, projectId: string): Promise<any> => {
+  const url = `/api/projects/${projectId}/cards/${obj._id}`
 
   const response = await fetch(url, {
     method: 'PATCH',
@@ -73,7 +73,7 @@ export const updateCard = async (obj: CardPatch, boardId: string): Promise<any> 
   return inJSON
 }
 
-export const updateCardSequence = async (obj: CardPatch, boardId: string): Promise<void> => {
+export const updateCardSequence = async (obj: CardPatch, projectId: string): Promise<void> => {
   const { _id, title, description, columnId, sequence } = obj
 
   const data = {
@@ -83,7 +83,7 @@ export const updateCardSequence = async (obj: CardPatch, boardId: string): Promi
     sequence
   }
 
-  const url = `/api/boards/${boardId}/cards/${_id}`
+  const url = `/api/projects/${projectId}/cards/${_id}`
 
   const response = await fetch(url, {
     method: 'PATCH',

@@ -36,7 +36,8 @@ const NavBar: FC<IProps> = ({ bg }) => {
   }, [data])
 
   const logout = async (): Promise<void> => {
-    const response = await signOut({ redirect: false })
+    // const response =
+    await signOut({ redirect: false })
     await router.push('/')
   }
 
@@ -45,7 +46,7 @@ const NavBar: FC<IProps> = ({ bg }) => {
     if (data != null) {
       return (
         <>
-          <Flex flexDirection='column' justifyContent='center' >
+          <Flex flexDirection='column' justifyContent='center'>
             <IoIosNotificationsOutline className='icon-blue-color' size='20' strokeWidth='20px' />
           </Flex>
           <Flex flexDirection='column' justifyContent='center' paddingX='2' >
@@ -62,8 +63,8 @@ const NavBar: FC<IProps> = ({ bg }) => {
                 <RiArrowDropDownLine color='#F0EEF9' size='20' />
               </Flex>
             </MenuButton>
-            <MenuList>
-              <MenuItem onClick={logout}>Log out</MenuItem>
+            <MenuList backgroundColor='white'>
+              <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>Log out</MenuItem>
             </MenuList>
           </Menu>
         </>

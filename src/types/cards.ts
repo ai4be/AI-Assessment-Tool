@@ -4,7 +4,7 @@ export interface CardDetail {
   description: string
   columnId?: string
   assignedTo?: string
-  boardId?: string
+  projectId?: string
   sequence?: number
   label?: Label
 }

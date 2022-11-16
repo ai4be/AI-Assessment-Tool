@@ -42,11 +42,11 @@ const Login = (): JSX.Element => {
 
     setIsFetching(false)
 
-    const { email: inviteEmail, token, boardId } = router.query
-    const isInvitedUser = inviteEmail && token && boardId
+    const { email: inviteEmail, token, projectId } = router.query
+    const isInvitedUser = inviteEmail && token && projectId
 
     if (isInvitedUser && result?.ok === true) {
-      const hasInvited = await inviteUser({ email: inviteEmail, boardId })
+      const hasInvited = await inviteUser({ email: inviteEmail, projectId })
       if (hasInvited) await router.push('/home')
     } else if (result?.ok === true) {
       await router.push('/home')
