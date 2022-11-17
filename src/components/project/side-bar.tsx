@@ -5,7 +5,7 @@ import ProjectContext from '@/src/store/project-context'
 const SideBar = (props: any): JSX.Element => {
   const context = useContext(ProjectContext)
   return (
-    <Box bgColor='#E5E5E5' display='flex' alignItems='center'>
+    <Box bgColor='#F7F7F7' display='flex' alignItems='center'>
       <Box display='flex' mt='2%' boxShadow='base' rounded='lg' p='1em' pl='0' ml='2rem' mr='2rem' bgColor='white'>
         <Box display='flex' flexDirection='column' mt='5rem'>
           {context.categories.map((cat, index) => (
