@@ -1,4 +1,4 @@
-import { Context, createContext, useState } from 'react'
+import { Context, createContext, useEffect, useState } from 'react'
 import { Category, Project } from '../types/projects'
 
 interface ProjectContextType {
@@ -21,6 +21,10 @@ export function ProjectContextProvider (props: any): JSX.Element {
   const [project, setProject] = useState<Project>(props.project)
   const [categories, setCategories] = useState<Category[]>(props.categories)
   const [selectedCategory, setSelectedCategory] = useState<Category>()
+
+  useEffect(() => {
+    if (selectedCategory == null && categories?.length > 0) setSelectedCategory(categories[0])
+  }, [categories, selectedCategory])
 
   const context: ProjectContextType = {
     project,

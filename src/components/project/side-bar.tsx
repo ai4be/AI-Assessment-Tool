@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { Box, Button } from '@chakra-ui/react'
 import ProjectContext from '@/src/store/project-context'
-import styles from './side-bar.module.css'
 
 const SideBar = (props: any): JSX.Element => {
   const context = useContext(ProjectContext)
@@ -20,8 +19,9 @@ const SideBar = (props: any): JSX.Element => {
               borderRadius='0'
               borderWidth='0'
               padding='0'
-              className={`text-grey capitalize whitespace-normal ${styles.sidebar_btn}`}
+              className='capitalize whitespace-normal'
               bgColor={cat._id === context.selectedCategory?._id ? 'var(--main-light-blue)' : 'white'}
+              color={cat._id === context.selectedCategory?._id ? '#25282B' : 'var(--text-grey)'}
               whiteSpace='normal'
               _hover={{ bg: 'var(--main-light-blue)' }}
               _focus={{ boxShadow: 'none' }}
@@ -29,7 +29,7 @@ const SideBar = (props: any): JSX.Element => {
             >
               <Box display='flex' justifyContent='space-between' width='100%' height='100%' alignItems='center'>
                 <Box width='4px' height='100%' bgColor={cat._id === context.selectedCategory?._id ? 'var(--main-blue)' : 'white'} borderRightRadius='5px' />
-                {cat.name}
+                <Box px='1rem'>{cat.name}</Box>
                 <Box width='4px' height='100%' bgColor='transparent' />
               </Box>
             </Button>

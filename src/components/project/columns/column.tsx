@@ -113,27 +113,8 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
       className='background-light-blue rounded-lg'
     >
       <Box pb='5px' rounded='lg'>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Box />
+        <Box display='flex' alignItems='center' justifyContent='center' className='mt-1.5'>
           {loadColumnTitle()}
-          <Box my='10px' mr='10px' cursor='grab' display='flex'>
-            <Menu>
-              <MenuButton aria-label='Options'>
-                <FiMoreHorizontal />
-              </MenuButton>
-              <MenuList justifyContent='center' alignItems='center'>
-                <MenuItem onClick={() => setEditBoxVisibility(!showEditBox)}>
-                  <AiOutlineEdit />
-                  <Text marginLeft='5px'>Edit</Text>
-                </MenuItem>
-                {/* <MenuDivider />
-                <MenuItem onClick={handleColumnDelete}>
-                  <AiOutlineDelete />
-                  <Text marginLeft='5px'>Delete</Text>
-                </MenuItem> */}
-              </MenuList>
-            </Menu>
-          </Box>
         </Box>
         <Droppable droppableId={column._id} type='card'>
           {(provided) => (
