@@ -17,7 +17,6 @@ import Unsplash from '@/src/components/sub-navbar/unsplash-in-drawer/unsplash'
 const SubNavbar = ({ project }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isLoading, setIsLoading] = useState(false)
-  const btnRef = React.useRef()
 
   const handleSave = async () => {
     setIsLoading(true)

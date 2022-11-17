@@ -1,10 +1,8 @@
 import React, { useState, FC, useEffect } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import AddColumnButton from '@/src/components/project/columns/buttons/add-column-button'
 import CardDetailsModal from '@/src/components/project/columns/modals/card-details-modal'
 import Column from '@/src/components/project/columns/column'
 import { CardDetail } from '@/src/types/cards'
-import shortId from 'shortid'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
@@ -26,7 +24,6 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
 
   const [columns, setColumns] = useState<any[]>([])
   const [cards, setCards] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(false)
   // useRenderingTrace('ProjectColumns', { projectId, session, columns, cards, isLoading, cardDetail }, 'log')
 
   useEffect(() => {
@@ -47,42 +44,6 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     const card = cards.filter((card) => card._id === cardId)
     setCardDetail(card[0])
     onOpen()
-  }
-
-  const addColumn = async (): Promise<void> => {
-    setIsLoading(true)
-    const columnId = shortId.generate()
-    const { user } = session
-    const columsArray = columns
-    let sequence = 1
-    if (columns.length > 0) {
-      sequence = columsArray[columsArray.length - 1].sequence + 1
-    }
-    const data = {
-      id: columnId,
-      projectId,
-      columnName: 'Add title',
-      dateCreated: new Date().toLocaleString(),
-      userId: user.id,
-      sequence
-    }
-
-    const response = await fetch(`/api/projects/${data.projectId}/columns`, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify(data)
-    })
-
-    const inJSON = await response.json()
-    await mutate()
-    setIsLoading(false)
   }
 
   const filterCards = (columnId: string): any[] => {
@@ -166,17 +127,11 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
   }
 
   return (
-    <Box display='block' position='relative' height='calc(100vh - 90px)' overflowX='auto'>
+    <Box>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='all-collumns' direction='horizontal' type='column'>
           {(provided) => (
-            <Box
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              display='flex'
-              position='absolute'
-              overflowY='auto'
-            >
+            <Box ref={provided.innerRef} {...provided.droppableProps} display='flex'>
               {Array.isArray(columns) && columns.map((column, index) => (
                 <Column
                   key={column._id}
@@ -191,7 +146,6 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
                 />
               ))}
               {provided.placeholder}
-              <AddColumnButton addColumn={addColumn} />
             </Box>
           )}
         </Droppable>

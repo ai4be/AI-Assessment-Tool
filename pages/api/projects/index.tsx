@@ -2,6 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
 import { authOptions } from '../auth/[...nextauth]'
 import { unstable_getServerSession } from 'next-auth/next'
+import shortid from 'shortid'
+
+const defaultColumns = ['to do', 'busy', 'done']
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
@@ -18,16 +21,24 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 
     switch (requestType) {
       case 'POST': {
-        const { _id, name, dateCreated, createdBy, backgroundImage } = req.body
+        const { name } = req.body
         const data = {
-          _id,
+          _id: shortid.generate(),
           name,
-          dateCreated,
-          createdBy,
-          backgroundImage,
+          dateCreated: Date.now(),
+          createdBy: existingUser._id,
           users: []
         }
         const project = await db.collection('projects').insertOne(data)
+        const projectColsData = defaultColumns.map((cn, idx) => ({
+          _id: shortid.generate(),
+          projectId: data._id,
+          columnName: cn,
+          dateCreated: data.dateCreated,
+          createdBy: existingUser._id,
+          idx
+        }))
+        await db.collection('columns').insertMany(projectColsData)
         res.send(project)
         return
       }

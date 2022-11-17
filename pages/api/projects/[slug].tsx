@@ -8,17 +8,13 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 
   if (client.isConnected()) {
     const requestType = req.method
-
     switch (requestType) {
       case 'GET': {
         const project = await db.collection('projects').findOne({ _id: slug })
-        res.send(project)
-
-        break
+        return res.send(project)
       }
       case 'PATCH': {
         const { _id, name, dateCreated, createdBy, backgroundImage } = req.body
-
         const data = {
           _id,
           name,
@@ -28,8 +24,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         }
 
         const project = await db.collection('projects').updateOne({ _id: slug }, { $set: data })
-        res.send(project)
-        break
+        return res.send(project)
       }
       case 'DELETE': {
         await db.collection('cards').remove({ projectId: slug })

@@ -1,11 +1,13 @@
-import { Box, Heading, Avatar, Tooltip } from '@chakra-ui/react'
+import { Box, Heading, Avatar, Tooltip, Button } from '@chakra-ui/react'
 
 import PropType from 'prop-types'
 import ProjectSettings from '@/src/components/sub-navbar/project-settings'
 import InviteModal from '@/src/components/sub-navbar/invite-user/modal'
 import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { AiOutlineHome } from 'react-icons/ai'
 import { fetchUsers } from '@/src/slices/users'
-import UnsplashDrawer from '@/src/components/sub-navbar/unsplash-in-drawer'
+// import UnsplashDrawer from '@/src/components/sub-navbar/unsplash-in-drawer'
 
 const SubNavbar = (props: any): JSX.Element => {
   const project = props.project
@@ -35,6 +37,18 @@ const SubNavbar = (props: any): JSX.Element => {
       justifyContent='space-between'
       bg='rgba(0,0,0,0.1)'
     >
+      <Box>
+        <Link href='/home'>
+          <Button size='xs' ml='5px' my='5px'>
+            <AiOutlineHome />
+          </Button>
+        </Link>
+        <Link href='/projects'>
+          <Button size='xs' ml='5px' mr='10px' my='5px'>
+            Projects
+          </Button>
+        </Link>
+      </Box>
       <Heading ml='0.5rem' color='white' as='h4' size='sm' whiteSpace='nowrap' d='block'>
         {project?.name}
       </Heading>
@@ -42,7 +56,7 @@ const SubNavbar = (props: any): JSX.Element => {
       <Box>
         <InviteModal project={project} />
         <ProjectSettings project={project} />
-        <UnsplashDrawer />
+        {/* <UnsplashDrawer /> */}
       </Box>
     </Box>
   )

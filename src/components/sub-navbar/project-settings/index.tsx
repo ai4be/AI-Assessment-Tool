@@ -54,7 +54,7 @@ const ProjectSettings = ({ project }): JSX.Element => {
     })
 
     const json = await response.json()
-    // TODO use context to set board
+    // TODO use context to set project
     onClose()
     setIsLoading(false)
   }
@@ -88,7 +88,7 @@ const ProjectSettings = ({ project }): JSX.Element => {
       <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Board Settings</ModalHeader>
+          <ModalHeader>Project Settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Tabs isFitted variant='enclosed'>
@@ -99,7 +99,7 @@ const ProjectSettings = ({ project }): JSX.Element => {
               <TabPanels>
                 <TabPanel>
                   <FormControl id='email'>
-                    <FormLabel>Board name</FormLabel>
+                    <FormLabel>Project name</FormLabel>
                     <Input
                       value={project.name}
                       onChange={(e) => (project.name = e.target.value)}

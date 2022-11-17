@@ -17,6 +17,12 @@ interface Columns {
   date: Date
 }
 
+export interface Category {
+  _id: string
+  key: string
+  name: string
+}
+
 interface Cards {
   id: string
   name: string

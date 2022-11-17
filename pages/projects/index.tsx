@@ -6,11 +6,11 @@ import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 
 export default function Page ({ session }): JSX.Element {
-  const { data, error } = useSWR('/api/projects', fetcher)
+  const { data, error, mutate } = useSWR('/api/projects', fetcher)
   console.log('ProjectsPage', session)
   return (
     <SideBar page='projects'>
-      <Projects projects={data || []} session={session} />
+      <Projects projects={data || []} session={session} fetchProjects={mutate} />
     </SideBar>
   )
 }

@@ -1,23 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
+
 :root {
   --main-blue: #0000E6;
+  --main-light-blue: #F0EEF9;
+  --text-grey: #6B6B6B;
 }
 html,
 body {
   margin: 0px;
   height: 100%;
+  font-family: 'Noto Sans', sans-serif;
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 .text-blue {
   color: var(--main-blue) !important;
 }
 
+.text-grey {
+  color: var(--text-grey) !important;
+}
+
 .background-blue {
   background-color: var(--main-blue) !important;
+}
+
+.background-light-blue {
+  background-color: var(--main-light-blue) !important;
 }
 
 .icon-blue-color {

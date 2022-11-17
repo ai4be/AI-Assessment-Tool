@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import PropType from 'prop-types'
 import {
   Box,
@@ -16,30 +16,40 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { AiOutlinePlus } from 'react-icons/ai'
-import shortId from 'shortid'
 
-export default function Projects (props: any[]): JSX.Element {
+export default function Projects (props: any): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const project: any = {}
-  const { projects = [] }: { projects: any[] } = props
+  const inputRef = useRef()
+  const { projects = [], fetchProjects }: { projects: any[], fetchProjects: Function } = props
 
   const handleCreate = async (): Promise<void> => {
-    setIsLoading(true)
-    const id = shortId.generate()
-    const date = new Date().toLocaleString()
-    // TODO
-    onClose()
-    setIsLoading(false)
-  }
+    try {
+      setIsLoading(true)
+      const data = {
+        name: inputRef.current.value
+      }
 
-  const handleChange = (e): void => {
-    const data = {
-      type: 'name',
-      value: e.target.value
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+      })
+
+      const inJSON = await response.json()
+      console.log('handleCreate', inJSON)
+      await fetchProjects()
+    } finally {
+      onClose()
+      setIsLoading(false)
     }
-
-    // TODO
   }
 
   const createProjectModal = (): JSX.Element => {
@@ -62,8 +72,7 @@ export default function Projects (props: any[]): JSX.Element {
             <ModalCloseButton />
             <ModalBody>
               <Input
-                value={project.name}
-                onChange={(e) => handleChange(e)}
+                ref={inputRef}
                 placeholder='Project name'
               />
             </ModalBody>
@@ -133,5 +142,7 @@ export default function Projects (props: any[]): JSX.Element {
 }
 
 Projects.propTypes = {
-  projects: PropType.array
+  projects: PropType.array,
+  session: PropType.object,
+  fetchProjects: PropType.func
 }

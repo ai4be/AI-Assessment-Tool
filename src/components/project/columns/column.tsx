@@ -15,12 +15,14 @@ import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import Cards from '@/src/components/project/columns/cards'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import { GrDrag } from 'react-icons/gr'
 import debounce from 'lodash.debounce'
 import { CardDetail } from '@/src/types/cards'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'
-import { deleteColumn, updateColumn } from '@/util/columns'
+import {
+  // deleteColumn,
+  updateColumn
+} from '@/util/columns'
 
 const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }): JSX.Element => {
   const { data } = useSession()
@@ -34,7 +36,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     (cardA: CardDetail, cardB: CardDetail) => cardA.sequence - cardB.sequence
   )
 
-  const loadColumnTitle = (draggableProps): JSX.Element => {
+  const loadColumnTitle = (): JSX.Element => {
     if (showEditBox) {
       return (
         <Input
@@ -51,10 +53,8 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     }
 
     return (
-      <Heading {...draggableProps} as='h6' size='sm' ml='10px' mt='5px' textAlign='center'>
-        <Box display='flex'>
-          <GrDrag /> {columnName}
-        </Box>
+      <Heading as='h6' size='sm' ml='10px' mt='5px' textAlign='center' className='text-grey uppercase'>
+        {columnName}
       </Heading>
     )
   }
@@ -78,12 +78,12 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     handleColumnNameChange(e.target.value)
   }
 
-  const handleColumnDelete = async (): Promise<void> => {
-    setIsLoading(true)
-    await deleteColumn(id, projectId)
-    await fetchColumns()
-    setIsLoading(false)
-  }
+  // const handleColumnDelete = async (): Promise<void> => {
+  //   setIsLoading(true)
+  //   await deleteColumn(id, projectId)
+  //   await fetchColumns()
+  //   setIsLoading(false)
+  // }
 
   const handleColumnNameChange = useCallback(
     debounce(async (value) => await nameChange(value), 800),
@@ -102,68 +102,65 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
   }
 
   return (
-    <Draggable draggableId={column._id} index={index} key={column._id}>
-      {(provided) => (
-        <Box
-          key={index}
-          width='272px'
-          height='calc(100vh - 90px)'
-          overflowY='auto'
-          mt='10px'
-          mx='10px'
-          {...provided.draggableProps}
-          ref={provided.innerRef}
-        >
-          <Box bg={column.columnName === 'addColumn' ? '' : '#F0F0F0'} pb='5px' rounded='lg'>
-            <Box display='flex' alignItems='center' justifyContent='space-between'>
-              {loadColumnTitle(provided.dragHandleProps)}
-              <Box my='10px' mr='10px' cursor='grab' display='flex'>
-                <Menu>
-                  <MenuButton aria-label='Options'>
-                    <FiMoreHorizontal />
-                  </MenuButton>
-                  <MenuList justifyContent='center' alignItems='center'>
-                    <MenuItem onClick={() => setEditBoxVisibility(!showEditBox)}>
-                      <AiOutlineEdit />
-                      <Text marginLeft='5px'>Edit</Text>
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuItem onClick={handleColumnDelete}>
-                      <AiOutlineDelete />
-                      <Text marginLeft='5px'>Delete</Text>
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-              </Box>
-            </Box>
-            <Droppable droppableId={column._id} type='card'>
-              {(provided) => (
-                // 2px height is needed to make the drop work when there is no card.
-                <Box ref={provided.innerRef} {...provided.droppableProps} minHeight='2px'>
-                  <Cards showCardDetail={showCardDetail} cards={cardsInSortedSequence} />
-                  {provided.placeholder}
-                </Box>
-              )}
-            </Droppable>
-            <Button
-              size='xs'
-              my='10px'
-              mx='auto'
-              width='80%'
-              color='black'
-              variant='ghost'
-              disabled={isLoading}
-              isLoading={isLoading}
-              display='flex'
-              loadingText='Adding card'
-              onClick={handleCardAdd}
-            >
-              + Add a card
-            </Button>
+    <Box
+      key={index}
+      width='272px'
+      height='calc(100vh - 90px)'
+      overflowY='auto'
+      mt='10px'
+      mr='10px'
+      ml={index === 0 ? '0' : '10px'}
+      className='background-light-blue rounded-lg'
+    >
+      <Box pb='5px' rounded='lg'>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Box />
+          {loadColumnTitle()}
+          <Box my='10px' mr='10px' cursor='grab' display='flex'>
+            <Menu>
+              <MenuButton aria-label='Options'>
+                <FiMoreHorizontal />
+              </MenuButton>
+              <MenuList justifyContent='center' alignItems='center'>
+                <MenuItem onClick={() => setEditBoxVisibility(!showEditBox)}>
+                  <AiOutlineEdit />
+                  <Text marginLeft='5px'>Edit</Text>
+                </MenuItem>
+                {/* <MenuDivider />
+                <MenuItem onClick={handleColumnDelete}>
+                  <AiOutlineDelete />
+                  <Text marginLeft='5px'>Delete</Text>
+                </MenuItem> */}
+              </MenuList>
+            </Menu>
           </Box>
         </Box>
-      )}
-    </Draggable>
+        <Droppable droppableId={column._id} type='card'>
+          {(provided) => (
+            // 2px height is needed to make the drop work when there is no card.
+            <Box ref={provided.innerRef} {...provided.droppableProps} minHeight='2px'>
+              <Cards showCardDetail={showCardDetail} cards={cardsInSortedSequence} />
+              {provided.placeholder}
+            </Box>
+          )}
+        </Droppable>
+        <Button
+          size='xs'
+          my='10px'
+          mx='auto'
+          width='80%'
+          color='black'
+          variant='ghost'
+          disabled={isLoading}
+          isLoading={isLoading}
+          display='flex'
+          loadingText='Adding card'
+          onClick={handleCardAdd}
+        >
+          + Add a card
+        </Button>
+      </Box>
+    </Box>
   )
 }
 

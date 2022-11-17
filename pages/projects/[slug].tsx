@@ -4,12 +4,13 @@ import { authOptions } from '../api/auth/[...nextauth]'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import { fetcher } from '@/util/api'
+import { categories } from '../api/categories'
 
 function Page ({ session }): JSX.Element {
   const router = useRouter()
   const { data, error } = useSWR(`/api/projects/${String(router.query.slug)}`, fetcher)
   return (
-    <Project project={data} session={session} />
+    <Project project={data} session={session} categories={categories} />
   )
 }
 

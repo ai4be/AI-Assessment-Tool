@@ -1,29 +1,22 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Box } from '@chakra-ui/react'
-import UserNavbar from '@/src/components/user-navbar'
 import SubNavbar from '@/src/components/sub-navbar'
 import ProjectColumns from '@/src/components/project/columns'
 import PropType from 'prop-types'
-import ProjectContext, { ProjectContextProvider } from '@/src/store/project-context'
+import { ProjectContextProvider } from '@/src/store/project-context'
+import SideBar from './side-bar'
+import NavBar from '../navbar'
 
-const Project = ({ project, session }): JSX.Element => {
-  const projectContext = useContext(ProjectContext)
-  projectContext.setProject(project)
-  // console.log('in here')
-
+const Project = ({ project, session, categories }): JSX.Element => {
   return (
-    <Box
-      backgroundImage={`url('${String(project?.backgroundImage)}')`}
-      backgroundPosition='center'
-      h='100vh'
-      backgroundRepeat='no-repeat'
-      backgroundSize='cover'
-    >
+    <Box>
       {project != null &&
-        <ProjectContextProvider>
-          <UserNavbar />
+        <ProjectContextProvider project={project} categories={categories}>
+          <NavBar bg='white' />
           <SubNavbar project={project} />
-          <ProjectColumns projectId={project._id} session={session} />
+          <SideBar>
+            <ProjectColumns projectId={project._id} session={session} />
+          </SideBar>
         </ProjectContextProvider>}
     </Box>
   )
@@ -31,7 +24,8 @@ const Project = ({ project, session }): JSX.Element => {
 
 Project.propTypes = {
   project: PropType.object,
-  session: PropType.object
+  session: PropType.object,
+  categories: PropType.array
 }
 
 export default Project
