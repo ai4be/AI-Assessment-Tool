@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropType from 'prop-types'
 import {
   Box,
@@ -16,30 +16,33 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { AiOutlinePlus } from 'react-icons/ai'
+import { defaultFetchOptions } from '@/util/api'
 
-export default function Projects (props: any): JSX.Element {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const inputRef = useRef()
-  const { projects = [], fetchProjects }: { projects: any[], fetchProjects: Function } = props
+
+  // useEffect(() => {
+  //   console.log('inputRef', inputRef)
+  //   if (isOpen && inputRef.current != null) inputRef.current.focus()
+  // }, [isOpen, inputRef, inputRef.current])
+
+  const handleSubmit = async (e: any): Promise<void> => {
+    if (e != null) e.preventDefault()
+    if (e.key === 'Enter') await handleCreate()
+  }
 
   const handleCreate = async (): Promise<void> => {
     try {
       setIsLoading(true)
-      const data = {
+      const data: any = {
         name: inputRef.current.value
       }
 
       const response = await fetch('/api/projects', {
+        ...defaultFetchOptions,
         method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        redirect: 'follow',
-        referrerPolicy: 'no-referrer',
         body: JSON.stringify(data)
       })
 
@@ -52,40 +55,43 @@ export default function Projects (props: any): JSX.Element {
     }
   }
 
-  const createProjectModal = (): JSX.Element => {
-    return (
-      <>
-        <Button
-          onClick={onOpen}
-          leftIcon={<AiOutlinePlus />}
-          className='background-blue'
-          color='white'
-          size='lg'
-          mt='1rem'
-        >
-          Create a project
-        </Button>
-        <Modal onClose={onClose} isOpen={isOpen} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Create project</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Input
-                ref={inputRef}
-                placeholder='Project name'
-              />
-            </ModalBody>
-            <ModalFooter>
-              <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText='Creating Project'>
-                Create
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    )
-  }
+  return (
+    <>
+      <Button
+        onClick={onOpen}
+        leftIcon={<AiOutlinePlus />}
+        className='background-blue'
+        color='white'
+        size='lg'
+        mt='1rem'
+      >
+        Create a project
+      </Button>
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create project</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input
+              ref={el => {inputRef.current = el; el?.focus();}}
+              placeholder='Project name'
+              onKeyUp={handleSubmit}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText='Creating Project'>
+              Create
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
+
+export default function Projects (props: any): JSX.Element {
+  const { projects = [], fetchProjects }: { projects: any[], fetchProjects: Function } = props
 
   const loadExistingProjects = (): JSX.Element => {
     return (
@@ -135,7 +141,7 @@ export default function Projects (props: any): JSX.Element {
 
   return (
     <Box flexGrow={3} mx='2%' boxShadow='base' rounded='lg' bg='white' p='1rem'>
-      {createProjectModal()}
+      <CreateProjectModal fetchProjects={fetchProjects} />
       {loadExistingProjects()}
     </Box>
   )

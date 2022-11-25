@@ -1,13 +1,10 @@
-import { Box, Heading, Avatar, Tooltip, Button } from '@chakra-ui/react'
+import { Box, Avatar, Tooltip, AvatarGroup } from '@chakra-ui/react'
 
 import PropType from 'prop-types'
 import ProjectSettings from '@/src/components/sub-navbar/project-settings'
-import InviteModal from '@/src/components/sub-navbar/invite-user/modal'
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { AiOutlineHome } from 'react-icons/ai'
-import { fetchUsers } from '@/src/slices/users'
-// import UnsplashDrawer from '@/src/components/sub-navbar/unsplash-in-drawer'
+import { BiUser } from 'react-icons/bi'
+import { fetchUsers } from '@/util/users-fe'
 
 const SubNavbar = (props: any): JSX.Element => {
   const project = props.project
@@ -15,48 +12,24 @@ const SubNavbar = (props: any): JSX.Element => {
 
   useEffect(() => {
     const usersIds: string[] = [...project.users, project.createdBy]
-    const userPromise: Array<Promise<any>> = usersIds.map(async uId => await fetch(`/api/users/${uId}`))
-    void Promise.all(userPromise)
-      .then(results => Promise.all(results.map(r => r.json())))
-      .then(usersData => setUsers(usersData))
-  }, [project])
-
-  const loadProjectUsers = (): JSX.Element[] => {
-    return users.map((user, index) => (
-      <Tooltip label={user.fullName} aria-label='A tooltip' key={index}>
-        <Avatar size='sm' name={user.fullName} mr='5px' src='https://bit.ly/tioluwani-kolawole' />
-      </Tooltip>
-    ))
-  }
+    void fetchUsers(usersIds).then(usersData => setUsers(usersData))
+  }, [project.users, project.createdBy])
 
   return (
     <Box
       height='40px'
       display='flex'
       alignItems='center'
-      justifyContent='space-between'
-      bg='rgba(0,0,0,0.1)'
+      justifyContent='flex-end'
+      bg='transparent'
     >
+      {/* <Box>{loadProjectUsers()}</Box> */}
+      <AvatarGroup size='sm' max={4}>
+        {users.map((u, idx) => (<Avatar key={idx} bg='transparent' icon={<BiUser size='20' className='icon-blue-color' />} />))}
+      </AvatarGroup>
       <Box>
-        <Link href='/home'>
-          <Button size='xs' ml='5px' my='5px'>
-            <AiOutlineHome />
-          </Button>
-        </Link>
-        <Link href='/projects'>
-          <Button size='xs' ml='5px' mr='10px' my='5px'>
-            Projects
-          </Button>
-        </Link>
-      </Box>
-      <Heading ml='0.5rem' color='white' as='h4' size='sm' whiteSpace='nowrap' d='block'>
-        {project?.name}
-      </Heading>
-      <Box>{loadProjectUsers()}</Box>
-      <Box>
-        <InviteModal project={project} />
+        {/* <InviteModal project={project} /> */}
         <ProjectSettings project={project} />
-        {/* <UnsplashDrawer /> */}
       </Box>
     </Box>
   )

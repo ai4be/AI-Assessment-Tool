@@ -1,4 +1,6 @@
+import sanitize from 'mongo-sanitize'
 import { Db, MongoClient } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
 const { MONGODB_URI, MONGODB_DB } = process.env
 
@@ -48,3 +50,7 @@ export async function connectToDatabase (): Promise<{ client: MongoClient, db: D
   cached.conn = await cached.promise
   return cached.conn
 }
+
+export const toObjectId = (_id: string | ObjectId): ObjectId => typeof _id === 'string' ? ObjectId(sanitize(_id)) : _id
+
+export const cleanEmail = (email: string): string => sanitize(email.trim().toLowerCase())

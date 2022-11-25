@@ -2,7 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
 import { authOptions } from '../auth/[...nextauth]'
 import { unstable_getServerSession } from 'next-auth/next'
-import shortid from 'shortid'
+import { ObjectId } from 'mongodb'
+import { getUserProjects } from '@/util/project'
+import { getUser } from '@/util/user'
 
 const defaultColumns = ['to do', 'busy', 'done']
 
@@ -14,27 +16,28 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
     return res.send({ error: 'You must be signed in to access this api route' })
   }
 
-  if (client.isConnected()) {
+  if (client.isConnected() && session?.user != null) {
     const db = client.db()
-    const existingUser = await db.collection('users').findOne({ email: session.user?.email })
+    console.log('session', session)
+    const existingUser = await getUser({ email: String(session.user?.email) })
     const requestType = req.method
 
     switch (requestType) {
       case 'POST': {
         const { name } = req.body
         const data = {
-          _id: shortid.generate(),
+          _id: ObjectId(),
           name,
-          dateCreated: Date.now(),
+          createdAt: Date.now(),
           createdBy: existingUser._id,
           users: []
         }
         const project = await db.collection('projects').insertOne(data)
         const projectColsData = defaultColumns.map((cn, idx) => ({
-          _id: shortid.generate(),
+          _id: ObjectId(),
           projectId: data._id,
-          columnName: cn,
-          dateCreated: data.dateCreated,
+          name: cn,
+          createdAt: Date.now(),
           createdBy: existingUser._id,
           idx
         }))
@@ -43,16 +46,8 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         return
       }
       case 'GET': {
-        const { userid } = req.query
-        const projects = await db
-          .collection('projects')
-          .find({ createdBy: existingUser._id })
-          .limit(30)
-          .toArray()
-        const invitedProjects = await db.collection('projects').find({ users: userid }).toArray()
-        const updatedProjects = projects.concat(invitedProjects)
-
-        res.send(updatedProjects)
+        const projects = await getUserProjects(existingUser._id)
+        res.send(projects)
         break
       }
       default:

@@ -7,7 +7,7 @@ import { fetcher } from '@/util/api'
 
 export default function Page ({ session }): JSX.Element {
   const { data, error, mutate } = useSWR('/api/projects', fetcher)
-  console.log('ProjectsPage', session)
+  const { data: industries, error: errorIndustries } = useSWR('/api/industries', fetcher)
   return (
     <SideBar page='projects'>
       <Projects projects={data || []} session={session} fetchProjects={mutate} />

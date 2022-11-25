@@ -1,8 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
+import { ObjectId } from 'mongodb'
+import sanitize from 'mongo-sanitize'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from '../../../../../auth/[...nextauth]'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { slug } = req.query
+  const session = await unstable_getServerSession(req, res, authOptions)
+  let { slug, cid } = req.query
+  slug = ObjectId(sanitize(slug))
+  cid = ObjectId(sanitize(cid))
 
   const { db, client } = await connectToDatabase()
 
@@ -15,28 +22,28 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         return res.send(columns)
       }
       case 'POST': {
+        const user = await db.collection('users').findOne({ email: session?.user?.email })
         const {
-          id,
-          projectId,
-          columnId,
-          dateCreated,
-          userId,
           title,
           type,
           description,
           sequence
         } = req.body
 
-        const data = {
-          _id: id,
-          projectId,
-          columnId,
+        const tempData = {
           title,
           type,
-          dateCreated,
-          userId,
-          sequence,
-          description
+          description,
+          sequence
+        }
+        Object.keys(tempData).forEach(k => (tempData[k] = sanitize(tempData[k])))
+
+        const data = {
+          ...tempData,
+          projectId: slug,
+          columnId: cid,
+          createdAt: new Date(),
+          userId: user._id
         }
 
         const card = await db.collection('cards').insertOne(data)

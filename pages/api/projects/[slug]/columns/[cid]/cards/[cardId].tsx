@@ -1,17 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
+import { ObjectId } from 'mongodb'
+import sanitize from 'mongo-sanitize'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { cardId, cid } = req.query
+  let { cardId, cid } = req.query
+  cardId = sanitize(cardId)
+  cid = sanitize(cid)
 
   const { db, client } = await connectToDatabase()
 
   if (client.isConnected()) {
     const requestType = req.method
-
     switch (requestType) {
       // case 'PATCH': {
-      //   const { projectName, columnName, columnId } = req.body
+      //   const { projectName, name, columnId } = req.body
 
       //   const data = {
       //     projectName,
@@ -24,7 +27,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       // }
 
       case 'DELETE': {
-        await db.collection('cards').deleteOne({ _id: cardId, columnId: cid })
+        await db.collection('cards').deleteOne({ _id: ObjectId(cardId), columnId: ObjectId(cid) })
         res.send({ messsage: 'Deleted' })
         break
       }

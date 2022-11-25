@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Flex,
   Box,
@@ -14,43 +14,45 @@ import {
   AlertTitle,
   AlertIcon
 } from '@chakra-ui/react'
-import shortId from 'shortid'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
+import { defaultFetchOptions } from '@/util/api'
+import isEmpty from 'lodash.isempty'
+
+const validEmail = /^[a-zA-Z0-9._:$!%-+]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/
+const validPassword = /^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,}$/
 
 const SignUp = (): JSX.Element => {
+  const router = useRouter()
+  const toast = useToast()
+  const email = router.query.email as string
   const [values, setValues] = useState({
-    email: '',
+    email: email ?? '',
     password: '',
     fullName: '',
     confirmPassword: ''
   })
   const [isCreating, setIsCreatingStatus] = useState(false)
   const [hasError, setErrorState] = useState(false)
-
-  const toast = useToast()
-  const router = useRouter()
-
   const [emailErr, setEmailErr] = useState(false)
   const [passwordErr, setPasswordErr] = useState(false)
-  const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$')
-  const validPassword = new RegExp('^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$')
+  const [isButtonDisabled, setButtonState] = useState(true)
 
-  const validate = () => {
-    if (!validEmail.test(values.email)) {
-      setEmailErr(true)
-    } else {
-      setEmailErr(false)
-    }
+  useEffect(() => {
+    validate()
+    const isMissingFields = isEmpty(values.password) || isEmpty(values.confirmPassword) || isEmpty(values.email) || isEmpty(values.fullName)
+    const isInValidPassword = values.password !== values.confirmPassword
+    const isErrorFields = emailErr || passwordErr
+    const disabled = isInValidPassword || isMissingFields || isErrorFields
+    setButtonState(disabled)
+  }, [values.email, values.password, values.confirmPassword, values.fullName, passwordErr, emailErr])
 
-    if (!validPassword.test(values.password)) {
-      setPasswordErr(true)
-    } else {
-      setPasswordErr(false)
-    }
+  const validate = (): void => {
+    setEmailErr(!validEmail.test(values.email))
+    setPasswordErr(!validPassword.test(values.password))
   }
 
-  const showToast = () => {
+  const showToast = (): void => {
     toast({
       position: 'top',
       title: 'Account created.',
@@ -61,61 +63,45 @@ const SignUp = (): JSX.Element => {
     })
   }
 
-  const registerUser = async (e) => {
+  const registerUser = async (e): Promise<void> => {
     e.preventDefault()
     setIsCreatingStatus(true)
-
-    const id = shortId.generate()
     const { email, password, confirmPassword, fullName } = values
-
     const data = {
-      id,
       email,
       password,
       confirmPassword,
       fullName
     }
 
-    const url = '/api/register'
+    const url = '/api/auth/signup'
 
     const response = await fetch(url, {
+      ...defaultFetchOptions,
       method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
       body: JSON.stringify(data)
     })
 
     const result = await response.json()
-    setIsCreatingStatus(false)
 
     if (response.status === 404) {
       setErrorState(true)
     }
 
-    const { email: inviteEmail, token, projectId } = router.query
-    const isInvitedUser = inviteEmail && token && projectId
-
-    if (isInvitedUser && result.message === 'success') {
-      redirectToLoginPage(`/login?token=${token}&email=${inviteEmail}&projectId=${projectId}`)
-    } else {
-      if (result.message === 'success') {
-        redirectToLoginPage()
-      }
+    setIsCreatingStatus(false)
+    if (result.message === 'success') {
+      redirectToLoginPage()
     }
   }
 
-  const redirectToLoginPage = (path = '/login') => {
+  const redirectToLoginPage = (path = '/login'): void => {
     showToast()
-
-    setTimeout(() => {
-      window.location.href = path
-    }, 3000)
+    setTimeout(async () => await router.push({
+      pathname: path,
+      query: {
+        email: values.email
+      }
+    }), 3000)
   }
 
   const showSignUpError = (): JSX.Element => {
@@ -142,15 +128,6 @@ const SignUp = (): JSX.Element => {
       ...values,
       [name]: value
     })
-
-    validate()
-  }
-
-  const isButtonDisabled = (): boolean => {
-    const isValidPassword = values.password !== values.confirmPassword
-    const isDisabled = !values.email || !values.fullName
-
-    return isValidPassword || isDisabled || !values.password || !values.confirmPassword
   }
 
   return (
@@ -243,7 +220,7 @@ const SignUp = (): JSX.Element => {
               fontWeight='semibold'
               width='full'
               mt={4}
-              disabled={isButtonDisabled()}
+              disabled={isButtonDisabled}
               bg='success'
               color='white'
               onClick={registerUser}

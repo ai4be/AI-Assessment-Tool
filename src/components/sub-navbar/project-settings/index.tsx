@@ -4,6 +4,8 @@ import {
   Input,
   Box,
   useDisclosure,
+  useToast,
+  UseToastOptions,
   Modal,
   ModalOverlay,
   ModalHeader,
@@ -22,63 +24,116 @@ import {
 } from '@chakra-ui/react'
 import { AiFillSetting, AiOutlineDelete, AiOutlineCheck } from 'react-icons/ai'
 import { useRouter } from 'next/router'
+import Roles from './roles'
+import Team from './team'
+import { defaultFetchOptions } from '@/util/api'
+import ConfirmDialog from '../../confirm-dialog'
 
-const ProjectSettings = ({ project }): JSX.Element => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const TabProjectName = ({ project }): JSX.Element => {
+  const toast = useToast()
+  const [projectName, setProjectName] = useState(project.name)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+
+  const showToast = (title: string, desc: string, status: any = 'success'): void => {
+    status = status as UseToastOptions['status']
+    toast({
+      position: 'top',
+      title,
+      description: desc,
+      status,
+      duration: 2500,
+      isClosable: true
+    })
+  }
 
   const handleSave = async (): Promise<void> => {
     setIsLoading(true)
     const data = {
-      _id: project._id as string,
-      name: project.name,
-      dateCreated: project.dateCreated,
-      createdBy: project.createdBy,
+      name: projectName,
       backgroundImage: project.backgroundImage
     }
 
-    const url = `/api/projects/${data._id}`
-
+    const url = `/api/projects/${String(project._id)}`
     const response = await fetch(url, {
+      ...defaultFetchOptions,
       method: 'PATCH',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
       body: JSON.stringify(data)
     })
-
-    const json = await response.json()
-    // TODO use context to set project
-    onClose()
+    if (response.ok) {
+      project.name = projectName
+      showToast('Success', 'Title changed successfully')
+    } else {
+      showToast('Error', 'Something went wrong', 'error')
+    }
     setIsLoading(false)
   }
 
+  return (
+    <>
+      <FormControl id='email'>
+        <FormLabel>Project name</FormLabel>
+        <Input
+          value={projectName}
+          onChange={(e) => (setProjectName(e.target.value))}
+        />
+        <FormHelperText>You can change this any time</FormHelperText>
+      </FormControl>
+      <Box align='right'>
+        <Button
+          backgroundColor='success'
+          color='white'
+          onClick={handleSave}
+          disabled={isLoading || projectName == null || projectName === ''}
+          isLoading={isLoading}
+        >
+          <AiOutlineCheck /> &nbsp; Save
+        </Button>
+      </Box>
+    </>
+  )
+}
+
+const TabDelete = ({ project }): JSX.Element => {
+  const [isLoading, setIsLoading] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const router = useRouter()
+
   const handleDelete = async (): Promise<void> => {
     setIsLoading(true)
-    const _id = project._id
-    const url = `/api/projects/${_id}`
+    const url = `/api/projects/${String(project._id)}`
     const response = await fetch(url, {
-      method: 'DELETE',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer'
+      ...defaultFetchOptions,
+      method: 'DELETE'
     })
     if (response.ok) {
       await router.push('/projects')
     }
     setIsLoading(false)
   }
+  return (
+    <>
+      <p>To delete your project, Click on Delete button.</p>
+      <Box align='right'>
+        <Button
+          bg='red.500'
+          color='white'
+          onClick={onOpen}
+          _hover={{
+            backgroundColor: 'red.600'
+          }}
+          isLoading={isLoading}
+          loadingText='Deleting'
+        >
+          <AiOutlineDelete /> &nbsp;Delete
+        </Button>
+      </Box>
+      <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={handleDelete} />
+    </>
+  )
+}
+
+const ProjectSettings = ({ project }): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
@@ -95,44 +150,21 @@ const ProjectSettings = ({ project }): JSX.Element => {
               <TabList mb='2rem'>
                 <Tab>Basic</Tab>
                 <Tab>Advance</Tab>
+                <Tab>Team</Tab>
+                <Tab>Roles</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <FormControl id='email'>
-                    <FormLabel>Project name</FormLabel>
-                    <Input
-                      value={project.name}
-                      onChange={(e) => (project.name = e.target.value)}
-                    />
-                    <FormHelperText>You can change this any time</FormHelperText>
-                  </FormControl>
-                  <Box align='right'>
-                    <Button
-                      backgroundColor='success'
-                      color='white'
-                      onClick={handleSave}
-                      isLoading={isLoading}
-                    >
-                      <AiOutlineCheck /> &nbsp; Save
-                    </Button>
-                  </Box>
+                  <TabProjectName project={project} />
                 </TabPanel>
                 <TabPanel>
-                  <p>To delete your project, Click on Delete button.</p>
-                  <Box align='right'>
-                    <Button
-                      bg='red.500'
-                      color='white'
-                      onClick={handleDelete}
-                      _hover={{
-                        backgroundColor: 'red.600'
-                      }}
-                      isLoading={isLoading}
-                      loadingText='Deleting'
-                    >
-                      <AiOutlineDelete /> &nbsp;Delete
-                    </Button>
-                  </Box>
+                  <TabDelete project={project} />
+                </TabPanel>
+                <TabPanel>
+                  <Team project={project} />
+                </TabPanel>
+                <TabPanel>
+                  <Roles project={project} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

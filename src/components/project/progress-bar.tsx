@@ -13,7 +13,7 @@ const gradientBGC = 'linear-gradient(89.87deg, #182FFF 7.28%, rgba(234, 226, 253
 
 const ProgressBar: FC<any> = (): JSX.Element => {
   return (
-    <Flex width='100%' justifyContent='center' alignItems='center' mt='2rem' backgroundColor='white'>
+    <Flex width='100%' justifyContent='center' alignItems='center' backgroundColor='white'>
       {SECTIONS.map((s, idx) => (
         <Flex
           key={s + String(idx)}
@@ -34,7 +34,7 @@ const ProgressBar: FC<any> = (): JSX.Element => {
           borderLeftRadius={idx === 0 ? borderRadiusOutside : '0px'}
           borderRightRadius={idx !== SECTIONS_MAX_IDX ? borderRadiusInner : borderRadiusOutside}
           marginLeft={idx > 0 ? `-${marginLeft}` : 0}
-          zIndex={1000 - idx}
+          zIndex={10 - idx}
         >
           {s}
         </Flex>

@@ -21,7 +21,7 @@ import { GrTextAlignFull } from 'react-icons/gr'
 import CardLabel from '@/src/components/project/columns/modals/card-labels-menu'
 import QuillEditor from '@/src/components/quill-editor'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers } from '@/util/users'
+import { fetchUsers } from '@/util/users-fe'
 import { updateCard } from '@/util/cards'
 
 interface Props {

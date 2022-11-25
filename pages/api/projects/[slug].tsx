@@ -1,35 +1,33 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
+import sanitize from 'mongo-sanitize'
+import { ObjectId } from 'mongodb'
+import { deleteProject, getProject, updateProject } from '@/util/project'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { slug } = req.query
-
+  let { slug } = req.query
+  slug = ObjectId(sanitize(slug))
   const { db, client } = await connectToDatabase()
 
   if (client.isConnected()) {
     const requestType = req.method
     switch (requestType) {
       case 'GET': {
-        const project = await db.collection('projects').findOne({ _id: slug })
+        const project = await getProject(slug)
         return res.send(project)
       }
       case 'PATCH': {
-        const { _id, name, dateCreated, createdBy, backgroundImage } = req.body
-        const data = {
-          _id,
-          name,
-          dateCreated,
-          createdBy,
-          backgroundImage
-        }
-
-        const project = await db.collection('projects').updateOne({ _id: slug }, { $set: data })
-        return res.send(project)
+        let { name, backgroundImage } = req.body
+        name = sanitize(name)
+        backgroundImage = sanitize(backgroundImage)
+        const success = await updateProject(slug, { name, backgroundImage })
+        return success ? res.status(201).end() : res.status(400).end()
       }
       case 'DELETE': {
-        await db.collection('cards').remove({ projectId: slug })
-        await db.collection('columns').remove({ projectId: slug })
-        await db.collection('projects').deleteOne({ _id: slug })
+        // TODO move next function to own file and call in project delete function
+        await db.collection('cards').remove({ projectId: ObjectId(slug) })
+        await db.collection('columns').remove({ projectId: ObjectId(slug) })
+        await deleteProject(slug)
 
         res.send({ messsage: 'Delete project with columns and cards' })
         break

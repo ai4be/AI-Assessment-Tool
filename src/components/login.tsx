@@ -8,7 +8,6 @@ import {
   Button,
   Image,
   Link,
-  Text,
   Alert,
   AlertDescription,
   CloseButton,
@@ -16,48 +15,42 @@ import {
   AlertIcon
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { inviteUser } from '@/util/users'
 import { AI4BelgiumIcon } from './navbar'
 
 const Login = (): JSX.Element => {
+  const router = useRouter()
+  const { email: emailQuery, token, projectId } = router.query
   const [values, setValues] = useState({
-    email: '',
+    email: emailQuery ?? '',
     password: ''
   })
 
   const [isFetching, setIsFetching] = useState(false)
   const [hasError, setErrorState] = useState(false)
 
-  const router = useRouter()
-
   const loginUser = async (e): Promise<void> => {
     e.preventDefault()
     setIsFetching(true)
 
-    const result = await signIn('credentials', {
+    const signinOptions: any = {
       redirect: false,
       email: values.email,
       password: values.password
-    })
+    }
+    if (token != null) signinOptions.token = token
+    if (projectId != null) signinOptions.projectId = projectId
+    console.log(signinOptions)
+    const result = await signIn('credentials', signinOptions)
 
     setIsFetching(false)
-
-    const { email: inviteEmail, token, projectId } = router.query
-    const isInvitedUser = inviteEmail && token && projectId
-
-    if (isInvitedUser && result?.ok === true) {
-      const hasInvited = await inviteUser({ email: inviteEmail, projectId })
-      if (hasInvited) await router.push('/home')
-    } else if (result?.ok === true) {
-      await router.push('/home')
-    }
+    if (result?.ok === true) await router.push('/home')
 
     if (result?.status === 404 || result?.status === 401) {
       setErrorState(true)
     }
   }
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const { name, value } = e.target
     setValues({
       ...values,

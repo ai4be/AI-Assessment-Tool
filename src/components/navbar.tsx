@@ -42,7 +42,6 @@ const NavBar: FC<IProps> = ({ bg }) => {
   }
 
   const renderButtons = (): JSX.Element => {
-    console.log(data)
     if (data != null) {
       return (
         <>
@@ -69,22 +68,6 @@ const NavBar: FC<IProps> = ({ bg }) => {
           </Menu>
         </>
       )
-      // return (
-      //   <>
-      //     <Button fontSize='20' variant='link'><BiUser className='icon-blue-color' /></Button>
-      //     <Button
-      //       fontSize='20'
-      //       color='danger'
-      //       variant='link'
-      //       float='right'
-      //       mr='2'
-      //       pr='2'
-      //       onClick={logout}
-      //     >
-      //       <GrLogout />
-      //     </Button>
-      //   </>
-      // )
     }
 
     return (
@@ -102,9 +85,9 @@ const NavBar: FC<IProps> = ({ bg }) => {
   return (
     <Box bg={bg} boxShadow='md'>
       <Flex>
-        <Link href='/'>
+        <Box href='/' onClick={() => router.push('/home')}>
           <AI4BelgiumIcon />
-        </Link>
+        </Box>
         <Spacer />
         {renderButtons()}
       </Flex>

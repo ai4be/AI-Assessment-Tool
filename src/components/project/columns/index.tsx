@@ -1,4 +1,4 @@
-import React, { useState, FC, useEffect } from 'react'
+import React, { useState, FC, useEffect, useContext } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import CardDetailsModal from '@/src/components/project/columns/modals/card-details-modal'
 import Column from '@/src/components/project/columns/column'
@@ -8,7 +8,7 @@ import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
 import { updateColumn } from '@/util/columns'
 import { fetcher } from '@/util/api'
-// import useRenderingTrace from '@/src/hooks'
+import { useRouter } from 'next/router'
 
 interface IProps {
   projectId: string
@@ -16,6 +16,8 @@ interface IProps {
 }
 
 const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string, session: any }): JSX.Element => {
+  const router = useRouter()
+  const { card: cardId, cat: categoryId } = router.query
   const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
   const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
 
@@ -34,6 +36,18 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     }
   }, [data])
   useEffect(() => setCards(dataCards || []), [dataCards])
+  useEffect(() => {
+    if (cardId != null && Array.isArray(cards)) {
+      const card = cards.find((card) => card._id === cardId)
+      if (card != null) showCardDetail(card._id)
+      else {
+        void router.push({
+          pathname: router.route,
+          query: { ...router.query, card: undefined }
+        }, undefined, { shallow: true })
+      }
+    }
+  }, [cardId, cards])
 
   const setColumnsSorted = (cols: any[]): void => {
     cols.sort((a, b) => a.sequence - b.sequence)
@@ -41,9 +55,21 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
   }
 
   const showCardDetail = (cardId: string): void => {
-    const card = cards.filter((card) => card._id === cardId)
-    setCardDetail(card[0])
+    const card = cards.find(card => card._id === cardId)
+    void router.push({
+      pathname: router.route,
+      query: { ...router.query, card: cardId }
+    }, undefined, { shallow: true })
+    setCardDetail(card)
     onOpen()
+  }
+
+  const hideCardDetail = (): void => {
+    void router.push({
+      pathname: router.route,
+      query: { ...router.query, card: undefined }
+    }, undefined, { shallow: true })
+    onClose()
   }
 
   const filterCards = (columnId: string): any[] => {
@@ -59,10 +85,6 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     // If card is being dragged
     if (type === 'card') {
       return await saveCardSequence(destination.index, destination.droppableId, draggableId)
-    }
-    // If column is being dragged
-    if (type === 'column') {
-      return await saveColumnSequence(destination.index, draggableId)
     }
   }
 
@@ -100,32 +122,6 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     // await mutateCards()
   }
 
-  const saveColumnSequence = async (destinationIndex: number, columnId: string): Promise<void> => {
-    // Remove the column which is dragged from the list
-    const filteredColumns: any[] = columns.filter((column) => column._id !== columnId)
-    const sortedColumns = filteredColumns.sort((a, b) => a.sequence - b.sequence)
-    let sequence = +(destinationIndex === 0 ? 1 : sortedColumns[destinationIndex - 1].sequence + 1)
-
-    const column = columns.find(c => c._id === columnId)
-    if (column == null) return
-    column.sequence = sequence
-    const promises: Array<Promise<any>> = [updateColumn({ columnId, projectId, sequence })]
-    for (let i = destinationIndex; i < sortedColumns.length; i++) {
-      const column = sortedColumns[i]
-      sequence += 1
-      column.sequence = sequence
-      const patchColumn = {
-        columnId: column._id,
-        sequence,
-        projectId
-      }
-      promises.push(updateColumn(patchColumn))
-    }
-    setColumnsSorted([...columns])
-    await Promise.all(promises)
-    // await mutate()
-  }
-
   return (
     <Box>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -150,7 +146,7 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
           )}
         </Droppable>
       </DragDropContext>
-      {isOpen && <CardDetailsModal isOpen={isOpen} onClose={onClose} card={cardDetail} projectId={projectId} fetchCards={mutateCards} />}
+      {isOpen && <CardDetailsModal isOpen={isOpen} onClose={hideCardDetail} card={cardDetail} projectId={projectId} fetchCards={mutateCards} />}
     </Box>
   )
 }

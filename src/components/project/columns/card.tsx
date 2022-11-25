@@ -3,7 +3,7 @@ import { Box, Badge, Avatar } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import { CardDetail } from '@/src/types/cards'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers } from '@/util/users'
+import { fetchUsers } from '@/util/users-fe'
 
 interface Props {
   showCardDetail: (cardId: string) => void

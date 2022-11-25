@@ -1,8 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
+import { ObjectId } from 'mongodb'
+import sanitize from 'mongo-sanitize'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { slug } = req.query
+  let { slug } = req.query
+  slug = sanitize(slug)
 
   const { db, client } = await connectToDatabase()
 
@@ -11,7 +14,8 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 
     switch (requestType) {
       case 'GET': {
-        const user = await db.collection('users').findOne({ _id: slug })
+        const user = await db.collection('users').findOne({ _id: ObjectId(slug) })
+        console.log(slug, user)
         res.send(user)
         break
       }

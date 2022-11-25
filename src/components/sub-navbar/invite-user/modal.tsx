@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { SyntheticEvent, useState, BaseSyntheticEvent } from 'react'
 import {
+  Box,
   Modal,
   ModalBody,
   ModalOverlay,
@@ -9,18 +10,21 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Input
+  Input,
 } from '@chakra-ui/react'
+import { defaultFetchOptions } from '@/util/api'
 
-const InviteModal = ({ project }) => {
+const InviteModal = ({ project, callback }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [email, setEmail] = useState('')
   const [emailErr, setEmailErr] = useState(false)
   const [isMailSending, setMailSending] = useState(false)
 
-  const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$')
+  const validEmail = /^[a-zA-Z0-9._:$!%-+]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/
 
-  const handleClick = async (): Promise<void> => {
+  const handleClick = async (e: SyntheticEvent): Promise<void> => {
+    if (e?.preventDefault != null) e.preventDefault()
+    if (e.nativeEvent instanceof KeyboardEvent && e.nativeEvent.key !== 'Enter') return
     setMailSending(true)
     await sendEmail()
     setMailSending(false)
@@ -30,6 +34,7 @@ const InviteModal = ({ project }) => {
     setEmail(e.target.value)
     validate()
   }
+
   const validate = (): void => {
     if (!validEmail.test(email)) {
       setEmailErr(true)
@@ -38,35 +43,31 @@ const InviteModal = ({ project }) => {
     }
   }
 
-  const sendEmail = async () => {
+  const sendEmail = async (): Promise<void> => {
     const url = '/api/mail'
-
     const response = await fetch(url, {
+      ...defaultFetchOptions,
       method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
       body: JSON.stringify({ email, projectId: project._id })
     })
-
-    const inJSON = await response.json()
-
-    if (inJSON.status === 200) {
+    if (response.ok) {
       onClose()
       setEmail('')
+      if (callback != null && typeof callback === 'function') await callback()
     }
   }
 
   return (
     <>
-      <Button onClick={onOpen} size='xs' ml='5px'>
-        Invite
-      </Button>
+      <Box align='right'>
+        <Button
+          backgroundColor='success'
+          color='white'
+          onClick={onOpen}
+        >
+          Invite
+        </Button>
+      </Box>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
@@ -77,7 +78,9 @@ const InviteModal = ({ project }) => {
               type='email'
               value={email}
               onChange={handleChange}
-              placeholder='Enter your email'
+              placeholder='Enter the email'
+              onKeyUp={handleClick}
+              ref={el => el?.focus()}
             />
           </ModalBody>
           {emailErr && <p>{emailErr}</p>}

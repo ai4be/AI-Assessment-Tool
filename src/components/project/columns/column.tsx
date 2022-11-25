@@ -3,16 +3,8 @@ import {
   Box,
   Button,
   Heading,
-  Input,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Text,
-  MenuDivider
+  Input
 } from '@chakra-ui/react'
-import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'
-import { FiMoreHorizontal } from 'react-icons/fi'
 import Cards from '@/src/components/project/columns/cards'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 import debounce from 'lodash.debounce'
@@ -20,7 +12,6 @@ import { CardDetail } from '@/src/types/cards'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'
 import {
-  // deleteColumn,
   updateColumn
 } from '@/util/columns'
 
@@ -31,7 +22,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
 
   const user: any = data?.user
 
-  const [columnName, setColumnName] = useState<string>(column.columnName)
+  const [columnName, setColumnName] = useState<string>(column.name)
   const cardsInSortedSequence = cards.sort(
     (cardA: CardDetail, cardB: CardDetail) => cardA.sequence - cardB.sequence
   )
@@ -93,7 +84,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
   const nameChange = async (value): Promise<void> => {
     setIsLoading(true)
     const data = {
-      columnName: value,
+      name: value,
       columnId: column._id,
       projectId
     }
