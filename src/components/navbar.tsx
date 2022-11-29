@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import { Button, Image, Flex, Box, Spacer,
   Menu,
   MenuButton,
@@ -15,6 +15,7 @@ import { IoIosNotificationsOutline } from 'react-icons/io'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import ProjectContext from '@/src/store/project-context'
 
 interface IProps {
   bg?: string
@@ -27,13 +28,17 @@ export const AI4BelgiumIcon = (): JSX.Element => (
 )
 
 const NavBar: FC<IProps> = ({ bg }) => {
-  const [session, setSession] = useState(undefined)
+  const { users } = useContext(ProjectContext)
+  const [user, setUser] = useState(undefined)
   const { data } = useSession()
   const router = useRouter()
 
   useEffect(() => {
-    if (data != null) setSession(data)
-  }, [data])
+    if (data?.user != null && Array.isArray(users)) {
+      const u = users.find(u => u.email === data?.user?.email)
+      setUser(u)
+    }
+  }, [data, users])
 
   const logout = async (): Promise<void> => {
     // const response =
@@ -56,8 +61,9 @@ const NavBar: FC<IProps> = ({ bg }) => {
               <Flex justifyContent='center' alignItems='center'>
                 <Avatar
                   size='sm'
-                  backgroundColor='#F0EEF9'
-                  icon={<BiUser size='20' className='icon-blue-color' />}
+                  name={user?.fullName ?? user?.email}
+                  // backgroundColor='#F0EEF9'
+                  // icon={<BiUser size='20' className='icon-blue-color' />}
                 />
                 <RiArrowDropDownLine color='#F0EEF9' size='20' />
               </Flex>

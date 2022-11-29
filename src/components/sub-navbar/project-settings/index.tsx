@@ -140,12 +140,12 @@ const ProjectSettings = ({ project }): JSX.Element => {
       <Button onClick={onOpen} size='xs' as={Button} m='5px'>
         <AiFillSetting />
       </Button>
-      <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered>
+      <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered scrollBehavior='inside'>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent height={['100vh', '60vh']} minWidth='370px'>
           <ModalHeader>Project Settings</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody overflowY='scroll'>
             <Tabs isFitted variant='enclosed'>
               <TabList mb='2rem'>
                 <Tab>Basic</Tab>

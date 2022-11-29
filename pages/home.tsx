@@ -1,9 +1,9 @@
 import Projects from '@/src/components/projects'
-import { unstable_getServerSession } from 'next-auth/next'
-import { authOptions } from './api/auth/[...nextauth]'
 import SideBar from '@/src/components/side-bar'
+import { authOptions } from './api/auth/[...nextauth]'
 import useSWR from 'swr'
 import { fetcher } from '@/util/api'
+import { unstable_getServerSession } from 'next-auth/next'
 
 export default function Page ({ session }): JSX.Element {
   const { data, error, mutate } = useSWR('/api/projects', fetcher)
@@ -15,8 +15,8 @@ export default function Page ({ session }): JSX.Element {
   )
 }
 
-export async function getServerSideProps (context): Promise<any> {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+export async function getServerSideProps (ctx): Promise<any> {
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
 
   if (session == null) {
     return {

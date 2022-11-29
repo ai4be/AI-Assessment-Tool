@@ -1,6 +1,6 @@
 import Project from '@/src/components/project'
-import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from '../api/auth/[...nextauth]'
+import { unstable_getServerSession } from 'next-auth/next'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import { fetcher } from '@/util/api'
@@ -16,8 +16,8 @@ function Page ({ session }): JSX.Element {
   )
 }
 
-export async function getServerSideProps (context): Promise<any> {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+export async function getServerSideProps (ctx): Promise<any> {
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
 
   if (session == null) {
     return {

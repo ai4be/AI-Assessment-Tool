@@ -43,7 +43,11 @@ const Login = (): JSX.Element => {
     const result = await signIn('credentials', signinOptions)
 
     setIsFetching(false)
-    if (result?.ok === true) await router.push('/home')
+    console.log('signIn', result)
+    if (result?.ok === true) {
+      console.log('redirecting to home')
+      await router.push('/home')
+    }
 
     if (result?.status === 404 || result?.status === 401) {
       setErrorState(true)

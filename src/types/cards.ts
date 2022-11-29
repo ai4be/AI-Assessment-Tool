@@ -1,7 +1,7 @@
-export interface CardDetail {
+export interface Card {
   _id: string
   title: string
-  description: string
+  desc: string
   columnId?: string
   assignedTo?: string
   projectId?: string
@@ -12,8 +12,4 @@ export interface CardDetail {
 export interface Label {
   bg: string
   type: string
-}
-
-export interface CardSlice {
-  cards: CardDetail[]
 }

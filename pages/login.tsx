@@ -1,13 +1,12 @@
 import Login from '@/src/components/login'
-import { unstable_getServerSession } from 'next-auth/next'
-import { authOptions } from './api/auth/[...nextauth]'
+import { getSession } from 'next-auth/react'
 
 export default function LoginPage ({ session }): JSX.Element {
   return (<Login />)
 }
 
 export async function getServerSideProps (ctx): Promise<any> {
-  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
+  const session = await getSession()
 
   if (session != null) {
     return {

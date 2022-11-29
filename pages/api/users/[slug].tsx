@@ -1,35 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
-import { ObjectId } from 'mongodb'
-import sanitize from 'mongo-sanitize'
+import { getUser } from '@/util/user'
+import { authOptions } from '../auth/[...nextauth]'
+import { unstable_getServerSession } from 'next-auth/next'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { slug } = req.query
-  slug = sanitize(slug)
+  const session = await unstable_getServerSession(req, res, authOptions)
+  const { slug } = req.query
+  const { client } = await connectToDatabase()
 
-  const { db, client } = await connectToDatabase()
+  if (session?.user == null) return res.status(401).send({ msg: 'Unauthorized', status: 401 })
+  if (!client.isConnected()) return res.status(500).send({ msg: 'DB connection error', status: 500 })
 
-  if (client.isConnected()) {
-    const requestType = req.method
-
-    switch (requestType) {
-      case 'GET': {
-        const user = await db.collection('users').findOne({ _id: ObjectId(slug) })
-        console.log(slug, user)
-        res.send(user)
-        break
-      }
-      case 'PATCH': {
-        break
-      }
-      case 'DELETE': {
-        break
-      }
-      default:
-        res.send({ message: 'DB error' })
-        break
+  switch (req.method) {
+    case 'GET': {
+      const user = await getUser({ _id: slug })
+      return res.send(user)
     }
-  } else {
-    res.send({ msg: 'DB connection error', status: 400 })
+    default:
+      return res.status(404).send({ message: 'Not found' })
   }
 }

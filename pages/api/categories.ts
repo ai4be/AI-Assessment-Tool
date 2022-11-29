@@ -45,13 +45,11 @@ export const categories = [
 ]
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const requestType = req.method
-  switch (requestType) {
+  switch (req.method) {
     case 'GET': {
       return res.send(categories)
     }
     default:
-      res.send({ message: 'DB error' })
-      break
+      return res.status(404).send({ message: 'Not found' })
   }
 }

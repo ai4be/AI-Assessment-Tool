@@ -38,6 +38,7 @@ export const getToken = async ({ _id, token }: { _id?: string | ObjectId, token?
 }
 
 export const invitedUserHandler = async (token: string, email: string): Promise<void> => {
+  console.log('invitedUserHandler', token, email)
   token = sanitize(token)
   email = cleanEmail(email)
   const { db } = await connectToDatabase()

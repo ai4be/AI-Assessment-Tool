@@ -49,7 +49,7 @@ export function ProjectContextProvider (props: any): JSX.Element {
   useEffect((): void => {
     if (Array.isArray(project.users)) {
       void fetchUsersByProjectId(project._id).then(u => {
-        console.log('fetchUsers', project.users, u)
+        console.log('fetchUsers PROJECT', project.users, u)
         setUsers(u)
       })
     }

@@ -32,6 +32,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
       method: 'DELETE'
     })
     if (response.ok) {
+      context.users = context.users.filter((u: any) => u._id !== user._id)
       project.users = project.users.filter(uid => uid !== user._id)
       context.setProject(project)
     }
@@ -71,7 +72,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
           <Flex key={user._id} justifyContent='space-between' alignItems='center'>
             <Box>{user.fullName || user.email}</Box>
             {user._id.toString() !== project.createdBy.toString()
-              ? (<RiDeleteBin6Line cursor='pointer' onClick={() => setDeleteHandlerWrapper(user, false)} color='var(--main-blue)' />)
+              ? (<RiDeleteBin6Line cursor='pointer' onClick={() => setDeleteHandlerWrapper(user)} color='var(--main-blue)' />)
               : (<></>)}
           </Flex>
         ))}

@@ -32,3 +32,9 @@ export const getUsers = async (userIds: Array<string | ObjectId>, omitFields: st
   omitFields.forEach(field => (projection[field] = 0))
   return await db.collection(TABLE_NAME).find({ _id: { $in: userIds } }, { projection }).toArray()
 }
+
+export const createUser = async ({ email, password, fullName }: { email: string, password: string, fullName: string }): Promise<User> => {
+  const { db } = await connectToDatabase()
+  const res = await db.collection(TABLE_NAME).insertOne({ email, password, fullName })
+  return { email, password, fullName, _id: res.insertedId }
+}

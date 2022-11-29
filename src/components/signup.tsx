@@ -26,6 +26,7 @@ const SignUp = (): JSX.Element => {
   const router = useRouter()
   const toast = useToast()
   const email = router.query.email as string
+  const token = router.query.token as string
   const [values, setValues] = useState({
     email: email ?? '',
     password: '',
@@ -67,12 +68,13 @@ const SignUp = (): JSX.Element => {
     e.preventDefault()
     setIsCreatingStatus(true)
     const { email, password, confirmPassword, fullName } = values
-    const data = {
+    const data: any = {
       email,
       password,
       confirmPassword,
       fullName
     }
+    if (token != null) data.token = token
 
     const url = '/api/auth/signup'
 

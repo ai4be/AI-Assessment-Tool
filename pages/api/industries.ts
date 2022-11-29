@@ -24,13 +24,11 @@ const industries = [
 ].map((i, idx) => ({ name: i, key: i.toLowerCase().replace(/ /g, '_'), _id: idx }))
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const requestType = req.method
-  switch (requestType) {
+  switch (req.method) {
     case 'GET': {
       return res.send(industries)
     }
     default:
-      res.send({ message: 'DB error' })
-      break
+      return res.status(404).send({ message: 'Not found' })
   }
 }

@@ -1,20 +1,12 @@
+import React, { useEffect, useState, useContext } from 'react'
 import { Box, Avatar, Tooltip, AvatarGroup } from '@chakra-ui/react'
 
 import PropType from 'prop-types'
 import ProjectSettings from '@/src/components/sub-navbar/project-settings'
-import React, { useEffect, useState } from 'react'
-import { BiUser } from 'react-icons/bi'
-import { fetchUsers } from '@/util/users-fe'
+import ProjectContext from '@/src/store/project-context'
 
-const SubNavbar = (props: any): JSX.Element => {
-  const project = props.project
-  const [users, setUsers]: [any[], Function] = useState([])
-
-  useEffect(() => {
-    const usersIds: string[] = [...project.users, project.createdBy]
-    void fetchUsers(usersIds).then(usersData => setUsers(usersData))
-  }, [project.users, project.createdBy])
-
+const SubNavbar = ({ project }): JSX.Element => {
+  const { users } = useContext(ProjectContext)
   return (
     <Box
       height='40px'
@@ -24,8 +16,9 @@ const SubNavbar = (props: any): JSX.Element => {
       bg='transparent'
     >
       {/* <Box>{loadProjectUsers()}</Box> */}
-      <AvatarGroup size='sm' max={4}>
-        {users.map((u, idx) => (<Avatar key={idx} bg='transparent' icon={<BiUser size='20' className='icon-blue-color' />} />))}
+      <AvatarGroup size='sm' max={5}>
+        {/* {users.map((u, idx) => (<Avatar key={idx} bg='transparent' icon={<BiUser size='20' className='icon-blue-color' />} />))} */}
+        {users.map(user => <Avatar key={user._id} name={user.fullName ?? user.email} />)}
       </AvatarGroup>
       <Box>
         {/* <InviteModal project={project} /> */}

@@ -17,11 +17,8 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
     const requestType = req.method
     switch (requestType) {
       case 'POST': {
-        let { name, desc } = req.body
-        name = sanitize(name)
-        desc = sanitize(desc)
-        const _id = ObjectId()
-        const role = await addRole(slug, { _id, name, desc })
+        const { name, desc } = req.body
+        const role = await addRole(slug, { name, desc })
         return res.status(200).json(role)
       }
       default:

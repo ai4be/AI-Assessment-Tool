@@ -12,11 +12,9 @@ export const deleteColumn = async (columnId: string, projectId: string): Promise
 
   const response = await fetch(url, {
     ...defaultFetchOptions,
-    method: 'DELETE',
+    method: 'DELETE'
   })
-
   const inJSON = await response.json()
-
   return inJSON
 }
 

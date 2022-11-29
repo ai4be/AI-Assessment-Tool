@@ -12,48 +12,41 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   const session = await unstable_getServerSession(req, res, authOptions)
   const { client } = await connectToDatabase()
 
-  if (session == null) {
-    return res.send({ error: 'You must be signed in to access this api route' })
-  }
+  if (session?.user == null) return res.status(401).send({ msg: 'Unauthorized', status: 401 })
+  if (!client.isConnected()) return res.status(500).send({ msg: 'DB connection error', status: 500 })
 
-  if (client.isConnected() && session?.user != null) {
-    const db = client.db()
-    console.log('session', session)
-    const existingUser = await getUser({ email: String(session.user?.email) })
-    const requestType = req.method
+  const db = client.db()
+  const existingUser = await getUser({ email: String(session.user?.email) })
 
-    switch (requestType) {
-      case 'POST': {
-        const { name } = req.body
-        const data = {
-          _id: ObjectId(),
-          name,
-          createdAt: Date.now(),
-          createdBy: existingUser._id,
-          users: []
-        }
-        const project = await db.collection('projects').insertOne(data)
-        const projectColsData = defaultColumns.map((cn, idx) => ({
-          _id: ObjectId(),
-          projectId: data._id,
-          name: cn,
-          createdAt: Date.now(),
-          createdBy: existingUser._id,
-          idx
-        }))
-        await db.collection('columns').insertMany(projectColsData)
-        res.send(project)
-        return
+  switch (req.method) {
+    case 'POST': {
+      const { name } = req.body
+      const data = {
+        _id: ObjectId(),
+        name,
+        createdAt: Date.now(),
+        createdBy: existingUser._id,
+        users: []
       }
-      case 'GET': {
-        const projects = await getUserProjects(existingUser._id)
-        res.send(projects)
-        break
-      }
-      default:
-        break
+      const project = await db.collection('projects').insertOne(data)
+      const projectColsData = defaultColumns.map((cn, idx) => ({
+        _id: ObjectId(),
+        projectId: data._id,
+        name: cn,
+        createdAt: Date.now(),
+        createdBy: existingUser._id,
+        idx
+      }))
+      await db.collection('columns').insertMany(projectColsData)
+      res.send(project)
+      return
     }
-  } else {
-    res.send([])
+    case 'GET': {
+      const projects = await getUserProjects(existingUser._id)
+      res.send(projects)
+      break
+    }
+    default:
+      return res.status(404).send({ message: 'Not found' })
   }
 }

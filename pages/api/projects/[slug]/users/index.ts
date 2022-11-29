@@ -2,29 +2,22 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/util/mongodb'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
-import sanitize from 'mongo-sanitize'
-import { ObjectId } from 'mongodb'
 import { getProjectUsers } from '@/util/project'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
   const { client } = await connectToDatabase()
 
-  if (client.isConnected()) {
-    let { slug } = req.query
-    slug = ObjectId(sanitize(slug))
-    const requestType = req.method
+  if (session?.user == null) return res.status(401).send({ msg: 'Unauthorized', status: 401 })
+  if (!client.isConnected()) return res.status(500).send({ msg: 'DB connection error', status: 500 })
 
-    switch (requestType) {
-      case 'GET': {
-        const users = await getProjectUsers(slug)
-        return res.status(200).json(users)
-      }
-      default:
-        res.send({ message: 'DB error' })
-        break
+  const { slug } = req.query
+  switch (req.method) {
+    case 'GET': {
+      const users = await getProjectUsers(slug)
+      return res.status(200).json(users)
     }
-  } else {
-    res.send({ msg: 'DB connection error', status: 400 })
+    default:
+      return res.status(404).send({ message: 'Not found' })
   }
 }

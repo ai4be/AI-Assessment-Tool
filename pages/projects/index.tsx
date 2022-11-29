@@ -15,8 +15,8 @@ export default function Page ({ session }): JSX.Element {
   )
 }
 
-export async function getServerSideProps (context): Promise<any> {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+export async function getServerSideProps (ctx): Promise<any> {
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
 
   if (session == null) {
     return {

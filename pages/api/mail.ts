@@ -58,32 +58,29 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   const { client } = await connectToDatabase()
   const session = await unstable_getServerSession(req, res, authOptions)
 
-  if (client.isConnected() && session?.user != null) {
-    const requestType = req.method
-    switch (requestType) {
-      case 'POST': {
-        let { email, projectId } = req.body
-        if (email == null || projectId == null || !isEmailValid(email)) return res.status(400).json({ error: 'missing properties' })
-        email = email != null ? cleanEmail(email) : email
-        projectId = projectId != null ? toObjectId(projectId) : projectId
-        const creator = await getUser({ email: String(session.user.email) })
-        let tokenInstance
-        try {
-          tokenInstance = await inviteUser(projectId, email, creator._id)
-        } catch (error) {
-          return res.status(400).json({ error: 'duplicate' })
-        }
-        const user = await getUser({ email })
-        const page = user != null ? 'login' : 'signup'
-        const html = getInvitationHtml(page, tokenInstance.token, email, projectId, String(req.headers.origin))
-        await sendMail(String(EMAIL_FROM), email, 'Invitation to AI4Belgium', html)
-        return res.status(200).send(null)
+  if (session?.user == null) return res.status(401).send({ msg: 'Unauthorized', status: 401 })
+  if (!client.isConnected()) return res.status(500).send({ msg: 'DB connection error', status: 500 })
+
+  switch (req.method) {
+    case 'POST': {
+      let { email, projectId } = req.body
+      if (email == null || projectId == null || !isEmailValid(email)) return res.status(400).json({ error: 'missing properties' })
+      email = email != null ? cleanEmail(email) : email
+      projectId = projectId != null ? toObjectId(projectId) : projectId
+      const creator = await getUser({ email: String(session.user.email) })
+      let tokenInstance
+      try {
+        tokenInstance = await inviteUser(projectId, email, creator._id)
+      } catch (error) {
+        return res.status(400).json({ error: 'duplicate' })
       }
-      default:
-        res.send({ message: 'DB error' })
-        break
+      const user = await getUser({ email })
+      const page = user != null ? 'login' : 'signup'
+      const html = getInvitationHtml(page, tokenInstance.token, email, projectId, String(req.headers.origin))
+      await sendMail(String(EMAIL_FROM), email, 'Invitation to AI4Belgium', html)
+      return res.status(200).send(null)
     }
-  } else {
-    res.send({ msg: 'DB connection error', status: 400 })
+    default:
+      return res.status(404).send({ message: 'Not found' })
   }
 }
