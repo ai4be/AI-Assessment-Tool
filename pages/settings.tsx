@@ -1,5 +1,6 @@
 import Settings from '@/src/components/settings'
 import SideBar from '@/src/components/side-bar'
+import { UserContextProvider } from '@/src/store/user-context'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from './api/auth/[...nextauth]'
 
@@ -8,7 +9,9 @@ const PAGE = 'settings'
 export default function SettingsPage ({ session }): JSX.Element {
   return (
     <SideBar page={PAGE}>
-      <Settings />
+      <UserContextProvider>
+        <Settings />
+      </UserContextProvider>
     </SideBar>
   )
 }

@@ -1,15 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase } from '@/util/mongodb'
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { unstable_getServerSession } from 'next-auth/next'
 import { addUserToRole, removeUserFromRole } from '@/util/role'
+import { handler as isConnected } from '@/util/temp-middleware'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const session = await unstable_getServerSession(req, res, authOptions)
-  const { client } = await connectToDatabase()
-
-  if (session?.user == null) return res.status(401).json({ message: 'Unauthorized' })
-  if (!client.isConnected()) return res.status(500).json({ msg: 'DB connection error', status: 500 })
+  if (isConnected(req, res) == null) return
 
   const { slug, roleId, userId } = req.query
 

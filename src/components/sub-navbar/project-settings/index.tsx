@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 import {
   Button,
   Input,
   Box,
+  Flex,
   useDisclosure,
   useToast,
   UseToastOptions,
@@ -20,7 +21,8 @@ import {
   TabList,
   TabPanels,
   Tab,
-  TabPanel
+  TabPanel,
+  Text
 } from '@chakra-ui/react'
 import { AiFillSetting, AiOutlineDelete, AiOutlineCheck } from 'react-icons/ai'
 import { useRouter } from 'next/router'
@@ -29,10 +31,15 @@ import Team from './team'
 import { defaultFetchOptions } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
 
-const TabProjectName = ({ project }): JSX.Element => {
+const ProjectName = ({ project }): JSX.Element => {
+  const { isBusy, setIsBusy } = useContext(ProjectSettingsContext)
   const toast = useToast()
   const [projectName, setProjectName] = useState(project.name)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setIsBusy(isLoading)
+  }, [isLoading])
 
   const showToast = (title: string, desc: string, status: any = 'success'): void => {
     status = status as UseToastOptions['status']
@@ -52,7 +59,7 @@ const TabProjectName = ({ project }): JSX.Element => {
       name: projectName,
       backgroundImage: project.backgroundImage
     }
-
+    await new Promise(resolve => setTimeout(resolve, 5000))
     const url = `/api/projects/${String(project._id)}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
@@ -65,6 +72,7 @@ const TabProjectName = ({ project }): JSX.Element => {
     } else {
       showToast('Error', 'Something went wrong', 'error')
     }
+
     setIsLoading(false)
   }
 
@@ -83,7 +91,7 @@ const TabProjectName = ({ project }): JSX.Element => {
           backgroundColor='success'
           color='white'
           onClick={handleSave}
-          disabled={isLoading || projectName == null || projectName === ''}
+          disabled={isLoading || projectName == null || projectName === '' || isBusy}
           isLoading={isLoading}
         >
           <AiOutlineCheck /> &nbsp; Save
@@ -93,10 +101,15 @@ const TabProjectName = ({ project }): JSX.Element => {
   )
 }
 
-const TabDelete = ({ project }): JSX.Element => {
+const DeleteProject = ({ project }): JSX.Element => {
+  const { isBusy, setIsBusy } = useContext(ProjectSettingsContext)
   const [isLoading, setIsLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const router = useRouter()
+
+  useEffect(() => {
+    setIsBusy(isLoading)
+  }, [isLoading])
 
   const handleDelete = async (): Promise<void> => {
     setIsLoading(true)
@@ -112,53 +125,83 @@ const TabDelete = ({ project }): JSX.Element => {
   }
   return (
     <>
-      <p>To delete your project, Click on Delete button.</p>
-      <Box align='right'>
-        <Button
-          bg='red.500'
-          color='white'
-          onClick={onOpen}
-          _hover={{
-            backgroundColor: 'red.600'
-          }}
-          isLoading={isLoading}
-          loadingText='Deleting'
-        >
-          <AiOutlineDelete /> &nbsp;Delete
-        </Button>
-      </Box>
-      <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={handleDelete} />
+      <Text as='b'>Danger zone</Text>
+      <Flex justifyContent='space-between' alignItems='center'>
+        <p>To delete your project, Click on Delete button.</p>
+        <Box align='right'>
+          <Button
+            bg='red.500'
+            color='white'
+            onClick={onOpen}
+            _hover={{
+              backgroundColor: 'red.600'
+            }}
+            isLoading={isLoading}
+            isDisabled={isLoading || isBusy}
+            loadingText='Deleting'
+          >
+            <AiOutlineDelete /> &nbsp;Delete
+          </Button>
+        </Box>
+        <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={handleDelete} />
+      </Flex>
     </>
+  )
+}
+
+interface PropsContext {
+  isBusy: boolean
+  setIsBusy: Function
+}
+
+export const ProjectSettingsContext = createContext<PropsContext>({
+  isBusy: false,
+  setIsBusy: () => {}
+})
+
+export function ProjectSettingsContextProvider (props: any): JSX.Element {
+  const [isBusy, setIsBusy] = useState<boolean>(false)
+
+  const context = {
+    isBusy,
+    setIsBusy
+  }
+
+  return (
+    <ProjectSettingsContext.Provider value={context}>
+      {props.children}
+    </ProjectSettingsContext.Provider>
   )
 }
 
 const ProjectSettings = ({ project }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isBusy } = useContext(ProjectSettingsContext)
+
+  console.log('isBusy', isBusy)
 
   return (
     <>
-      <Button onClick={onOpen} size='xs' as={Button} m='5px'>
+      <Button onClick={onOpen} size='xs' as={Button} m='5px' disabled={isBusy}>
         <AiFillSetting />
       </Button>
-      <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered scrollBehavior='inside'>
+      <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered scrollBehavior='inside' closeOnOverlayClick={!isBusy} closeOnEsc={!isBusy}>
         <ModalOverlay />
         <ModalContent height={['100vh', '60vh']} minWidth='370px'>
-          <ModalHeader>Project Settings</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader >Project Settings</ModalHeader>
+          <ModalCloseButton disabled={isBusy}/>
           <ModalBody overflowY='scroll'>
-            <Tabs isFitted variant='enclosed'>
+            <Tabs isFitted variant='enclosed' defaultIndex={0}>
               <TabList mb='2rem'>
-                <Tab>Basic</Tab>
-                <Tab>Advance</Tab>
+                <Tab>General</Tab>
                 <Tab>Team</Tab>
                 <Tab>Roles</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <TabProjectName project={project} />
-                </TabPanel>
-                <TabPanel>
-                  <TabDelete project={project} />
+                  <ProjectName project={project} />
+                  <hr className='my-3' />
+                  <DeleteProject project={project} />
                 </TabPanel>
                 <TabPanel>
                   <Team project={project} />

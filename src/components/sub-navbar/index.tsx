@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { Box, Avatar, Tooltip, AvatarGroup } from '@chakra-ui/react'
 
 import PropType from 'prop-types'
-import ProjectSettings from '@/src/components/sub-navbar/project-settings'
+import ProjectSettings, { ProjectSettingsContextProvider } from '@/src/components/sub-navbar/project-settings'
 import ProjectContext from '@/src/store/project-context'
 
 const SubNavbar = ({ project }): JSX.Element => {
@@ -22,7 +22,9 @@ const SubNavbar = ({ project }): JSX.Element => {
       </AvatarGroup>
       <Box>
         {/* <InviteModal project={project} /> */}
-        <ProjectSettings project={project} />
+        <ProjectSettingsContextProvider>
+          <ProjectSettings project={project} />
+        </ProjectSettingsContextProvider>
       </Box>
     </Box>
   )

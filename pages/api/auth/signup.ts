@@ -16,7 +16,7 @@ async function handler (req, res): Promise<any> {
   if (!isEmailValid(email) || password == null || password?.trim().length < 8) {
     return res.status(422).json({
       message:
-        'Invalid input - password should also be at least 7 characters long.'
+        'Invalid input - password should also be at least 8 characters long.'
     })
   }
 

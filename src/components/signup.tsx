@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
   Flex,
   Box,
@@ -18,9 +18,8 @@ import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
 import { defaultFetchOptions } from '@/util/api'
 import isEmpty from 'lodash.isempty'
-
-const validEmail = /^[a-zA-Z0-9._:$!%-+]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/
-const validPassword = /^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,}$/
+import { debounce } from 'lodash'
+import { isEmailValid, isPasswordValid } from '@/util/validator'
 
 const SignUp = (): JSX.Element => {
   const router = useRouter()
@@ -30,28 +29,51 @@ const SignUp = (): JSX.Element => {
   const [values, setValues] = useState({
     email: email ?? '',
     password: '',
-    fullName: '',
+    firstName: '',
+    lastName: '',
     confirmPassword: ''
+  })
+  const [touched, setTouched] = useState({
+    email: false,
+    password: false,
+    firstName: false,
+    lastName: false,
+    confirmPassword: false
   })
   const [isCreating, setIsCreatingStatus] = useState(false)
   const [hasError, setErrorState] = useState(false)
   const [emailErr, setEmailErr] = useState(false)
-  const [passwordErr, setPasswordErr] = useState(false)
+  const [passwordLengthErr, setPasswordLengthErr] = useState(false)
+  const [passwordCharErr, setPasswordCharErr] = useState(false)
+  const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
   const [isButtonDisabled, setButtonState] = useState(true)
 
   useEffect(() => {
-    validate()
-    const isMissingFields = isEmpty(values.password) || isEmpty(values.confirmPassword) || isEmpty(values.email) || isEmpty(values.fullName)
-    const isInValidPassword = values.password !== values.confirmPassword
-    const isErrorFields = emailErr || passwordErr
-    const disabled = isInValidPassword || isMissingFields || isErrorFields
-    setButtonState(disabled)
-  }, [values.email, values.password, values.confirmPassword, values.fullName, passwordErr, emailErr])
+    if (!touched.email) return
+    setEmailErr(!isEmailValid(values.email))
+  }, [values.email, touched.email])
 
-  const validate = (): void => {
-    setEmailErr(!validEmail.test(values.email))
-    setPasswordErr(!validPassword.test(values.password))
-  }
+  useEffect(() => {
+    console.log(values.password, values.confirmPassword, touched.password, touched.confirmPassword)
+    if (!touched.password || !touched.confirmPassword) return
+    if (values.password?.length > 0 && values.confirmPassword?.length > 0 && values.confirmPassword !== values.password) {
+      setConfirmPasswordErr(true)
+    } else {
+      setConfirmPasswordErr(false)
+    }
+  }, [values.password, values.confirmPassword, touched.password, touched.confirmPassword])
+
+  useEffect(() => {
+    if (!touched.password) return
+    const isTooShort = values.password?.length < 8
+    setPasswordLengthErr(isTooShort)
+    setPasswordCharErr(!isPasswordValid(values.password))
+  }, [values.password, touched.password])
+
+  useEffect(() => {
+    const hasErrors = emailErr || passwordLengthErr || passwordCharErr || confirmPasswordErr || isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword) || isEmpty(values.firstName) || isEmpty(values.lastName)
+    setButtonState(hasErrors)
+  }, [values.password, values.confirmPassword, values.firstName, values.lastName, values.email])
 
   const showToast = (): void => {
     toast({
@@ -90,20 +112,21 @@ const SignUp = (): JSX.Element => {
       setErrorState(true)
     }
 
-    setIsCreatingStatus(false)
     if (result.message === 'success') {
-      redirectToLoginPage()
+      await redirectToLoginPage()
     }
+    setIsCreatingStatus(false)
   }
 
-  const redirectToLoginPage = (path = '/login'): void => {
+  const redirectToLoginPage = async (path = '/login'): Promise<void> => {
     showToast()
-    setTimeout(async () => await router.push({
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+    await router.push({
       pathname: path,
       query: {
         email: values.email
       }
-    }), 3000)
+    })
   }
 
   const showSignUpError = (): JSX.Element => {
@@ -124,12 +147,22 @@ const SignUp = (): JSX.Element => {
     )
   }
 
+  const setPropTouched = (prop: string): void => {
+    console.log('setPropTouched', prop, touched)
+    setTouched({
+      ...touched,
+      [prop]: true
+    })
+  }
+  const setPropTouchedDebounced = useMemo(() => debounce(setPropTouched, 1000), [touched])
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const { name, value } = e.target
     setValues({
       ...values,
       [name]: value
     })
+    setPropTouchedDebounced(name)
   }
 
   return (
@@ -178,13 +211,14 @@ const SignUp = (): JSX.Element => {
             <h1>Sign up</h1>
           </Box>
           <Box my={4} textAlign='left'>
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={emailErr}>
               <Input
                 type='email'
                 name='email'
                 value={values.email}
                 placeholder='Enter Email'
                 onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, email: true })}
                 autoComplete='off'
               />
               {emailErr && <p color='red'>Invalid email.</p>}
@@ -192,31 +226,47 @@ const SignUp = (): JSX.Element => {
             <FormControl my='4' isRequired>
               <Input
                 type='text'
-                name='fullName'
-                value={values.fullName}
-                placeholder='Full name'
+                name='firstName'
+                value={values.firstName}
+                placeholder='First name'
                 onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, firstName: true })}
                 autoComplete='off'
               />
             </FormControl>
-            <FormControl my='4'>
+            <FormControl my='4' isRequired>
+              <Input
+                type='text'
+                name='lastName'
+                value={values.lastName}
+                placeholder='Last name'
+                onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, lastName: true })}
+                autoComplete='off'
+              />
+            </FormControl>
+            <FormControl my='4' isInvalid={passwordLengthErr || passwordCharErr} isRequired>
               <Input
                 type='password'
                 name='password'
                 value={values.password}
                 placeholder='Create password'
+                onBlur={() => setTouched({ ...touched, password: true })}
                 onChange={handleChange}
               />
-              {passwordErr && <p color='red'>Invalid password.</p>}
+              {passwordLengthErr && <p color='red'>Password is too short</p>}
+              {passwordCharErr && <p color='red'>Invalid password</p>}
             </FormControl>
-            <FormControl my='4'>
+            <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
               <Input
                 type='password'
                 name='confirmPassword'
                 value={values.confirmPassword}
                 placeholder='Confirm password'
                 onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, confirmPassword: true })}
               />
+              {confirmPasswordErr && <p color='red'>Passwords don't match</p>}
             </FormControl>
             <Button
               fontWeight='semibold'
@@ -232,7 +282,7 @@ const SignUp = (): JSX.Element => {
               Sign up
             </Button>
             <Box m='5' textAlign='center'>
-              <Link href='/login' color='brand' p='2'>
+              <Link href='/login' color='brand' p='2' >
                 Already have an account? Log in.
               </Link>
             </Box>
