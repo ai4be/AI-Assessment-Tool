@@ -1,0 +1,103 @@
+{
+    "id": "1669727131",
+    "title": "Privacy and Data Governance",
+    "description": "Closely linked to the principle of prevention of harm is privacy, a fundamental right particularly affected by AI systems. Prevention of harm to privacy also necessitates adequate data governance that covers the quality and integrity of the data used, its relevance in light of the domain in which the AI systems will be deployed, its access protocols and the capability to process data in a manner that protects privacy.",
+    "sections" : null,
+    "cards":
+    [
+        {
+            "id" : "1669727403",
+            "title" : "Rate the privacy & data governance measures and procedures you have set up for the AI system?",
+            "desc" : "The following questions will help you in your evaluation",
+            "questions": 
+            [
+                {
+                    "id": "PDG-Q1-B",
+                    "title": "Did you consider the impact of the =gb=AI system=ge= on the right to privacy, the right to physical, mental and/or moral integrity and the right to data protection?   =hb=Everyone has the right to respect for his or her private and family life, home and communications.=br=This right is enshrined in different human rights charters and conventions.=he=",
+                    "visibleIf" : "",
+                    "type": "radiogroup",
+                    "isScored": 0,
+                    "answers": [
+                        "Yes", "No", "Don't know"
+                    ]
+                }, {
+                    "id": "PDG-Q2-B",
+                    "title": "Depending on the =gb=use case=ge=, did you establish mechanisms that allow flagging issues related to privacy or data protection concerning the =gb=AI system=ge=?",
+                    "type": "radiogroup",
+                    "visibleIf": "{PDG-Q1-B} notempty",
+                    "isScored": 0,
+                    "answers": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "id": "PDG1",
+                    "title": "Is your =gb=AI system=ge= being trained, or was it developed, by using or processing personal data (including special categories of personal data)? =hb=The following special categories of personal data are deemed ‘sensitive’ and get specific protection under the General Data Protection Regulation (GDPR):<ul><li>racial or ethnic origin;</li><li>political opinions;</li><li>religious or philosophical beliefs;</li><li>trade union membership;</li><li>processing of genetic data;</li><li>biometric data for the purpose of uniquely identifying a natural person;</li><li>health;</li><li>sex life or sexual orientation.</li></ul> As a <b>general rule</b>, processing of the types of data listed above is <b>prohibited</b>.However, under certain derogations  a company or organisation may be allowed to process sensitive personal data, when for example:<li>you have made your sensitive data manifestly public;</li><li>you have given your explicit consent;</li><li>there is a law which governs a specific type of data processing for a specific purpose related to public interest or health;</li><li>a law including adequate safeguards provides for the processing of sensitive personal data in areas such as public health, employment and social protection.</li></ul>=br= Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rights-citizens/how-my-personal-data-protected/how-data-my-religious-beliefs-sexual-orientation-health-political-views-protected_en'>link</a>=he=",
+                    "type": "radiogroup",
+                    "visibleIf": "{PDG-Q2-B} notempty",
+                    "isScored": 0,
+                    "answers": [
+                        "Yes", "To some extent", "No", "Don't know"
+                    ]
+                }, {
+                    "id": "PDG-Q3-B",
+                    "title": "Did you put in place any of the following measures to thoroughly implement the General Data Protection Regulation (GDPR), or non-European equivalent?     ",
+                    "type": "checkbox",
+                    "visibleIf": "{PDG1} notempty",
+                    "isScored": 0,
+                    "answers": [
+                        "=gb=Data Protection Impact Assessment=ge= (DPIA). =hb=A DPIA is required whenever processing is likely to result in a high risk to the rights and freedoms of individuals. A DPIA is required at least in the following cases:<ul><li>a systematic and extensive evaluation of the personal aspects of an individual, including profiling;</li><li>processing of sensitive data on a large scale;</li><li>systematic monitoring of public areas on a large scale.</li></ul><a href='https://ec.europa.eu/commission/sites/beta-political/files/national-data-protection-authorities-jan_2018_en.pdf'>National Data Protection Authorities</a>, in concertation with the < a href ='https://europa.eu/european-union/about-eu/institutions-bodies/european-data-protection-supervisor_en'>European Data Protection Board</a>, may provide lists of cases where a DPIA would be required.The DPIA should be conducted before the processing and should be considered as a living tool, not merely as a one - off exercise.Where there are residual risks that can’t be mitigated by the measures put in place, the DPA must be consulted prior to the start of the processing. =br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/when-data-protection-impact-assessment-dpia-required_en'>link</a> =br= <b>References</b> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=611236'>EDPB Guidelines on Data Protection Impact Assessment(DPIA)</a> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e3546-1-1'>Articles 35 and 36 </a> and <a href ='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'> Recitals(89) to(96) of the GDPR </a> =he=",
+                        "Designate a =gb=Data Protection Officer=ge= (DPO) and include him/her at an early stage in the development, procurement or use phase of the =gb=AI system=ge= =hb=Your company/organisation needs to appoint a DPO, whether it's a controller or a processor, if its <b>core activities</b> involve processing of <b>sensitive data</b> on a <b>large scale or involve large scale, regular and systematic monitoring</b> of individuals. In that respect, monitoring the behaviour of individuals includes all forms of tracking and profiling on the internet, including for the purposes of behavioural advertising. =br= Public administrations always have an obligation to appoint a DPO(except for courts acting in their judicial capacity). =br= The DPO may be a staff member of your organisation or may be contracted externally on the basis of a service contact.A DPO can be an individual or an organisation =br==br=<b>References</b> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=612048'>EDPB Guidelines on Data Protection Officers('DPOs')</a> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Articles 37, 38 and 39 and Recital(97) of the GDPR</a> =br= Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/data-protection-officers/does-my-company-organisation-need-have-data-protection-officer-dpo_en:'>link</a>  =he=",
+                        "Oversight mechanisms for data processing (incl. limited access by qualified organisation members, mechanisms for logging data access and modifications)",
+                        "Measures to enhance privacy by design and default (e.g., =gb=encryption, pseudonymisation, aggregation, anonymisation=ge=) =hb=Companies/organisations are encouraged to implement technical and organisational measures, at the earliest stages of the design of the processing operations, in such a way that  safeguards privacy and data protection principles right from the start (‘data protection by design’). By default, companies/organisations should ensure that personal data is processed with the highest privacy protection (for example only the data necessary should be processed, short storage period, limited accessibility) so that by default personal data isn’t made accessible to an indefinite number of persons (‘data protection by default’). =br==br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/what-does-data-protection-design-and-default-mean_en'>link</a> =he=",
+                        "Data minimisation, in particular personal data (incl. special categories of data) =hb=Personal data should only be processed where it isn’t reasonably feasible to carry out the processing in another manner. Where possible, it is preferable to use anonymous data. Where personal data is needed, it should be <b>adequate, relevant, and limited to what is necessary for the purpose (‘data minimisation’)</b>. It’s your company/organisation's responsibility as controller to assess how much data is needed and ensure that irrelevant data isn’t collected. =br= <b>Example</b> =br= Your company / organisation  offers car - sharing services to individuals.For those services it may require the id, address and credit card number of customers and potentially even information on whether the person has a disability(so health data), but not their racial origin =br=<b>References</b> =br= <a href ='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Article 5(1)(c) and Recital(39) of the GDPR</a> =br==br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/principles-gdpr/how-much-data-can-be-collected_en'>link</a>  =he="
+                    ]
+                }, {
+                    "id": "PDG-Q4-B",
+                    "title": "Did you implement the right to withdraw consent, the right to object and the right to be forgotten in the =gb=AI system=ge=? =hb=It should be as easy to withdraw as to give consent. If consent is withdrawn your company/organisation can no longer process the data. Once consent has been withdrawn, your company/organisation needs to ensure that the data is deleted unless it can be processed on another legal ground (for example storage requirements or as far as it is a necessity to fulfil the contract). If the data was being processed for several purposes your company/organisation can’t use the personal data for the part of the processing for which consent has been withdrawn or for any of the purposes, depending on the nature of the withdrawal of consent. =br==br= <b>References:</b> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Article 7 and Recitals(32), (33), (42), (43) and 58 of the GDPR</a> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=623051'>EDPB guidelines on Consent under Regulation 2016/679</a> =br==br= Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/legal-grounds-processing-data/grounds-processing/what-if-somebody-withdraws-their-consent_en'>link</a> =he=",
+                    "type": "radiogroup",
+                    "visibleIf": "{PDG-Q3-B} notempty",
+                    "isScored": 0,
+                    "answers": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "id": "PDG-Q5-B",
+                    "title": "Did you consider the privacy and data protection implications of data collected, generated or processed over the course of the =gb=AI system=ge='s =gb=lifecycle=ge=?",
+                    "type": "radiogroup",
+                    "visibleIf": "{PDG-Q4-B} notempty",
+                    "isScored": 0,
+                    "answers": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "id": "PDG-Q6-B",
+                    "title": "Did you consider the privacy and data protection implications of the =gb=AI system=ge='s non-personal training-data or other processed non-personal data? ",
+                    "type": "radiogroup",
+                    "visibleIf": "{PDG-Q5-B} notempty",
+                    "isScored": 0,
+                    "answers": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "id": "PDG-Q7-B",
+                    "title": "Did you align the =gb=AI system=ge= with relevant =gb=standards=ge= (e.g. ISO, IEEE) or widely adopted protocols for (daily) data management and =gb=governance=ge=? ",
+                    "type": "radiogroup",
+                    "visibleIf": "{PDG-Q6-B} notempty",
+                    "isScored": 0,
+                    "answers": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "id": "PDG-S1-R",
+                    "title": "Rate the privacy & =gb=data governance=ge= measures and procedures you have set up for the =gb=AI system=ge=? ",
+                    "type": "radiogroup",
+                    "visibleIf": "{PDG-Q7-B} notempty",
+                    "isScored": 1,
+                    "answers": [
+                        "Non-existent", "Completely Inadequate", "Almost adequate", "Adequate", "Fully adequate"
+                    ]
+                }
+            ]
+        }
+    ]
+}

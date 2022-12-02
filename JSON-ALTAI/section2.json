@@ -1,0 +1,599 @@
+{
+    "title": "Technical Robustness and Safety",
+    "processedTitle": "Technical Robustness and Safety",
+    "completedHtml": "<h3>Your submission has been validated.</h3> <h5>We are redirecting you to the right page!</h5>",
+    "description": "A crucial requirement for achieving Trustworthy AI systems is their dependability (the ability to deliver services that can justifiably be trusted) and resilience (robustness when facing changes). Technical robustness requires that AI systems are developed with a preventative approach to risks and that they behave reliably and as intended while minimising unintentional and unexpected harm as well as preventing it where possible. This should also apply in the event of potential changes in their operating environment or the presence of other agents (human or artificial) that may interact with the AI system in an adversarial manner. The questions in this section address four main issues: 1) security; 2) safety; 3) accuracy; and 4) reliability, fall-back plans and reproducibility.",
+    "pages": [
+        {
+            "name": "page1",
+            "elements": [
+                {
+                    "type": "radiogroup",
+                    "name": "TRS1",
+                    "title": "Is the =gb=AI system=ge= certified for cybersecurity (e.g., the certification scheme created by the <a href='https://ec.europa.eu/digital-single-market/en/eu-cybersecurity-act'>Cybersecurity Act in Europe</a>) or is it compliant with specific security standards? =hb=This section is about system protection against vulnerabilities to adversarial attacks, e.g., hacking. Complying with appropriate security standards or a certification scheme shields the system and saves expensive ad-hoc protection measures. Security by design is one of the key principles of the EU coordinated plan on AI =br==br=EGTAI p. 16, 21-23.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS1.1",
+                    "visibleIf": "{TRS1} notempty and !({TRS1} = 'No')",
+                    "title": "How exposed is the =gb=AI system=ge= to cyber-attacks?",
+                    "isRequired": true,
+                    "choices": [
+                        "Exposed",
+                        "To some extent",
+                        "Not exposed",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q1.1-B",
+                    "visibleIf": "{TRS1.1} notempty and !({TRS1.1} = 'Not exposed')",
+                    "title": "Did you assess potential forms of attacks to which the =gb=AI system=ge= could be vulnerable?  =hb=Attacks may target the data (data poisoning), the model (model leakage) or the underlying infrastructure, both software and hardware.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "type": "checkbox",
+                    "name": "TRS-Q1.1.1-B",
+                    "visibleIf": "{TRS-Q1.1-B} = 'Yes'",
+                    "title": "Did you consider different types of vulnerabilities and potential entry points for attacks such as:",
+                    "isRequired": true,
+                    "choices": [
+                        "=gb=Data poisoning=ge= (i.e., manipulation of the training data)",
+                        "=gb=Model evasion=ge= (i.e., classify the data according to the attacker will)",
+                        "=gb=Model inversion=ge= (i.e., infer the model parameters)",
+                        "Other "
+                    ]
+                },
+                {
+                    "type": "comment",
+                    "name": "TRS-Q1.1.1-EX-B",
+                    "visibleIf": "{TRS-Q1.1.1-B} = 'Other'",
+                    "title": "Please specify:"
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q1.2-B",
+                    "visibleIf": "{TRS-Q1.1-B} notempty",
+                    "title": "Did you put measures in place to ensure the integrity, robustness and overall security of the =gb=AI system=ge= against potential attacks over its =gb=lifecycle=ge=?=hb=New security threats might appear after system deployment. Its behaviour and resilience to attacks after deployment must be analysed and its design updated as much as necessary.=br=EGTAI p. 20-22.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                {
+                    "type": "comment",
+                    "name": "TRS-Q1.2-EX-B",
+                    "visibleIf": "{TRS-Q1.2-B} = 'Yes'",
+                    "title": "Please describe the measures"
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q1.3-B",
+                    "visibleIf": "{TRS-Q1.2-B} notempty",
+                    "title": "Did you =gb=red-team=ge=/=gb=pen test=ge= the system?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q1.4-B",
+                    "visibleIf": "{TRS-Q1.3-B} notempty",
+                    "title": "Do you inform =gb=end-users=ge= of the duration of security coverage and updates?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "comment",
+                    "name": "TRS1.2",
+                    "visibleIf": "{TRS-Q1.4-B} notempty",
+                    "title": "How long is the expected timeframe within which you will provide security updates for your system?",
+                    "isRequired": true
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S1-R",
+                    "visibleIf": "{TRS-Q1.4-B} notempty",
+                    "title": "Based on your answers to the previous questions, how would you rate the resilience to attacks of the =gb=AI system=ge=? ",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Low",
+                        "Moderate",
+                        "Significant",
+                        "High"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S2-R",
+                    "visibleIf": "{TRS-Q1.4-B} notempty",
+                    "title": "Based on your answers to the previous questions, how would you rate the measures you have adopted to ensure resilience?",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Completely inadequate",
+                        "Almost adequate",
+                        "Adequate",
+                        "Fully adequate"
+                    ]
+                },
+                {
+                    "type": "html",
+                    "name": "title",
+                    "html": "<h3>General Safety</h3>"
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS2",
+                    "title": "Could the =gb=AI system=ge= have adversarial, critical or damaging effects (e.g., to human or societal safety) in case of risks or threats such as design or technical faults, defects, outages, attacks, misuse, inappropriate or malicious use? =hb=This section is about system safety, i.e., its ability to operate as intended, with minimal risk, and absence of catastrophic consequences on its users and the environment. Risk must be assessed depending on the application case. Its mitigation might require a failsafe design using redundancy and ensuring graceful degradation.=br=EGTAI p. 16-17, 21-23.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.1-B",
+                    "visibleIf": "{TRS2} notempty and !({TRS2} = 'No')",
+                    "title": "Did you define risk, risk metrics and risk levels of the =gb=AI system=ge= in each specific use case?=hb=Risk is usually related to consequences of system of failure, and this depends on the criticality of the AI system. Assessing risk enables to take the necessary measures to reduce it.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.1.1-B",
+                    "visibleIf": "{TRS-Q2.1-B} notempty and !({TRS-Q2.1-B} = 'No')",
+                    "title": "Did you put in place a process to continuously measure and assess risks?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "comment",
+                    "name": "TRS-Q2.1.1-EX-B",
+                    "visibleIf": "{TRS-Q2.1.1-B} = 'Yes'",
+                    "title": "If yes, please describe the process:",
+                    "isRequired": true
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.1.2-B",
+                    "visibleIf": "{TRS-Q2.1.1-B} = 'Yes'",
+                    "title": "Did you inform =gb=end-users=ge= and =gb=subjects=ge= of existing or potential risks?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.2-B",
+                    "visibleIf": "{TRS-Q2.1-B} notempty",
+                    "title": "Did you identify the possible threats to the =gb=AI system=ge= (design faults, technical faults, environmental threats) and the possible resulting consequences?  =hb=Threats to system safety can have different origins: design, eg., there are flaws in design, or incomplete specifications, technical faults, e.g., related to hardware implementation, or the operation environment, including users.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.3-B",
+                    "visibleIf": "{TRS-Q2.2-B} notempty",
+                    "title": "Did you assess the risk of possible malicious use, misuse or inappropriate use of the =gb=AI system=ge=?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.4-B",
+                    "visibleIf": "{TRS-Q2.3-B} notempty",
+                    "title": "Did you define safety criticality levels (e.g., related to human integrity) of the possible consequences of faults or misuse of the =gb=AI system=ge=?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.5-B",
+                    "visibleIf": "{TRS-Q2.4-B} notempty",
+                    "title": "Did you assess the dependency of critical system’s decisions on its stable and reliable behavior?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.5.1-B",
+                    "visibleIf": "{TRS-Q2.5-B} notempty and !({TRS-Q2.5-B} = 'No')",
+                    "title": "Did you align the reliability/testing requirements to the appropriate levels of stability and reliability?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.6-B",
+                    "visibleIf": "{TRS-Q2.5-B} notempty",
+                    "title": "Did you plan fault tolerance via, e.g., a duplicated system or another parallel system (AI-based or “conventional”)?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q2.7-B",
+                    "visibleIf": "{TRS-Q2.6-B} notempty",
+                    "title": "Did you develop a mechanism to evaluate when the =gb=AI system=ge= has been changed enough to merit a new review of its technical robustness and safety?=hb=If the system is a learning system or if it is for example a rule-based system on which modifications and updates are performed, it is necessary or review its dependability.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S3-R",
+                    "visibleIf": "{TRS-Q2.7-B} notempty",
+                    "title": "Based on your answers to the previous questions, how would you rate the safety of the =gb=AI system=ge=?",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Low",
+                        "Moderate",
+                        "Significant",
+                        "High"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S4-R",
+                    "visibleIf": "{TRS-Q2.7-B} notempty",
+                    "title": "How would you rate the measures you have adopted to ensure safety?",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Completely inadequate ",
+                        "Almost adequate ",
+                        "Adequate ",
+                        "Fully adequate"
+                    ]
+                },
+                {
+                    "type": "html",
+                    "name": "title",
+                    "html": "<h3>Accuracy</h3>"
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS3",
+                    "title": "Could a low level of accuracy of the =gb=AI system=ge= have critical, adversarial or damaging consequences?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q3.1-B",
+                    "visibleIf": "{TRS3} notempty and !({TRS3} = 'No')",
+                    "title": "Did you put in place measures to ensure that the data (including training data) used to develop the =gb=AI system=ge= is up to date, of high quality, complete and representative of the environment the system will be deployed in? =hb=A learning AI system's performance depends on the quality of the data which must represent correctly the domain in which it will operate.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q3.2-B",
+                    "visibleIf": "{TRS-Q3.1-B} notempty",
+                    "title": "Did you put in place a series of steps to monitor, and document the =gb=AI system=ge=’s accuracy?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q3.3-B",
+                    "visibleIf": "{TRS-Q3.2-B} notempty",
+                    "title": "Did you consider whether the =gb=AI system=ge='s operation can invalidate the data or assumptions it was trained on, and how this might lead to adversarial effects (e.g. biased estimators, echo chambers etc.)? =hb=Echo chambers result from a feedback loop between the AI system's output and inputs, where the output reinforces the input data, resulting in the amplification bias.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q3.4-B",
+                    "visibleIf": "{TRS-Q3.3-B} notempty",
+                    "title": "Did you put processes in place to ensure that the level of accuracy of the =gb=AI system=ge= to be expected by =gb=end-users=ge= and/or =gb=subjects=ge= is properly communicated?=hb=Users’ trust in AI systems will depend, among other factors, on their accuracy.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S5-R",
+                    "visibleIf": "{TRS3} notempty",
+                    "title": "Based on your answers to the previous questions, how would you rate the risk that the =gb=AI system=ge='s accuracy drops below intended level?",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Low",
+                        "Moderate",
+                        "Significant",
+                        "High"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S6-R",
+                    "visibleIf": "{TRS3} notempty",
+                    "title": "How would you rate the measures you have adopted to ensure system accuracy? ",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Completely inadequate ",
+                        "Almost adequate ",
+                        "Adequate ",
+                        "Fully adequate"
+                    ]
+                },
+                {
+                    "type": "html",
+                    "name": "title",
+                    "html": "<h3>Reliability, fall-back plans and reproducibility</h3>"
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS4",
+                    "title": "Could the =gb=AI system=ge= cause critical, adversarial or damaging consequences (e.g., pertaining to human safety) in case of low reliability and/or reproduciblity? =hb=Reliability is the continuity of service over an expected time, whereas reproducibility is the capcity of the system to repetitively provide the same output for the same input.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q4.1-B",
+                    "visibleIf": "{TRS4} notempty and !({TRS4} = 'No')",
+                    "title": "Did you put in place a well-defined process to monitor if the =gb=AI system=ge= is meeting the goals of the intended applications?=hb=AI systems can be developed for various applications. It is essential to verify if they are indeed adapted to the considered applications.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q4.2-B",
+                    "visibleIf": "{TRS-Q4.1-B} notempty",
+                    "title": "Did you test whether specific contexts or conditions need to be taken into account to ensure reproducibility? =hb=Environment conditions or varying data might impact system reproducibility if they fall outside the training data domain and challenge the generalization ability of the system.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q4.3-B",
+                    "visibleIf": "{TRS-Q4.2-B} notempty",
+                    "title": "Did you put in place verification and validation methods and documentation (e.g. logging) to evaluate and ensure different aspects of the system’s reliability and reproducibility?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q4.4-B",
+                    "visibleIf": "{TRS-Q4.3-B} notempty",
+                    "title": "Did you clearly document and operationalize processes for the testing and verification of the reliability and reproducibility of the =gb=AI system=ge=?=hb=Documentation is key for system development, update, verification, as well as for auditability of the AI system.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q4.5-B",
+                    "visibleIf": "{TRS-Q4.4-B} notempty",
+                    "title": "Did you define tested failsafe fallback plans to address =gb=AI system=ge= errors of whatever origin and put governance procedures in place to trigger them?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q4.6-B",
+                    "visibleIf": "{TRS-Q4.5-B} notempty",
+                    "title": "Did you put in place a proper procedure for handling the cases where the =gb=AI system=ge= yields results with a low confidence score?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS4.1",
+                    "title": "Is your =gb=AI system=ge= using =gb=online continual learning=ge=?  ",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-Q4.7-B",
+                    "visibleIf": "{TRS4.1} notempty and !({TRS4.1} = 'No')",
+                    "title": "Did you consider potential negative consequences from the =gb=AI system=ge= learning novel or unusual methods to score well on its objective function?    =hb=The system might learn actions when optimizing its objective function which might not be aligned with what it was expected to achieve. This might lead to undesirable consequences.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes",
+                        "No",
+                        "Don't know"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S7-R",
+                    "visibleIf": "{TRS4} = 'Yes' or {TRS4} = 'No'",
+                    "title": "Based on your answers to the previous questions, how would you rate the reliability of the =gb=AI system=ge=? ",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Low",
+                        "Moderate",
+                        "Significant",
+                        "High"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S8-R",
+                    "visibleIf": "{TRS4} = 'Yes' or {TRS4} = 'No'",
+                    "title": "How would you rate the measures you have adopted to ensure system reliability? ",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Completely inadequate ",
+                        "Almost adequate ",
+                        "Adequate ",
+                        "Fully adequate"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S9-R",
+                    "visibleIf": "{TRS4} = 'Yes' or {TRS4} = 'No'",
+                    "title": "Based on your answers to the previous questions, how would you rate the reproducibility of the =gb=AI system=ge=? ",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Low",
+                        "Moderate",
+                        "Significant",
+                        "High"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S10-R",
+                    "visibleIf": "{TRS4} notempty",
+                    "title": "How would you rate the measures you have adopted to ensure system reproducibility? ",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Completely inadequate ",
+                        "Almost adequate ",
+                        "Adequate ",
+                        "Fully adequate"
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "TRS-S11-R",
+                    "visibleIf": "{TRS4} notempty",
+                    "title": "Based on your answers to the previous questions, how would you rate the fall-back you have adopted?",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent",
+                        "Completely inadequate ",
+                        "Almost adequate ",
+                        "Adequate ",
+                        "Fully adequate"
+                    ]
+                }
+            ]
+        }
+    ],
+    "showQuestionNumbers": "off"
+}
