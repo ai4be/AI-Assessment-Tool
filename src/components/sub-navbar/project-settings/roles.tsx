@@ -8,49 +8,17 @@ import {
   Box,
   useBreakpointValue,
   useDisclosure,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem
+  Flex
 } from '@chakra-ui/react'
 import { HiOutlinePencil } from 'react-icons/hi'
 import { RiAddCircleLine, RiDeleteBin6Line } from 'react-icons/ri'
-import { FiUserPlus, FiCheck } from 'react-icons/fi'
 import { useRouter } from 'next/router'
-import { defaultFetchOptions } from '@/util/api'
 import styles from './roles.module.css'
+import { defaultFetchOptions } from '@/util/api'
 import ProjectContext from '@/src/store/project-context'
-import ConfirmDialog from '../../confirm-dialog'
-
-export const UserMenu = ({ userIds, onUserAdd, onUserRemove }: { userIds: string, onUserRemove: Function, onUserAdd: Function }): JSX.Element => {
-  const { users } = useContext(ProjectContext)
-
-  const clickHandler = (e, user: any): void => {
-    e.stopPropagation()
-    userIds.includes(user._id) ? onUserRemove(user._id) : onUserAdd(user._id)
-  }
-
-  return (
-    <Menu>
-      <MenuButton>
-        <FiUserPlus color='C9C9C9' size={20} />
-      </MenuButton>
-      <MenuList>
-        {users.map(user => (
-          <MenuItem key={user._id} display='block' onClick={e => clickHandler(e, user)}>
-            <Flex justifyContent='space-between' alignItems='center' onClick={e => clickHandler(e, user)}>
-              <Box onClick={e => clickHandler(e, user)}>{user.fullName ?? user.email}</Box>
-              <Box onClick={e => clickHandler(e, user)} display={userIds.includes(user._id) ? 'block' : 'none'}>
-                <FiCheck onClick={e => clickHandler(e, user)} />
-              </Box>
-            </Flex>
-          </MenuItem>
-        ))}
-      </MenuList>
-    </Menu>
-  )
-}
+import ConfirmDialog from '@/src/components/confirm-dialog'
+import { UserMenu } from '@/src/components/user-menu'
+import { getUserDisplayName } from '@/util/users-fe'
 
 const UserMenuMemo = React.memo(UserMenu)
 
@@ -58,7 +26,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
   const [isEditing, setIsEditing] = useState(false)
   const [isUserAdd, setIsUserAdd] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [includedUsers, setIncludedUsers] = useState([])
+  const [includedUsers, setIncludedUsers] = useState<string[]>([])
   const rows = useBreakpointValue({ base: 2, sm: 5 })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [name, setName] = useState(role.name)
@@ -68,7 +36,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
 
   useEffect(() => {
     if (Array.isArray(users)) {
-      const iu = users.filter(u => role.userIds.includes(u._id))
+      const iu: string[] = users.filter(u => role.userIds.includes(u._id))
       setIncludedUsers(iu)
     }
   }, [users, role.userIds, userIdTrigger])
@@ -147,9 +115,9 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
         {!isEditing && (
           <Flex>
             <AvatarGroup size='sm' max={5}>
-              {includedUsers.map(user => <Avatar key={user._id} name={user.fullName ?? user.email} />)}
+              {includedUsers.map(user => <Avatar key={user._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
             </AvatarGroup>
-            <UserMenuMemo userIds={role.userIds} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger} />
+            <UserMenuMemo users={users} includedUserIds={role.userIds} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger} />
           </Flex>
         )}
       </Flex>
@@ -219,9 +187,10 @@ const Roles = ({ project }): JSX.Element => {
   return (
     <Flex flexDirection='column'>
       {Array.isArray(project.roles) && project.roles.map((role, index) =>
-        <RoleBox key={index} role={role} project={project}  deleteRole={deleteRole} saveRole={handleSave} setIsLoading={setIsLoading} />)
+        <RoleBox key={index} role={role} project={project} deleteRole={deleteRole} saveRole={handleSave} setIsLoading={setIsLoading} />)
       }
-      <Flex width={[200, 350]} height={[120, 168]} boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' borderRadius='15px' justifyContent='center' alignItems='center'
+      <Flex
+        width={[200, 350]} height={[120, 168]} boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' borderRadius='15px' justifyContent='center' alignItems='center'
         cursor='pointer'
         onClick={addRole}
       >

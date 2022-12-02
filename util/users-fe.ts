@@ -1,8 +1,13 @@
 import { defaultFetchOptions } from './api'
 import { User } from './user'
 
+export const getUserDisplayName = (user: User): string => {
+  let res = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()
+  if (res === '') res = user.email
+  return res
+}
+
 export const fetchUsers = async (userIds: string[]): Promise<any[]> => {
-  console.log(userIds)
   const promises: Array<Promise<Response>> = userIds.map(async (uid: string) => await fetch(`/api/users/${uid}`))
   const responses: Response[] = await Promise.all(promises)
   const texts: any[] = await Promise.all(responses.map(async (res: Response) => await res.text()))

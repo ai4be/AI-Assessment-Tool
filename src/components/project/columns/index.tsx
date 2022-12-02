@@ -35,7 +35,9 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
       setColumns([])
     }
   }, [data])
-  useEffect(() => setCards(dataCards || []), [dataCards])
+  useEffect(() => {
+    setCards(dataCards || [])
+  }, [dataCards])
   useEffect(() => {
     if (cardId != null && Array.isArray(cards)) {
       const card = cards.find((card) => card._id === cardId)
@@ -64,12 +66,12 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     onOpen()
   }
 
-  const hideCardDetail = (): void => {
-    void router.push({
+  const hideCardDetail = async (): Promise<void> => {
+    onClose()
+    await router.push({
       pathname: router.route,
       query: { ...router.query, card: undefined }
     }, undefined, { shallow: true })
-    onClose()
   }
 
   const filterCards = (columnId: string): any[] => {
@@ -146,7 +148,7 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
           )}
         </Droppable>
       </DragDropContext>
-      {isOpen && <CardDetailsModal isOpen={isOpen} onClose={hideCardDetail} card={cardDetail} projectId={projectId} fetchCards={mutateCards} />}
+      <CardDetailsModal isOpen={isOpen} onClose={hideCardDetail} card={cardDetail} projectId={projectId} fetchCards={mutateCards} />
     </Box>
   )
 }

@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { Box, Avatar, Tooltip, AvatarGroup } from '@chakra-ui/react'
+import React, { useContext } from 'react'
+import { Box, Avatar, AvatarGroup } from '@chakra-ui/react'
 
 import PropType from 'prop-types'
 import ProjectSettings, { ProjectSettingsContextProvider } from '@/src/components/sub-navbar/project-settings'
 import ProjectContext from '@/src/store/project-context'
+import { getUserDisplayName } from '@/util/users-fe'
 
 const SubNavbar = ({ project }): JSX.Element => {
   const { users } = useContext(ProjectContext)
@@ -18,7 +19,7 @@ const SubNavbar = ({ project }): JSX.Element => {
       {/* <Box>{loadProjectUsers()}</Box> */}
       <AvatarGroup size='sm' max={5}>
         {/* {users.map((u, idx) => (<Avatar key={idx} bg='transparent' icon={<BiUser size='20' className='icon-blue-color' />} />))} */}
-        {users.map(user => <Avatar key={user._id} name={user.fullName ?? user.email} />)}
+        {users.map(user => <Avatar key={user._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
       </AvatarGroup>
       <Box>
         {/* <InviteModal project={project} /> */}

@@ -15,10 +15,9 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
   const projectContext = useContext(ProjectContext)
   const [users, setUsers] = useState<any[]>([])
 
-  useEffect(async (): Promise<void> => {
+  useEffect((): void => {
     if (projectContext.project?.users != null) {
-      const usersData = await fetchUsers(projectContext.project?.users)
-      setUsers(usersData)
+      void fetchUsers(projectContext.project?.users).then(usersData => setUsers(usersData))
     } else {
       setUsers((prevValue) => {
         if (prevValue.length === 0) return prevValue
@@ -28,7 +27,7 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
   }, [projectContext.project?.users])
 
   const loadAssignedToUser = (): JSX.Element => {
-    if (card.assignedTo == null) return
+    if (card.assignedTo == null) return <></>
 
     const user = users.filter((user) => user._id === card.assignedTo)
 

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { addUserToRole, removeUserFromRole } from '@/util/role'
-import { handler as isConnected } from '@/util/temp-middleware'
+import { isConnected } from '@/util/temp-middleware'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   if (isConnected(req, res) == null) return

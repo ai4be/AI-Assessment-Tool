@@ -69,7 +69,7 @@ export const getCards = async (
   if (category != null) where.category = sanitize(category)
   const cards = await db
     .collection(TABLE_NAME)
-    .find(where)
+    .find(where).toArray()
   return cards
 }
 
