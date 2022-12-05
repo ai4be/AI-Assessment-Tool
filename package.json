@@ -27,6 +27,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.findindex": "^4.6.0",
     "lodash.isempty": "^4.4.0",
+    "lodash.pick": "^4.4.0",
     "mongo-sanitize": "^1.1.0",
     "mongodb": "^3.6.6",
     "mongodb-client-encryption": "^2.3.0",

@@ -1,8 +1,10 @@
 
-import { connectToDatabase, toObjectId } from './mongodb'
+import { cleanText, connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import { getUsers, User } from './user'
 import sanitize from 'mongo-sanitize'
+import { createProjectDefaultColumns, getTodoColumn } from './columns'
+import { createCards } from './card'
 
 export const TABLE_NAME = 'projects'
 
@@ -14,6 +16,36 @@ export interface Project {
   backgroundImage?: string
   users?: ObjectId[]
   roles?: Role[]
+}
+
+export const createProject = async ({ name, createdBy }: { name: string, createdBy: ObjectId | string }, addDefaultColumns = true): Promise<string> => {
+  const { db } = await connectToDatabase()
+  name = cleanText(name)
+  createdBy = toObjectId(createdBy)
+  const createdAt = Date.now()
+  const data = {
+    _id: ObjectId(),
+    name,
+    createdAt,
+    createdBy,
+    users: []
+  }
+  const result = await db.collection(TABLE_NAME).insertOne(data)
+  if (addDefaultColumns) await createProjectDefaultColumns(data._id, createdBy)
+  return String(result.insertedId)
+}
+
+export const createProjectWithDefaultColumnsAndCards = async (name: string, createdBy: ObjectId | string, cards: any[]): Promise<string> => {
+  const projectId = await createProject({ name, createdBy }, true)
+  const todoColumn = await getTodoColumn(projectId)
+  cards = sanitize(cards)
+  cards = cards.map(c => ({
+    ...c,
+    projectId: toObjectId(projectId),
+    columnId: toObjectId(todoColumn._id)
+  }))
+  await createCards(cards)
+  return String(projectId)
 }
 
 export const getProject = async (_id: ObjectId | string): Promise<Project> => {

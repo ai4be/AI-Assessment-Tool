@@ -269,7 +269,7 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
         >
           {date != null ? format(date, configs.dateFormat) : ''}
         </Text> */}
-        <Box cursor='pointer' onClick={() => popoverOpen ? null : openpopover()} popoverOpen={popoverOpen}>
+        <Box cursor='pointer' onClick={() => popoverOpen ? null : openpopover()}>
           {props.children}
         </Box>
       </PopoverTrigger>

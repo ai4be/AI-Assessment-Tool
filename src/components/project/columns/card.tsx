@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { Box, Badge, Avatar } from '@chakra-ui/react'
+import { Box, Badge, Avatar, Text } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import { CardDetail } from '@/src/types/cards'
 import ProjectContext from '@/src/store/project-context'
@@ -65,7 +65,7 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
               {card.label.type}
             </Badge>
           )}
-          <p>{card.title}</p>
+          <Text fontSize='sm' >{card.title?.replace(/(=g(b|e)=)/g, '')}</Text>
           {loadAssignedToUser()}
         </Box>
       )}

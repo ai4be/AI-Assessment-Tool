@@ -5,15 +5,15 @@ import {
   Heading,
   Input
 } from '@chakra-ui/react'
-import Cards from '@/src/components/project/columns/cards'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 import debounce from 'lodash.debounce'
+import Card from '@/src/components/project/columns/card'
 import { CardDetail } from '@/src/types/cards'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'
 import {
   updateColumn
-} from '@/util/columns'
+} from '@/util/columns-fe'
 
 const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }): JSX.Element => {
   const { data } = useSession()
@@ -103,20 +103,22 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
       ml={index === 0 ? '0' : '10px'}
       className='background-light-blue rounded-lg'
     >
-      <Box pb='5px' rounded='lg'>
+      <Box pb='5px' rounded='lg' display='flex' flexDirection='column'>
         <Box display='flex' alignItems='center' justifyContent='center' className='mt-1.5'>
           {loadColumnTitle()}
         </Box>
         <Droppable droppableId={column._id} type='card'>
           {(provided) => (
             // 2px height is needed to make the drop work when there is no card.
-            <Box ref={provided.innerRef} {...provided.droppableProps} minHeight='2px'>
-              <Cards showCardDetail={showCardDetail} cards={cardsInSortedSequence} />
+            <Box ref={provided.innerRef} {...provided.droppableProps} minHeight='2px' height='100%'>
+              {cardsInSortedSequence?.map((card, index) => (
+                <Card key={index} card={card} cardIndex={index} showCardDetail={showCardDetail} />
+              ))}
               {provided.placeholder}
             </Box>
           )}
         </Droppable>
-        <Button
+        {/* <Button
           size='xs'
           my='10px'
           mx='auto'
@@ -130,7 +132,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
           onClick={handleCardAdd}
         >
           + Add a card
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   )

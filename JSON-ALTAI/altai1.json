@@ -1,27 +1,27 @@
 {
     "id":"1669036585",
-    "title" : "Human Agency and Oversight", 
-    "desc" : "AI systems should support human autonomy and decision-making, as prescribed by the principle of respect for human autonomy. This requires that AI systems should both act as enablers to a democratic, flourishing and equitable society by supporting the user’s agency and upholding fundamental rights, which should be underpinned by human oversight. In this section, we are asking you to assess the AI system in terms of the respect for human agency, as well as human oversight.", 
-    "sections" : 
+    "title" : "Human Agency and Oversight",
+    "desc" : "AI systems should support human autonomy and decision-making, as prescribed by the principle of respect for human autonomy. This requires that AI systems should both act as enablers to a democratic, flourishing and equitable society by supporting the user’s agency and upholding fundamental rights, which should be underpinned by human oversight. In this section, we are asking you to assess the AI system in terms of the respect for human agency, as well as human oversight.",
+    "sections" :
     [
         {
-            "id" : "1669036901", 
+            "id" : "1669036901",
             "title" : "Human Autonomy",
             "desc" : "This subsection deals with the effect AI systems can have on human behaviour in the broadest sense. It deals with the effect of AI systems that are aimed at guiding, influencing or supporting humans in decision making processes, for example, algorithmic decision support systems, risk analysis/prediction systems (recommender systems, predictive policing, financial risk analysis, etc.). It also deals with the effect on human perception and expectation when confronted with AI systems that 'act' like humans. Finally, it deals with the effect of AI systems on human affection, trust and (in)dependence."},
         {
-            "id" : "1669036910", 
+            "id" : "1669036910",
             "title" : "Human Oversight",
             "desc" : "This subsection helps to self-assess necessary oversight measures through governance mechanisms such as human-in-the-loop (HITL), human-on-the-loop (HOTL), or human-in-command (HIC) approaches. Human-in-the-loop refers to the capability for human intervention in every decision cycle of the system. Human-on-the-loop refers to the capability for human intervention during the design cycle of the system and monitoring the system’s operation. Human-in-command refers to the capability to oversee the overall activity of the AI system (including its broader economic, societal, legal and ethical impact) and the ability to decide when and how to use the AI system in any particular situation. The latter can include the decision not to use an AI system in a particular situation to establish levels of human discretion during the use of the system, or to ensure the ability to override a decision made by an AI system."
         }
-    ], 
-    "cards": 
+    ],
+    "cards":
     [
         {
             "id" : "1669036932",
-            "tile" : "Evaluate the risk that the =gb=AI system=ge= negatively affects human autonomy.",
+            "title" : "Evaluate the risk that the =gb=AI system=ge= negatively affects human autonomy.",
             "desc" : "The following questions will help you in your evaluation",
-            "section" : "1669036901", 
-            "questions": 
+            "section" : "1669036901",
+            "questions":
             [
                 {
                     "id":"HAO1",
@@ -29,7 +29,7 @@
                     "isVisibleIf":"",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "To some extent",
@@ -43,7 +43,7 @@
                     "isVisibleIf":"",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "No"
@@ -55,19 +55,19 @@
                     "isVisibleIf":"{HAO1} notempty and !({HAO1} = 'No')",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "No"
                     ]
-                }, 
+                },
                 {
                     "id":"HAO1.2",
                     "title":"Could the =gb=AI system=ge= generate confusion for some or all =gb=end-users=ge= or =gb=subjects=ge= on whether they are interacting with a human or AI system?   =hb=Users should be able to make informed autonomous decisions regarding AI systems. They should be given the knowledge and tools to comprehend and interact with AI system to a satisfactory degree and, where possible, be enabled to reasonably self-assess or challenge the system. AI systems should support individuals in making better, more informed choices in accordance with their goals.=br==br=Communicate, in a clear and proactive manner, information to stakeholders about the AI system’s capabilities and limitations, enabling realistic expectation setting, and about the manner in which the requirements are implemented.Be transparent about the fact that they are dealing with an AI system.=br==br=EGTAI p. 15, 24.=he=",
                     "isVisibleIf":"{HAO1.1} = 'Yes'",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "No"
@@ -79,7 +79,7 @@
                     "isVisibleIf":"{HAO1.1} notempty",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "No"
@@ -91,7 +91,7 @@
                     "isVisibleIf":"{HAO1.2} == 'Yes'",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "No"
@@ -103,7 +103,7 @@
                     "isVisibleIf":"{HAO1.2} notempty",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "No"
@@ -115,7 +115,7 @@
                     "isVisibleIf":"!({HAO1.3} = 'No')",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "To some extent",
@@ -129,7 +129,7 @@
                     "isVisibleIf":"{HAO1.3} notempty",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
                         "Yes",
                         "No"
@@ -141,12 +141,12 @@
                     "isVisibleIf":"",
                     "isScored":1,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
-                        "Non-existent", 
-                        "Low", 
-                        "Moderate", 
-                        "Significant", 
+                        "Non-existent",
+                        "Low",
+                        "Moderate",
+                        "Significant",
                         "High"
                     ]
                 },
@@ -156,12 +156,12 @@
                     "isVisibleIf":"",
                     "isScored":1,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
-                        "Non-existent", 
-                        "Completely Inadequate", 
-                        "Almost adequate", 
-                        "Adequate", 
+                        "Non-existent",
+                        "Completely Inadequate",
+                        "Almost adequate",
+                        "Adequate",
                         "Fully adequate"
                     ]
                 }
@@ -169,10 +169,10 @@
         },
         {
             "id" : "1669036901",
-            "tile" : "Evaluate the risk that your =gb=AI system=ge= creates human attachment or addiction to your platform or can be used in manipulative ways.",
+            "title" : "Evaluate the risk that your =gb=AI system=ge= creates human attachment or addiction to your platform or can be used in manipulative ways.",
             "desc" : "The following questions will help you in your evaluation",
-            "section" : "1669036901", 
-            "questions": 
+            "section" : "1669036901",
+            "questions":
             [
                 {
                     "id":"HAO2",
@@ -180,13 +180,13 @@
                     "isVisibleIf":"",
                     "isScored":0,
                     "type":"checkbox",
-                    "answers": 
+                    "answers":
                     [
-                        "Is a self-learning or autonomous system", 
-                        "Is overseen by a =gb=human-in-the-loop=ge=", 
-                        "Is overseen by a =gb=human-on-the-loop=ge=", 
-                        "Is overseen by a =gb=human-in-command=ge=", 
-                        "Other", 
+                        "Is a self-learning or autonomous system",
+                        "Is overseen by a =gb=human-in-the-loop=ge=",
+                        "Is overseen by a =gb=human-on-the-loop=ge=",
+                        "Is overseen by a =gb=human-in-command=ge=",
+                        "Other",
                         "Don't know"
                     ]
                 },
@@ -196,11 +196,11 @@
                     "isVisibleIf":"",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
-                        "Yes", 
+                        "Yes",
                         "No",
-                        "Don't know" 
+                        "Don't know"
                     ]
                 },
                 {
@@ -211,9 +211,9 @@
                     "type":"radio",
                     "answers":
                     [
-                        "Yes", 
+                        "Yes",
                         "No",
-                        "Don't know" 
+                        "Don't know"
                     ]
                 },
                 {
@@ -224,9 +224,9 @@
                     "type":"radio",
                     "answers":
                     [
-                        "Yes", 
+                        "Yes",
                         "No",
-                        "Don't know" 
+                        "Don't know"
                     ]
                 },
                 {
@@ -235,12 +235,12 @@
                     "isVisibleIf":"",
                     "isScored":1,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
-                        "Non-existent", 
-                        "Completely Inadequate", 
-                        "Almost adequate", 
-                        "Adequate", 
+                        "Non-existent",
+                        "Completely Inadequate",
+                        "Almost adequate",
+                        "Adequate",
                         "Fully adequate"
                     ]
                 }
@@ -248,7 +248,7 @@
         },
         {
             "id" : "1669045830",
-            "tile" : "Evaluate the oversight procedures you have set up for the =gb=AI system=ge=.",
+            "title" : "Evaluate the oversight procedures you have set up for the =gb=AI system=ge=.",
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669036910",
             "questions":
@@ -259,11 +259,11 @@
                     "isVisibleIf":"",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
-                        "Abort the process entirely", 
-                        "Abort the process in part", 
-                        "Delegate control to a human", 
+                        "Abort the process entirely",
+                        "Abort the process in part",
+                        "Delegate control to a human",
                         "Other", "Don't know"
                     ]
 
@@ -274,11 +274,11 @@
                     "isVisibleIf":"",
                     "isScored":0,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
-                        "Yes", 
+                        "Yes",
                         "No",
-                        "Don't know" 
+                        "Don't know"
                     ]
                 },
                 {
@@ -287,18 +287,18 @@
                     "isVisibleIf":"",
                     "isScored":1,
                     "type":"radio",
-                    "answers": 
+                    "answers":
                     [
-                    
-                        "Non-existent", 
-                        "Completely Inadequate", 
-                        "Almost adequate", 
-                        "Adequate", 
+
+                        "Non-existent",
+                        "Completely Inadequate",
+                        "Almost adequate",
+                        "Adequate",
                         "Fully adequate"
-                    
+
                     ]
                 }
-            ]     
+            ]
         }
-    ]   
+    ]
 }

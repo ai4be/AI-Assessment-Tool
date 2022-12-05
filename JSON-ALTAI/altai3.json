@@ -1,7 +1,7 @@
 {
     "id": "1669727131",
     "title": "Privacy and Data Governance",
-    "description": "Closely linked to the principle of prevention of harm is privacy, a fundamental right particularly affected by AI systems. Prevention of harm to privacy also necessitates adequate data governance that covers the quality and integrity of the data used, its relevance in light of the domain in which the AI systems will be deployed, its access protocols and the capability to process data in a manner that protects privacy.",
+    "desc": "Closely linked to the principle of prevention of harm is privacy, a fundamental right particularly affected by AI systems. Prevention of harm to privacy also necessitates adequate data governance that covers the quality and integrity of the data used, its relevance in light of the domain in which the AI systems will be deployed, its access protocols and the capability to process data in a manner that protects privacy.",
     "sections" : null,
     "cards":
     [
@@ -9,13 +9,13 @@
             "id" : "1669727403",
             "title" : "Rate the privacy & data governance measures and procedures you have set up for the AI system?",
             "desc" : "The following questions will help you in your evaluation",
-            "questions": 
+            "questions":
             [
                 {
                     "id": "PDG-Q1-B",
                     "title": "Did you consider the impact of the =gb=AI system=ge= on the right to privacy, the right to physical, mental and/or moral integrity and the right to data protection?   =hb=Everyone has the right to respect for his or her private and family life, home and communications.=br=This right is enshrined in different human rights charters and conventions.=he=",
                     "visibleIf" : "",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "isScored": 0,
                     "answers": [
                         "Yes", "No", "Don't know"
@@ -23,7 +23,7 @@
                 }, {
                     "id": "PDG-Q2-B",
                     "title": "Depending on the =gb=use case=ge=, did you establish mechanisms that allow flagging issues related to privacy or data protection concerning the =gb=AI system=ge=?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "{PDG-Q1-B} notempty",
                     "isScored": 0,
                     "answers": [
@@ -32,7 +32,7 @@
                 }, {
                     "id": "PDG1",
                     "title": "Is your =gb=AI system=ge= being trained, or was it developed, by using or processing personal data (including special categories of personal data)? =hb=The following special categories of personal data are deemed ‘sensitive’ and get specific protection under the General Data Protection Regulation (GDPR):<ul><li>racial or ethnic origin;</li><li>political opinions;</li><li>religious or philosophical beliefs;</li><li>trade union membership;</li><li>processing of genetic data;</li><li>biometric data for the purpose of uniquely identifying a natural person;</li><li>health;</li><li>sex life or sexual orientation.</li></ul> As a <b>general rule</b>, processing of the types of data listed above is <b>prohibited</b>.However, under certain derogations  a company or organisation may be allowed to process sensitive personal data, when for example:<li>you have made your sensitive data manifestly public;</li><li>you have given your explicit consent;</li><li>there is a law which governs a specific type of data processing for a specific purpose related to public interest or health;</li><li>a law including adequate safeguards provides for the processing of sensitive personal data in areas such as public health, employment and social protection.</li></ul>=br= Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rights-citizens/how-my-personal-data-protected/how-data-my-religious-beliefs-sexual-orientation-health-political-views-protected_en'>link</a>=he=",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "{PDG-Q2-B} notempty",
                     "isScored": 0,
                     "answers": [
@@ -54,7 +54,7 @@
                 }, {
                     "id": "PDG-Q4-B",
                     "title": "Did you implement the right to withdraw consent, the right to object and the right to be forgotten in the =gb=AI system=ge=? =hb=It should be as easy to withdraw as to give consent. If consent is withdrawn your company/organisation can no longer process the data. Once consent has been withdrawn, your company/organisation needs to ensure that the data is deleted unless it can be processed on another legal ground (for example storage requirements or as far as it is a necessity to fulfil the contract). If the data was being processed for several purposes your company/organisation can’t use the personal data for the part of the processing for which consent has been withdrawn or for any of the purposes, depending on the nature of the withdrawal of consent. =br==br= <b>References:</b> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Article 7 and Recitals(32), (33), (42), (43) and 58 of the GDPR</a> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=623051'>EDPB guidelines on Consent under Regulation 2016/679</a> =br==br= Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/legal-grounds-processing-data/grounds-processing/what-if-somebody-withdraws-their-consent_en'>link</a> =he=",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "{PDG-Q3-B} notempty",
                     "isScored": 0,
                     "answers": [
@@ -63,7 +63,7 @@
                 }, {
                     "id": "PDG-Q5-B",
                     "title": "Did you consider the privacy and data protection implications of data collected, generated or processed over the course of the =gb=AI system=ge='s =gb=lifecycle=ge=?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "{PDG-Q4-B} notempty",
                     "isScored": 0,
                     "answers": [
@@ -72,7 +72,7 @@
                 }, {
                     "id": "PDG-Q6-B",
                     "title": "Did you consider the privacy and data protection implications of the =gb=AI system=ge='s non-personal training-data or other processed non-personal data? ",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "{PDG-Q5-B} notempty",
                     "isScored": 0,
                     "answers": [
@@ -81,7 +81,7 @@
                 }, {
                     "id": "PDG-Q7-B",
                     "title": "Did you align the =gb=AI system=ge= with relevant =gb=standards=ge= (e.g. ISO, IEEE) or widely adopted protocols for (daily) data management and =gb=governance=ge=? ",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "{PDG-Q6-B} notempty",
                     "isScored": 0,
                     "answers": [
@@ -90,7 +90,7 @@
                 }, {
                     "id": "PDG-S1-R",
                     "title": "Rate the privacy & =gb=data governance=ge= measures and procedures you have set up for the =gb=AI system=ge=? ",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "{PDG-Q7-B} notempty",
                     "isScored": 1,
                     "answers": [

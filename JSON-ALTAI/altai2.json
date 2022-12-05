@@ -1,26 +1,26 @@
 {
     "id": "1669217033",
     "title": "Technical Robustness and Safety",
-    "description": "A crucial requirement for achieving Trustworthy AI systems is their dependability (the ability to deliver services that can justifiably be trusted) and resilience (robustness when facing changes). Technical robustness requires that AI systems are developed with a preventative approach to risks and that they behave reliably and as intended while minimising unintentional and unexpected harm as well as preventing it where possible. This should also apply in the event of potential changes in their operating environment or the presence of other agents (human or artificial) that may interact with the AI system in an adversarial manner. The questions in this section address four main issues: 1) security; 2) safety; 3) accuracy; and 4) reliability, fall-back plans and reproducibility.",
+    "desc": "A crucial requirement for achieving Trustworthy AI systems is their dependability (the ability to deliver services that can justifiably be trusted) and resilience (robustness when facing changes). Technical robustness requires that AI systems are developed with a preventative approach to risks and that they behave reliably and as intended while minimising unintentional and unexpected harm as well as preventing it where possible. This should also apply in the event of potential changes in their operating environment or the presence of other agents (human or artificial) that may interact with the AI system in an adversarial manner. The questions in this section address four main issues: 1) security; 2) safety; 3) accuracy; and 4) reliability, fall-back plans and reproducibility.",
     "sections" :
     [
         {
-            "id" : "1669217049", 
+            "id" : "1669217049",
             "title" : "Security",
             "desc" : null
-        },        
+        },
         {
-            "id" : "1669217102", 
+            "id" : "1669217102",
             "title" : "General Safety",
             "desc" : null
         },
         {
-            "id" : "1669217118", 
+            "id" : "1669217118",
             "title" : "Accuracy",
             "desc" : null
         },
         {
-            "id" : "1669217134", 
+            "id" : "1669217134",
             "title" : "Reliability, fall-back plans and reproducibility",
             "desc" : null
         }
@@ -64,9 +64,9 @@
                     "isScored":0,
                     "answers" :
                     [
-                        "=gb=Data poisoning=ge= (i.e., manipulation of the training data)", 
-                        "=gb=Model evasion=ge= (i.e., classify the data according to the attacker will)", 
-                        "=gb=Model inversion=ge= (i.e., infer the model parameters)", 
+                        "=gb=Data poisoning=ge= (i.e., manipulation of the training data)",
+                        "=gb=Model evasion=ge= (i.e., classify the data according to the attacker will)",
+                        "=gb=Model inversion=ge= (i.e., infer the model parameters)",
                         "Other "
                     ]
                 },
@@ -123,10 +123,10 @@
                     "answers":
                     [
                         [
-                            "Non-existent", 
-                            "Completely inadequate", 
-                            "Almost adequate", 
-                            "Adequate", 
+                            "Non-existent",
+                            "Completely inadequate",
+                            "Almost adequate",
+                            "Adequate",
                             "Fully adequate"
                         ]
                     ]
@@ -223,7 +223,7 @@
                     "isVisibleIf" : "{TRS-Q1.2-B} = 'Yes'",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -234,7 +234,7 @@
                     "isVisibleIf" : "{TRS-Q2.5-B} notempty and !({TRS-Q2.5-B} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -245,9 +245,9 @@
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
-                        "Yes", "No", "Don't know" 
+                        "Yes", "No", "Don't know"
                     ]
                 },
                 {
@@ -256,9 +256,9 @@
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty and !({TRS-Q2.1-B} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
-                        "Yes", "No", "Don't know"  
+                        "Yes", "No", "Don't know"
                     ]
                 },
                 {
@@ -267,7 +267,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
                         "Non-existent", "Low", "Moderate", "Significant", "High"
                     ]
@@ -299,7 +299,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -310,7 +310,7 @@
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -321,7 +321,7 @@
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -332,7 +332,7 @@
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -343,7 +343,7 @@
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -354,7 +354,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
                         "Non-existent", "Low", "Moderate", "Significant", "High"
                     ]
@@ -365,7 +365,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
                         "Non-existent", "Completely inadequate ", "Almost adequate ", "Adequate ", "Fully adequate"
                     ]
@@ -373,10 +373,10 @@
             ]
         },
         {
-            "id" : "1669218235",   
+            "id" : "1669218235",
             "title" : "Evaluate the reliability, fall-back plans and reproducibility of the =gb=AI system=ge=?",
             "desc" : "The following questions will help you in your evaluation",
-            "section" : "1669217134",   
+            "section" : "1669217134",
             "questions":
             [
                 {
@@ -385,7 +385,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -396,7 +396,7 @@
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -407,7 +407,7 @@
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -418,7 +418,7 @@
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -429,7 +429,7 @@
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -440,7 +440,7 @@
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -451,7 +451,7 @@
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -462,7 +462,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
                     ]
@@ -473,10 +473,10 @@
                     "isVisibleIf" : "{TRS4.1} notempty and !({TRS4.1} = 'No')",
                     "type" : "radio",
                     "isScored" : 0,
-                    "answers" : 
+                    "answers" :
                     [
                         "Yes", "No", "Don't know"
-                    ]   
+                    ]
                 },
                 {
                     "id" : "TRS-S7-R",
@@ -484,7 +484,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
                         "Non-existent", "Low", "Moderate", "Significant", "High"
                     ]
@@ -495,7 +495,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
                         "Non-existent", "Completely inadequate ", "Almost adequate ", "Adequate ", "Fully adequate"
                     ]
@@ -506,9 +506,9 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
-                        "Non-existent", "Low", "Moderate", "Significant", "High"                    
+                        "Non-existent", "Low", "Moderate", "Significant", "High"
                     ]
                 },
                 {
@@ -517,7 +517,7 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
                         "Non-existent", "Completely inadequate ", "Almost adequate ", "Adequate ", "Fully adequate"
                     ]
@@ -528,10 +528,10 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored" : 1,
-                    "answers" : 
+                    "answers" :
                     [
                         "Non-existent", "Low", "Moderate", "Significant", "High"
-                    ]       
+                    ]
                 }
             ]
         }

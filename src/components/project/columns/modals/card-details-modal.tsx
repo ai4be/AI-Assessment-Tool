@@ -21,7 +21,12 @@ import {
   MenuItem,
   MenuList,
   Badge,
-  border
+  border,
+  RadioGroup,
+  Radio,
+  Stack,
+  CheckboxGroup,
+  Checkbox
 } from '@chakra-ui/react'
 import { CardDetail } from '@/src/types/cards'
 import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
@@ -85,16 +90,16 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const handleModalClose = async (): Promise<void> => {
     setIsLoading(true)
-    const data = {
-      _id: card._id,
-      title,
-      description,
-      columnId: card.columnId,
-      assignedTo: assigned
-    }
+    // const data = {
+    //   _id: card._id,
+    //   title,
+    //   description,
+    //   columnId: card.columnId,
+    //   assignedTo: assigned
+    // }
 
-    await updateCard(data, projectId)
-    await fetchCards()
+    // await updateCard(data, projectId)
+    // await fetchCards()
     setIsLoading(false)
     onClose()
   }
@@ -138,19 +143,19 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
       <ModalOverlay />
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
       <ModalContent maxW='64rem' overflowX='hidden' minHeight='50vh' maxHeight='100vh'>
-        <ModalBody p='0' height='100%' display='flex'>
+        <ModalBody p='0' height='100%' display='flex' width='100%'>
           {(card.label != null) && (
             <Badge bg={card.label.type} color='white'>
               {card.label.type}
             </Badge>
           )}
-          <Flex flexDirection='column' height='100%'>
+          <Flex flexDirection='column' height='100%' width='100%' justifyContent='space-between'>
             <Box display='flex'>
               <Box width='100%' marginTop='2rem' ml='4'>
                 <Box ml='-4' position='relative'>
                   <Box width='4px' bgColor='var(--main-blue)' borderRightRadius='15px' height='100%' position='absolute' left='0' top='0' />
                   <Text fontSize={[16, 20]} fontWeight='400' px='4'>
-                    6.7 Assess whether the AI system's user interface is usable by those with special needs or disabilities or those at risk of exclusion.
+                    {card.title.replace(/=g(b|e)=/g, '')}
                   </Text>
                 </Box>
                 <Accordion allowToggle allowMultiple>
@@ -207,6 +212,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
+                {card?.questions?.map((q, index) => (
+                  <Box p={3} key={q.id}>
+                    <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
+                      {q.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}
+                    </Text>
+                    <GenerateAnswers question={q} />
+                  </Box>
+                ))}
               </Box>
               <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='2'>
                 <Flex flexDirection='column'>
@@ -266,3 +279,29 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 }
 
 export default CardDetailsModal
+
+export const GenerateAnswers = ({ question }): JSX.Element => {
+  const [value, setValue] = React.useState(null)
+  if (question.type === 'radio') {
+    return (
+      <RadioGroup onChange={setValue} value={value}>
+        <Stack direction='row'>
+          {question.answers.map((a, idx) => (
+            <Radio key={idx} value={idx} fontSize='10px'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
+          ))}
+        </Stack>
+      </RadioGroup>
+    )
+  } else if (question.type === 'checkbox') {
+    return (
+      <CheckboxGroup onChange={setValue} value={value}>
+        <Stack direction='row'>
+          {question.answers.map((a, idx) => (
+            <Checkbox size='md' key={idx} value={idx} fontSize='10px'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>
+          ))}
+        </Stack>
+      </CheckboxGroup>
+    )
+  }
+  return <></>
+}

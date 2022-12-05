@@ -6,7 +6,7 @@ import { CardDetail } from '@/src/types/cards'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
-import { updateColumn } from '@/util/columns'
+import { updateColumn } from '@/util/columns-fe'
 import { fetcher } from '@/util/api'
 import { useRouter } from 'next/router'
 
@@ -35,9 +35,11 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
       setColumns([])
     }
   }, [data])
+
   useEffect(() => {
     setCards(dataCards || [])
   }, [dataCards])
+
   useEffect(() => {
     if (cardId != null && Array.isArray(cards)) {
       const card = cards.find((card) => card._id === cardId)
@@ -50,6 +52,13 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
       }
     }
   }, [cardId, cards])
+
+  // useEffect(() => {
+  //   if (categoryId != null && Array.isArray(cards)) {
+  //     const catCards = cards.filter(card => card.categoryId === categoryId)
+  //     catCards.sort((a, b) => a.order - b.order)
+  //   }
+  // }, [categoryId, cards])
 
   const setColumnsSorted = (cols: any[]): void => {
     cols.sort((a, b) => a.sequence - b.sequence)
@@ -75,7 +84,10 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
   }
 
   const filterCards = (columnId: string): any[] => {
-    return cards.filter(card => card.columnId === columnId)
+    console.log('filterCards', columnId, categoryId)
+    console.log('filterCards', 'cards', cards)
+    console.log('filterCards res', cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId))
+    return cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId)
   }
 
   const onDragEnd = async (result): Promise<void> => {
