@@ -139,11 +139,11 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   }
 
   return (
-    <Modal size='xl' onClose={handleModalClose} isOpen={isOpen} isCentered>
-      <ModalOverlay />
+    <Modal size='xl' onClose={handleModalClose} isOpen={isOpen} isCentered overflow='hidden'>
+      <ModalOverlay maxHeight='100vh' />
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
-      <ModalContent maxW='64rem' overflowX='hidden' minHeight='50vh' maxHeight='100vh'>
-        <ModalBody p='0' height='100%' display='flex' width='100%'>
+      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative'>
+        <ModalBody p='0' height='100%' display='flex' width='100%' overflowY='scroll' position='relative'>
           {(card.label != null) && (
             <Badge bg={card.label.type} color='white'>
               {card.label.type}

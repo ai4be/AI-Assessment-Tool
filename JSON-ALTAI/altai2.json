@@ -122,13 +122,11 @@
                     "isScored":1,
                     "answers":
                     [
-                        [
-                            "Non-existent",
-                            "Completely inadequate",
-                            "Almost adequate",
-                            "Adequate",
-                            "Fully adequate"
-                        ]
+                        "Non-existent",
+                        "Completely inadequate",
+                        "Almost adequate",
+                        "Adequate",
+                        "Fully adequate"
                     ]
                 }
             ]
