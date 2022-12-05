@@ -1,0 +1,20 @@
+.input_class, .textarea_class {
+  color: #25282B !important;
+  opacity: 1 !important;
+  font-weight: bold;
+  font-size: 16px;
+  outline: none;
+}
+
+.textarea_class:focus, .input_class:focus{
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.textarea_class {
+  color: #25282B !important;
+  opacity: 1 !important;
+  font-weight: normal;
+  font-size: 11px !important;
+  resize: none;
+}

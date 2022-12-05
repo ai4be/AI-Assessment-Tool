@@ -1,19 +1,15 @@
-export type CardDetail = {
-  _id: string;
-  title: string;
-  description: string;
-  columnId?: string;
-  assignedTo?: string;
-  boardId?: string;
-  sequence?: number;
-  label?: Label;
-};
+export interface Card {
+  _id: string
+  title: string
+  desc: string
+  columnId?: string
+  assignedTo?: string
+  projectId?: string
+  sequence?: number
+  label?: Label
+}
 
-export type Label = {
-  bg: string;
-  type: string;
-};
-
-export type CardSlice = {
-  cards: CardDetail[];
-};
+export interface Label {
+  bg: string
+  type: string
+}

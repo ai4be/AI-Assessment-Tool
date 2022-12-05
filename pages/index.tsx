@@ -1,6 +1,21 @@
-import WelcomeScreen from '@/src/components/welcome-screen';
-import withStore from '@/src/hoc/with-store';
+import WelcomeScreen from '@/src/components/welcome-screen'
+import { getSession } from 'next-auth/react'
 
-const WelcomeScreenWithStore = withStore(WelcomeScreen);
+export default WelcomeScreen
 
-export default WelcomeScreenWithStore;
+export async function getServerSideProps (context): Promise<any> {
+  const session = await getSession(context)
+
+  if (session != null) {
+    return {
+      redirect: {
+        destination: '/home',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: { session }
+  }
+}

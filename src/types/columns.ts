@@ -1,10 +1,10 @@
-export type Column = {
-  _id: string;
-  sequence?: number;
-};
+export interface Column {
+  _id: string
+  sequence?: number
+}
 
-export type ColumnsSlice = {
-  columns: Column[];
-  status: string;
-  doneFetching: boolean;
-};
+export interface ColumnsSlice {
+  columns: Column[]
+  status: string
+  doneFetching: boolean
+}

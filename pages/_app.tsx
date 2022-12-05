@@ -1,11 +1,12 @@
-import React from 'react';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import '@/src/styles/default.css';
-import PropTypes from 'prop-types';
-import Head from 'next/head';
-import NextNprogress from 'nextjs-progressbar';
+import React from 'react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import '@/src/styles/default.css'
+import PropTypes from 'prop-types'
+import Head from 'next/head'
+import NextNprogress from 'nextjs-progressbar'
+import { SessionProvider } from 'next-auth/react'
 
-import 'nprogress/nprogress.css';
+import 'nprogress/nprogress.css'
 
 const theme = extendTheme({
   colors: {
@@ -21,25 +22,31 @@ const theme = extendTheme({
     feature: '#61bd4f',
     information: '#ff9f1a'
   }
-});
+})
 
-const TrelloApp = ({ Component, pageProps }) => {
+const App = ({ Component, pageProps }): JSX.Element => {
   return (
     <>
       <Head>
-        <title>Trello clone</title>
-        <link rel="shortcut icon" href="/trello-icon.svg"></link>
+        <title>AI Assessment Tool</title>
+        <link rel='icon' href='/favicon.ico' />
+        <link rel='manifest' type='image/x-icon' href='/site.webmanifest' />
+        <link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
+        <link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />
+        <link rel='icon' type='image/png' sizes='16x16' href='/favicon-16x16.png' />
       </Head>
-      <NextNprogress color="#0079bf" startPosition={0.3} stopDelayMs={200} height={4} />
+      <NextNprogress color='#0079bf' startPosition={0.3} stopDelayMs={200} height={4} />
       <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
+        <SessionProvider session={pageProps.session}>
+          <Component {...pageProps} />
+        </SessionProvider>
       </ChakraProvider>
     </>
-  );
-};
+  )
+}
 
-TrelloApp.propTypes = {
+App.propTypes = {
   pageProps: PropTypes.object
-};
+}
 
-export default TrelloApp;
+export default App

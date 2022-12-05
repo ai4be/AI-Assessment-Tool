@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState, BaseSyntheticEvent } from 'react'
 import {
+  Box,
   Modal,
   ModalBody,
   ModalOverlay,
@@ -9,69 +10,65 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Input
-} from '@chakra-ui/react';
-import checkEnvironment from '@/util/check-environment';
-import { useAppSelector } from '@/src/hooks';
+  Input,
+} from '@chakra-ui/react'
+import { defaultFetchOptions } from '@/util/api'
 
-const host = checkEnvironment();
+const InviteModal = ({ project, callback }): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [email, setEmail] = useState('')
+  const [emailErr, setEmailErr] = useState(false)
+  const [isMailSending, setMailSending] = useState(false)
 
-const InviteModal = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [email, setEmail] = useState('');
-  const [emailErr, setEmailErr] = useState(false);
-  const [isMailSending, setMailSending] = useState(false);
-  const board = useAppSelector((state) => state.board.board);
+  const validEmail = /^[a-zA-Z0-9._:$!%-+]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/
 
-  const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
+  const handleClick = async (e: SyntheticEvent): Promise<void> => {
+    console.log('InviteModal.handleClick', e)
+    if (e?.preventDefault != null) e.preventDefault()
+    if (e.nativeEvent instanceof KeyboardEvent && e.nativeEvent.key !== 'Enter') return
+    setMailSending(true)
+    await sendEmail()
+    setMailSending(false)
+  }
 
-  const handleClick = async () => {
-    setMailSending(true);
-    await sendEmail();
-    setMailSending(false);
-  };
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+    setEmail(e.target.value)
+    validate()
+  }
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    validate();
-  };
-  const validate = () => {
+  const validate = (): void => {
     if (!validEmail.test(email)) {
-      setEmailErr(true);
+      setEmailErr(true)
     } else {
-      setEmailErr(false);
+      setEmailErr(false)
     }
-  };
+  }
 
-  const sendEmail = async () => {
-    const url = `${host}/api/mail`;
-
+  const sendEmail = async (): Promise<void> => {
+    const url = '/api/mail'
     const response = await fetch(url, {
+      ...defaultFetchOptions,
       method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify({ email, boardId: board._id })
-    });
-
-    const inJSON = await response.json();
-
-    if (inJSON.status === 200) {
-      onClose();
-      setEmail('');
+      body: JSON.stringify({ email, projectId: project._id })
+    })
+    if (response.ok) {
+      onClose()
+      setEmail('')
+      if (callback != null && typeof callback === 'function') await callback()
     }
-  };
+  }
 
   return (
     <>
-      <Button onClick={onOpen} size="xs" ml="5px">
-        Invite
-      </Button>
+      <Box align='right'>
+        <Button
+          backgroundColor='success'
+          color='white'
+          onClick={onOpen}
+        >
+          Invite
+        </Button>
+      </Box>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
@@ -79,28 +76,31 @@ const InviteModal = () => {
           <ModalCloseButton />
           <ModalBody>
             <Input
-              type="email"
+              type='email'
               value={email}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder='Enter the email'
+              onKeyUp={handleClick}
+              ref={el => el?.focus()}
             />
           </ModalBody>
           {emailErr && <p>{emailErr}</p>}
           <ModalFooter>
             <Button
               disabled={!validEmail.test(email)}
-              colorScheme="blue"
+              colorScheme='blue'
               mr={3}
               onClick={handleClick}
               isLoading={isMailSending}
-              loadingText="Sending">
+              loadingText='Sending'
+            >
               Invite
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default InviteModal;
+export default InviteModal
