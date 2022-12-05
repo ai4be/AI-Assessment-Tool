@@ -12,7 +12,8 @@ import {
   AlertDescription,
   CloseButton,
   AlertTitle,
-  AlertIcon
+  AlertIcon,
+  Text
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
@@ -222,7 +223,7 @@ const SignUp = (): JSX.Element => {
                 onBlur={() => setTouched({ ...touched, email: true })}
                 autoComplete='off'
               />
-              {emailErr && <p color='red'>Invalid email.</p>}
+              {emailErr && <Text size='xs' color='red'>Invalid email.</Text>}
             </FormControl>
             <FormControl my='4' isRequired>
               <Input
@@ -255,8 +256,8 @@ const SignUp = (): JSX.Element => {
                 onBlur={() => setTouched({ ...touched, password: true })}
                 onChange={handleChange}
               />
-              {passwordLengthErr && <p color='red'>Password is too short</p>}
-              {passwordCharErr && <p color='red'>Invalid password</p>}
+              {passwordLengthErr && <Text size='xs' color='red'>Password is too short</Text>}
+              {passwordCharErr && <Text size='xs' color='red'>Include a special character and number</Text>}
             </FormControl>
             <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
               <Input
@@ -267,7 +268,7 @@ const SignUp = (): JSX.Element => {
                 onChange={handleChange}
                 onBlur={() => setTouched({ ...touched, confirmPassword: true })}
               />
-              {confirmPasswordErr && <p color='red'>Passwords don't match</p>}
+              {confirmPasswordErr && <Text size='xs' color='red'>Passwords don't match</Text>}
             </FormControl>
             <Button
               fontWeight='semibold'
