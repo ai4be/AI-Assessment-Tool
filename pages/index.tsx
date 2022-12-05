@@ -3,10 +3,10 @@ import { getSession } from 'next-auth/react'
 
 export default WelcomeScreen
 
-export async function getServerSideProps (context): Promise<any> {
+export async function getServerSideProps (context: any): Promise<any> {
   const session = await getSession(context)
 
-  if (session != null) {
+  if (session?.user != null) {
     return {
       redirect: {
         destination: '/home',

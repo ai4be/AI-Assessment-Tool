@@ -54,7 +54,6 @@ const SignUp = (): JSX.Element => {
   }, [values.email, touched.email])
 
   useEffect(() => {
-    console.log(values.password, values.confirmPassword, touched.password, touched.confirmPassword)
     if (!touched.password || !touched.confirmPassword) return
     if (values.password?.length > 0 && values.confirmPassword?.length > 0 && values.confirmPassword !== values.password) {
       setConfirmPasswordErr(true)
@@ -151,7 +150,6 @@ const SignUp = (): JSX.Element => {
   }
 
   const setPropTouched = (prop: string): void => {
-    console.log('setPropTouched', prop, touched)
     setTouched({
       ...touched,
       [prop]: true

@@ -1,6 +1,5 @@
 import NextAuth, { NextAuthOptions, User } from 'next-auth'
-import Credentials from 'next-auth/providers/credentials'
-import CredentialsProvider from "next-auth/providers/credentials"
+import CredentialsProvider from 'next-auth/providers/credentials'
 
 import { verifyPassword } from '@/util/auth'
 import { invitedUserHandler } from '@/util/token'
@@ -10,7 +9,7 @@ import isEmpty from 'lodash.isempty'
 
 const authorize: any = async (credentials: any, req): Promise<User | null> => {
   // Check any field is empty
-  if (isEmpty(credentials.email)  || isEmpty(credentials.password)) throw new Error('email or password is missing')
+  if (isEmpty(credentials.email) || isEmpty(credentials.password)) throw new Error('email or password is missing')
   const email = sanitize(credentials.email.trim().toLowerCase())
   const { token } = req.body
   const user = await getUser({ email }, [])
