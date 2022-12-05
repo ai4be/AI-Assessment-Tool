@@ -169,7 +169,7 @@ const SignUp = (): JSX.Element => {
   return (
     <>
       <Box display='flex' alignItems='center' justifyContent='center'>
-        <AI4BelgiumIcon />
+        <Link href='/'><AI4BelgiumIcon /></Link>
       </Box>
       <Flex
         alignItems='center'

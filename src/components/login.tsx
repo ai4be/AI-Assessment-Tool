@@ -83,7 +83,7 @@ const Login = (): JSX.Element => {
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' my='40px'>
-        <AI4BelgiumIcon />
+        <Link href='/'><AI4BelgiumIcon /></Link>
       </Box>
 
       <Flex
