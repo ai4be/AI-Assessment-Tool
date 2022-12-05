@@ -12,6 +12,7 @@ import { defaultFetchOptions, fetcher } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
 import InviteModal from '../invite-user/modal'
 import { getDisplayName } from 'next/dist/shared/lib/utils'
+import { getUserDisplayName } from '@/util/users-fe'
 
 const InviteModalMemo = React.memo(InviteModal)
 const ConfirmDialogMemo = React.memo(ConfirmDialog)
@@ -69,9 +70,11 @@ const Team = ({ project }: { project: any }): JSX.Element => {
   return (
     <>
       <Flex flexDirection='column' className='mb-2'>
-        {Array.isArray(context.users) && context.users.map((user) => (
+        <Box className='text-grey mt-2'>Project Users</Box>
+        <hr className='my-2' />
+        {context.users != null && context.users?.length > 0 && context.users.map((user) => (
           <Flex key={user._id} justifyContent='space-between' alignItems='center'>
-            <Box>{getDisplayName(user)}</Box>
+            <Box>{getUserDisplayName(user)}</Box>
             {user._id.toString() !== project.createdBy.toString()
               ? (<RiDeleteBin6Line cursor='pointer' onClick={() => setDeleteHandlerWrapper(user)} color='var(--main-blue)' />)
               : (<></>)}
@@ -79,7 +82,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
         ))}
         {Array.isArray(data) &&
           <>
-            <Box className='text-grey mt-2'>Pending Invites</Box>
+            <Box className='text-grey mt-3'>Pending Invites</Box>
             <hr className='my-2' />
             {data.map((token) => (
               <Flex key={token._id} justifyContent='space-between' alignItems='center'>

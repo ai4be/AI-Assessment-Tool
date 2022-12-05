@@ -30,7 +30,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
   const rows = useBreakpointValue({ base: 2, sm: 5 })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [name, setName] = useState(role.name)
-  const [description, setDescription] = useState(role.description)
+  const [description, setDescription] = useState(role.desc)
   const [userIdTrigger, setUserIdTrigger] = useState(0)
   const { users = [] } = useContext(ProjectContext)
 
@@ -53,7 +53,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
   const handleSave = async (...args: any[]): Promise<void> => {
     setIsEditingWrapper(false)
     role.name = name
-    role.description = description
+    role.desc = description
     await saveRole(role)
   }
 

@@ -31,7 +31,7 @@ export const addRole = async (projectId: ObjectId | string, role: { _id?: Object
   projectId = toObjectId(projectId)
   role._id = role._id != null ? toObjectId(role._id) : new ObjectId()
   role.name = sanitize(role.name)
-  role.desc = sanitize(role.desc)
+  role.desc = sanitize(role.desc ?? '')
   role = pick(role, ['_id', 'name', 'desc']) // allow to use the spreadoperator safely
   await db.collection(TABLE_NAME)
     .updateOne({ _id: projectId }, { $push: { roles: { ...role, userIds: [], createdAt: Date.now() } } })
@@ -55,7 +55,7 @@ export const updateRole = async (projectId: ObjectId | string, role: { _id: Obje
     {
       $set: {
         'roles.$.name': sanitize(role.name),
-        'roles.$.description': sanitize(role.desc)
+        'roles.$.desc': sanitize(role.desc)
       }
     }
   )

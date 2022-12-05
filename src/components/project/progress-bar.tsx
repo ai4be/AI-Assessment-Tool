@@ -34,7 +34,7 @@ const ProgressBar: FC<any> = (): JSX.Element => {
           borderLeftRadius={idx === 0 ? borderRadiusOutside : '0px'}
           borderRightRadius={idx !== SECTIONS_MAX_IDX ? borderRadiusInner : borderRadiusOutside}
           marginLeft={idx > 0 ? `-${marginLeft}` : 0}
-          zIndex={10 - idx}
+          zIndex={3 - idx}
         >
           {s}
         </Flex>
