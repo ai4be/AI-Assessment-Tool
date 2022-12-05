@@ -21,14 +21,12 @@ import {
   MenuItem,
   MenuList,
   Badge,
-  border,
   RadioGroup,
   Radio,
   Stack,
   CheckboxGroup,
   Checkbox
 } from '@chakra-ui/react'
-import { CardDetail } from '@/src/types/cards'
 import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
 import { FiUserPlus } from 'react-icons/fi'
 import { GrTextAlignFull } from 'react-icons/gr'
@@ -46,7 +44,7 @@ import { UserMenu } from '@/src/components/user-menu'
 interface Props {
   onClose: () => void
   isOpen: boolean
-  card: CardDetail
+  card: any
   projectId: string
   fetchCards: () => any
 }
@@ -139,7 +137,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   }
 
   return (
-    <Modal size='xl' onClose={handleModalClose} isOpen={isOpen} isCentered overflow='hidden'>
+    <Modal size='xl' onClose={handleModalClose} isOpen={isOpen} isCentered>
       <ModalOverlay maxHeight='100vh' />
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
       <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative'>
@@ -281,10 +279,10 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 export default CardDetailsModal
 
 export const GenerateAnswers = ({ question }): JSX.Element => {
-  const [value, setValue] = React.useState(null)
+  const [value, setValue] = React.useState<string>('')
   if (question.type === 'radio') {
     return (
-      <RadioGroup onChange={setValue} value={value}>
+      <RadioGroup onChange={value => setValue(value)} value={value}>
         <Stack direction='row'>
           {question.answers.map((a, idx) => (
             <Radio key={idx} value={idx} fontSize='10px'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
@@ -294,7 +292,7 @@ export const GenerateAnswers = ({ question }): JSX.Element => {
     )
   } else if (question.type === 'checkbox') {
     return (
-      <CheckboxGroup onChange={setValue} value={value}>
+      <CheckboxGroup onChange={value => setValue(String(value))} value={[value]}>
         <Stack direction='row'>
           {question.answers.map((a, idx) => (
             <Checkbox size='md' key={idx} value={idx} fontSize='10px'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>

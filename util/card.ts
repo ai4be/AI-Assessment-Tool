@@ -68,8 +68,8 @@ export const createCards = async (cards: Card[]): Promise<boolean> => {
     ...c,
     ...(c._id != null ? { _id: toObjectId(c._id) } : {}),
     ...(c.projectId != null ? { projectId: toObjectId(c.projectId) } : {}),
-    ...(c.assignedTo?.length > 0 ? { assignedTo: c.assignedTo.map(toObjectId) } : {}),
-    ...(c.roles?.length > 0 ? { roles: c.roles.map(toObjectId) } : {})
+    ...(c != null && c.assignedTo != null && c?.assignedTo?.length > 0 ? { assignedTo: c?.assignedTo?.map(toObjectId) } : {}),
+    ...(c != null && c.roles != null && c?.roles?.length > 0 ? { roles: c?.roles?.map(toObjectId) } : {})
   }))
   const res = await db
     .collection(TABLE_NAME)

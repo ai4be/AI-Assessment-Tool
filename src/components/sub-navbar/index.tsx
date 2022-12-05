@@ -19,7 +19,7 @@ const SubNavbar = ({ project }): JSX.Element => {
       {/* <Box>{loadProjectUsers()}</Box> */}
       <AvatarGroup size='sm' max={5}>
         {/* {users.map((u, idx) => (<Avatar key={idx} bg='transparent' icon={<BiUser size='20' className='icon-blue-color' />} />))} */}
-        {users.map(user => <Avatar key={user._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
+        {Array.isArray(users) && users.map(user => <Avatar key={user._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
       </AvatarGroup>
       <Box>
         {/* <InviteModal project={project} /> */}

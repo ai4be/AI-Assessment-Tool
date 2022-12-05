@@ -3,7 +3,7 @@ import { Box, Button } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
 
 interface Props {
-  addColumn: () => void
+  addColumn: any
 }
 
 const AddColumnButton: FC<Props> = ({ addColumn }) => {

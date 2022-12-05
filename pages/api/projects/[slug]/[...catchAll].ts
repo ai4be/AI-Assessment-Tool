@@ -7,13 +7,17 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   const { client } = await connectToDatabase()
   let { slug, catchAll } = req.query
   slug = toObjectId(slug)
-  catchAll = Array.isArray(catchAll) ? catchAll?.map(sanitize) : [sanitize(catchAll)]
+  let restOfQuery = catchAll != null && typeof catchAll === 'string' ? [catchAll] : []
+
+  if (Array.isArray(catchAll)) {
+    restOfQuery = catchAll.map(sanitize)
+  }
 
   if (client.isConnected()) {
     const requestType = req.method
     switch (requestType) {
       case 'GET': {
-        const [tokens, tokenStatus = ''] = catchAll
+        const [tokens, tokenStatus = ''] = restOfQuery
         if (tokens.toLowerCase() === 'tokens' && tokenStatus.toUpperCase() === TokenStatus.PENDING) {
           const tokenInstances = await getProjectInvites(slug)
           return res.status(200).json(tokenInstances)
@@ -21,7 +25,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         return res.status(404).json([])
       }
       case 'DELETE': {
-        const [tokens, tokenId] = catchAll
+        const [tokens, tokenId] = restOfQuery
         if (tokens.toLowerCase() === 'tokens' && tokenId?.length === 24) {
           const deleted = await deleteToken(tokenId)
           return res.status(200).json({ success: deleted })

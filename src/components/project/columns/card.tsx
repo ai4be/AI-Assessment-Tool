@@ -1,14 +1,13 @@
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { Box, Badge, Avatar, Text } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
-import { CardDetail } from '@/src/types/cards'
 import ProjectContext from '@/src/store/project-context'
 import { fetchUsers } from '@/util/users-fe'
 
 interface Props {
   showCardDetail: (cardId: string) => void
   cardIndex: number
-  card: CardDetail
+  card: any
 }
 
 const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {

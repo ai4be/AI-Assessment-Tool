@@ -13,7 +13,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   switch (req.method) {
     case 'PATCH': {
       const user = await getUser({ _id: slug })
-      const userSession = await getUser({ email: session?.user?.email })
+      const userSession = await getUser({ email: String(session?.user?.email) })
       if (user?._id === userSession?._id) return res.status(403).send({ message: 'forbidden' })
       const data = {
         _id: slug,

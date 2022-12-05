@@ -21,10 +21,10 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       if (email == null || projectId == null || !isEmailValid(email)) return res.status(400).json({ error: 'missing properties' })
       email = email != null ? cleanEmail(email) : email
       projectId = projectId != null ? toObjectId(projectId) : projectId
-      const creator = await getUser({ email: String(session.user.email) })
+      const creator = await getUser({ email: String(session?.user?.email) })
       let tokenInstance
       try {
-        tokenInstance = await inviteUser(projectId, email, creator._id)
+        tokenInstance = await inviteUser(projectId, email, creator?._id)
       } catch (error) {
         return res.status(400).json({ error: 'duplicate' })
       }

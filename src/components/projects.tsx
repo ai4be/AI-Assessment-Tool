@@ -21,7 +21,7 @@ import { defaultFetchOptions } from '@/util/api'
 const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const inputRef = useRef()
+  const inputRef: any = useRef()
 
   // useEffect(() => {
   //   console.log('inputRef', inputRef)
@@ -37,7 +37,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
     try {
       setIsLoading(true)
       const data: any = {
-        name: inputRef.current.value
+        name: inputRef?.current?.value ?? ''
       }
 
       const response = await fetch('/api/projects', {

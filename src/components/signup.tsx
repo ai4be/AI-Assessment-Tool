@@ -89,12 +89,13 @@ const SignUp = (): JSX.Element => {
   const registerUser = async (e): Promise<void> => {
     e.preventDefault()
     setIsCreatingStatus(true)
-    const { email, password, confirmPassword, fullName } = values
+    const { email, password, confirmPassword, firstName, lastName } = values
     const data: any = {
       email,
       password,
       confirmPassword,
-      fullName
+      firstName,
+      lastName
     }
     if (token != null) data.token = token
 

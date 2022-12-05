@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import data from '../../src/data'
 
-export const sections = data.map(c => c.sections.map(s => {
+export const sections = data.map(c => c?.sections?.map((s: any) => {
   const section = {
     ...s,
     _id: s.id

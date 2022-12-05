@@ -19,7 +19,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       if (slug !== 'me') {
         const projects = await getUserProjects(user._id)
         const userIds = projects.map((project) => project.users).flat().map(uid => String(uid))
-        if (!userIds.includes(slug)) return res.status(403).json({ error: 'You are not authorized to view this user' })
+        if (!userIds.includes(String(slug))) return res.status(403).json({ error: 'You are not authorized to view this user' })
         user = await getUser({ _id: slug })
       }
       return res.status(200).json(user)

@@ -11,6 +11,7 @@ import ProjectContext from '@/src/store/project-context'
 import { defaultFetchOptions, fetcher } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
 import InviteModal from '../invite-user/modal'
+import { getDisplayName } from 'next/dist/shared/lib/utils'
 
 const InviteModalMemo = React.memo(InviteModal)
 const ConfirmDialogMemo = React.memo(ConfirmDialog)
@@ -32,7 +33,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
       method: 'DELETE'
     })
     if (response.ok) {
-      context.users = context.users.filter((u: any) => u._id !== user._id)
+      context.users = context.users?.filter((u: any) => u._id !== user._id)
       project.users = project.users.filter(uid => uid !== user._id)
       context.setProject(project)
     }
@@ -68,9 +69,9 @@ const Team = ({ project }: { project: any }): JSX.Element => {
   return (
     <>
       <Flex flexDirection='column' className='mb-2'>
-        {context.users.map((user) => (
+        {Array.isArray(context.users) && context.users.map((user) => (
           <Flex key={user._id} justifyContent='space-between' alignItems='center'>
-            <Box>{user.fullName || user.email}</Box>
+            <Box>{getDisplayName(user)}</Box>
             {user._id.toString() !== project.createdBy.toString()
               ? (<RiDeleteBin6Line cursor='pointer' onClick={() => setDeleteHandlerWrapper(user)} color='var(--main-blue)' />)
               : (<></>)}

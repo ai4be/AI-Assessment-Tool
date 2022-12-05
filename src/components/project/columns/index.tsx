@@ -2,11 +2,9 @@ import React, { useState, FC, useEffect, useContext } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import CardDetailsModal from '@/src/components/project/columns/modals/card-details-modal'
 import Column from '@/src/components/project/columns/column'
-import { CardDetail } from '@/src/types/cards'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
-import { updateColumn } from '@/util/columns-fe'
 import { fetcher } from '@/util/api'
 import { useRouter } from 'next/router'
 
@@ -22,7 +20,7 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
   const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [cardDetail, setCardDetail] = useState<CardDetail>({ _id: '', title: '', description: '' })
+  const [cardDetail, setCardDetail] = useState<any>({ _id: '', title: '', description: '' })
 
   const [columns, setColumns] = useState<any[]>([])
   const [cards, setCards] = useState<any[]>([])

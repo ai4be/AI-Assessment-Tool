@@ -15,7 +15,7 @@ export interface Project {
   createdAt: number
   backgroundImage?: string
   users?: ObjectId[]
-  roles?: Role[]
+  roles?: any[]
 }
 
 export const createProject = async ({ name, createdBy }: { name: string, createdBy: ObjectId | string }, addDefaultColumns = true): Promise<string> => {
@@ -115,7 +115,7 @@ export const getProjectUsers = async (_id: ObjectId | string): Promise<User[]> =
   return await getUsers([...project.users, project.createdBy])
 }
 
-export const getProjectRoles = async (_id: ObjectId | string): Promise<Role[]> => {
+export const getProjectRoles = async (_id: ObjectId | string): Promise<any[]> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
   const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { roles: 1 } })

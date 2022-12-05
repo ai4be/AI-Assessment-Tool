@@ -1,14 +1,12 @@
 import React, { useState, useCallback } from 'react'
 import {
   Box,
-  Button,
   Heading,
   Input
 } from '@chakra-ui/react'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 import debounce from 'lodash.debounce'
 import Card from '@/src/components/project/columns/card'
-import { CardDetail } from '@/src/types/cards'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'
 import {
@@ -24,7 +22,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
 
   const [columnName, setColumnName] = useState<string>(column.name)
   const cardsInSortedSequence = cards.sort(
-    (cardA: CardDetail, cardB: CardDetail) => cardA.sequence - cardB.sequence
+    (cardA: any, cardB: any) => cardA.sequence - cardB.sequence
   )
 
   const loadColumnTitle = (): JSX.Element => {

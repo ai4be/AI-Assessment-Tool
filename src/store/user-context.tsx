@@ -5,9 +5,9 @@ import { User } from '@/util/user'
 import { useSession } from 'next-auth/react'
 
 interface UserContextType {
-  user: User | null
-  setUser: Function
-  triggerReloadUser: Function
+  user: User | any
+  setUser: any
+  triggerReloadUser: any
 }
 
 const UserContext: Context<UserContextType> = createContext({

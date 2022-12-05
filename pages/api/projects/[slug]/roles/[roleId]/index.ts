@@ -4,7 +4,7 @@ import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import sanitize from 'mongo-sanitize'
 import { ObjectId } from 'mongodb'
-import { getRole, removeRole, updateRole } from '@/util/project'
+import { updateRole, getRole, removeRole } from '@/util/role'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)

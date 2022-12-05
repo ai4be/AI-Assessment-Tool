@@ -26,17 +26,17 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
   const [isEditing, setIsEditing] = useState(false)
   const [isUserAdd, setIsUserAdd] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [includedUsers, setIncludedUsers] = useState<string[]>([])
+  const [includedUsers, setIncludedUsers] = useState<any[]>([])
   const rows = useBreakpointValue({ base: 2, sm: 5 })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [name, setName] = useState(role.name)
   const [description, setDescription] = useState(role.description)
   const [userIdTrigger, setUserIdTrigger] = useState(0)
-  const { users } = useContext(ProjectContext)
+  const { users = [] } = useContext(ProjectContext)
 
   useEffect(() => {
     if (Array.isArray(users)) {
-      const iu: string[] = users.filter(u => role.userIds.includes(u._id))
+      const iu: any[] = users.filter(u => role.userIds.includes(u._id))
       setIncludedUsers(iu)
     }
   }, [users, role.userIds, userIdTrigger])
@@ -92,7 +92,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
     <Box overflow='hidden' width={[200, 350]} height={[120, 168]} border='2px solid var(--main-blue)' borderRadius='15px' boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' className='mt-1 p-2'>
       <Flex justifyContent='space-between'>
         <Input
-          placeholder='Role name' size={['xs', 'sm']} className={styles.input_class} disabled={!isEditing} border='0' cursor='pointer !important'
+          placeholder='Role name' size='xs' className={styles.input_class} disabled={!isEditing} border='0' cursor='pointer !important'
           value={name} onChange={(e): void => setName(e.target.value) }
         />
         {!isEditing &&
@@ -115,7 +115,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
         {!isEditing && (
           <Flex>
             <AvatarGroup size='sm' max={5}>
-              {includedUsers.map(user => <Avatar key={user._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
+              {includedUsers.map(user => <Avatar key={user?._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
             </AvatarGroup>
             <UserMenuMemo users={users} includedUserIds={role.userIds} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger} />
           </Flex>
@@ -187,7 +187,7 @@ const Roles = ({ project }): JSX.Element => {
   return (
     <Flex flexDirection='column'>
       {Array.isArray(project.roles) && project.roles.map((role, index) =>
-        <RoleBox key={index} role={role} project={project} deleteRole={deleteRole} saveRole={handleSave} setIsLoading={setIsLoading} />)
+        <RoleBox key={index} role={role} project={project} deleteRole={deleteRole} saveRole={handleSave} />)
       }
       <Flex
         width={[200, 350]} height={[120, 168]} boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' borderRadius='15px' justifyContent='center' alignItems='center'

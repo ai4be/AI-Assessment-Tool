@@ -8,9 +8,10 @@ import { isEmailValid } from '@/util/validator'
 async function handler (req, res): Promise<any> {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
 
-  let { email, password, fullName, token } = req.body
+  let { email, password, firstName, lastName, token } = req.body
   email = cleanEmail(email)
-  fullName = sanitize(fullName)
+  firstName = sanitize(firstName)
+  lastName = sanitize(lastName)
   token = token != null ? sanitize(token) : token
 
   if (!isEmailValid(email) || password == null || password?.trim().length < 8) {
@@ -29,7 +30,8 @@ async function handler (req, res): Promise<any> {
   const user = await createUser({
     email,
     password: hashedPassword,
-    fullName
+    firstName,
+    lastName
   })
   if (user?._id != null) {
     if (token != null) await invitedUserHandler(token, email)

@@ -209,7 +209,7 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [processClickEvent, setProcessClickEvent] = useState(true)
 
-  const closeHandler = (e: any) => {
+  const closeHandler = (e?: any): void => {
     if (e?.preventDefault != null) {
       e.preventDefault()
       e.stopPropagation()

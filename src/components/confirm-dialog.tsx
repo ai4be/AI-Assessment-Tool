@@ -10,12 +10,12 @@ import {
 import { useRef, useState } from 'react'
 
 const ConfirmDialog = (props: any): JSX.Element => {
-  const cancelRef = useRef()
+  const cancelRef = useRef<HTMLButtonElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const {
     isOpen,
     title = 'Please confirm',
-    content = `Are you sure? You can't undo this action afterwards.`,
+    content = 'Are you sure? You can\'t undo this action afterwards.',
     onClose,
     confirmHandler
   } = props

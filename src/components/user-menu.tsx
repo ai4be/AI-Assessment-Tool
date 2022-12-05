@@ -12,8 +12,8 @@ import {
 import { getUserDisplayName } from '@/util/users-fe'
 import { User } from '@/src/types/user'
 
-export const UserMenu = (props: { users: User[], includedUserIds: string[], onUserRemove: Function, onUserAdd: Function, childern: any }): JSX.Element => {
-  const { users, includedUserIds, onUserRemove, onUserAdd, childern } = props
+export const UserMenu = (props: { users: User[], includedUserIds: string[], onUserRemove: Function, onUserAdd: Function, children?: any, userIdTrigger?: any }): JSX.Element => {
+  const { users, includedUserIds, onUserRemove, onUserAdd } = props
   const clickHandler = (e, user: any): void => {
     e.stopPropagation()
     includedUserIds.includes(user._id)
@@ -34,7 +34,7 @@ export const UserMenu = (props: { users: User[], includedUserIds: string[], onUs
                 <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} mr='1' />
                 <Box>{getUserDisplayName(user)}</Box>
               </Flex>
-              <Box display={includedUserIds.includes(user._id) ? 'block' : 'none'}>
+              <Box display={includedUserIds.includes(String(user._id)) ? 'block' : 'none'}>
                 <FiCheck color='green' />
               </Box>
             </Flex>

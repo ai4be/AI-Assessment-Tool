@@ -4,21 +4,15 @@ import { useRouter } from 'next/router'
 import { fetchUsersByProjectId } from '@/util/users-fe'
 
 interface ProjectContextType {
-  project: Project | undefined
-  categories: Category[]
-  selectedCategory: any
-  setProject: (project: Project) => {}
-  categoryClickHandler: (cat: any) => {}
-  users: any[]
+  project?: Project | undefined
+  categories?: Category[]
+  selectedCategory?: any
+  setProject?: any
+  categoryClickHandler?: any
+  users?: any[]
 }
 
-const ProjectContext: Context<ProjectContextType> = createContext({
-  project: null,
-  setProject: (project: Project) => {},
-  categories: [],
-  selectedCategory: null,
-  categoryClickHandler: (cat: Category) => {}
-})
+const ProjectContext: Context<ProjectContextType> = createContext({})
 
 export function ProjectContextProvider (props: any): JSX.Element {
   const router = useRouter()
