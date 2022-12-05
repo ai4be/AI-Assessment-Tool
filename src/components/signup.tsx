@@ -71,9 +71,11 @@ const SignUp = (): JSX.Element => {
   }, [values.password, touched.password])
 
   useEffect(() => {
-    const hasErrors = emailErr || passwordLengthErr || passwordCharErr || confirmPasswordErr || isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword) || isEmpty(values.firstName) || isEmpty(values.lastName)
+    const hasErrors = emailErr || passwordLengthErr || passwordCharErr || confirmPasswordErr ||
+      isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword) ||
+      isEmpty(values.firstName) || isEmpty(values.lastName)
     setButtonState(hasErrors)
-  }, [values.password, values.confirmPassword, values.firstName, values.lastName, values.email])
+  }, [values.password, values.confirmPassword, values.firstName, values.lastName, values.email, emailErr, passwordLengthErr, passwordCharErr, confirmPasswordErr])
 
   const showToast = (): void => {
     toast({
