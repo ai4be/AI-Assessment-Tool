@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { HiOutlinePencil } from 'react-icons/hi'
 import { RiAddCircleLine, RiDeleteBin6Line } from 'react-icons/ri'
+import { FiUserPlus } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import styles from './roles.module.css'
 import { defaultFetchOptions } from '@/util/api'
@@ -117,7 +118,9 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
             <AvatarGroup size='sm' max={5}>
               {includedUsers.map(user => <Avatar key={user?._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
             </AvatarGroup>
-            <UserMenuMemo users={users} includedUserIds={role.userIds} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger} />
+            <UserMenuMemo users={users} includedUserIds={role.userIds} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
+              <FiUserPlus color='var(--main-blue)' cursor='pointer' />
+            </UserMenuMemo>
           </Flex>
         )}
       </Flex>
