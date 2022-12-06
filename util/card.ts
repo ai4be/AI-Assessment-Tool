@@ -10,8 +10,8 @@ export interface Card {
   _id: string
   title: string
   desc: string
-  assignedTo?: ObjectId[]
-  roles?: ObjectId[]
+  userIds?: ObjectId[]
+  roleIds?: ObjectId[]
   projectId?: ObjectId
   sequence?: number
   label?: Label
@@ -68,8 +68,8 @@ export const createCards = async (cards: Card[]): Promise<boolean> => {
     ...c,
     ...(c._id != null ? { _id: toObjectId(c._id) } : {}),
     ...(c.projectId != null ? { projectId: toObjectId(c.projectId) } : {}),
-    ...(c != null && c.assignedTo != null && c?.assignedTo?.length > 0 ? { assignedTo: c?.assignedTo?.map(toObjectId) } : {}),
-    ...(c != null && c.roles != null && c?.roles?.length > 0 ? { roles: c?.roles?.map(toObjectId) } : {})
+    ...(c?.userIds != null && c?.userIds?.length > 0 ? { userIds: c?.userIds?.map(toObjectId) } : {}),
+    ...(c?.roleIds != null && c?.roleIds?.length > 0 ? { roleIds: c?.roleIds?.map(toObjectId) } : {})
   }))
   const res = await db
     .collection(TABLE_NAME)
@@ -91,5 +91,31 @@ export const updateCard = async (_id: string | ObjectId, data: any): Promise<boo
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: { ...updatableFields } })
+  return res.result.ok === 1
+}
+
+export const addUserToCard = async (cardId: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
+  const { db } = await connectToDatabase()
+  const res = await db.collection(TABLE_NAME).updateOne(
+    { _id: toObjectId(cardId) },
+    {
+      $addToSet: {
+        userIds: toObjectId(userId)
+      }
+    }
+  )
+  return res.result.ok === 1
+}
+
+export const removeUserFromCard = async (cardId: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
+  const { db } = await connectToDatabase()
+  const res = await db.collection(TABLE_NAME).updateOne(
+    { _id: toObjectId(cardId) },
+    {
+      $pull: {
+        userIds: toObjectId(userId)
+      }
+    }
+  )
   return res.result.ok === 1
 }

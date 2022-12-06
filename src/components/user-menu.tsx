@@ -28,7 +28,7 @@ export const UserMenu = (props: { users: User[], includedUserIds: string[], onUs
       </MenuButton>
       <MenuList>
         {users.map(user => (
-          <MenuItem key={user._id} display='block' onClick={e => clickHandler(e, user)} px='1'>
+          <MenuItem key={user._id} display='block' onClick={e => clickHandler(e, user)} px='1' closeOnSelect={false}>
             <Flex justifyContent='space-between' alignItems='center'>
               <Flex justifyContent='flex-start' alignItems='center'>
                 <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} mr='1' />

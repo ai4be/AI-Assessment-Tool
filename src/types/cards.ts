@@ -3,7 +3,8 @@ export interface Card {
   title: string
   desc: string
   columnId?: string
-  assignedTo?: string
+  userIds?: string[]
+  roleIds?: string[]
   projectId?: string
   sequence?: number
   label?: Label

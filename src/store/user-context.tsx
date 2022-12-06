@@ -1,5 +1,5 @@
 import { Context, createContext, useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import { getCurrentUser } from '@/util/users-fe'
 import { User } from '@/util/user'
 import { useSession } from 'next-auth/react'
@@ -17,7 +17,7 @@ const UserContext: Context<UserContextType> = createContext({
 })
 
 export function UserContextProvider (props: any): JSX.Element {
-  const router = useRouter()
+  // const router = useRouter()
   const { data, status } = useSession()
   const [user, setUser] = useState<User | null>(null)
   const [reloadUser, setReloadUser] = useState(false)

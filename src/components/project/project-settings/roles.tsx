@@ -90,27 +90,29 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
   }
 
   return (
-    <Box overflow='hidden' width={[200, 350]} height={[120, 168]} border='2px solid var(--main-blue)' borderRadius='15px' boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' className='mt-1 p-2'>
-      <Flex justifyContent='space-between'>
-        <Input
-          placeholder='Role name' size='xs' className={styles.input_class} disabled={!isEditing} border='0' cursor='pointer !important'
-          value={name} onChange={(e): void => setName(e.target.value) }
+    <Box display='flex' flexDirection='column' justifyContent='space-between' overflow='hidden' width={[200, 350]} height={[120, 168]} border='2px solid var(--main-blue)' borderRadius='15px' boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' className='mt-1 p-2'>
+      <Box>
+        <Flex justifyContent='space-between'>
+          <Input
+            placeholder='Role name' size='xs' className={styles.input_class} disabled={!isEditing} border='0' cursor='pointer !important'
+            value={name} onChange={(e): void => setName(e.target.value) }
+          />
+          {!isEditing &&
+            <Flex>
+              <HiOutlinePencil onClick={() => setIsEditingWrapper(true)} color='var(--main-blue)' cursor='pointer'/>
+              <RiDeleteBin6Line onClick={onOpen} color='var(--main-blue)' cursor='pointer' />
+            </Flex>
+          }
+          {isEditing &&
+            <Button onClick={handleSave} size='sm' bg='var(--main-blue)' color='white' className='ml-1'>Save</Button>
+          }
+        </Flex>
+        <Textarea
+          rows={rows}
+          placeholder='Role description' disabled={!isEditing} className={'mt-1 ' + styles.textarea_class} border='0' p='0'
+          value={description} onChange={(e): void => setDescription(e.target.value)}
         />
-        {!isEditing &&
-          <Flex>
-            <HiOutlinePencil onClick={() => setIsEditingWrapper(true)} color='var(--main-blue)' cursor='pointer'/>
-            <RiDeleteBin6Line onClick={onOpen} color='var(--main-blue)' cursor='pointer' />
-          </Flex>
-        }
-        {isEditing &&
-          <Button onClick={handleSave} size='sm' bg='var(--main-blue)' color='white' className='ml-1'>Save</Button>
-        }
-      </Flex>
-      <Textarea
-        rows={rows}
-        placeholder='Role description' disabled={!isEditing} className={'mt-1 ' + styles.textarea_class} border='0' p='0'
-        value={description} onChange={(e): void => setDescription(e.target.value)}
-      />
+      </Box>
       <Flex justifyContent='space-between'>
         <Box />
         {!isEditing && (

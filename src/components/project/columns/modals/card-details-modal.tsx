@@ -25,7 +25,8 @@ import {
   Radio,
   Stack,
   CheckboxGroup,
-  Checkbox
+  Checkbox,
+  Avatar
 } from '@chakra-ui/react'
 import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
 import { FiUserPlus } from 'react-icons/fi'
@@ -33,7 +34,7 @@ import { GrTextAlignFull } from 'react-icons/gr'
 import CardLabel from '@/src/components/project/columns/modals/card-labels-menu'
 import QuillEditor from '@/src/components/quill-editor'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers } from '@/util/users-fe'
+import { fetchUsers, getUserDisplayName } from '@/util/users-fe'
 import { updateCard } from '@/util/cards'
 import { defaultFetchOptions } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
@@ -50,48 +51,26 @@ interface Props {
 }
 
 const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCards }) => {
+  card.userIds = card.userIds ?? []
   const [title, setTitle] = useState(card?.title)
-  const [description, setDescription] = useState(card?.description)
-  const [assigned, assignUser] = useState(card?.assignedTo)
+  const [description, setDescription] = useState(card?.desc)
   const [isLoading, setIsLoading] = useState(false)
-  const projectContext = useContext(ProjectContext)
+  const { users } = useContext(ProjectContext)
   const [date, setDate] = useState(card?.dueDate)
+  const [userIdTrigger, setUserIdTrigger] = useState(0)
+  const [assignedUsers, setAssignedUsers] = useState<any[]>([])
 
-  const [users, setUsers] = useState<any[]>([])
-
-  useEffect((): void => {
-    const userIds = projectContext.project?.users
-    if (Array.isArray(userIds) && userIds.length > 0) {
-      void fetchUsers(userIds).then(usersData => setUsers(usersData))
-    } else {
-      setUsers((prevState) => {
-        if (Array.isArray(prevState) && prevState.length === 0) return prevState
-        else return []
-      })
-    }
-  }, [projectContext.project?.users])
-
-  const handleCardDelete = async (): Promise<void> => {
-    setIsLoading(true)
-    const url = `/api/projects/${projectId}/cards/${String(card._id)}`
-
-    const response = await fetch(url, {
-      ...defaultFetchOptions,
-      method: 'DELETE'
-    })
-
-    const inJSON = await response.json()
-    setIsLoading(false)
-    await fetchCards()
-    onClose()
-  }
+  useEffect(() => {
+    const stringIds = card.userIds.map(id => String(id)) ?? []
+    setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
+  }, [card.userIds, userIdTrigger])
 
   const handleModalClose = async (): Promise<void> => {
     setIsLoading(true)
     // const data = {
     //   _id: card._id,
     //   title,
-    //   description,
+    //   desc: description,
     //   columnId: card.columnId,
     //   assignedTo: assigned
     // }
@@ -104,36 +83,47 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const handleClick = async (userId: string): Promise<void> => {
     setIsLoading(true)
-    assignUser(userId)
 
     const data = {
       _id: card._id,
       title,
-      description,
-      columnId: card.columnId,
-      assignedTo: userId
+      desc: description,
+      columnId: card.columnId
     }
 
     await updateCard(data, projectId)
     setIsLoading(false)
   }
 
-  const assignToMenu = (): JSX.Element => {
-    return (
-      <Menu>
-        <MenuButton as={Button} size='xs' rightIcon={<AiOutlineDown />}>
-          Assign To
-        </MenuButton>
-        <MenuList>
-          {users.map((user, index) => (
-            <MenuItem key={index} onClick={() => handleClick(user._id)}>
-              {user?.fullName}
-            </MenuItem>
-          ))}
-          <MenuItem onClick={() => handleClick('')}>Unassign</MenuItem>
-        </MenuList>
-      </Menu>
-    )
+  const onUserAdd = async (userId: string): Promise<void> => {
+    card.userIds = card.userIds ?? []
+    card.userIds.push(userId)
+    setUserIdTrigger(userIdTrigger + 1)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'POST',
+      body: JSON.stringify({})
+    })
+    if (!response.ok) {
+      card.userIds = card.userIds.filter(id => String(id) !== String(userId))
+      setUserIdTrigger(userIdTrigger + 1)
+    }
+  }
+
+  const onUserRemove = async (userId: string): Promise<void> => {
+    card.userIds = card.userIds ?? []
+    card.userIds = card.userIds.filter(id => String(id) !== String(userId))
+    setUserIdTrigger(userIdTrigger + 1)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'DELETE',
+      body: JSON.stringify({})
+    })
+    if (!response.ok) {
+      // TODO
+    }
   }
 
   return (
@@ -234,10 +224,15 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                   </SingleDatepicker>
                   <Flex justifyContent='space-between' alignItems='center'>
                     <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>Responsable</Text>
-                    <UserMenu users={users} includedUserIds={card.userIds ?? []} onUserAdd={() => {}} onUserRemove={() => {}}>
+                    <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
                       <FiEdit2 color='#C9C9C9' cursor='pointer' />
                     </UserMenu>
                   </Flex>
+                  {assignedUsers.map(user => (
+                    <Flex key={user._id} paddingY='1'>
+                      <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} />
+                      <Text fontSize='sm' fontWeight='600' ml='2'>{getUserDisplayName(user)}</Text>
+                    </Flex>))}
                   {/* <CardLabel id={card._id} projectId={card.projectId} />
                   {assignToMenu()}
                 </Flex>

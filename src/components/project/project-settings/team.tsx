@@ -4,7 +4,8 @@ import useSWR from 'swr'
 import {
   Box,
   useDisclosure,
-  Flex
+  Flex,
+  Avatar
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import ProjectContext from '@/src/store/project-context'
@@ -73,8 +74,11 @@ const Team = ({ project }: { project: any }): JSX.Element => {
         <Box className='text-grey mt-2'>Project Users</Box>
         <hr className='my-2' />
         {context.users != null && context.users?.length > 0 && context.users.map((user) => (
-          <Flex key={user._id} justifyContent='space-between' alignItems='center'>
-            <Box>{getUserDisplayName(user)}</Box>
+          <Flex key={user._id} justifyContent='space-between' alignItems='center' paddingY='1'>
+            <Flex alignItems='center'>
+              <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} mr='2' />
+              <Box>{getUserDisplayName(user)}</Box>
+            </Flex>
             {user._id.toString() !== project.createdBy.toString()
               ? (<RiDeleteBin6Line cursor='pointer' onClick={() => setDeleteHandlerWrapper(user)} color='var(--main-blue)' />)
               : (<></>)}
@@ -85,7 +89,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
             <Box className='text-grey mt-3'>Pending Invites</Box>
             <hr className='my-2' />
             {data.map((token) => (
-              <Flex key={token._id} justifyContent='space-between' alignItems='center'>
+              <Flex key={token._id} justifyContent='space-between' alignItems='center' paddingY='1'>>
                 <Box>{token.email}</Box>
                 <RiDeleteBin6Line cursor='pointer' onClick={() => setDeleteHandlerWrapper(token, false)} color='var(--main-blue)' />
               </Flex>
