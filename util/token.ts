@@ -38,7 +38,6 @@ export const getToken = async ({ _id, token }: { _id?: string | ObjectId, token?
 }
 
 export const invitedUserHandler = async (token: string, email: string): Promise<void> => {
-  console.log('invitedUserHandler', token, email)
   token = sanitize(token)
   email = cleanEmail(email)
   const { db } = await connectToDatabase()
@@ -47,7 +46,6 @@ export const invitedUserHandler = async (token: string, email: string): Promise<
     const { projectId, status } = dbToken
     if (status === TokenStatus.PENDING) {
       const user = await getUser({ email })
-      console.log(user)
       await addUser(projectId, user?._id)
       await setStatus(token, TokenStatus.REDEEMED)
     }

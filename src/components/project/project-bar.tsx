@@ -2,11 +2,11 @@ import React, { useContext } from 'react'
 import { Box, Avatar, AvatarGroup } from '@chakra-ui/react'
 
 import PropType from 'prop-types'
-import ProjectSettings, { ProjectSettingsContextProvider } from '@/src/components/sub-navbar/project-settings'
+import ProjectSettings, { ProjectSettingsContextProvider } from '@/src/components/project/project-settings'
 import ProjectContext from '@/src/store/project-context'
 import { getUserDisplayName } from '@/util/users-fe'
 
-const SubNavbar = ({ project }): JSX.Element => {
+const ProjectBar = ({ project }): JSX.Element => {
   const { users } = useContext(ProjectContext)
   return (
     <Box
@@ -31,8 +31,8 @@ const SubNavbar = ({ project }): JSX.Element => {
   )
 }
 
-SubNavbar.propTypes = {
+ProjectBar.propTypes = {
   project: PropType.object
 }
 
-export default SubNavbar
+export default ProjectBar

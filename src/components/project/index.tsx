@@ -5,7 +5,7 @@ import { ProjectContextProvider } from '@/src/store/project-context'
 import SideBar from './side-bar'
 import NavBar from '../navbar'
 import ProgressBar from './progress-bar'
-import SubNavBar from '../sub-navbar'
+import ProjectBar from '@/src/components/project/project-bar'
 
 interface Props {
   project: any
@@ -24,7 +24,7 @@ const Project: FC<Props> = ({ project, session, categories }): JSX.Element => {
               <ProgressBar />
             </Box>
             <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
-              <SubNavBar project={project} />
+              <ProjectBar project={project} />
               <Box display='flex' position='relative'>
                 <SideBar />
                 <ProjectColumns projectId={project._id} session={session} />

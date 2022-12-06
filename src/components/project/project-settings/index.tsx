@@ -178,7 +178,7 @@ const ProjectSettings = ({ project }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isBusy } = useContext(ProjectSettingsContext)
 
-  console.log('isBusy', isBusy)
+  // console.log('isBusy', isBusy)
 
   return (
     <>

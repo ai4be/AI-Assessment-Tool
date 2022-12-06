@@ -26,17 +26,28 @@ export const getRole = async (projectId: ObjectId | string, roleId: ObjectId | s
   return project?.roles.find((role: any) => role._id.toString() === roleId.toString())
 }
 
-export const addRole = async (projectId: ObjectId | string, role: { _id?: ObjectId | string, name: string, desc: string }): Promise<Role> => {
+export const addRoles = async (projectId: ObjectId | string, roles: Array<{ _id?: ObjectId | string, name: string, desc: string } >): Promise<boolean> => {
   const { db } = await connectToDatabase()
   projectId = toObjectId(projectId)
+  const rolesFormatted: any[] = roles.map(r => {
+    r._id = r._id != null ? toObjectId(r._id) : new ObjectId()
+    r.name = sanitize(r.name)
+    r.desc = sanitize(r.desc ?? '')
+    const pickedObj = pick(r, ['_id', 'name', 'desc']) // allow to use the spreadoperator safely
+    const result = { ...pickedObj, userIds: [], createdAt: Date.now() }
+    return result
+  })
+
+  const res = await db.collection(TABLE_NAME)
+    .updateOne({ _id: projectId }, { $push: { roles: { $each: rolesFormatted } } })
+  return res.result.ok === 1
+}
+
+export const addRole = async (projectId: ObjectId | string, role: { _id?: ObjectId | string, name: string, desc: string }): Promise<Role> => {
   role._id = role._id != null ? toObjectId(role._id) : new ObjectId()
-  role.name = sanitize(role.name)
-  role.desc = sanitize(role.desc ?? '')
-  role = pick(role, ['_id', 'name', 'desc']) // allow to use the spreadoperator safely
-  await db.collection(TABLE_NAME)
-    .updateOne({ _id: projectId }, { $push: { roles: { ...role, userIds: [], createdAt: Date.now() } } })
-  const roleUp = await getRole(projectId, role._id)
-  return roleUp
+  await addRoles(projectId, [role])
+  const roleInserted = await getRole(projectId, role._id)
+  return roleInserted
 }
 
 export const removeRole = async (projectId: ObjectId | string, roldId: ObjectId | string): Promise<boolean> => {

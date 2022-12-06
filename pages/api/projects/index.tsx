@@ -5,7 +5,8 @@ import { createProjectWithDefaultColumnsAndCards, getProject, getUserProjects } 
 import { getUser } from '@/util/user'
 import { isConnected } from '@/util/temp-middleware'
 import { dataToCards } from '@/util/data'
-import data from '@/src/data'
+import { defaultCards, defaultRoles } from '@/src/data'
+import { addRoles } from '@/util/role'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
@@ -17,8 +18,9 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   switch (req.method) {
     case 'POST': {
       const { name } = req.body
-      const cardsData = await dataToCards(data)
+      const cardsData = await dataToCards(defaultCards)
       const projectId = await createProjectWithDefaultColumnsAndCards(name, String(existingUser?._id), cardsData)
+      await addRoles(projectId, defaultRoles)
       const project = await getProject(projectId)
       return res.send(project)
     }
