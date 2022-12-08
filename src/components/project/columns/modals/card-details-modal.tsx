@@ -108,6 +108,24 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     setIsLoading(false)
   }
 
+  const saveQuestion = async (questionId: string, responses: any[]): Promise<void> => {
+    setIsLoading(true)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${questionId}`
+    const data = {
+      responses
+    }
+
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    })
+    if (!response.ok) {
+      // TODO
+    }
+    setIsLoading(false)
+  }
+
   const onUserAdd = async (userId: string): Promise<void> => {
     card.userIds = card.userIds ?? []
     card.userIds.push(userId)
@@ -218,7 +236,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                     <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
                       {q.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}
                     </Text>
-                    <GenerateAnswers question={q} />
+                    <GenerateAnswers question={q} onChange={value => saveQuestion(q.id, value)} />
                   </Box>
                 ))}
               </Box>
@@ -249,34 +267,6 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                       <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} />
                       <Text fontSize='sm' fontWeight='600' ml='2'>{getUserDisplayName(user)}</Text>
                     </Flex>))}
-                  {/* <CardLabel id={card._id} projectId={card.projectId} />
-                  {assignToMenu()}
-                </Flex>
-                <Flex flexDirection='column'>
-                  <Button
-                    size='xs'
-                    marginRight='1rem'
-                    onClick={handleCardDelete}
-                    disabled={isLoading}
-                    isLoading={isLoading}
-                    loadingText='Deleting'
-                    bg='red.500'
-                    color='white'
-                    _hover={{
-                      backgroundColor: 'red.600'
-                    }}
-                  >
-                    <AiOutlineDelete />
-                  </Button>
-                  <Button
-                    size='xs'
-                    onClick={handleModalClose}
-                    disabled={isLoading}
-                    isLoading={isLoading}
-                    loadingText='Updating'
-                  >
-                    <AiOutlineClose /> Close
-                  </Button>*/}
                 </Flex>
               </Flex>
             </Box>
@@ -289,12 +279,20 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
 export default CardDetailsModal
 
-export const GenerateAnswers = ({ question }): JSX.Element => {
-  const [value, setValue] = React.useState<any>('')
-  const valueHandler = (value) => setValue(value)
+export const GenerateAnswers = ({ question, onChange }: { question: any, onChange?: Function }): JSX.Element => {
+  const [value, setValue] = React.useState<any>(question.responses ??  '')
+  const valueHandler = (value) => {
+    if (!Array.isArray(value)) value = [value]
+    if (Array.isArray(value) && value.length > 1) {
+      value = value.filter(v => v !== '')
+      value = [...new Set<any>(value)]
+    }
+    setValue(value)
+    if (onChange != null) onChange(value)
+  }
   if (question.type === 'radio') {
     return (
-      <RadioGroup onChange={valueHandler} value={value}>
+      <RadioGroup onChange={valueHandler} value={value[0]} name={question.id}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Radio key={idx} value={idx} size='sm' fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
@@ -304,7 +302,7 @@ export const GenerateAnswers = ({ question }): JSX.Element => {
     )
   } else if (question.type === 'checkbox') {
     return (
-      <CheckboxGroup onChange={valueHandler} value={[value]}>
+      <CheckboxGroup onChange={valueHandler} value={Array.isArray(value) ? value : [value]}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Checkbox size='sm' key={idx} value={idx} fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>

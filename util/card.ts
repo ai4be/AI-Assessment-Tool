@@ -15,6 +15,7 @@ export interface Card {
   projectId?: ObjectId
   sequence?: number
   label?: Label
+  questions?: any[]
 }
 
 export interface Label {
@@ -114,6 +115,21 @@ export const removeUserFromCard = async (cardId: ObjectId | string, userId: Obje
     {
       $pull: {
         userIds: toObjectId(userId)
+      }
+    }
+  )
+  return res.result.ok === 1
+}
+
+export const updateQuestion = async (cardId: ObjectId | string, questionId: string, data: any): Promise<boolean> => {
+  const { db } = await connectToDatabase()
+  let { responses } = data
+  responses = sanitize(responses)
+  const res = await db.collection(TABLE_NAME).updateOne(
+    { _id: toObjectId(cardId), 'questions.id': questionId },
+    {
+      $set: {
+        "questions.$.reponses" : responses
       }
     }
   )

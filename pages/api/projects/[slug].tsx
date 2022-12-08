@@ -4,15 +4,14 @@ import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { connectToDatabase, toObjectId } from '@/util/mongodb'
 import { ObjectId } from 'mongodb'
 import { deleteProject, getProject, updateProject } from '@/util/project'
+import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const session = await unstable_getServerSession(req, res, authOptions)
   let { slug } = req.query
   slug = toObjectId(slug)
   const { db, client } = await connectToDatabase()
 
-  if (session?.user == null) return res.status(401).send({ msg: 'Unauthorized', status: 401 })
-  if (!client.isConnected()) return res.status(500).send({ msg: 'DB connection error', status: 500 })
+  if (!(await isConnected(req, res).then(() => hasProjectAccess(req, res, slug)))) return
 
   switch (req.method) {
     case 'GET': {
