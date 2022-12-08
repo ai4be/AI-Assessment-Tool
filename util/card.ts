@@ -22,7 +22,7 @@ export interface Label {
   type: string
 }
 
-const UPDATABLE_FIELDS = ['title', 'desc', 'sequence', 'columnId', 'label']
+const UPDATABLE_FIELDS = ['title', 'desc', 'sequence', 'columnId', 'label', 'dueDate']
 
 export const getCard = async (_id: string | ObjectId): Promise<Card> => {
   const { db } = await connectToDatabase()

@@ -58,6 +58,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
             </Flex>
           </MenuButton>
           <MenuList backgroundColor='white'>
+            <MenuItem onClick={() => void router.push('/settings')} className='icon-blue-color' color='#0000E6'>Settings</MenuItem>
             <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>Log out</MenuItem>
           </MenuList>
         </Menu>

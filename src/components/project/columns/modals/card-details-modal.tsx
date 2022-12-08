@@ -28,6 +28,7 @@ import {
   Checkbox,
   Avatar
 } from '@chakra-ui/react'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
 import { FiUserPlus } from 'react-icons/fi'
 import { GrTextAlignFull } from 'react-icons/gr'
@@ -56,7 +57,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   const [description, setDescription] = useState(card?.desc)
   const [isLoading, setIsLoading] = useState(false)
   const { users } = useContext(ProjectContext)
-  const [date, setDate] = useState(card?.dueDate)
+  const [date, setDate] = useState(card?.dueDate ? new Date(card.dueDate) : null)
   const [userIdTrigger, setUserIdTrigger] = useState(0)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
 
@@ -65,15 +66,27 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
   }, [card.userIds, userIdTrigger])
 
+
+  useEffect(() => {
+    console.log('date change effect', date)
+    if (date !== card.date) {
+      const data = {
+        _id: card._id,
+        dueDate: date instanceof Date ? +date : date
+      }
+      void updateCard(data, card.projectId)
+    }
+  }, [date])
+
+
+
   const handleModalClose = async (): Promise<void> => {
     setIsLoading(true)
-    // const data = {
-    //   _id: card._id,
-    //   title,
-    //   desc: description,
-    //   columnId: card.columnId,
-    //   assignedTo: assigned
-    // }
+    const data = {
+      _id: card._id,
+      columnId: card.columnId
+    }
+
 
     // await updateCard(data, projectId)
     // await fetchCards()
@@ -218,9 +231,12 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                     <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Due date</Text>
                   </Flex>
                   <SingleDatepicker name='date-input' date={date} onDateChange={setDate}>
-                    <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
-                      {date != null ? format(date, 'dd MMM yyyy') : 'click to set'}
-                    </Text>
+                    <Flex justifyContent='space-between' alignItems='center'>
+                      <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
+                        {date != null ? format(date, 'dd MMM yyyy') : 'click to set'}
+                      </Text>
+                      {date != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
+                    </Flex>
                   </SingleDatepicker>
                   <Flex justifyContent='space-between' alignItems='center'>
                     <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>Responsable</Text>
@@ -274,23 +290,24 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 export default CardDetailsModal
 
 export const GenerateAnswers = ({ question }): JSX.Element => {
-  const [value, setValue] = React.useState<string>('')
+  const [value, setValue] = React.useState<any>('')
+  const valueHandler = (value) => setValue(value)
   if (question.type === 'radio') {
     return (
-      <RadioGroup onChange={value => setValue(value)} value={value}>
+      <RadioGroup onChange={valueHandler} value={value}>
         <Stack direction='row'>
-          {question.answers.map((a, idx) => (
-            <Radio key={idx} value={idx} fontSize='10px'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
+          {question?.answers?.map((a, idx) => (
+            <Radio key={idx} value={idx} size='sm' fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
           ))}
         </Stack>
       </RadioGroup>
     )
   } else if (question.type === 'checkbox') {
     return (
-      <CheckboxGroup onChange={value => setValue(String(value))} value={[value]}>
+      <CheckboxGroup onChange={valueHandler} value={[value]}>
         <Stack direction='row'>
-          {question.answers.map((a, idx) => (
-            <Checkbox size='md' key={idx} value={idx} fontSize='10px'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>
+          {question?.answers?.map((a, idx) => (
+            <Checkbox size='sm' key={idx} value={idx} fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>
           ))}
         </Stack>
       </CheckboxGroup>
