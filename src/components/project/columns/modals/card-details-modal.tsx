@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, memo, useContext, useEffect, useMemo, useState } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -15,6 +15,7 @@ import {
   Input,
   ModalOverlay,
   Text,
+  Textarea,
   Box,
   Menu,
   MenuButton,
@@ -26,9 +27,17 @@ import {
   Stack,
   CheckboxGroup,
   Checkbox,
-  Avatar
+  Avatar,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import isEmpty from 'lodash.isempty'
 import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
 import { FiUserPlus } from 'react-icons/fi'
 import { GrTextAlignFull } from 'react-icons/gr'
@@ -40,8 +49,110 @@ import { updateCard } from '@/util/cards'
 import { defaultFetchOptions } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
 import { FiEdit2 } from 'react-icons/fi'
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
+import isEqual from 'lodash.isequal'
+import { IoMdHelpCircle } from 'react-icons/io'
+
+const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat.`
+
+
+const QuestionHelp = ({ question }) => {
+  const [help, setHelp] = useState('')
+
+  useEffect(() => {
+    if (question.title != null) {
+      const match = question.title.match(/=hb=(.*)=he=/)
+      if (match?.[1] != null) {
+        const h = match[1].replace(/=br=/g, '<br />').trim()
+        setHelp(h)
+      }
+    }
+  }
+  , [question.title])
+
+  return (
+    <>
+      {!isEmpty(help) &&
+      <Popover>
+        <PopoverTrigger>
+          <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverBody dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
+        </PopoverContent>
+      </Popover>
+      }
+    </>
+  )
+}
+
+
+const Question = ({ question, onChange, index, chapterNb, ...rest }) => {
+  const [conclusion, setConclusion] = useState(question.conclusion ?? '')
+  const [timeoutId, setTimeoutId] = useState<any>(null)
+  useEffect(() => {
+    if (timeoutId != null) clearTimeout(timeoutId)
+    const tId = setTimeout(() => onChange(question, null, conclusion), 800)
+    setTimeoutId(tId)
+    return () => {
+      timeoutId != null ? clearTimeout(timeoutId) : null
+    }
+  }, [conclusion])
+
+  const noRenderOnTimeoutchange = useMemo(() => (
+      <Box p={3}>
+        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
+          {`${chapterNb}.${index + 1} ` + question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}
+          <QuestionHelp question={question} />
+        </Text>
+        <Box ml='1.5'>
+          <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
+          <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
+            Conclusion
+          </Text>
+          <Textarea placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)}/>
+        </Box>
+      </Box>
+    ), [question, conclusion]
+  )
+
+  return (<>{noRenderOnTimeoutchange}</>)
+}
+
+const AccordionItemStyled = ({ title, desc }) => {
+  return <AccordionItem
+    border='none'
+    isFocusable={false}
+    _hover={{
+      boxShadow: 'none',
+      border: 'none'
+    }}
+    _focus={{ boxShadow: 'none !important' }}
+    _expanded={{ boxShadow: 'none' }}
+  >
+    <AccordionButton
+      display='flex' alignItems='center' boxShadow='none'
+      _hover={{
+        boxShadow: 'none',
+        border: 'none'
+      }}
+      _focus={{ boxShadow: 'none !important' }}
+    >
+      <Text color='var(--main-blue)' fontSize='sm' as='b'>{title}</Text>
+      <AccordionIcon />
+    </AccordionButton>
+    <AccordionPanel pb={4} border='none'>
+      {desc}
+    </AccordionPanel>
+  </AccordionItem>
+}
 
 interface Props {
   onClose: () => void
@@ -60,6 +171,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   const [date, setDate] = useState(card?.dueDate ? new Date(card.dueDate) : null)
   const [userIdTrigger, setUserIdTrigger] = useState(0)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
+  const [chapterNb, setChapterNb] = useState(null)
 
   useEffect(() => {
     const stringIds = card.userIds.map(id => String(id)) ?? []
@@ -68,7 +180,6 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
 
   useEffect(() => {
-    console.log('date change effect', date)
     if (date !== card.date) {
       const data = {
         _id: card._id,
@@ -78,6 +189,12 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
   }, [date])
 
+  useEffect(() => {
+    if (card.title != null) {
+      const nb = card.title.match(/^\s?([0-9.]+)/)
+      if (Array.isArray(nb)) setChapterNb(nb[1])
+    }
+  }, [card?.title])
 
 
   const handleModalClose = async (): Promise<void> => {
@@ -108,12 +225,18 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     setIsLoading(false)
   }
 
-  const saveQuestion = async (questionId: string, responses: any[]): Promise<void> => {
+  const saveQuestion = async (question: any, responses?: any[], conclusion?: string): Promise<void> => {
     setIsLoading(true)
-    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${questionId}`
-    const data = {
-      responses
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}`
+    const data = {}
+    if (responses != null) {
+      if (question != null && !isEqual(question.responses?.sort(), responses.sort())) {
+        data['responses'] = responses
+      }
     }
+    if (conclusion != null && !isEqual(question.conclusion, conclusion)) data['conclusion'] = conclusion
+
+    if (isEmpty(data)) return
 
     const response = await fetch(url, {
       ...defaultFetchOptions,
@@ -122,6 +245,9 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     })
     if (!response.ok) {
       // TODO
+    } else {
+      if (conclusion != null) question.conclusion = conclusion
+      if (responses != null) question.responses = responses
     }
     setIsLoading(false)
   }
@@ -177,68 +303,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                     {card.title.replace(/=g(b|e)=/g, '')}
                   </Text>
                 </Box>
-                <Accordion allowToggle allowMultiple>
-                  <AccordionItem
-                    border='none'
-                    isFocusable={false}
-                    _hover={{
-                      boxShadow: 'none',
-                      border: 'none'
-                    }}
-                  >
-                    <AccordionButton
-                      display='flex' alignItems='center' boxShadow='none' _hover={{
-                        boxShadow: 'none',
-                        border: 'none'
-                      }} _focus={{ boxShadow: 'none' }} _expanded={{ boxShadow: 'none' }}>
-                      <Text color='var(--main-blue)' fontSize='sm' as='b'>Example</Text>
-                      <AccordionIcon />
-                    </AccordionButton>
-                    <AccordionPanel pb={4} border='none'>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                      commodo consequat.
-                    </AccordionPanel>
-                  </AccordionItem>
 
-                  <AccordionItem
-                    border='none'
-                    isFocusable={false}
-                    _hover={{
-                      boxShadow: 'none',
-                      border: 'none'
-                    }}
-                    _focus={{ boxShadow: 'none !important' }}
-                    _expanded={{ boxShadow: 'none' }}
-                  >
-                    <AccordionButton
-                      display='flex' alignItems='center' boxShadow='none'
-                      _hover={{
-                        boxShadow: 'none',
-                        border: 'none'
-                      }}
-                      _focus={{ boxShadow: 'none !important' }}
-                    >
-                      <Text color='var(--main-blue)' fontSize='sm' as='b'>Recommandation</Text>
-                      <AccordionIcon />
-                    </AccordionButton>
-                    <AccordionPanel pb={4} border='none'>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                      commodo consequat.
-                    </AccordionPanel>
-                  </AccordionItem>
+                <Accordion allowToggle allowMultiple>
+                  <AccordionItemStyled title='Example' desc={loremIpsum} />
+                  <AccordionItemStyled title='Recommandation' desc={loremIpsum} />
                 </Accordion>
-                {card?.questions?.map((q, index) => (
-                  <Box p={3} key={q.id}>
-                    <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
-                      {q.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}
-                    </Text>
-                    <GenerateAnswers question={q} onChange={value => saveQuestion(q.id, value)} />
-                  </Box>
-                ))}
+                {card?.questions?.map((q, index) =>
+                  <Question key={index} question={q} index={index} chapterNb={chapterNb} onChange={saveQuestion} />
+                )}
               </Box>
               <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='2'>
                 <Flex flexDirection='column'>

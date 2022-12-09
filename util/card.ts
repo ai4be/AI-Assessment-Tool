@@ -123,14 +123,16 @@ export const removeUserFromCard = async (cardId: ObjectId | string, userId: Obje
 
 export const updateQuestion = async (cardId: ObjectId | string, questionId: string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
-  let { responses } = data
+  let { responses, conclusion } = data
   responses = sanitize(responses)
+  conclusion = sanitize(conclusion)
+  const set = {}
+  if (responses != null) set['questions.$.responses'] = responses
+  if (conclusion != null) set['questions.$.conclusion'] = conclusion
   const res = await db.collection(TABLE_NAME).updateOne(
     { _id: toObjectId(cardId), 'questions.id': questionId },
     {
-      $set: {
-        "questions.$.reponses" : responses
-      }
+      $set: set
     }
   )
   return res.result.ok === 1

@@ -82,9 +82,9 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
   }
 
   const filterCards = (columnId: string): any[] => {
-    console.log('filterCards', columnId, categoryId)
-    console.log('filterCards', 'cards', cards)
-    console.log('filterCards res', cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId))
+    // console.log('filterCards', columnId, categoryId)
+    // console.log('filterCards', 'cards', cards)
+    // console.log('filterCards res', cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId))
     return cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId)
   }
 
