@@ -295,7 +295,7 @@ export const GenerateAnswers = ({ question, onChange }: { question: any, onChang
       <RadioGroup onChange={valueHandler} value={value[0]} name={question.id}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
-            <Radio key={idx} value={idx} size='sm' fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
+            <Radio key={idx} value={`${idx}`} size='sm' fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
           ))}
         </Stack>
       </RadioGroup>
@@ -305,7 +305,7 @@ export const GenerateAnswers = ({ question, onChange }: { question: any, onChang
       <CheckboxGroup onChange={valueHandler} value={Array.isArray(value) ? value : [value]}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
-            <Checkbox size='sm' key={idx} value={idx} fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>
+            <Checkbox size='sm' key={idx} value={`${idx}`} fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>
           ))}
         </Stack>
       </CheckboxGroup>
