@@ -1,21 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { addUserToRole, removeUserFromRole } from '@/util/role'
-import { isConnected } from '@/util/temp-middleware'
+import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  if (isConnected(req, res) == null) return
+  const { projectId, roleId, userId } = req.query
 
-  const { slug, roleId, userId } = req.query
+  if (!await isConnected(req, res)) return
+  if (!await hasProjectAccess(req, res, String(projectId))) return
 
   switch (req.method) {
     case 'POST': {
-      // const res =
-      await addUserToRole(slug, roleId, userId)
+      await addUserToRole(projectId, roleId, userId)
       return res.send(201)
     }
     case 'DELETE': {
       // const res =
-      await removeUserFromRole(slug, roleId, userId)
+      await removeUserFromRole(projectId, roleId, userId)
       return res.send(201)
     }
     default:

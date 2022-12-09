@@ -3,13 +3,13 @@ import { cardBelongsToProject, hasProjectAccess, isConnected } from '@/util/temp
 import { updateQuestion } from '@/util/card'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { slug, cardId, id: questionId } = req.query
-  slug = String(slug)
+  let { projectId, cardId, questionId } = req.query
+  projectId = String(projectId)
   cardId = String(cardId)
   questionId = String(questionId)
   if (!(await isConnected(req, res))) return
-  if (!(await hasProjectAccess(req, res, slug))) return
-  if (!(await cardBelongsToProject(req, res, slug, cardId))) return
+  if (!(await hasProjectAccess(req, res, projectId))) return
+  if (!(await cardBelongsToProject(req, res, projectId, cardId))) return
 
   switch (req.method) {
     case 'PATCH': {
