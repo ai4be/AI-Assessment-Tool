@@ -5,10 +5,9 @@ import { authOptions } from '../pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from 'next-auth/next'
 import { getProjectUsers } from './project'
 import { getUser } from './user'
-import async from 'react-select/dist/declarations/src/async/index'
 import { getCard } from './card'
 
-export async function isConnected (req: NextApiRequest, res: NextApiResponse): Promise<void | boolean> {
+export async function isConnected (req: NextApiRequest, res: NextApiResponse): Promise<boolean> {
   const session = await unstable_getServerSession(req, res, authOptions)
   const { client } = await connectToDatabase()
 
@@ -23,7 +22,7 @@ export async function isConnected (req: NextApiRequest, res: NextApiResponse): P
   return await addUserToReq(req, res)
 }
 
-export async function addUserToReq (req: NextApiRequest, res: NextApiResponse): Promise<void | boolean> {
+export async function addUserToReq (req: NextApiRequest, res: NextApiResponse): Promise<boolean> {
   const tempReq = req as any
   if (tempReq?.locals?.user != null) return true
   const session = await unstable_getServerSession(req, res, authOptions)
@@ -31,7 +30,7 @@ export async function addUserToReq (req: NextApiRequest, res: NextApiResponse): 
     res.status(401).send({ msg: 'Unauthorized', status: 401 })
     return false
   }
-  const user =  await getUser({ email: String(session?.user?.email) })
+  const user = await getUser({ email: String(session?.user?.email) })
   if (user == null) {
     res.status(401).send({ msg: 'Unauthorized', status: 401 })
     return false
@@ -41,7 +40,7 @@ export async function addUserToReq (req: NextApiRequest, res: NextApiResponse): 
   return true
 }
 
-export async function hasProjectAccess (req: NextApiRequest, res: NextApiResponse, projectId: string): Promise<void | boolean> {
+export async function hasProjectAccess (req: NextApiRequest, res: NextApiResponse, projectId: string): Promise<boolean> {
   const tempReq = req as any
   if (!(await addUserToReq(req, res))) return false
   const user = tempReq.locals.user
@@ -54,7 +53,7 @@ export async function hasProjectAccess (req: NextApiRequest, res: NextApiRespons
   return true
 }
 
-export async function cardBelongsToProject (req: NextApiRequest, res: NextApiResponse, projectId: string, cardId: string): Promise<void | boolean> {
+export async function cardBelongsToProject (req: NextApiRequest, res: NextApiResponse, projectId: string, cardId: string): Promise<boolean> {
   const card = await getCard(cardId)
   if (card == null) {
     res.status(404).send({ msg: 'Notfound', status: 404 })
