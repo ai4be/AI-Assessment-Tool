@@ -2,6 +2,7 @@
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
+import pick from 'lodash.pick'
 
 export const TABLE_NAME = 'comments'
 
@@ -29,17 +30,23 @@ export const createComment = async (data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   data = sanitize(data)
   data.projectId = toObjectId(data.projectId)
-  const result = await db.collection(TABLE_NAME).insertOne(data)
+  data.userId = toObjectId(data.userId)
+  data.createdAt = new Date()
+  let localData = pick(data, ['projectId', 'userId', 'text', 'createdAt', 'questionId'])
+  localData = sanitize(localData)
+  const result = await db.collection(TABLE_NAME).insertOne(localData)
   return result.result.ok === 1
 }
 
 export const updateComment = async (_id: ObjectId | string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  data = sanitize(data)
+  let localData: any = pick(data, ['text'])
+  localData = sanitize(localData)
+  localData.updateAt = new Date()
   const res = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id }, { $set: data })
+    .updateOne({ _id }, { $set: localData })
   return res.result.ok === 1
 }
 
