@@ -50,8 +50,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.send(card)
     }
     case 'DELETE': {
-      const { slug } = req.query
-      await db.collection('columns').remove({ projectId: slug })
+      await db.collection('columns').remove({ projectId })
       return res.send({ message: 'All columns deleted' })
     }
     default:

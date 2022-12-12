@@ -8,7 +8,6 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   if (!await isConnected(req, res)) return
   if (!await hasProjectAccess(req, res, String(projectId))) return
 
-  const { slug } = req.query
   switch (req.method) {
     case 'GET': {
       const users = await getProjectUsers(projectId)

@@ -100,8 +100,8 @@ export default function Projects (props: any): JSX.Element {
           <Link
             key={index}
             href={{
-              pathname: '/projects/[slug]',
-              query: { slug: pr._id }
+              pathname: '/projects/[projectId]',
+              query: { projectId: pr._id }
             }}
           >
             <Box
