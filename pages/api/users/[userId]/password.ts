@@ -6,17 +6,17 @@ import { authOptions } from 'pages/api/auth/[...nextauth]'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
-  const { slug } = req.query
+  const { userId } = req.query
   const canProceed = await isConnected(req, res)
   if (canProceed !== true) return
 
   switch (req.method) {
     case 'PATCH': {
-      const user = await getUser({ _id: slug })
+      const user = await getUser({ _id: userId })
       const userSession = await getUser({ email: String(session?.user?.email) })
       if (user?._id === userSession?._id) return res.status(403).send({ message: 'forbidden' })
       const data = {
-        _id: slug,
+        _id: userId,
         password: req.body.newPassword,
         currentPassword: req.body.currentPassword
       }

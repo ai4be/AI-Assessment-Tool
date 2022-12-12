@@ -1,31 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { authOptions } from '../auth/[...nextauth]'
-import { unstable_getServerSession } from 'next-auth/next'
 import { createProjectWithDefaultColumnsAndCards, getProject, getUserProjects } from '@/util/project'
-import { getUser } from '@/util/user'
-import { isConnected } from '@/util/temp-middleware'
 import { dataToCards } from '@/util/data'
 import { defaultCards, defaultRoles } from '@/src/data'
 import { addRoles } from '@/util/role'
+import { isConnected } from '@/util/temp-middleware'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const session = await unstable_getServerSession(req, res, authOptions)
-  const existingUser = await getUser({ email: String(session?.user?.email) })
+  let { projectId } = req.query
 
-  const canProceed = await isConnected(req, res)
-  if (canProceed !== true) return
+  if (!(await isConnected(req, res))) return
 
+  const anyReq = req as any
+  const user = anyReq.user
   switch (req.method) {
     case 'POST': {
       const { name } = req.body
       const cardsData = await dataToCards(defaultCards)
-      const projectId = await createProjectWithDefaultColumnsAndCards(name, String(existingUser?._id), cardsData)
+      const projectId = await createProjectWithDefaultColumnsAndCards(name, String(user?._id), cardsData)
       await addRoles(projectId, defaultRoles)
       const project = await getProject(projectId)
       return res.send(project)
     }
     case 'GET': {
-      const projects = await getUserProjects(existingUser?._id)
+      const projects = await getUserProjects(user?._id)
       return res.send(projects)
     }
     default:

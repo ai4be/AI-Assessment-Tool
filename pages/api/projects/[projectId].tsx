@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase, toObjectId } from '@/util/mongodb'
-import { ObjectId } from 'mongodb'
 import { deleteProject, getProject, updateProject } from '@/util/project'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 
@@ -23,8 +22,8 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
     }
     case 'DELETE': {
       // TODO move next function to own file and call in project delete function
-      await db.collection('cards').remove({ projectId: ObjectId(projectId) })
-      await db.collection('columns').remove({ projectId: ObjectId(projectId) })
+      await db.collection('cards').remove({ projectId })
+      await db.collection('columns').remove({ projectId })
       await deleteProject(projectId)
 
       return res.send({ messsage: 'Delete project with columns and cards' })
