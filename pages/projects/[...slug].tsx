@@ -8,7 +8,7 @@ import { categories } from '../api/categories'
 
 function Page ({ session }): JSX.Element {
   const router = useRouter()
-  const [projectId] = Array.isArray(router.query.projectId) ? router.query.projectId : [router.query.projectId, null]
+  const [projectId] = Array.isArray(router.query.slug) ? router.query.slug : [router.query.slug, null]
   const { data, error } = useSWR(`/api/projects/${String(projectId)}`, fetcher)
   console.log('project', projectId)
   if (error != null) void router.push('/error')

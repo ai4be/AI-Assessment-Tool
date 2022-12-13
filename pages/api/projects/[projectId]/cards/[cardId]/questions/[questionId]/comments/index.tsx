@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { hasProjectAccess, isConnected, cardBelongsToProject } from '@/util/temp-middleware'
 import { createComment } from '@/util/comments'
 
-
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, cardId, questionId } = req.query
 

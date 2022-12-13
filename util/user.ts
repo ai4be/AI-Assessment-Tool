@@ -68,6 +68,13 @@ export const updatePassword = async ({ _id, password, currentPassword }: { _id: 
   return res.modifiedCount === 1
 }
 
+export const resetPassword = async (_id: string | ObjectId, password: string): Promise<boolean> => {
+  const { db } = await connectToDatabase()
+  _id = toObjectId(_id)
+  const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: { password } })
+  return res.modifiedCount === 1
+}
+
 export const updateUser = async (_id: string | ObjectId, updateData: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)

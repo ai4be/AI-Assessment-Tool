@@ -11,7 +11,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   if (!(await isConnected(req, res))) return
 
   const anyReq = req as any
-  const user = anyReq.user
+  const user = anyReq.locals.user
   switch (req.method) {
     case 'POST': {
       const { name } = req.body

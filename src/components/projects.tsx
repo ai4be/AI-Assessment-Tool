@@ -99,10 +99,7 @@ export default function Projects (props: any): JSX.Element {
         {projects.map((pr, index) => (
           <Link
             key={index}
-            href={{
-              pathname: '/projects/[projectId]',
-              query: { projectId: pr._id }
-            }}
+            href={`/projects/${pr._id}`}
           >
             <Box
               mr='1rem'

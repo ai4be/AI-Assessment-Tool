@@ -1,19 +1,55 @@
 
 function getInvitationHtml (page: string, token: string, email: string, projectId: string, hostname: string): string {
   return `
-    <div>
-     <div style="height:100px; background-color:#26292c; color: white">
-       <p>AI<sub>4<sub>Belgium</p>
-     <div>
-     <div style="height:200px; background-color:#0079bf;">
-       <a href='${hostname}/${page}?token=${token}&email=${email}&projectId=${projectId}'>Your are invited to a project in AI<sub>4<sub>Belgium.</a>
-     </div>
-     <div style="height:100px; background-color:#26292c;">
+    <style>
+      a:hover { color: #333; text-decoration: none; }
+    </style>
+
+    <article style="display: block; text-align: left; width: 650px; margin: 0 auto;">
+      <h1 style="font-size: 40px;"><p style="color: #0000E6; font-weight: 600; font-family: Helvetica,Arial,sans-serif; text-align: center;">AI<sub style="color: #000;">4</sub>Belgium</p></h1>
+
+      <div style="font: 20px Helvetica, sans-serif; color: #333;">
+          <p>You have been invited for the assessment of an AI project!</p>
+          <p>To accept the invite please click
+            <a href='${hostname}/${page}?token=${token}&email=${email}&projectId=${projectId}' style="color: #dc8100; text-decoration: underline;">
+              here
+            </a>
+          </p>
+          <p>&mdash; The Team</p>
+      </div>
+    </article>
+  `
+}
+
+function resetPasswordHtml (token: string, hostname: string): string {
+  return `
+    <style>
+      a:hover { color: #333; text-decoration: none; }
+    </style>
+
+    <article style="display: block; text-align: left; width: 650px; margin: 0 auto;">
+      <h1 style="font-size: 40px;"><p style="color: #0000E6; font-weight: 600; font-family: Helvetica,Arial,sans-serif; text-align: center;">AI<sub style="color: #000;">4</sub>Belgium</p></h1>
+
+      <div style="font: 20px Helvetica, sans-serif; color: #333;">
+          <p>You have requested a password reset!</p>
+          <p>To reset your password please click
+            <a href='${hostname}/reset-password?token=${token}' style="color: #dc8100; text-decoration: underline;">
+              here
+            </a>
+            .
+          </p>
+          <p>This link is valid for 2h!</p>
+          <br />
+          <p>If you didn't ask for a password reset you can ignore this email.</p>
+          <p>&mdash; The Team</p>
+      </div>
+    </article>
   `
 }
 
 const templates = {
-  invitation: getInvitationHtml
+  invitation: getInvitationHtml,
+  resetPassword: resetPasswordHtml
 }
 
 export default templates

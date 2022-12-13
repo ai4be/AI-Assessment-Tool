@@ -1,4 +1,4 @@
-import React, { FC, memo, useContext, useEffect, useMemo, useState } from 'react'
+import React, { FC, Fragment, memo, useContext, useEffect, useMemo, useState } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -53,7 +53,9 @@ import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
 import isEqual from 'lodash.isequal'
+import { Mention, MentionsInput } from 'react-mentions';
 import { IoMdHelpCircle } from 'react-icons/io'
+import UserContext from '@/src/store/user-context'
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -61,7 +63,7 @@ veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 commodo consequat.`
 
 
-const QuestionHelp = ({ question }) => {
+const QuestionHelp = ({ question }): JSX.Element => {
   const [help, setHelp] = useState('')
 
   useEffect(() => {
@@ -78,23 +80,22 @@ const QuestionHelp = ({ question }) => {
   return (
     <>
       {!isEmpty(help) &&
-      <Popover>
-        <PopoverTrigger>
-          <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
-        </PopoverTrigger>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverBody dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
-        </PopoverContent>
-      </Popover>
-      }
+        <Popover>
+          <PopoverTrigger>
+            <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverBody dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
+          </PopoverContent>
+        </Popover>}
     </>
   )
 }
 
 
-const Question = ({ question, onChange, index, chapterNb, ...rest }) => {
+const Question = ({ question, onChange, index, chapterNb, ...rest }): JSX.Element => {
   const [conclusion, setConclusion] = useState(question.conclusion ?? '')
   const [timeoutId, setTimeoutId] = useState<any>(null)
   useEffect(() => {
@@ -107,51 +108,76 @@ const Question = ({ question, onChange, index, chapterNb, ...rest }) => {
   }, [conclusion])
 
   const noRenderOnTimeoutchange = useMemo(() => (
-      <Box p={3}>
+    <Box p={3}>
+      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
+        {`${chapterNb}.${index + 1} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
+        <QuestionHelp question={question} />
+      </Text>
+      <Box ml='1.5'>
+        <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
         <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
-          {`${chapterNb}.${index + 1} ` + question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}
-          <QuestionHelp question={question} />
+          Conclusion
         </Text>
-        <Box ml='1.5'>
-          <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
-          <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
-            Conclusion
-          </Text>
-          <Textarea placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)}/>
-        </Box>
+        <Textarea placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)}/>
       </Box>
-    ), [question, conclusion]
+    </Box>
+  ), [question, conclusion]
   )
 
   return (<>{noRenderOnTimeoutchange}</>)
 }
 
-const AccordionItemStyled = ({ title, desc }) => {
-  return <AccordionItem
-    border='none'
-    isFocusable={false}
-    _hover={{
-      boxShadow: 'none',
-      border: 'none'
-    }}
-    _focus={{ boxShadow: 'none !important' }}
-    _expanded={{ boxShadow: 'none' }}
-  >
-    <AccordionButton
-      display='flex' alignItems='center' boxShadow='none'
+const AccordionItemStyled = ({ title, desc }): JSX.Element => {
+  return (
+    <AccordionItem
+      border='none'
+      isFocusable={false}
       _hover={{
         boxShadow: 'none',
         border: 'none'
       }}
       _focus={{ boxShadow: 'none !important' }}
+      _expanded={{ boxShadow: 'none' }}
     >
-      <Text color='var(--main-blue)' fontSize='sm' as='b'>{title}</Text>
-      <AccordionIcon />
-    </AccordionButton>
-    <AccordionPanel pb={4} border='none'>
-      {desc}
-    </AccordionPanel>
-  </AccordionItem>
+      <AccordionButton
+        display='flex' alignItems='center' boxShadow='none'
+        _hover={{
+          boxShadow: 'none',
+          border: 'none'
+        }}
+        _focus={{ boxShadow: 'none !important' }}
+      >
+        <Text color='var(--main-blue)' fontSize='sm' as='b'>{title}</Text>
+        <AccordionIcon />
+      </AccordionButton>
+      <AccordionPanel pb={4} border='none'>
+        {desc}
+      </AccordionPanel>
+    </AccordionItem>
+  )
+}
+
+const Comment = ({ comment }): JSX.Element => {
+  const { users } = useContext(ProjectContext)
+  const { user } = useContext(UserContext)
+  const [value, setValue] = useState(comment?.text ?? '')
+  const mentionsUsers: any[] = useMemo((): any[] => users?.map(u => ({ id: u._id, display: u.name }) ?? []), [users])
+
+  return (
+    <MentionsInput
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    >
+      <Mention
+        trigger='@'
+        data={mentionsUsers}
+      />
+    </MentionsInput>
+  )
+}
+
+const Comments = ({ comments }): JSX.Element => {
+
 }
 
 interface Props {
@@ -177,7 +203,6 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     const stringIds = card.userIds.map(id => String(id)) ?? []
     setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
   }, [card.userIds, userIdTrigger])
-
 
   useEffect(() => {
     if (date !== card.date) {
@@ -309,7 +334,10 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                   <AccordionItemStyled title='Recommandation' desc={loremIpsum} />
                 </Accordion>
                 {card?.questions?.map((q, index) =>
-                  <Question key={index} question={q} index={index} chapterNb={chapterNb} onChange={saveQuestion} />
+                  <Fragment key={index}>
+                    <Question question={q} index={index} chapterNb={chapterNb} onChange={saveQuestion} />
+                    <Comment comment={{ }} />
+                  </Fragment>
                 )}
               </Box>
               <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='2'>
@@ -353,7 +381,7 @@ export default CardDetailsModal
 
 export const GenerateAnswers = ({ question, onChange }: { question: any, onChange?: Function }): JSX.Element => {
   const [value, setValue] = React.useState<any>(question.responses ??  '')
-  const valueHandler = (value) => {
+  const valueHandler = (value): void => {
     if (!Array.isArray(value)) value = [value]
     if (Array.isArray(value) && value.length > 1) {
       value = value.filter(v => v !== '')
