@@ -1,5 +1,5 @@
 // https://codesandbox.io/s/chakra-ui-datepicker-demo-qmx3c?file=/src/components/Datepicker/Datepicker.tsx:1342-1461
-import React, { useRef, useState, ReactNode, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import lodash_isEmpty from 'lodash/isEmpty'
 import lodash_isNil from 'lodash/isNil'
 import {
@@ -16,9 +16,7 @@ import {
   Text,
   useOutsideClick,
   VStack,
-  InputGroup,
   Input as InputComponent,
-  InputRightElement
 } from '@chakra-ui/react'
 import { CalendarIcon } from '@chakra-ui/icons'
 import {
@@ -29,7 +27,6 @@ import {
   Calendar
 } from 'dayzed'
 import { format } from 'date-fns'
-import { FiEdit2 } from 'react-icons/fi'
 
 const MONTH_NAMES_DEFAULT = [
   'Jan',
@@ -209,12 +206,12 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [processClickEvent, setProcessClickEvent] = useState(true)
 
-  const closeHandler = (e?: any): void => {
-    if (e?.preventDefault != null) {
-      e.preventDefault()
-      e.stopPropagation()
-    }
+  const closeHandler = (e?: any, stopEvent = true): void => {
     if (popoverOpen) {
+      if (e?.preventDefault != null && stopEvent) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
       setPopoverOpen(false)
       setTimeout(() => setProcessClickEvent(true), 300)
     }
@@ -222,7 +219,7 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
 
   useOutsideClick({
     ref,
-    handler: closeHandler
+    handler: (e) => closeHandler(e, false)
   })
 
   const openpopover = (): void => {

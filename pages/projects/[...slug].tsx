@@ -10,7 +10,6 @@ function Page ({ session }): JSX.Element {
   const router = useRouter()
   const [projectId] = Array.isArray(router.query.slug) ? router.query.slug : [router.query.slug, null]
   const { data, error } = useSWR(`/api/projects/${String(projectId)}`, fetcher)
-  console.log('project', projectId)
   if (error != null) void router.push('/error')
   return (
     <Project project={data} session={session} categories={categories} />

@@ -101,11 +101,9 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
             <Flex>
               <HiOutlinePencil onClick={() => setIsEditingWrapper(true)} color='var(--main-blue)' cursor='pointer'/>
               <RiDeleteBin6Line onClick={onOpen} color='var(--main-blue)' cursor='pointer' />
-            </Flex>
-          }
+            </Flex>}
           {isEditing &&
-            <Button onClick={handleSave} size='sm' bg='var(--main-blue)' color='white' className='ml-1'>Save</Button>
-          }
+            <Button onClick={handleSave} size='sm' bg='var(--main-blue)' color='white' className='ml-1'>Save</Button>}
         </Flex>
         <Textarea
           rows={rows}

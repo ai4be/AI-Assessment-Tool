@@ -32,12 +32,16 @@ export const getUser = async ({ _id, email }: { _id?: string | ObjectId, email?:
   return await db.collection(TABLE_NAME).findOne(where, { projection })
 }
 
-export const getUsers = async (userIds: Array<string | ObjectId>, omitFields: string[] = ['password', 'avatar']): Promise<User[]> => {
+export const getUsers = async (userIds?: Array<string | ObjectId>, omitFields: string[] = ['password', 'avatar']): Promise<User[]> => {
   const { db } = await connectToDatabase()
-  userIds = userIds.map(id => toObjectId(id))
+  let where = {}
+  if (Array.isArray(userIds)) {
+    userIds = userIds.map(id => toObjectId(id))
+    where = { _id: { $in: userIds } }
+  }
   const projection: any = {}
   omitFields.forEach(field => (projection[field] = 0))
-  return await db.collection(TABLE_NAME).find({ _id: { $in: userIds } }, { projection }).toArray()
+  return await db.collection(TABLE_NAME).find(where, { projection }).toArray()
 }
 
 export const createUser = async ({ email, password, firstName, lastName }: { email: string, password: string, firstName: string, lastName: string }): Promise<User> => {

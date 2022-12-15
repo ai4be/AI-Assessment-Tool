@@ -41,11 +41,14 @@ export async function addUserToReq (req: NextApiRequest, res: NextApiResponse): 
 }
 
 export async function hasProjectAccess (req: NextApiRequest, res: NextApiResponse, projectId: string): Promise<boolean> {
+  let hasAccess = false
   const tempReq = req as any
   if (!(await addUserToReq(req, res))) return false
-  const user = tempReq.locals.user
-  const users = await getProjectUsers(projectId, [user._id])
-  const hasAccess = users.some(u => String(u._id) === String(user._id))
+  const user = tempReq.locals?.user
+  if (projectId != null && projectId !== 'undefined' && user != null) {
+    const users = await getProjectUsers(projectId, [user._id])
+    hasAccess = users.some(u => String(u._id) === String(user._id))
+  }
   if (!hasAccess) {
     res.status(403).send({ msg: 'Forbidden', status: 403 })
     return false

@@ -27,8 +27,6 @@ const SideBar = (props: any): JSX.Element => {
   // const variants = useBreakpointValue({ base: 'base', md: 'md' })
   // const ref = React.useRef()
 
-  console.log(context.categories)
-
   const content = Array.isArray(context?.categories)
     ? context.categories.map((cat, index) => (
       <Button

@@ -6,8 +6,6 @@ import { addRoles } from '@/util/role'
 import { isConnected } from '@/util/temp-middleware'
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { projectId } = req.query
-
   if (!(await isConnected(req, res))) return
 
   const anyReq = req as any

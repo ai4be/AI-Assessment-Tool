@@ -2,6 +2,7 @@ import { Context, createContext, useEffect, useState } from 'react'
 import { Category, Project } from '../types/projects'
 import { useRouter } from 'next/router'
 import { fetchUsersByProjectId } from '@/util/users-fe'
+import { UserContextProvider } from './user-context'
 
 interface ProjectContextType {
   project?: Project | undefined
@@ -63,9 +64,11 @@ export function ProjectContextProvider (props: any): JSX.Element {
   }
 
   return (
-    <ProjectContext.Provider value={context}>
-      {props.children}
-    </ProjectContext.Provider>
+    <UserContextProvider>
+      <ProjectContext.Provider value={context}>
+        {props.children}
+      </ProjectContext.Provider>
+    </UserContextProvider>
   )
 }
 
