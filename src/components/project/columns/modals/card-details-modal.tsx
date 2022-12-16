@@ -416,7 +416,7 @@ export const GenerateAnswers = ({ question, onChange }: { question: any, onChang
     if (!Array.isArray(value)) value = [value]
     if (Array.isArray(value) && value.length > 1) {
       value = value.filter(v => v !== '')
-      value = [...new Set<any>(value)]
+      value = Array.from(new Set<any>(value))
     }
     setValue(value)
     if (onChange != null) onChange(value)
@@ -426,7 +426,7 @@ export const GenerateAnswers = ({ question, onChange }: { question: any, onChang
       <RadioGroup onChange={valueHandler} value={value[0]} name={question.id}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
-            <Radio key={idx} value={`${idx}`} size='sm' fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
+            <Radio key={idx} value={`${String(idx)}`} size='sm' fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
           ))}
         </Stack>
       </RadioGroup>

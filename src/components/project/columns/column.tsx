@@ -108,7 +108,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
         <Droppable droppableId={column._id} type='card'>
           {(provided) => (
             // 2px height is needed to make the drop work when there is no card.
-            <Box ref={provided.innerRef} {...provided.droppableProps} flexGrow='1'>
+            <Box ref={provided.innerRef} {...provided.droppableProps} flexGrow={1}>
               {cardsInSortedSequence?.map((card, index) => (
                 <Card key={index} card={card} cardIndex={index} showCardDetail={showCardDetail} />
               ))}

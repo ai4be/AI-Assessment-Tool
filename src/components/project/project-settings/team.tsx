@@ -89,7 +89,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
             <Box className='text-grey mt-3'>Pending Invites</Box>
             <hr className='my-2' />
             {data.map((token) => (
-              <Flex key={token._id} justifyContent='space-between' alignItems='center' paddingY='1'>>
+              <Flex key={token._id} justifyContent='space-between' alignItems='center' paddingY='1'>
                 <Box>{token.email}</Box>
                 <RiDeleteBin6Line cursor='pointer' onClick={() => setDeleteHandlerWrapper(token, false)} color='var(--main-blue)' />
               </Flex>

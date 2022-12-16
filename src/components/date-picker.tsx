@@ -237,11 +237,13 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
     }
   }
 
-  const dayzedData = useDayzed({
+  const opts: any = {
     showOutsideDays: true,
-    onDateSelected,
-    selected: date
-  })
+    onDateSelected
+  }
+
+  if (date != null) opts.selected = date
+  const dayzedData = useDayzed(opts)
 
   return (
     <Popover

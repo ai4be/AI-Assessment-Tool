@@ -22,6 +22,7 @@ import { GiCancel } from 'react-icons/gi'
 import UserContext from '@/src/store/user-context'
 import ProjectContext from '@/src/store/project-context'
 import ConfirmDialog from '@/src/components/confirm-dialog'
+import { User } from '@/src/types/user'
 
 function timeAgo (value): string {
   const seconds = Math.floor((new Date().getTime() - new Date(value).getTime()) / 1000)
@@ -46,7 +47,7 @@ const Comment = ({ comment, onSave, onCancel, onDelete }: { comment: any, onSave
   const [value, setValue] = useState(comment?.text ?? '')
   const [showEditOptions, setShowEditOptions] = useState(false)
   const [disabled, setDisabled] = useState(false)
-  const [usersComment, setUsersComment] = useState(null)
+  const [usersComment, setUsersComment] = useState<null|User>(null)
   const mentionsUsers = useMemo(
     () => users?.map(u => ({ id: String(u._id), display: getUserDisplayName(u) }))
       .filter(u => u.id !== user?._id) ?? []
@@ -99,7 +100,7 @@ const Comment = ({ comment, onSave, onCancel, onDelete }: { comment: any, onSave
         {comment.updatedAt != null && <Text fontSize='xs' ml='1' textDecoration='underline' color='var(--text-grey)'>(Edited)</Text>}
       </GridItem>
       <GridItem colSpan={1}>
-        <Avatar size='xs' name={usersComment != null ? getUserDisplayName(usersComment) : undefined} src={usersComment?.xsAvatar} mr='1' mt='1' />
+        {usersComment != null && <Avatar size='xs' name={getUserDisplayName(usersComment)} src={usersComment?.xsAvatar} mr='1' mt='1' />}
       </GridItem>
       <GridItem colSpan={1}>
         <Box width='100%' boxShadow='rgb(0 0 0 / 10%) 0 0 10px' borderRadius='0.5rem' padding='2'>
