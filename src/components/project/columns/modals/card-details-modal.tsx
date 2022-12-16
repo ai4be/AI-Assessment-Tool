@@ -116,7 +116,7 @@ const Question = ({ question, onChange, index, chapterNb, ...rest }): JSX.Elemen
         <Textarea placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)}/>
       </Box>
     </>
-  ), [question, conclusion]
+  ), [question, conclusion, chapterNb, index, onChange]
   )
 
   return (<>{noRenderOnTimeoutchange}</>)
@@ -164,10 +164,11 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   card.userIds = card.userIds ?? []
   const [isLoading, setIsLoading] = useState(false)
   const { users } = useContext(ProjectContext)
-  const [date, setDate] = useState(card?.dueDate ? new Date(card.dueDate) : null)
   const [userIdTrigger, setUserIdTrigger] = useState(0)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
   const [chapterNb, setChapterNb] = useState(null)
+
+  console.log('CardDetailsModal.card', card)
 
   useEffect(() => {
     const stringIds = card.userIds.map(id => String(id)) ?? []
@@ -175,19 +176,11 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   }, [card.userIds, userIdTrigger])
 
   useEffect(() => {
-    if (date !== card.date && date != null && card.date != null) {
-      const data = {
-        _id: card._id,
-        dueDate: date instanceof Date ? +date : date
-      }
-      void updateCard(data, card.projectId)
-    }
-  }, [date])
-
-  useEffect(() => {
     if (card.title != null) {
       const nb = card.title.match(/^\s?([0-9.]+)/)
-      if (Array.isArray(nb)) setChapterNb(nb[1])
+      if (Array.isArray(nb)) {
+        setChapterNb(nb[1])
+      }
     }
   }, [card?.title])
 
@@ -295,6 +288,30 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
   }
 
+  const saveCard = async (): Promise<void> => {
+    setIsLoading(true)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}`
+    const data: any = {
+      dueDate: card.dueDate
+    }
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    })
+    if (response.ok) {
+      card.dueDate = data.dueDate
+    } else {
+      // TODO
+    }
+    setIsLoading(false)
+  }
+
+  const setDate = (date: Date | null): void => {
+    card.dueDate = date instanceof Date ? +date : date
+    void saveCard()
+  }
+
   useEffect(() => {
     if (isOpen) void fetchComments()
   }, [isOpen])
@@ -316,6 +333,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
     setIsLoading(false)
   }
+
+  console.log('date', card.dueDate)
 
   return (
     <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
@@ -343,7 +362,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                   <AccordionItemStyled title='Recommandation' desc={loremIpsum} />
                 </Accordion>
                 {card?.questions?.map((q, index) =>
-                  <Box key={q.id} p={3}>
+                  <Box key={`${card._id}-${q.id}`} p={3}>
                     <Question question={q} index={index} chapterNb={chapterNb} onChange={saveQuestion} />
                     <Comment comment={{}} onSave={data => saveComment({}, data, q)} />
                     {q.comments?.map(c => (
@@ -360,12 +379,12 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                   <Flex justifyContent='space-between' alignItems='center'>
                     <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Due date</Text>
                   </Flex>
-                  <SingleDatepicker name='date-input' date={date} onDateChange={setDate}>
+                  <SingleDatepicker name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
                     <Flex justifyContent='space-between' alignItems='center'>
                       <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
-                        {date != null ? format(date, 'dd MMM yyyy') : 'click to set'}
+                        {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : 'click to set'}
                       </Text>
-                      {date != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
+                      {card.dueDate != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
                     </Flex>
                   </SingleDatepicker>
                   <Flex justifyContent='space-between' alignItems='center'>

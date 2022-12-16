@@ -4,7 +4,7 @@ import sanitize from 'mongo-sanitize'
 import { TokenStatus, getProjectInvites, deleteToken } from '@/util/token'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   let { projectId, catchAll } = req.query
   projectId = toObjectId(projectId)
   let restOfQuery = catchAll != null && typeof catchAll === 'string' ? [catchAll] : []
@@ -12,9 +12,6 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   if (Array.isArray(catchAll)) {
     restOfQuery = catchAll.map(sanitize)
   }
-
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
 
   switch (req.method) {
     case 'GET': {
@@ -38,3 +35,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

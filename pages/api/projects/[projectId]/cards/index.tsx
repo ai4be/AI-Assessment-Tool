@@ -2,11 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getCards } from '@/util/card'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { projectId } = req.query
-
-  if (!(await isConnected(req, res))) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const { projectId } = req.query
 
   switch (req.method) {
     case 'GET': {
@@ -18,3 +15,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

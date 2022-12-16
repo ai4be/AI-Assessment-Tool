@@ -1,14 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ObjectId } from 'mongodb'
-import sanitize from 'mongo-sanitize'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 import { connectToDatabase } from '@/util/mongodb'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const { cardId, cid, projectId } = req.query
-
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const { cardId, cid } = req.query
 
   const { db } = await connectToDatabase()
 
@@ -23,3 +19,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

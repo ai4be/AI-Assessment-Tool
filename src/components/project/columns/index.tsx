@@ -75,9 +75,11 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
 
   const hideCardDetail = async (): Promise<void> => {
     onClose()
+    const query = { ...router.query }
+    delete query.card
     await router.push({
       pathname: router.route,
-      query: { ...router.query, card: undefined }
+      query
     }, undefined, { shallow: true })
   }
 

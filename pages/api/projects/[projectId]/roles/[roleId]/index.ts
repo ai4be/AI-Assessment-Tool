@@ -2,15 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { updateRole, getRole, removeRole } from '@/util/role'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, roleId } = req.query
-
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
 
   switch (req.method) {
     case 'PATCH': {
-      let { name, desc } = req.body
+      const { name, desc } = req.body
       await updateRole(projectId, { _id: roleId, name, desc })
       const role = await getRole(projectId, roleId)
       return res.status(200).json(role)
@@ -24,3 +21,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

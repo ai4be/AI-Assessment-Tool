@@ -2,14 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { updateCard } from '@/util/card'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { cardId, projectId } = req.query
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const { cardId } = req.query
 
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
-
-  const requestType = req.method
-  switch (requestType) {
+  switch (req.method) {
     case 'GET': {
       return res.send({ message: 'Get more details of the card' })
     }
@@ -23,3 +19,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

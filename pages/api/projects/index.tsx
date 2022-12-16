@@ -5,9 +5,7 @@ import { defaultCards, defaultRoles } from '@/src/data'
 import { addRoles } from '@/util/role'
 import { isConnected } from '@/util/temp-middleware'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  if (!(await isConnected(req, res))) return
-
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const anyReq = req as any
   const user = anyReq.locals.user
   switch (req.method) {
@@ -27,3 +25,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.status(404).send({ message: 'Not found' })
   }
 }
+
+export default isConnected(handler)

@@ -6,12 +6,9 @@ import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 
 const UPDATEABLE_FIELDS = ['name', 'sequence']
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { projectId, cid } = req.query
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  let { cid } = req.query
   cid = sanitize(cid)
-
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
 
   const { db } = await connectToDatabase()
 
@@ -38,3 +35,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

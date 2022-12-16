@@ -7,14 +7,10 @@ import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 import { getUser } from '@/util/user'
 import { getColumns } from '@/util/columns'
 
-
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
   let { projectId } = req.query
   projectId = toObjectId(projectId)
-
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
 
   const { db } = await connectToDatabase()
 
@@ -48,3 +44,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

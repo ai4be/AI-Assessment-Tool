@@ -4,11 +4,9 @@ import { isConnected } from '@/util/temp-middleware'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
   const { userId } = req.query
-  const canProceed = await isConnected(req, res)
-  if (canProceed !== true) return
 
   switch (req.method) {
     case 'PATCH': {
@@ -28,3 +26,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.status(404).send({ message: 'Not found' })
   }
 }
+
+export default isConnected(handler)

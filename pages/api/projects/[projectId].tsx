@@ -3,12 +3,9 @@ import { connectToDatabase, toObjectId } from '@/util/mongodb'
 import { deleteProject, getProject, updateProject } from '@/util/project'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   let { projectId } = req.query
   projectId = toObjectId(projectId)
-
-  if (!(await isConnected(req, res))) return
-  if (!(await hasProjectAccess(req, res, String(projectId)))) return
 
   const { db } = await connectToDatabase()
   switch (req.method) {
@@ -32,3 +29,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.status(404).send({ message: 'not found' })
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

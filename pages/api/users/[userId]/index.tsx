@@ -6,13 +6,9 @@ import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { getUserProjects } from '@/util/project'
 import isEmpty from 'lodash.isempty'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
   const { userId } = req.query
-
-  const canProceed = await isConnected(req, res)
-  if (canProceed !== true) return
-
   let user: any = await getUser({ email: String(session?.user?.email) })
   switch (req.method) {
     case 'GET': {
@@ -36,3 +32,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.status(404).send({ message: 'Not found' })
   }
 }
+
+export default isConnected(handler)

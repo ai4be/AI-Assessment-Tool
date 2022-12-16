@@ -60,7 +60,7 @@ export interface SingleDatepickerProps {
   onDateChange: (date: Date) => void
   id?: string
   name?: string
-  date: Date
+  date: Date | null
   configs?: SingleDatepickerConfigs
 }
 
@@ -199,7 +199,7 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   },
   ...props
 }): JSX.Element => {
-  let { date, name, disabled, onDateChange, id } = props
+  const { date, name, disabled, onDateChange, id } = props
 
   const ref = useRef<HTMLElement>(null)
   const initialFocusRef = useRef<HTMLInputElement>(null)
@@ -254,20 +254,9 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
       isLazy
     >
       <PopoverTrigger>
-        {/* <Text
-          id={id}
-          fontSize='sm'
-          fontWeight='600'
-          ref={initialFocusRef}
-          onClick={() => setPopoverOpen(!popoverOpen)}
-          name={name}
-          value={date != null ? format(date, configs.dateFormat) : ''}
-          onChange={(e) => e.target.value}
-        >
-          {date != null ? format(date, configs.dateFormat) : ''}
-        </Text> */}
         <Box cursor='pointer' onClick={() => popoverOpen ? null : openpopover()}>
           {props.children}
+          <Box display='none'>{date != null ? date.toISOString() : ''}</Box>
         </Box>
       </PopoverTrigger>
       <PopoverContent ref={ref}>

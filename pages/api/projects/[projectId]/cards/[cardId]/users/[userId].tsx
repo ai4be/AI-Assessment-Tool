@@ -3,10 +3,8 @@ import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 import { addUserToCard, removeUserFromCard } from '@/util/card'
 import { getProjectUsers } from '@/util/project'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, cardId, userId } = req.query
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
 
   switch (req.method) {
     case 'POST': {
@@ -29,3 +27,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

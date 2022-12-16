@@ -2,14 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { cardBelongsToProject, hasProjectAccess, isConnected } from '@/util/temp-middleware'
 import { deleteComment, getComment, updateComment } from '@/util/comments'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { projectId, cardId, commentId } = req.query
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  let { projectId, commentId } = req.query
   projectId = String(projectId)
-  cardId = String(cardId)
-  if (!(await isConnected(req, res))) return
-  if (!(await hasProjectAccess(req, res, projectId))) return
-  if (!(await cardBelongsToProject(req, res, projectId, cardId))) return
-
   const reqAsAny = req as any
   const user = reqAsAny.locals.user
 
@@ -36,3 +31,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(cardBelongsToProject(handler)))

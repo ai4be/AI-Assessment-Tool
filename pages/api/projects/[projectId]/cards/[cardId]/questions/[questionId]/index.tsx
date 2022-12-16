@@ -2,14 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { cardBelongsToProject, hasProjectAccess, isConnected } from '@/util/temp-middleware'
 import { updateQuestion } from '@/util/card'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { projectId, cardId, questionId } = req.query
-  projectId = String(projectId)
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  let { cardId, questionId } = req.query
   cardId = String(cardId)
   questionId = String(questionId)
-  if (!(await isConnected(req, res))) return
-  if (!(await hasProjectAccess(req, res, projectId))) return
-  if (!(await cardBelongsToProject(req, res, projectId, cardId))) return
 
   switch (req.method) {
     case 'PATCH': {
@@ -21,3 +17,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(cardBelongsToProject(handler)))

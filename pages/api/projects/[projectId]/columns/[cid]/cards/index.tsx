@@ -5,14 +5,11 @@ import { unstable_getServerSession } from 'next-auth'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 import { authOptions } from '../../../../../auth/[...nextauth]'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
   let { projectId, cid } = req.query
   cid = toObjectId(cid)
   projectId = toObjectId(projectId)
-
-  if (!await isConnected(req, res)) return
-  if (!await hasProjectAccess(req, res, String(projectId))) return
 
   const { db } = await connectToDatabase()
 
@@ -58,3 +55,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       break
   }
 }
+
+export default isConnected(hasProjectAccess(handler))

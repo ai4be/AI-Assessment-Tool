@@ -7,13 +7,10 @@ import { authOptions } from './auth/[...nextauth]'
 import { isEmailValid } from '@/util/validator'
 import { sendMail } from '@/util/mail'
 import templates from '@/util/mail/templates'
-import { isConnected } from '@/util/temp-middleware'
+import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
-
-  const canProceed = await isConnected(req, res)
-  if (canProceed !== true) return
 
   switch (req.method) {
     case 'POST': {
@@ -38,3 +35,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.status(404).send({ message: 'Not found' })
   }
 }
+
+export default isConnected(hasProjectAccess(handler))
