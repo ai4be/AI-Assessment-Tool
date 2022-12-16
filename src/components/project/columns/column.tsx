@@ -101,14 +101,14 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
       ml={index === 0 ? '0' : '10px'}
       className='background-light-blue rounded-lg'
     >
-      <Box pb='5px' rounded='lg' display='flex' flexDirection='column'>
+      <Box pb='5px' rounded='lg' display='flex' flexDirection='column' height='100%'>
         <Box display='flex' alignItems='center' justifyContent='center' className='mt-1.5'>
           {loadColumnTitle()}
         </Box>
         <Droppable droppableId={column._id} type='card'>
           {(provided) => (
             // 2px height is needed to make the drop work when there is no card.
-            <Box ref={provided.innerRef} {...provided.droppableProps} minHeight='2px' height='100%'>
+            <Box ref={provided.innerRef} {...provided.droppableProps} flexGrow='1'>
               {cardsInSortedSequence?.map((card, index) => (
                 <Card key={index} card={card} cardIndex={index} showCardDetail={showCardDetail} />
               ))}

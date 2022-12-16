@@ -160,8 +160,11 @@ const Login = (): JSX.Element => {
                 Sign In
               </Button>
               <Box m='5' textAlign='center'>
-                <Link href='/signup' color='brand' p='2'>
+                <Link href='/signup' color='brand' p='2' display='block'>
                   Sign up for an account
+                </Link>
+                <Link href='/reset-password' color='brand' p='2'>
+                  Forgot you password? Reset it here.
                 </Link>
               </Box>
               {showLoginError()}

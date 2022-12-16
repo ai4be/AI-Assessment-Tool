@@ -87,7 +87,7 @@ export const updateCard = async (_id: string | ObjectId, data: any): Promise<boo
   })
   const card = await getCard(_id)
   const columns = await getColumnsByProjectId(card.projectId)
-  if (updatableFields.columnId != null && columns.find(c => c._id === updatableFields.columnId) == null) throw new Error('Invalid columnId')
+  if (updatableFields.columnId != null && columns.find(c => String(c._id) === String(updatableFields.columnId)) == null) throw new Error('Invalid columnId')
   if (updatableFields.columnId != null) updatableFields.columnId = toObjectId(updatableFields.columnId)
   const res = await db
     .collection(TABLE_NAME)

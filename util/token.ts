@@ -44,7 +44,7 @@ export const getToken = async ({ _id, token, type, createdBy }: { _id?: string |
   if (token != null) where.token = token
   if (type != null) where.type = type
   if (createdBy != null) where.createdBy = createdBy
-  console.log(where)
+  // console.log(where)
   if (isEmpty(where)) return null
   if (isEmpty(where.token) && isEmpty(where._id)) return await db.collection(TABLE_NAME).find(where).sort({ createdAt: -1 }).limit(1).next()
   return await db.collection(TABLE_NAME).findOne(where)

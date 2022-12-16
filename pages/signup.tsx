@@ -17,7 +17,7 @@ export async function getServerSideProps (ctx): Promise<any> {
   token = sanitize(token)
   if (token && email && projectId) {
     // If token is invalid then redirect to error page
-    const tokenValue = await getToken({ token })
+    const tokenValue = token != null ? await getToken({ token }) : null
     if (!tokenValue || tokenValue?.status !== TokenStatus.PENDING) {
       return {
         redirect: {
