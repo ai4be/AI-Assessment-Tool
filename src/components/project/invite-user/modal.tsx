@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState, BaseSyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState, BaseSyntheticEvent, useContext } from 'react'
 import {
   Box,
   Modal,
@@ -13,9 +13,11 @@ import {
   Input,
 } from '@chakra-ui/react'
 import { defaultFetchOptions } from '@/util/api'
+import ToastContext from '@/src/store/toast-context'
 
 const InviteModal = ({ project, callback }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { showToast } = useContext(ToastContext)
   const [email, setEmail] = useState('')
   const [emailErr, setEmailErr] = useState(false)
   const [isMailSending, setMailSending] = useState(false)
@@ -52,9 +54,17 @@ const InviteModal = ({ project, callback }): JSX.Element => {
       body: JSON.stringify({ email, projectId: project._id })
     })
     if (response.ok) {
-      onClose()
       setEmail('')
+      onClose()
       if (callback != null && typeof callback === 'function') await callback()
+    } else {
+      try {
+        const error = await response.json()
+        if (error.message != null) showToast({ title: 'Something went wrong', description: error.message, status: 'error' })
+        else showToast({ title: 'Something went wrong', status: 'error' })
+      } catch (err) {
+        showToast({ title: 'Something went wrong', status: 'error' })
+      }
     }
   }
 

@@ -15,7 +15,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
   switch (req.method) {
     case 'POST': {
       let { email, projectId } = req.body
-      if (email == null || projectId == null || !isEmailValid(email)) return res.status(400).json({ error: 'missing properties' })
+      if (email == null || projectId == null || !isEmailValid(email)) return res.status(400).json({ message: 'missing properties' })
       email = email != null ? cleanEmail(email) : email
       projectId = projectId != null ? toObjectId(projectId) : projectId
       const creator = await getUser({ email: String(session?.user?.email) })
@@ -23,7 +23,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       try {
         tokenInstance = await inviteUser(projectId, email, creator?._id)
       } catch (error) {
-        return res.status(400).json({ error: 'duplicate' })
+        return res.status(400).json({ message: error?.message ?? 'Something went wrong' })
       }
       const user = await getUser({ email })
       const page = user != null ? 'login' : 'signup'

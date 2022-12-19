@@ -86,7 +86,12 @@ export const inviteUser = async (projectId: string | ObjectId, email: string, cr
   const user = await getUser({ email })
   if (user != null) {
     const projects = await getUserProjects(user?._id, projectId)
-    if (projects?.length > 0) throw new Error('User already invited')
+    if (projects?.length > 0) throw new Error('Duplicate invite. Email already used for invitation.')
+  }
+  const invitations = await getProjectInvites(projectId)
+  if (invitations?.length > 0) {
+    const invitedUser = invitations.find(invitation => invitation.email === email)
+    if (invitedUser != null) throw new Error('Duplicate invite. Email already used for invitation.')
   }
   await db.collection(TABLE_NAME)
     .insertOne({ token, userId: user?._id, createdBy, status: TokenStatus.PENDING, type: TokenType.INVITE, email, projectId, createdAt: Date.now() })

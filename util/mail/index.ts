@@ -14,7 +14,7 @@ const throwMissingEnvVar = (varName: string): void => {
 
 export const sendMail = async (to: string | string[], subject: string, html: string | null = null, text = null): Promise<SentMessageInfo> => {
   const port: number = +(process.env.SMTP_PORT ?? 587)
-  const transporter = nodemailer.createTransport({
+  const options = {
     host: SMTP_HOST ?? 'smtp.ethereal.email',
     port,
     secure: port === 465, // true for 465, false for other ports
@@ -22,7 +22,8 @@ export const sendMail = async (to: string | string[], subject: string, html: str
       user: SMTP_USER,
       pass: SMTP_PASS
     }
-  })
+  }
+  const transporter = nodemailer.createTransport(options)
   const mailOptions: any = {
     from: EMAIL_FROM, // sender address
     to, // list of receivers
