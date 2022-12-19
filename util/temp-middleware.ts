@@ -49,7 +49,10 @@ export function hasProjectAccess (handler: Function): Function {
     let hasAccess = false
     const tempReq = req as any
     const user = tempReq.locals?.user
-    const { projectId } = req.query
+    let { projectId } = req.query
+    if (projectId == null) {
+      projectId = req.body?.projectId
+    }
     if (projectId != null && projectId !== 'undefined' && user != null) {
       const users = await getProjectUsers(projectId, [user._id])
       hasAccess = users.some(u => String(u._id) === String(user._id))
