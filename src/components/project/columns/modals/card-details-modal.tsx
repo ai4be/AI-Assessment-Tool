@@ -168,8 +168,6 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
   const [chapterNb, setChapterNb] = useState(null)
 
-  console.log('CardDetailsModal.card', card)
-
   useEffect(() => {
     const stringIds = card.userIds.map(id => String(id)) ?? []
     setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
