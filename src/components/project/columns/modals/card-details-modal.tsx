@@ -1,4 +1,4 @@
-import React, { FC, Fragment, memo, useContext, useEffect, useMemo, useState } from 'react'
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -17,6 +17,7 @@ import {
   Badge,
   RadioGroup,
   Radio,
+  Select,
   Stack,
   CheckboxGroup,
   Checkbox,
@@ -26,9 +27,7 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverHeader,
-  PopoverBody,
-  border
+  PopoverBody
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import isEmpty from 'lodash.isempty'
@@ -98,7 +97,7 @@ const Question = ({ question, onChange, index, chapterNb, ...rest }): JSX.Elemen
     const tId = setTimeout(() => onChange(question, null, conclusion), 800)
     setTimeoutId(tId)
     return () => {
-      timeoutId != null ? clearTimeout(timeoutId) : null
+      if (timeoutId != null) clearTimeout(timeoutId)
     }
   }, [conclusion])
 
@@ -286,19 +285,18 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
   }
 
-  const saveCard = async (): Promise<void> => {
+  const saveCard = async (data: any): Promise<void> => {
     setIsLoading(true)
     const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}`
-    const data: any = {
-      dueDate: card.dueDate
-    }
     const response = await fetch(url, {
       ...defaultFetchOptions,
       method: 'PATCH',
       body: JSON.stringify(data)
     })
     if (response.ok) {
-      card.dueDate = data.dueDate
+      Object.keys(data).forEach(key => {
+        card[key] = data[key]
+      })
     } else {
       // TODO
     }
@@ -307,7 +305,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const setDate = (date: Date | null): void => {
     card.dueDate = date instanceof Date ? +date : date
-    void saveCard()
+    void saveCard({ dueDate: card.dueDate })
+  }
+
+  const setStage = (stage: string): void => {
+    if (card.stage === stage) return
+    console.log(stage)
+    card.stage = stage
+    void saveCard({ stage })
   }
 
   useEffect(() => {
@@ -331,8 +336,6 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
     setIsLoading(false)
   }
-
-  console.log('date', card.dueDate)
 
   return (
     <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
@@ -396,6 +399,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                       <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} />
                       <Text fontSize='sm' fontWeight='600' ml='2'>{getUserDisplayName(user)}</Text>
                     </Flex>))}
+                  <label>
+                    <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Stage</Text>
+                    <Select size='xs' value={card.stage ?? 'PREPARATION'} onChange={(e) => setStage(e?.target?.value || card.stage)}>
+                      <option value='PREPARATION'>Preparation</option>
+                      <option value='EXECUTION'>Execution</option>
+                      <option value='UTILISATION'>Utilisation</option>
+                    </Select>
+                  </label>
                 </Flex>
               </Flex>
             </Box>

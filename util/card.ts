@@ -3,27 +3,11 @@ import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import { pick } from 'lodash'
 import { getColumnsByProjectId } from './columns'
+import { CardStage, Card, stageValues } from '../src/types/cards'
 
 export const TABLE_NAME = 'cards'
 
-export interface Card {
-  _id: string
-  title: string
-  desc: string
-  userIds?: ObjectId[]
-  roleIds?: ObjectId[]
-  projectId?: ObjectId
-  sequence?: number
-  label?: Label
-  questions?: any[]
-}
-
-export interface Label {
-  bg: string
-  type: string
-}
-
-const UPDATABLE_FIELDS = ['title', 'desc', 'sequence', 'columnId', 'label', 'dueDate']
+const UPDATABLE_FIELDS = ['title', 'desc', 'sequence', 'columnId', 'label', 'dueDate', 'stage']
 
 export const getCard = async (_id: string | ObjectId): Promise<Card> => {
   const { db } = await connectToDatabase()
@@ -89,6 +73,8 @@ export const updateCard = async (_id: string | ObjectId, data: any): Promise<boo
   const columns = await getColumnsByProjectId(card.projectId)
   if (updatableFields.columnId != null && columns.find(c => String(c._id) === String(updatableFields.columnId)) == null) throw new Error('Invalid columnId')
   if (updatableFields.columnId != null) updatableFields.columnId = toObjectId(updatableFields.columnId)
+  if (typeof updatableFields.stage === 'string' && !stageValues.includes(updatableFields.stage.toUpperCase())) throw new Error('Invalid stage')
+  if (updatableFields.stage != null) updatableFields.stage = updatableFields.stage.toUpperCase()
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: { ...updatableFields } })

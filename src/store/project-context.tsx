@@ -8,18 +8,23 @@ interface ProjectContextType {
   project?: Project | undefined
   categories?: Category[]
   selectedCategory?: any
+  selectedStage?: any
   setProject?: any
   categoryClickHandler?: any
+  stageClickHandler?: any
   users?: any[]
+  stages?: any[]
+  stage?: any
 }
 
 const ProjectContext: Context<ProjectContextType> = createContext({})
 
 export function ProjectContextProvider (props: any): JSX.Element {
   const router = useRouter()
-  const { cat: catId } = router.query
+  const { cat: catId, stage = 'ALL' } = router.query
   const [project, setProject] = useState<Project>(props.project)
-  const [categories, setCategories] = useState<Category[]>(props.categories)
+  const [categories] = useState<Category[]>(props.categories)
+  const [stages] = useState<any[]>(props.stages)
   const [selectedCategory, setSelectedCategory] = useState<Category>(props.selectedCategory)
   const [users, setUsers] = useState<any[]>([])
 
@@ -43,15 +48,24 @@ export function ProjectContextProvider (props: any): JSX.Element {
 
   useEffect((): void => {
     if (Array.isArray(project.users)) {
-      void fetchUsersByProjectId(project._id).then(u => {
-        console.log('fetchUsers PROJECT', project.users, u)
-        setUsers(u)
-      })
+      void fetchUsersByProjectId(project._id).then(u => setUsers(u))
     }
   }, [project.users])
 
   function categoryClickHandler (cat: Category): void {
-    void router.push(`/projects/${String(project._id)}?cat=${cat._id}`, undefined, { shallow: true })
+    const query = { ...router.query, cat: cat._id }
+    void router.push({
+      pathname: `/projects/${String(project._id)}`,
+      query
+    }, undefined, { shallow: true })
+  }
+
+  function stageClickHandler (stage: string): void {
+    const query = { ...router.query, stage }
+    void router.push({
+      pathname: `/projects/${String(project._id)}`,
+      query
+    }, undefined, { shallow: true })
   }
 
   const context: ProjectContextType = {
@@ -60,7 +74,10 @@ export function ProjectContextProvider (props: any): JSX.Element {
     categories,
     selectedCategory,
     categoryClickHandler,
-    users
+    stageClickHandler,
+    users,
+    stage,
+    stages
   }
 
   return (

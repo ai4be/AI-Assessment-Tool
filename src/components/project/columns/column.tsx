@@ -94,7 +94,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     <Box
       key={index}
       width='272px'
-      height='calc(100vh - 90px)'
+      height='calc(100vh - 70px)'
       overflowY='auto'
       mt='10px'
       mr='10px'

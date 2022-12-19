@@ -11,23 +11,24 @@ interface Props {
   project: any
   session: any
   categories: any[]
+  stages?: any[]
 }
 
-const Project: FC<Props> = ({ project, session, categories }): JSX.Element => {
+const Project: FC<Props> = (props): JSX.Element => {
   return (
     <Box bgColor='#F7F7F7'>
-      {project != null &&
-        <ProjectContextProvider project={project} categories={categories}>
+      {props.project != null &&
+        <ProjectContextProvider {...props}>
           <NavBar bg='white' />
           <Box display='flex' alignItems='center' flexDirection='column' ml='2rem' mr='2rem'>
             <Box width='100%' my='1%'>
               <ProgressBar />
             </Box>
             <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
-              <ProjectBar project={project} />
+              <ProjectBar project={props.project} />
               <Box display='flex' position='relative'>
                 <SideBar />
-                <ProjectColumns projectId={project._id} session={session} />
+                <ProjectColumns projectId={props.project._id} session={props.session} />
               </Box>
             </Box>
           </Box>

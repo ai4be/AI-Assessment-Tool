@@ -15,7 +15,7 @@ interface IProps {
 
 const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string, session: any }): JSX.Element => {
   const router = useRouter()
-  const { card: cardId, cat: categoryId } = router.query
+  const { card: cardId, cat: categoryId, stage } = router.query
   const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
   const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
 
@@ -87,6 +87,7 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     // console.log('filterCards', columnId, categoryId)
     // console.log('filterCards', 'cards', cards)
     // console.log('filterCards res', cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId))
+    if (stage != null && String(stage).toUpperCase() !== 'ALL') return cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId && card.stage === stage)
     return cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId)
   }
 
