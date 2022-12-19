@@ -87,7 +87,13 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     // console.log('filterCards', columnId, categoryId)
     // console.log('filterCards', 'cards', cards)
     // console.log('filterCards res', cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId))
-    if (stage != null && String(stage).toUpperCase() !== 'ALL') return cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId && card.stage === stage)
+    if (stage != null && String(stage).toUpperCase() !== 'ALL') {
+      return cards.filter(
+        card => String(card.columnId) === String(columnId) &&
+          card.category === categoryId &&
+          (card.stage === stage || (stage === 'PREPARATION' && (card.stage == null || card.stage.trim() === '')))
+      )
+    }
     return cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId)
   }
 
