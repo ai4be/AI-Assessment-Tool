@@ -119,8 +119,9 @@ export const getProjectInvites = async (projectId: string | ObjectId): Promise<T
   return await db.collection(TABLE_NAME).find({
     projectId,
     status: TokenStatus.PENDING,
-    type: {
-      $or: [TokenType.INVITE, { $exists: false }]
-    }
+    $or: [
+      { type: TokenType.INVITE },
+      { type: { $exists: false } }
+    ]
   }).toArray()
 }
