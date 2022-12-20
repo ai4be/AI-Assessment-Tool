@@ -187,17 +187,6 @@
                     "title" : "Did you assess the risk of possible malicious use, misuse or inappropriate use of the =gb=AI system=ge=?",
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty",
                     "type" : "radio",
-                    "isScored":0,
-                    "answers" :
-                    [
-                        "Yes", "No", "Don't know"
-                    ]
-                },
-                {
-                    "id" : "TRS-Q2.3-B",
-                    "title" : "Did you assess the risk of possible malicious use, misuse or inappropriate use of the =gb=AI system=ge=?",
-                    "isVisibleIf" : "{TRS-Q2.1-B} notempty",
-                    "type" : "radio",
                     "isScored" : 0,
                     "answers" :
                     [
