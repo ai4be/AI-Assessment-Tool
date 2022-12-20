@@ -31,14 +31,8 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import isEmpty from 'lodash.isempty'
-import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
-import { FiUserPlus } from 'react-icons/fi'
-import { GrTextAlignFull } from 'react-icons/gr'
-import CardLabel from '@/src/components/project/columns/modals/card-labels-menu'
-import QuillEditor from '@/src/components/quill-editor'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers, getUserDisplayName } from '@/util/users-fe'
-import { updateCard } from '@/util/cards'
+import { getUserDisplayName } from '@/util/users-fe'
 import { defaultFetchOptions } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
 import { FiEdit2 } from 'react-icons/fi'
@@ -46,12 +40,8 @@ import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
 import isEqual from 'lodash.isequal'
-import { Mention, MentionsInput } from 'react-mentions';
-import { IoMdHelpCircle } from 'react-icons/io'
-import UserContext from '@/src/store/user-context'
-import defaultStyle from './default-style'
 import Comment from './comment'
-import cards from '@/src/data/cards'
+import { questionEnabler } from '@/util/question'
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -79,17 +69,17 @@ const QuestionHelp = ({ question }): JSX.Element => {
           <PopoverTrigger>
             <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent opacity='1' _opacity={'1 !important'} >
             <PopoverArrow />
             <PopoverCloseButton />
-            <PopoverBody dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
+            <PopoverBody opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
           </PopoverContent>
         </Popover>}
     </>
   )
 }
 
-const Question = ({ question, onChange, index, chapterNb, ...rest }): JSX.Element => {
+const Question = ({ question, onChange, ...rest }): JSX.Element => {
   const [conclusion, setConclusion] = useState(question.conclusion ?? '')
   const [timeoutId, setTimeoutId] = useState<any>(null)
   useEffect(() => {
@@ -101,24 +91,24 @@ const Question = ({ question, onChange, index, chapterNb, ...rest }): JSX.Elemen
     }
   }, [conclusion])
 
-  const noRenderOnTimeoutchange = useMemo(() => (
+  return (
     <>
-      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
-        {`${chapterNb}.${index + 1} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
+      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
+        {`${question.TOCnumber} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
         <QuestionHelp question={question} />
       </Text>
+      {question.enabled === false && <Text color='var(--main-blue)' fontSize='xs' as='b' textDecoration='underline' display='block'>
+        {question.enabledCondition?.disabledText}
+      </Text>}
       <Box ml='1.5'>
         <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
-        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block'>
-          Conclusion
+        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
+          Justification
         </Text>
-        <Textarea placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)}/>
+        <Textarea disabled={!question.enabled} placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)}/>
       </Box>
     </>
-  ), [question, conclusion, chapterNb, index, onChange]
   )
-
-  return (<>{noRenderOnTimeoutchange}</>)
 }
 
 const AccordionItemStyled = ({ title, desc }): JSX.Element => {
@@ -163,14 +153,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   card.userIds = card.userIds ?? []
   const [isLoading, setIsLoading] = useState(false)
   const { users } = useContext(ProjectContext)
-  const [userIdTrigger, setUserIdTrigger] = useState(0)
+  const [renderTrigger, setRenderTrigger] = useState(0)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
   const [chapterNb, setChapterNb] = useState(null)
 
   useEffect(() => {
     const stringIds = card.userIds.map(id => String(id)) ?? []
     setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
-  }, [card.userIds, userIdTrigger])
+  }, [card.userIds, renderTrigger])
 
   useEffect(() => {
     if (card.title != null) {
@@ -180,6 +170,12 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
       }
     }
   }, [card?.title])
+
+  useEffect(() => {
+    if (Array.isArray(card.questions) && chapterNb != null) {
+      card.questions.forEach((q, idx) => (q.TOCnumber = `${chapterNb}.${idx + 1}`))
+    }
+  }, [chapterNb, card.questions])
 
   const saveQuestion = async (question: any, responses?: any[], conclusion?: string): Promise<void> => {
     setIsLoading(true)
@@ -205,6 +201,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
       if (conclusion != null) question.conclusion = conclusion
       if (responses != null) question.responses = responses
     }
+    recalculateEnableing()
     setIsLoading(false)
   }
 
@@ -227,7 +224,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
       const commentIdx = question.comments.findIndex(c => String(c._id) === String(comment._id))
       if (commentIdx >= 0) question.comments.splice(commentIdx, 1, newComment)
       else question.comments = [newComment, ...question.comments]
-      setUserIdTrigger(userIdTrigger + 1)
+      setRenderTrigger(renderTrigger + 1)
     } else {
       // TODO
     }
@@ -237,7 +234,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   const onUserAdd = async (userId: string): Promise<void> => {
     card.userIds = card.userIds ?? []
     card.userIds.push(userId)
-    setUserIdTrigger(userIdTrigger + 1)
+    setRenderTrigger(renderTrigger + 1)
     const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
@@ -246,14 +243,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     })
     if (!response.ok) {
       card.userIds = card.userIds.filter(id => String(id) !== String(userId))
-      setUserIdTrigger(userIdTrigger + 1)
+      setRenderTrigger(renderTrigger + 1)
     }
   }
 
   const onUserRemove = async (userId: string): Promise<void> => {
     card.userIds = card.userIds ?? []
     card.userIds = card.userIds.filter(id => String(id) !== String(userId))
-    setUserIdTrigger(userIdTrigger + 1)
+    setRenderTrigger(renderTrigger + 1)
     const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
@@ -310,7 +307,6 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const setStage = (stage: string): void => {
     if (card.stage === stage) return
-    console.log(stage)
     card.stage = stage
     void saveCard({ stage })
   }
@@ -330,12 +326,20 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     if (response.ok) {
       question.comments = question.comments ?? []
       question.comments = question.comments.filter(c => String(c._id) !== String(comment._id))
-      setUserIdTrigger(userIdTrigger + 1)
+      setRenderTrigger(renderTrigger + 1)
     } else {
       // TODO
     }
     setIsLoading(false)
   }
+
+  const recalculateEnableing = (): void => {
+    if (Array.isArray(card?.questions)) {
+      questionEnabler(card?.questions)
+    }
+  }
+
+  useEffect(recalculateEnableing, [card._id, card?.questions])
 
   return (
     <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
@@ -357,14 +361,19 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                     {card.title.replace(/=g(b|e)=/g, '')}
                   </Text>
                 </Box>
+                <Box>
+                  <Text fontSize={[16, 20]} color='var(--text-gray)' fontWeight='400' px='4'>
+                    {card.description?.replace(/=g(b|e)=/g, '') ?? ''}
+                  </Text>
+                </Box>
 
                 <Accordion allowToggle allowMultiple>
                   <AccordionItemStyled title='Example' desc={loremIpsum} />
                   <AccordionItemStyled title='Recommandation' desc={loremIpsum} />
                 </Accordion>
                 {card?.questions?.map((q, index) =>
-                  <Box key={`${card._id}-${q.id}`} p={3}>
-                    <Question question={q} index={index} chapterNb={chapterNb} onChange={saveQuestion} />
+                  <Box key={`${card._id}-${q.id}-${index}`} p={3}>
+                    <Question question={q} onChange={saveQuestion} />
                     <Comment comment={{}} onSave={data => saveComment({}, data, q)} />
                     {q.comments?.map(c => (
                       <Comment key={c._id} comment={c} onSave={data => saveComment(c, data, q)} onDelete={() => deleteComment(c, q)} />
@@ -390,7 +399,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                   </SingleDatepicker>
                   <Flex justifyContent='space-between' alignItems='center'>
                     <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>Responsable</Text>
-                    <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
+                    <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
                       <FiEdit2 color='#C9C9C9' cursor='pointer' />
                     </UserMenu>
                   </Flex>
@@ -435,7 +444,12 @@ export const GenerateAnswers = ({ question, onChange }: { question: any, onChang
       <RadioGroup onChange={valueHandler} value={value[0]} name={question.id}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
-            <Radio key={idx} value={`${String(idx)}`} size='sm' fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Radio>
+            <Radio
+              key={idx} value={`${String(idx)}`} disabled={!question.enabled} size='sm' fontSize='sm'
+              opacity={question.enabled ? 1 : 0.5}
+            >
+              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
+            </Radio>
           ))}
         </Stack>
       </RadioGroup>
@@ -445,7 +459,12 @@ export const GenerateAnswers = ({ question, onChange }: { question: any, onChang
       <CheckboxGroup onChange={valueHandler} value={Array.isArray(value) ? value : [value]}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
-            <Checkbox size='sm' key={idx} value={`${idx}`} fontSize='sm'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Checkbox>
+            <Checkbox
+              size='sm' key={idx} value={`${idx}`} disabled={!question.enabled} fontSize='sm'
+              opacity={question.enabled ? 1 : 0.5}
+            >
+              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
+            </Checkbox>
           ))}
         </Stack>
       </CheckboxGroup>

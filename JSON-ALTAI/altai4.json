@@ -148,8 +148,8 @@
                     ]
                 },
                 {
+                    "id": "T-Q3.3-B",
                     "type": "radio",
-                    "name": "T-Q3.3-B",
                     "visibleIf": "",
                     "title": "Did you communicate the technical limitations and potential risks of the =gb=AI system=ge= to =gb=end-users=ge=, such as its level of accuracy and/or error rates?",
                     "isRequired": true,

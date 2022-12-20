@@ -84,9 +84,6 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
   }
 
   const filterCards = (columnId: string): any[] => {
-    // console.log('filterCards', columnId, categoryId)
-    // console.log('filterCards', 'cards', cards)
-    // console.log('filterCards res', cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId))
     if (stage != null && String(stage).toUpperCase() !== 'ALL') {
       return cards.filter(
         card => String(card.columnId) === String(columnId) &&
