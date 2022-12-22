@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-// import { connectToDatabase } from '@/util/mongodb'
+import { isConnected } from '@/util/temp-middleware'
 
 const industries = [
   'Accommodation and Food Services',
@@ -23,7 +23,7 @@ const industries = [
   'Wholesale Trade'
 ].map((i, idx) => ({ name: i, key: i.toLowerCase().replace(/ /g, '_'), _id: idx }))
 
-export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   switch (req.method) {
     case 'GET': {
       return res.send(industries)
@@ -32,3 +32,5 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.status(404).send({ message: 'Not found' })
   }
 }
+
+export default isConnected(handler)

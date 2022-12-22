@@ -25,20 +25,21 @@ export const questionEnabler = (questions: any[]) => {
           const hasNotBefore: boolean = condition.startsWith('!')
           const hasBracketBefore: boolean = hasNotBefore ? condition.startsWith('!(') : condition.startsWith('(')
           const hasBracketAfter: boolean = condition.endsWith(')')
-          const questionId = condition.match(/\{([^{}]+)\}/i)[1]
+          const questionId = (condition.match(/\{([^{}]+)\}/i) ?? [])[1]
           const q = arr.find((q) => q.id === questionId)
+          if (q == null) continue
           let disabledText = ''
           let isConditionTrue = false
           if (condition.includes('notempty') === true) {
             const isNotEmpty = q?.responses?.length > 0
             isConditionTrue = hasNotBefore ? !isNotEmpty : isNotEmpty
-            disabledText = hasNotBefore ? `${q.TOCnumber} is not empty` : `${q.TOCnumber} is empty`
+            disabledText = hasNotBefore ? `${q?.TOCnumber} is not empty` : `${q?.TOCnumber} is empty`
           } else if (condition.includes('=') === true) {
             const [_, value] = condition.match(/=\s?'(.+)'/i)
             const responsesValues = Array.isArray(q?.responses) ? q?.responses.map((r: any) => q.answers[r]) : []
             const includesValue: boolean = responsesValues.includes(value)
             isConditionTrue = hasNotBefore ? !includesValue : includesValue
-            disabledText = hasNotBefore ? `${q.TOCnumber} equals '${value}'` : `${q.TOCnumber} does not equals '${value}'`
+            disabledText = hasNotBefore ? `${q?.TOCnumber} equals '${value}'` : `${q?.TOCnumber} does not equals '${value}'`
           }
           group.condition = condition
           group.questionId = questionId

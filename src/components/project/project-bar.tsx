@@ -9,14 +9,13 @@ import { getUserDisplayName } from '@/util/users-fe'
 const ProjectBar = ({ project }): JSX.Element => {
   const { users } = useContext(ProjectContext)
   return (
-    <Flex justifyContent='center' alignItems='center' position='relative'>
-      <Text>
+    <Flex justifyContent='center' alignItems='center' position='relative' height='40px'>
+      <Text color='var(--main-blue)' as='b' textDecoration='underline'>
         {project.name}
       </Text>
       <Flex
         position='absolute'
         right='0'
-        height='40px'
         alignItems='center'
         justifyContent='flex-end'
         bg='transparent'

@@ -5,6 +5,7 @@ import { getUsers, User } from './user'
 import sanitize from 'mongo-sanitize'
 import { createProjectDefaultColumns, getTodoColumn } from './columns'
 import { createCards } from './card'
+import isEmpty from 'lodash.isempty'
 
 export const TABLE_NAME = 'projects'
 
@@ -18,25 +19,27 @@ export interface Project {
   roles?: any[]
 }
 
-export const createProject = async ({ name, createdBy }: { name: string, createdBy: ObjectId | string }, addDefaultColumns = true): Promise<string> => {
+export const createProject = async ({ name, createdBy, description, industry }: { name: string, createdBy: ObjectId | string, description?: string, industry?: string }, addDefaultColumns = true): Promise<string> => {
   const { db } = await connectToDatabase()
   name = cleanText(name)
   createdBy = toObjectId(createdBy)
   const createdAt = Date.now()
-  const data = {
+  const data: any = {
     _id: ObjectId(),
     name,
     createdAt,
     createdBy,
     users: []
   }
+  if (description != null) data.description = cleanText(description)
+  if (industry != null) data.industry = cleanText(industry)
   const result = await db.collection(TABLE_NAME).insertOne(data)
   if (addDefaultColumns) await createProjectDefaultColumns(data._id, createdBy)
   return String(result.insertedId)
 }
 
-export const createProjectWithDefaultColumnsAndCards = async (name: string, createdBy: ObjectId | string, cards: any[]): Promise<string> => {
-  const projectId = await createProject({ name, createdBy }, true)
+export const createProjectWithDefaultColumnsAndCards = async (data: any, cards: any[]): Promise<string> => {
+  const projectId = await createProject(data, true)
   const todoColumn = await getTodoColumn(projectId)
   cards = sanitize(cards)
   cards = cards.map(c => ({
@@ -57,11 +60,15 @@ export const getProject = async (_id: ObjectId | string): Promise<Project> => {
 export const updateProject = async (_id: ObjectId | string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  const name = sanitize(data.name)
-  const backgroundImage = sanitize(data.backgroundImage)
+  const updateData: any = {}
+  const updateableProps = ['name', 'description', 'industry', 'backgroundImage']
+  for (const prop of updateableProps) {
+    if (data[prop] != null) updateData[prop] = cleanText(data[prop])
+  }
+  if (isEmpty(updateableProps)) return false
   const res = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id }, { $set: { name, backgroundImage } })
+    .updateOne({ _id }, { $set: updateData })
   return res.result.ok === 1
 }
 

@@ -12,16 +12,22 @@ import {
   ModalCloseButton,
   ModalFooter,
   Input,
-  Text
+  Text,
+  Textarea,
+  Select
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { defaultFetchOptions } from '@/util/api'
+import { defaultFetchOptions, fetcher } from '@/util/api'
+import useSWR from 'swr'
 
 const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
+  const { data: industries, error } = useSWR('/api/industries', fetcher)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const inputRef: any = useRef()
+  const [description, setDescription] = useState<string>('')
+  const [industry, setIndustry] = useState<string>('')
 
   // useEffect(() => {
   //   console.log('inputRef', inputRef)
@@ -37,8 +43,10 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
     try {
       setIsLoading(true)
       const data: any = {
-        name: inputRef?.current?.value ?? ''
+        name: inputRef?.current?.value ?? '',
+        description: description ?? '',
       }
+      if (industry != null && industry.length > 0) data.industry = industry
 
       const response = await fetch('/api/projects', {
         ...defaultFetchOptions,
@@ -47,7 +55,6 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
       })
 
       const inJSON = await response.json()
-      console.log('handleCreate', inJSON)
       await fetchProjects()
     } finally {
       onClose()
@@ -74,10 +81,17 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
           <ModalCloseButton />
           <ModalBody>
             <Input
-              ref={el => {inputRef.current = el; el?.focus();}}
+              ref={el => { inputRef.current = el }}
               placeholder='Project name'
               onKeyUp={handleSubmit}
             />
+            <Textarea
+              placeholder={`Project description
+What is the purpose of the project and applications?`}
+              mt='2' onChange={(e) => setDescription(e.target.value)} />
+            <Select size='xs' placeholder='Select the industry' onChange={e => setIndustry(e.target.value)}>
+              {industries?.map(industry => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
+            </Select>
           </ModalBody>
           <ModalFooter>
             <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText='Creating Project'>

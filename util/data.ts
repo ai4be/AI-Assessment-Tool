@@ -20,7 +20,7 @@ export const dataToCards = async (data: any[], projectId?: string | ObjectId, co
       card.questions = card.questions.map((q: any, i: number) => ({
         ...q,
         title: `${catIdx}.${idx + 1}.${i + 1} ${String(q.title)}`,
-        answers: q.answers.map(a => typeof a === 'string' ? a.trim() : a)
+        ...(q.answers != null ? { answers: q.answers.map(a => typeof a === 'string' ? a.trim() : a) } : {})
       }))
       cards.push(returnCard)
       idx++
