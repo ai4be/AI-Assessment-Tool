@@ -5,7 +5,7 @@ import { getUsers, User } from './user'
 import sanitize from 'mongo-sanitize'
 import { createProjectDefaultColumns, getTodoColumn } from './columns'
 import { createCards } from './card'
-import isEmpty from 'lodash.isempty'
+import { isEmpty } from '@/util/index'
 
 export const TABLE_NAME = 'projects'
 

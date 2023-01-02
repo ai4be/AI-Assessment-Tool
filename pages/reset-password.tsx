@@ -12,7 +12,6 @@ export const getServerSideProps = setup(async (ctx): Promise<any> => {
   const { token } = ctx.query
   const dbToken = token != null ? await getToken({ token, type: TokenType.RESET_PASSWORD }) : null
   let message: any = null
-  console.log(dbToken)
   if (dbToken != null && isTokenExpired(dbToken)) message = 'Token expired. please request a new one.'
 
   const props: any = { session, message }

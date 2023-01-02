@@ -5,7 +5,7 @@ import { verifyPassword } from '@/util/auth'
 import { invitedUserHandler } from '@/util/token'
 import sanitize from 'mongo-sanitize'
 import { getUser } from '@/util/user'
-import isEmpty from 'lodash.isempty'
+import { isEmpty } from '@/util/index'
 
 const authorize: any = async (credentials: any, req): Promise<User | null> => {
   // Check any field is empty
@@ -22,7 +22,10 @@ const authorize: any = async (credentials: any, req): Promise<User | null> => {
   )
   if (!isValid) throw new Error('Wrong credentials')
   if (token != null) await invitedUserHandler(sanitize(token), email)
-  return { email: user.email, id: user._id }
+  const userId = String(user._id)
+  // this is a hack "name: userId" to have the user id without having to fetch hime again
+  // because it's not passed along to the frontend
+  return { email: user.email, id: userId, name: userId }
 }
 
 export const authOptions: NextAuthOptions = {
@@ -41,7 +44,13 @@ export const authOptions: NextAuthOptions = {
       authorize
     })
   ],
-  secret: process.env.JWT_SECRET_KEY
+  secret: process.env.JWT_SECRET_KEY,
+  callbacks: {
+    async session ({ session, token, user }) {
+      console.log(session, token, user)
+      return session
+    }
+  }
 }
 
 export default NextAuth(authOptions)

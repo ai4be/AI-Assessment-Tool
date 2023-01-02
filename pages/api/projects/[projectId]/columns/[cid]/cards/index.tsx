@@ -19,7 +19,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.send(columns)
     }
     case 'POST': {
-      const user = await db.collection('users').findOne({ email: session?.user?.email })
+      const user = (req as any).locals?.user
       const {
         title,
         type,

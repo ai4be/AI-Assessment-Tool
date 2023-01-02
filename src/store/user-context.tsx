@@ -24,12 +24,8 @@ export function UserContextProvider (props: any): JSX.Element {
 
   useEffect(() => {
     if (status === 'loading') return
-    if (data?.user == null) {
-      return setUser(null)
-    }
-    void getCurrentUser().then(user => {
-      setUser(user)
-    })
+    if (data?.user == null) return setUser(null)
+    void getCurrentUser().then(user => setUser(user))
   }, [data, data?.user, status, reloadUser])
 
   const context = {

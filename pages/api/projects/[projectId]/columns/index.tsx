@@ -1,14 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase, toObjectId } from '@/util/mongodb'
 import sanitize from 'mongo-sanitize'
-import { unstable_getServerSession } from 'next-auth/next'
-import { authOptions } from '../../../auth/[...nextauth]'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
-import { getUser } from '@/util/user'
 import { getColumns } from '@/util/columns'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const session = await unstable_getServerSession(req, res, authOptions)
   let { projectId } = req.query
   projectId = toObjectId(projectId)
 
@@ -20,7 +16,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.send(columns)
     }
     case 'POST': {
-      const user = await getUser({ email: String(session?.user?.email) })
+      const user = (req as any).locals?.user
       let {
         name,
         sequence

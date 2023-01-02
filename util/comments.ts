@@ -2,7 +2,6 @@
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
-import pick from 'lodash.pick'
 
 export const TABLE_NAME = 'comments'
 
@@ -35,7 +34,10 @@ export const createComment = async (data: any): Promise<any> => {
   data.userId = toObjectId(data.userId)
   data.cardId = toObjectId(data.cardId)
   data.createdAt = new Date()
-  let localData = pick(data, ['projectId', 'userId', 'text', 'cardId', 'createdAt', 'questionId'])
+  let localData: any = {};
+  ['projectId', 'userId', 'text', 'cardId', 'createdAt', 'questionId'].forEach(k => {
+    if (data[k] != null) localData[k] = data[k]
+  })
   localData = sanitize(localData)
   const result = await db.collection(TABLE_NAME).insertOne(localData)
   if (result.result.ok === 1) {
@@ -48,9 +50,9 @@ export const createComment = async (data: any): Promise<any> => {
 export const updateComment = async (_id: ObjectId | string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  let localData: any = pick(data, ['text'])
-  localData = sanitize(localData)
-  localData.updatedAt = new Date()
+  const { text }: any = data
+  const localData: any = sanitize({ text })
+  localData.updatedAt = Date.now()
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: localData })

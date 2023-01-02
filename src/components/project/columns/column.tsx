@@ -5,7 +5,7 @@ import {
   Input
 } from '@chakra-ui/react'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import debounce from 'lodash.debounce'
+import { debounce } from '@/util/index'
 import Card from '@/src/components/project/columns/card'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'

@@ -6,7 +6,7 @@ import {
   useToast
 } from '@chakra-ui/react'
 import { defaultFetchOptions } from '@/util/api'
-import isEmpty from 'lodash.isempty'
+import { isEmpty } from '@/util/index'
 import { isPasswordValid } from '@/util/validator'
 import UserContext from '../../store/user-context'
 

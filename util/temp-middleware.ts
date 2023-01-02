@@ -26,6 +26,16 @@ export function isConnected (handler: any): Function {
   }
 }
 
+export function isCurrentUser (handler: Function): Function {
+  return addUserToReq(async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
+    const { userId } = req.query
+    const tempReq = req as any
+    const user = tempReq.locals?.user
+    if (user?._id.toString() !== userId) return res.status(403).send({ message: 'forbidden' })
+    return handler(req, res)
+  })
+}
+
 export function addUserToReq (handler: Function): Function {
   return async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
     const tempReq = req as any
@@ -34,7 +44,7 @@ export function addUserToReq (handler: Function): Function {
     if (session?.user == null) {
       return returnUnauthorized(res)
     }
-    const user = await getUser({ email: String(session?.user?.email) })
+    const user = await getUser({ _id: String(session?.user?.name) })
     if (user == null) {
       return returnUnauthorized(res)
     }

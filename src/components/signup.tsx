@@ -18,8 +18,8 @@ import {
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
 import { defaultFetchOptions } from '@/util/api'
-import isEmpty from 'lodash.isempty'
-import { debounce } from 'lodash'
+import { isEmpty } from '@/util/index'
+import { debounce } from '@/util/index'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 
 const SignUp = (): JSX.Element => {

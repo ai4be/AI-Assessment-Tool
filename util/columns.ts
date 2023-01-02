@@ -2,7 +2,6 @@
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
-import pick from 'lodash.pick'
 
 export const TABLE_NAME = 'columns'
 
@@ -69,8 +68,8 @@ export const createProjectDefaultColumns = async (projectId: ObjectId | string, 
 export const updateColumn = async (_id: ObjectId | string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  data = pick(sanitize(data), ['name', 'sequence'])
-  data = sanitize(data)
+  const { name, sequence } = sanitize(data)
+  data = sanitize({ name, sequence })
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: data })

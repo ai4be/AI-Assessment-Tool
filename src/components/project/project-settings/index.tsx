@@ -30,7 +30,7 @@ import Roles from './roles'
 import Team from './team'
 import { defaultFetchOptions, fetcher } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
-import isEmpty from 'lodash.isempty'
+import { isEmpty } from '@/util/index'
 import ToastContext from '@/src/store/toast-context'
 import useSWR from 'swr'
 

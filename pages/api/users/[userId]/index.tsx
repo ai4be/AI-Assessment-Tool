@@ -4,12 +4,12 @@ import { isConnected } from '@/util/temp-middleware'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { getUserProjects } from '@/util/project'
-import isEmpty from 'lodash.isempty'
+import { isEmpty } from '@/util/index'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
   const { userId } = req.query
-  let user: any = await getUser({ email: String(session?.user?.email) })
+  let user: any = await getUser({ _id: String(session?.user?.name) })
   switch (req.method) {
     case 'GET': {
       if (userId !== 'me') {
@@ -21,11 +21,11 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(200).json(user)
     }
     case 'PATCH': {
-      if (String(user._id) !== userId) return res.status(403).json({ msg: 'You are not authorized to update this user' })
-      const { firstName, lastName, avatar, xsAvatar } = req.body
-      const update = { firstName, lastName, avatar, xsAvatar }
-      if (isEmpty(update)) res.status(204).end()
-      const updated = await updateUser(userId, update)
+      if (String(user._id) !== userId) return res.status(403).json({ message: 'You are not authorized to update this user' })
+      if (isEmpty(req.body)) res.status(204).end()
+      const data = req.body
+      delete data.email
+      const updated = await updateUser(userId, data)
       return res.status(204).end()
     }
     default:

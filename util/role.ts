@@ -1,5 +1,4 @@
 import sanitize from 'mongo-sanitize'
-import { pick } from 'lodash'
 import { ObjectId } from 'mongodb'
 import { TABLE_NAME } from './project'
 import { toObjectId, connectToDatabase } from './mongodb'
@@ -31,10 +30,10 @@ export const addRoles = async (projectId: ObjectId | string, roles: Array<{ _id?
   projectId = toObjectId(projectId)
   const rolesFormatted: any[] = roles.map(r => {
     r._id = r._id != null ? toObjectId(r._id) : new ObjectId()
-    r.name = sanitize(r.name)
+    r.name = sanitize(r.name ?? '')
     r.desc = sanitize(r.desc ?? '')
-    const pickedObj = pick(r, ['_id', 'name', 'desc']) // allow to use the spreadoperator safely
-    const result = { ...pickedObj, userIds: [], createdAt: Date.now() }
+    const { _id, name, desc } = r
+    const result = { _id, name, desc, userIds: [], createdAt: Date.now() }
     return result
   })
 

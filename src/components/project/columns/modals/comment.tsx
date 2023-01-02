@@ -14,7 +14,7 @@ import {
   GridItem,
   useDisclosure
 } from '@chakra-ui/react'
-import isEmpty from 'lodash.isempty'
+import { isEmpty, timeAgo } from '@/util/index'
 import { getUserDisplayName } from '@/util/users-fe'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Mention, MentionsInput } from 'react-mentions'
@@ -23,22 +23,6 @@ import UserContext from '@/src/store/user-context'
 import ProjectContext from '@/src/store/project-context'
 import ConfirmDialog from '@/src/components/confirm-dialog'
 import { User } from '@/src/types/user'
-
-function timeAgo (value): string {
-  const seconds = Math.floor((new Date().getTime() - new Date(value).getTime()) / 1000)
-  let interval = seconds / 31536000
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
-  if (interval > 1) { return rtf.format(-Math.floor(interval), 'year') }
-  interval = seconds / 2592000
-  if (interval > 1) { return rtf.format(-Math.floor(interval), 'month') }
-  interval = seconds / 86400
-  if (interval > 1) { return rtf.format(-Math.floor(interval), 'day') }
-  interval = seconds / 3600
-  if (interval > 1) { return rtf.format(-Math.floor(interval), 'hour') }
-  interval = seconds / 60
-  if (interval > 1) { return rtf.format(-Math.floor(interval), 'minute') }
-  return rtf.format(-Math.floor(interval), 'second')
-}
 
 const Comment = ({ comment, onSave, onCancel, onDelete }: { comment: any, onSave?: Function, onCancel?: Function, onDelete?: Function }): JSX.Element => {
   const { users } = useContext(ProjectContext)
@@ -69,7 +53,6 @@ const Comment = ({ comment, onSave, onCancel, onDelete }: { comment: any, onSave
   const saveHandler = (e): void => {
     e.preventDefault()
     e.stopPropagation()
-    console.log('saveHandler')
     const val = value.trim().replace(/\n+$/, '')
     if (onSave != null) onSave({ text: val })
     if (comment._id == null) setValue('')

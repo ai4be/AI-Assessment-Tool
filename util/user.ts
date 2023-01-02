@@ -1,7 +1,6 @@
 import { cleanEmail, cleanText, connectToDatabase, toObjectId } from '@/util/mongodb'
-import sanitize from 'mongo-sanitize'
 import { ObjectId } from 'mongodb'
-import isEmpty from 'lodash.isempty'
+import { isEmpty } from '@/util/index'
 import { hashPassword, verifyPassword } from './auth'
 import { isEmailValid, isPasswordValid } from './validator'
 
@@ -21,7 +20,7 @@ export interface User {
 export const getUser = async ({ _id, email }: { _id?: string | ObjectId, email?: string }, omitFields: string[] = ['password']): Promise<User | null> => {
   const { db } = await connectToDatabase()
   _id = _id != null ? toObjectId(_id) : undefined
-  email = typeof email === 'string' ? sanitize(email.trim().toLowerCase()) : undefined
+  email = typeof email === 'string' ? cleanEmail(email) : undefined
   const where: any = {}
   if (_id != null) where._id = _id
   if (email != null) where.email = email
@@ -82,16 +81,14 @@ export const resetPassword = async (_id: string | ObjectId, password: string): P
 export const updateUser = async (_id: string | ObjectId, updateData: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  const { email, firstName, lastName, avatar, xsAvatar } = updateData
+  const updateableFields = ['email', 'firstName', 'lastName', 'avatar', 'xsAvatar', 'organization', 'department', 'role']
   const update: any = {}
-  if (email != null) update.email = cleanEmail(email)
-  if (firstName != null) update.firstName = cleanText(firstName)
-  if (lastName != null) update.lastName = cleanText(lastName)
-  if (avatar != null) update.avatar = cleanText(avatar)
-  if (xsAvatar != null) update.xsAvatar = cleanText(xsAvatar)
-  if (isEmpty(update)) return false
-
+  for (const field of updateableFields) {
+    if (updateData[field] != null) update[field] = cleanText(updateData[field])
+  }
+  if (update.email != null) update.email = cleanEmail(update.email)
   if (update.email != null && !isEmailValid(update.email)) throw new Error('Invalid email')
+  if (isEmpty(update)) return false
 
   const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: update })
   return res.modifiedCount === 1

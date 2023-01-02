@@ -1,7 +1,6 @@
 import sanitize from 'mongo-sanitize'
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
-import { pick } from 'lodash'
 import { getColumnsByProjectId } from './columns'
 import { CardStage, Card, stageValues } from '../src/types/cards'
 
@@ -65,9 +64,9 @@ export const createCards = async (cards: Card[]): Promise<boolean> => {
 export const updateCard = async (_id: string | ObjectId, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  const updatableFields = pick(data, UPDATABLE_FIELDS)
+  const updatableFields: any = {}
   UPDATABLE_FIELDS.forEach(field => {
-    if (updatableFields[field] != null) updatableFields[field] = sanitize(updatableFields[field])
+    if (data[field] != null) updatableFields[field] = sanitize(data[field])
   })
   const card = await getCard(_id)
   const columns = await getColumnsByProjectId(card.projectId)

@@ -30,7 +30,7 @@ import {
   PopoverBody
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import isEmpty from 'lodash.isempty'
+import { isEmpty } from '@/util/index'
 import ProjectContext from '@/src/store/project-context'
 import { getUserDisplayName } from '@/util/users-fe'
 import { defaultFetchOptions } from '@/util/api'
@@ -39,9 +39,9 @@ import { FiEdit2 } from 'react-icons/fi'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
-import isEqual from 'lodash.isequal'
 import Comment from './comment'
 import { questionEnabler } from '@/util/question'
+import { isEqual } from '@/util/index'
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -186,7 +186,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
         data.responses = responses
       }
     }
-    if (conclusion != null && !isEqual(question.conclusion, conclusion)) data.conclusion = conclusion
+    if (conclusion != null && question.conclusion !== conclusion) data.conclusion = conclusion
 
     if (isEmpty(data)) return
 
