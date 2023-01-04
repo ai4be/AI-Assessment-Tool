@@ -124,7 +124,7 @@ const SingleDatepickerCalendar = (
     configs
   } = props
 
-  if (lodash_isEmpty(calendars)) {
+  if (isEmpty(calendars)) {
     return (<></>)
   }
 
@@ -230,7 +230,7 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   const onDateSelected = (options: { selectable: boolean, date: Date }): void => {
     const { selectable, date } = options
     if (!selectable) return
-    if (!lodash_isNil(date)) {
+    if (date != null) {
       onDateChange(date)
       closeHandler(null)
     }

@@ -90,8 +90,10 @@ const Profile = (): JSX.Element => {
     }
     // avoid heavy request payload
     if (user?.avatar === data.avatar) delete data.avatar
-    else if (data.avatar != null) {
+    else if (data.avatar != null && data.avatar !== '') {
       data.xsAvatar = await resizeImg(data.avatar, 100, 100)
+    } else if (data.avatar === '') {
+      data.xsAvatar = ''
     }
     const url = `/api/users/${String(user?._id)}`
     const response = await fetch(url, {
@@ -178,7 +180,7 @@ const Profile = (): JSX.Element => {
       </FormControl>
       <ImgInput
         data={values.avatar}
-        onChange={(base64Data) => setValues({ ...values, avatar: base64Data})}
+        onChange={(base64Data) => setValues({ ...values, avatar: base64Data })}
         placeholder={`${user?.firstName} ${user?.lastName}`}
       />
       <Button

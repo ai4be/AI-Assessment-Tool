@@ -15,6 +15,7 @@ export const dataToCards = async (data: any[], projectId?: string | ObjectId, co
         ...(projectId != null ? { projectId: toObjectId(projectId) } : {}),
         ...(columnId != null ? { columnId: toObjectId(columnId) } : {}),
         sequence: idx,
+        number: +`${catIdx}.${idx + 1}`,
         title: `${catIdx}.${idx + 1} ${String(card.title)}`
       }
       card.questions = card.questions.map((q: any, i: number) => ({

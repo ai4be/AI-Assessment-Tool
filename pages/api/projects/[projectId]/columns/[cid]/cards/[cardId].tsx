@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ObjectId } from 'mongodb'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
-import { connectToDatabase } from '@/util/mongodb'
+import { connectToDatabase } from '@/src/models/mongodb'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { cardId, cid } = req.query

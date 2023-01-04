@@ -1,6 +1,5 @@
 import sanitize from 'mongo-sanitize'
-import { Db, MongoClient } from 'mongodb'
-import { ObjectId } from 'mongodb'
+import { Db, MongoClient, ObjectId } from 'mongodb'
 
 const { MONGODB_URI, MONGODB_DB } = process.env
 

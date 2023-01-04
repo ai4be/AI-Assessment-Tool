@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   Box,
   Heading,
@@ -9,21 +9,66 @@ import { debounce } from '@/util/index'
 import Card from '@/src/components/project/columns/card'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { Sort, Order } from '@/src/components/project/project-bar/sort-menu'
 import {
   updateColumn
-} from '@/util/columns-fe'
+} from '@/util/columns'
+
+enum SortKeys {
+  NUMBER = 'number',
+  DUE_DATE = 'dueDate'
+}
+
+function sortCards (cards: any[], sort: Sort, order: Order): any[] {
+  let key = SortKeys.NUMBER
+  switch (sort) {
+    case Sort.DUE_DATA:
+      key = SortKeys.DUE_DATE
+      break
+    default:
+      key = SortKeys.NUMBER
+  }
+  const noValPlaceholder = sort === Sort.NUMBER ? 0 : (order === Order.ASC ? Infinity : -Infinity)
+
+  const copy = [...cards]
+
+  copy.sort((a, b) => {
+    let valA = a[key]
+    let valB = b[key]
+    // backward compatibility hack
+    if (key === SortKeys.NUMBER && valA == null) {
+      valA = +(a.title.match(/^[0-9.]+/))
+      valB = +(b.title.match(/^[0-9.]+/))
+    }
+    valA = valA ?? noValPlaceholder
+    valB = valB ?? noValPlaceholder
+    if (order === Order.ASC) {
+      return valA - valB
+    } else {
+      return valB - valA
+    }
+  })
+  return copy
+}
 
 const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }): JSX.Element => {
   const { data } = useSession()
+  const router = useRouter()
+  const {
+    sort = Sort.NUMBER,
+    ord = Order.ASC
+  } = router.query
   const [showEditBox, setEditBoxVisibility] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [cardsInSortedSequence, setCardsInSortedSequence] = useState<any[]>(sortCards(cards, sort as Sort, ord as Order))
+  const [columnName, setColumnName] = useState<string>(column.name)
 
   const user: any = data?.user
 
-  const [columnName, setColumnName] = useState<string>(column.name)
-  const cardsInSortedSequence = cards.sort(
-    (cardA: any, cardB: any) => cardA.sequence - cardB.sequence
-  )
+  useEffect(() => {
+    setCardsInSortedSequence(sortCards(cards ?? [], sort as Sort, ord as Order))
+  }, [cards, sort, ord])
 
   const loadColumnTitle = (): JSX.Element => {
     if (showEditBox) {

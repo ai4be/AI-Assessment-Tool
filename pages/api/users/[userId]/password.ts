@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getUser, updatePassword } from '@/util/user'
+import { getUser, updatePassword } from '@/src/models/user'
 import { isConnected, isCurrentUser } from '@/util/temp-middleware'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'

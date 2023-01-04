@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useState } from 'react'
 import { Box, Badge, Flex, Text, AvatarGroup, Avatar } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers, getUserDisplayName } from '@/util/users-fe'
+import { fetchUsers, getUserDisplayName } from '@/util/users'
 
 interface Props {
   showCardDetail: (cardId: string) => void

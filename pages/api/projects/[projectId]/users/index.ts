@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getProjectUsers } from '@/util/project'
+import { getProjectUsers } from'@/src/models/project'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

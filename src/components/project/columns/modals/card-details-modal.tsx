@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useMemo, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -30,9 +30,9 @@ import {
   PopoverBody
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { isEmpty } from '@/util/index'
+import { isEmpty, isEqual } from '@/util/index'
 import ProjectContext from '@/src/store/project-context'
-import { getUserDisplayName } from '@/util/users-fe'
+import { getUserDisplayName } from '@/util/users'
 import { defaultFetchOptions } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
 import { FiEdit2 } from 'react-icons/fi'
@@ -41,7 +41,6 @@ import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
 import Comment from './comment'
 import { questionEnabler } from '@/util/question'
-import { isEqual } from '@/util/index'
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -69,7 +68,7 @@ const QuestionHelp = ({ question }): JSX.Element => {
           <PopoverTrigger>
             <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
           </PopoverTrigger>
-          <PopoverContent opacity='1' _opacity={'1 !important'} >
+          <PopoverContent opacity='1' _opacity='1 !important'>
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverBody opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
@@ -97,15 +96,16 @@ const Question = ({ question, onChange, ...rest }): JSX.Element => {
         {`${question.TOCnumber} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
         <QuestionHelp question={question} />
       </Text>
-      {question.enabled === false && <Text color='var(--main-blue)' fontSize='xs' as='b' textDecoration='underline' display='block'>
-        {question.enabledCondition?.disabledText}
-      </Text>}
+      {question.enabled === false &&
+        <Text color='var(--main-blue)' fontSize='xs' as='b' textDecoration='underline' display='block'>
+          {question.enabledCondition?.disabledText}
+        </Text>}
       <Box ml='1.5'>
         <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
         <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
           Justification
         </Text>
-        <Textarea disabled={!question.enabled} placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)}/>
+        <Textarea disabled={!question.enabled} placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)} />
       </Box>
     </>
   )
@@ -398,7 +398,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                     </Flex>
                   </SingleDatepicker>
                   <Flex justifyContent='space-between' alignItems='center'>
-                    <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>Responsable</Text>
+                    <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>Assigned to</Text>
                     <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
                       <FiEdit2 color='#C9C9C9' cursor='pointer' />
                     </UserMenu>

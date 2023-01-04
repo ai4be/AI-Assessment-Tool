@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
-import { addUserToCard, removeUserFromCard } from '@/util/card'
-import { getProjectUsers } from '@/util/project'
+import { addUserToCard, removeUserFromCard } from '@/src/models/card'
+import { getProjectUsers } from '@/src/models/project'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, cardId, userId } = req.query

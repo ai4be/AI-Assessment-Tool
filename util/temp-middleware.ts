@@ -1,11 +1,11 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase } from '@/util/mongodb'
+import { connectToDatabase } from '@/src/models/mongodb'
 import { authOptions } from '../pages/api/auth/[...nextauth]'
 import { unstable_getServerSession } from 'next-auth/next'
-import { getProjectUsers } from './project'
-import { getUser } from './user'
-import { getCard } from './card'
+import { getProjectUsers } from '@/src/models/project'
+import { getUser } from '@/src/models/user'
+import { getCard } from '@/src/models/card'
 
 const returnUnauthorized = (res: NextApiResponse): void => {
   res.status(401).send({ message: 'Unauthorized', status: 401 })

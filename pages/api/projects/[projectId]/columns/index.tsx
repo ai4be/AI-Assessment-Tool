@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase, toObjectId } from '@/util/mongodb'
+import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
 import sanitize from 'mongo-sanitize'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
-import { getColumns } from '@/util/columns'
+import { getColumns } from '@/src/models/column'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   let { projectId } = req.query

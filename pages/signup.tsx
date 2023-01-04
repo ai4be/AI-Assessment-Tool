@@ -2,8 +2,8 @@ import SignUp from '@/src/components/signup'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from './api/auth/[...nextauth]'
 import sanitize from 'mongo-sanitize'
-import { getUser } from '@/util/user'
-import { getToken, TokenStatus } from '@/util/token'
+import { getUser } from '@/src/models/user'
+import { getToken, TokenStatus } from '@/src/models/token'
 
 export default function SignUpPage ({ session }): JSX.Element {
   return (<SignUp />)

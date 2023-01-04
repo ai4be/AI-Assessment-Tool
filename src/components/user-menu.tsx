@@ -1,5 +1,5 @@
 import React from 'react'
-import { FiUserPlus, FiCheck } from 'react-icons/fi'
+import { FiCheck } from 'react-icons/fi'
 import {
   Avatar,
   Box,
@@ -9,10 +9,18 @@ import {
   MenuList,
   MenuItem
 } from '@chakra-ui/react'
-import { getUserDisplayName } from '@/util/users-fe'
+import { getUserDisplayName } from '@/util/users'
 import { User } from '@/src/types/user'
 
-export const UserMenu = (props: { users: User[], includedUserIds: string[], onUserRemove: Function, onUserAdd: Function, children?: any, userIdTrigger?: any }): JSX.Element => {
+interface UserMenuProps {
+  users: User[]
+  includedUserIds: string[]
+  onUserRemove: Function
+  onUserAdd: Function
+  [key: string]: any
+}
+
+export const UserMenu = (props: UserMenuProps): JSX.Element => {
   const { users, includedUserIds, onUserRemove, onUserAdd } = props
   const clickHandler = (e, user: any): void => {
     e.stopPropagation()
@@ -23,9 +31,11 @@ export const UserMenu = (props: { users: User[], includedUserIds: string[], onUs
 
   return (
     <Menu>
-      <MenuButton>
-        {props.children}
-      </MenuButton>
+      {props.children?.type?.displayName === 'MenuButton'
+        ? props.children
+        : <MenuButton>
+          {props.children}
+        </MenuButton>}
       <MenuList>
         {users.map(user => (
           <MenuItem key={user._id} display='block' onClick={e => clickHandler(e, user)} px='1' closeOnSelect={false}>

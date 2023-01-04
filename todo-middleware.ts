@@ -1,7 +1,7 @@
 // middleware.ts
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-// import { connectToDatabase } from '@/util/mongodb'
+// import { connectToDatabase } from '@/src/models/mongodb'
 import { withAuth } from 'next-auth/middleware'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 

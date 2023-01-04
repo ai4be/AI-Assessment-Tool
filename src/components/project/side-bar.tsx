@@ -13,6 +13,7 @@ import {
  } from '@chakra-ui/react'
  import { ChevronRightIcon } from '@chakra-ui/icons'
 import ProjectContext from '@/src/store/project-context'
+import { useRouter } from 'next/router'
 
 // (<IconButton
 //   icon={<ChevronRightIcon w={8} h={8} />}
@@ -22,6 +23,8 @@ import ProjectContext from '@/src/store/project-context'
 // />)
 
 const SideBar = (props: any): JSX.Element => {
+  const router = useRouter()
+  const { cat: selectedCategoryId } = router.query ?? {}
   const context = useContext(ProjectContext)
   // const { isOpen, onClose, onOpen } = useDisclosure()
   // const variants = useBreakpointValue({ base: 'base', md: 'md' })
@@ -40,15 +43,15 @@ const SideBar = (props: any): JSX.Element => {
         borderWidth='0'
         padding='0'
         className='capitalize whitespace-normal'
-        bgColor={cat._id === context.selectedCategory?._id ? 'var(--main-light-blue)' : 'white'}
-        color={cat._id === context.selectedCategory?._id ? '#25282B' : 'var(--text-grey)'}
+        bgColor={cat._id === selectedCategoryId ? 'var(--main-light-blue)' : 'white'}
+        color={cat._id === selectedCategoryId ? '#25282B' : 'var(--text-grey)'}
         whiteSpace='normal'
         _hover={{ bg: 'var(--main-light-blue)' }}
         _focus={{ boxShadow: 'none' }}
         onClick={() => context.categoryClickHandler(cat)}
       >
         <Box display='flex' justifyContent='space-between' width='100%' height='100%' alignItems='center'>
-          <Box width='4px' height='100%' bgColor={cat._id === context.selectedCategory?._id ? 'var(--main-blue)' : 'white'} borderRightRadius='5px' />
+          <Box width='4px' height='100%' bgColor={cat._id === selectedCategoryId ? 'var(--main-blue)' : 'white'} borderRightRadius='5px' />
           <Box px='1rem'>{cat.name}</Box>
           <Box width='4px' height='100%' bgColor='transparent' />
         </Box>

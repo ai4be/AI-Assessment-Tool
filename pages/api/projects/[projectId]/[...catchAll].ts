@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { toObjectId } from '@/util/mongodb'
+import { toObjectId } from '@/src/models/mongodb'
 import sanitize from 'mongo-sanitize'
-import { TokenStatus, getProjectInvites, deleteToken } from '@/util/token'
+import { TokenStatus, getProjectInvites, deleteToken } from '@/src/models/token'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

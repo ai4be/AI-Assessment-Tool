@@ -1,8 +1,8 @@
 import { hashPassword } from '@/util/auth'
-import { cleanEmail } from '@/util/mongodb'
+import { cleanEmail } from '@/src/models/mongodb'
 import sanitize from 'mongo-sanitize'
-import { invitedUserHandler } from '@/util/token'
-import { createUser, getUser } from '@/util/user'
+import { invitedUserHandler } from '@/src/models/token'
+import { createUser, getUser } from '@/src/models/user'
 import { isEmailValid } from '@/util/validator'
 
 async function handler (req, res): Promise<any> {

@@ -2,9 +2,9 @@ import NextAuth, { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 import { verifyPassword } from '@/util/auth'
-import { invitedUserHandler } from '@/util/token'
+import { invitedUserHandler } from '@/src/models/token'
 import sanitize from 'mongo-sanitize'
-import { getUser } from '@/util/user'
+import { getUser } from '@/src/models/user'
 import { isEmpty } from '@/util/index'
 
 const authorize: any = async (credentials: any, req): Promise<User | null> => {

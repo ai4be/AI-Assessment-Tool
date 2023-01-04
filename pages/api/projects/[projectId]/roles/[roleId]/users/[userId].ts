@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { addUserToRole, removeUserFromRole } from '@/util/role'
+import { addUserToRole, removeUserFromRole } from '@/src/models/role'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

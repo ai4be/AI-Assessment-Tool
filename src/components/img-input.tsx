@@ -1,32 +1,4 @@
-// import {
-//   Input,
-//   useMultiStyleConfig,
-//   InputProps
-// } from '@chakra-ui/react'
-
-// export const FileInput = (props: InputProps): JSX.Element => {
-//   const styles = useMultiStyleConfig('Button', { variant: 'outline' })
-
-//   return (
-//     <Input
-//       type='file'
-//       sx={{
-//         '::file-selector-button': {
-//           border: 'none',
-//           outline: 'none',
-//           mr: 2,
-//           ...styles
-//         }
-//       }}
-//       {...props}
-//     />
-//   )
-// }
-
-// export default FileInput
-
 import React, { useEffect, useState } from 'react'
-
 import {
   AspectRatio,
   Box,
@@ -37,14 +9,17 @@ import {
   Text,
   Avatar
 } from '@chakra-ui/react'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 import { resizeImg } from '@/util/img'
 
 export default function ImgInput ({ onChange, data, placeholder }: { onChange?: Function, data?: string, placeholder: string }): JSX.Element {
   const [opacityImg, setOpacityImg] = useState<number>(1)
   const [dataBase64, setDataBase64] = useState<string>(data ?? '')
+  const [disabled, setDisabled] = useState<boolean>(false)
 
   useEffect(() => {
     if (typeof onChange === 'function' && dataBase64?.length > 0 && data !== dataBase64) onChange(dataBase64)
+    setDisabled(dataBase64 == null || dataBase64.length === 0)
   }, [dataBase64, onChange])
 
   useEffect(() => {
@@ -66,22 +41,18 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
     }
   }
 
+  const deleteAvatar = (): void => {
+    if (disabled) return
+    setDataBase64('')
+    if (typeof onChange === 'function') {
+      onChange('')
+    }
+  }
+
   return (
     <Container my='12'>
       <AspectRatio maxW={300} ratio={1}>
-        <Box
-          shadow='sm'
-          role='group'
-          borderRadius='full'
-          transition='all 150ms ease-in-out'
-          _hover={{
-            shadow: 'md'
-          }}
-          initial='rest'
-          animate='rest'
-          whileHover='hover'
-          overflow='hidden'
-        >
+        <Box>
           <Box position='relative' height='100%' width='100%' overflow='hidden'>
             <Box
               position='absolute'
@@ -96,6 +67,16 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
               borderStyle='dashed'
               borderWidth='2px'
               borderRadius='full'
+              shadow='sm'
+              role='group'
+              transition='all 150ms ease-in-out'
+              _hover={{
+                shadow: 'md'
+              }}
+              initial='rest'
+              animate='rest'
+              whileHover='hover'
+              overflow='hidden'
             >
               <Stack p='8' textAlign='center' spacing='1' alignItems='center' height='100%' width='100%'>
                 <Heading fontSize='lg' color='gray.700' fontWeight='bold'>
@@ -123,6 +104,9 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
               onChange={handleFile}
               borderRadius='full'
             />
+          </Box>
+          <Box position='absolute' right='0' bottom='0'>
+            <RiDeleteBin6Line color='var(--main-blue)' opacity={disabled ? 0.2 : 1} cursor={!disabled ? 'pointer' : ''} onClick={deleteAvatar} />
           </Box>
         </Box>
       </AspectRatio>

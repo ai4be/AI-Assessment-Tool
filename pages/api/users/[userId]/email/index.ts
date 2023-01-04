@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getUser } from '@/util/user'
+import { getUser } from '@/src/models/user'
 import { isConnected, isCurrentUser } from '@/util/temp-middleware'
 import { isEmailValid } from '@/util/validator'
-import { createEmailValidationToken, deleteToken, getToken, TokenStatus, TokenType } from '@/util/token'
-import { cleanEmail } from '@/util/mongodb'
+import { createEmailValidationToken, deleteToken, getToken, TokenStatus, TokenType } from '@/src/models/token'
+import { cleanEmail } from '@/src/models/mongodb'
 import { sendMail } from '@/util/mail'
 import { validateEmailHtml } from '@/util/mail/templates'
 

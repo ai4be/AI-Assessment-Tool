@@ -1,15 +1,23 @@
 import React, { useContext } from 'react'
-import { Box, Avatar, AvatarGroup, Flex, Text } from '@chakra-ui/react'
+import {
+  Box, Avatar, AvatarGroup, Flex, Text
+} from '@chakra-ui/react'
 
-import PropType from 'prop-types'
 import ProjectSettings, { ProjectSettingsContextProvider } from '@/src/components/project/project-settings'
 import ProjectContext from '@/src/store/project-context'
-import { getUserDisplayName } from '@/util/users-fe'
+import { getUserDisplayName } from '@/util/users'
+import { SortMenu } from '@/src/components/project/project-bar/sort-menu'
+import { FilterMenu } from '@/src/components/project/project-bar/filter-menu'
 
-const ProjectBar = ({ project }): JSX.Element => {
-  const { users } = useContext(ProjectContext)
+const ProjectBar = ({ project }: { project: any }): JSX.Element => {
+  const { users = [] } = useContext(ProjectContext)
+
   return (
     <Flex justifyContent='center' alignItems='center' position='relative' height='40px'>
+      <Box position='absolute' left='0'>
+        <SortMenu />
+        <FilterMenu ml='1' />
+      </Box>
       <Text color='var(--main-blue)' as='b' textDecoration='underline'>
         {project.name}
       </Text>
@@ -35,10 +43,6 @@ const ProjectBar = ({ project }): JSX.Element => {
       </Flex>
     </Flex>
   )
-}
-
-ProjectBar.propTypes = {
-  project: PropType.object
 }
 
 export default ProjectBar

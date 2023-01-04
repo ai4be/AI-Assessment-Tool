@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getUser, updateUser } from '@/util/user'
+import { getUser, updateUser } from '@/src/models/user'
 import { isConnected } from '@/util/temp-middleware'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { getUserProjects } from '@/util/project'
+import { getUserProjects } from '@/src/models/project'
 import { isEmpty } from '@/util/index'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

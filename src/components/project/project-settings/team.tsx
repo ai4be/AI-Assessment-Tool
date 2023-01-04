@@ -13,7 +13,7 @@ import { defaultFetchOptions, fetcher } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
 import InviteModal from '../invite-user/modal'
 import { getDisplayName } from 'next/dist/shared/lib/utils'
-import { getUserDisplayName } from '@/util/users-fe'
+import { getUserDisplayName } from '@/util/users'
 
 const InviteModalMemo = React.memo(InviteModal)
 const ConfirmDialogMemo = React.memo(ConfirmDialog)

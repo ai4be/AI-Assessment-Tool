@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createProjectWithDefaultColumnsAndCards, getProject, getUserProjects } from '@/util/project'
-import { dataToCards } from '@/util/data'
+import { createProjectWithDefaultColumnsAndCards, getProject, getUserProjects } from'@/src/models/project'
+import { dataToCards } from '@/src/models/data'
 import { defaultCards, defaultRoles } from '@/src/data'
-import { addRoles } from '@/util/role'
+import { addRoles } from '@/src/models/role'
 import { isConnected } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

@@ -1,5 +1,4 @@
 import { defaultFetchOptions } from './api'
-// import findIndex from 'lodash.findindex'
 
 interface CardPatch {
   _id: string

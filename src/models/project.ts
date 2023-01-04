@@ -3,9 +3,9 @@ import { cleanText, connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import { getUsers, User } from './user'
 import sanitize from 'mongo-sanitize'
-import { createProjectDefaultColumns, getTodoColumn } from './columns'
-import { createCards } from './card'
 import { isEmpty } from '@/util/index'
+import { deleteProjectCards, createCards } from '@/src/models/card'
+import { deleteProjectColumns, createProjectDefaultColumns, getTodoColumn } from '@/src/models/column'
 
 export const TABLE_NAME = 'projects'
 
@@ -73,8 +73,10 @@ export const updateProject = async (_id: ObjectId | string, data: any): Promise<
 }
 
 export const deleteProject = async (_id: ObjectId | string): Promise<boolean> => {
-  const { db } = await connectToDatabase()
   _id = toObjectId(_id)
+  await deleteProjectCards(_id)
+  await deleteProjectColumns(_id)
+  const { db } = await connectToDatabase()
   const res = await db
     .collection(TABLE_NAME)
     .deleteOne({ _id })

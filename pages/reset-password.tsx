@@ -1,5 +1,5 @@
 import ResetPassword from '@/src/components/reset-password'
-import { TokenType, getToken, isTokenExpired } from '@/util/token'
+import { TokenType, getToken, isTokenExpired } from '@/src/models/token'
 import { getSession } from 'next-auth/react'
 import { setup } from '@/util/csrf'
 

@@ -16,7 +16,7 @@ import { defaultFetchOptions } from '@/util/api'
 import { isEmailValid } from '@/util/validator'
 import UserContext from '@/src/store/user-context'
 import ToastContext from '@/src/store/toast-context'
-import { isEmpty } from 'lodash'
+import { isEmpty } from '@/util/index'
 
 const EmailSettings = (): JSX.Element => {
   const { user, triggerReloadUser } = useContext(UserContext)

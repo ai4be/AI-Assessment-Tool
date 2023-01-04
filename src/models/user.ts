@@ -1,8 +1,8 @@
-import { cleanEmail, cleanText, connectToDatabase, toObjectId } from '@/util/mongodb'
+import { cleanEmail, cleanText, connectToDatabase, toObjectId } from '@/src/models/mongodb'
 import { ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
-import { hashPassword, verifyPassword } from './auth'
-import { isEmailValid, isPasswordValid } from './validator'
+import { hashPassword, verifyPassword } from '@/util/auth'
+import { isEmailValid, isPasswordValid } from '@/util/validator'
 
 const TABLE_NAME = 'users'
 

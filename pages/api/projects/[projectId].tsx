@@ -1,13 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase, toObjectId } from '@/util/mongodb'
-import { deleteProject, getProject, updateProject } from '@/util/project'
+import { deleteProject, getProject, updateProject } from '@/src/models/project'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { projectId } = req.query
-  projectId = toObjectId(projectId)
+  const { projectId } = req.query
 
-  const { db } = await connectToDatabase()
   switch (req.method) {
     case 'GET': {
       const project = await getProject(projectId)
@@ -18,12 +15,8 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return success ? res.status(201).end() : res.status(400).end()
     }
     case 'DELETE': {
-      // TODO move next function to own file and call in project delete function
-      await db.collection('cards').remove({ projectId })
-      await db.collection('columns').remove({ projectId })
-      await deleteProject(projectId)
-
-      return res.send({ messsage: 'Delete project with columns and cards' })
+      const success = await deleteProject(projectId)
+      return success ? res.status(201).end() : res.status(400).end()
     }
     default:
       return res.status(404).send({ message: 'not found' })

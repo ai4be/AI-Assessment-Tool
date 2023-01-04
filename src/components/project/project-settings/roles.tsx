@@ -19,7 +19,7 @@ import { defaultFetchOptions } from '@/util/api'
 import ProjectContext from '@/src/store/project-context'
 import ConfirmDialog from '@/src/components/confirm-dialog'
 import { UserMenu } from '@/src/components/user-menu'
-import { getUserDisplayName } from '@/util/users-fe'
+import { getUserDisplayName } from '@/util/users'
 
 const UserMenuMemo = React.memo(UserMenu)
 

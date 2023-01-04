@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { addRole } from '@/util/role'
+import { addRole } from '@/src/models/role'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

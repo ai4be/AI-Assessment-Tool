@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
-import { removeUser } from '@/util/project'
+import { removeUser } from'@/src/models/project'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, userId } = req.query

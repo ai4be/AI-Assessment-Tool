@@ -1,4 +1,4 @@
-import React, { useState, FC, useEffect, useContext } from 'react'
+import React, { useState, FC, useEffect } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import CardDetailsModal from '@/src/components/project/columns/modals/card-details-modal'
 import Column from '@/src/components/project/columns/column'
@@ -8,6 +8,9 @@ import { updateCard } from '@/util/cards'
 import { fetcher } from '@/util/api'
 import { useRouter } from 'next/router'
 import ProjectBar from '@/src/components/project/project-bar'
+import { stageValues, CardStage } from '@/src/types/cards'
+import { isEmpty } from '@/util/index'
+import { Assignment, DueDate } from '../project-bar/filter-menu'
 
 interface IProps {
   project: any
@@ -16,9 +19,17 @@ interface IProps {
 
 const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, session: any }): JSX.Element => {
   const router = useRouter()
-  const { card: cardId, cat: categoryId, stage } = router.query
-  const { data, error, mutate } = useSWR(`/api/projects/${project?._id}/columns`, fetcher)
-  const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${project?._id}/cards`, fetcher)
+  const projectId = String(project?._id)
+  const {
+    card: cardId,
+    cat: categoryId,
+    stage,
+    ['filter[assigned_to]']: assignedTo,
+    ['filter[due_date]']: dueDate,
+    ['filter[assignment]']: assignment
+  } = router.query
+  const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
+  const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [cardDetail, setCardDetail] = useState<any>({ _id: '', title: '', description: '' })
@@ -36,7 +47,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   }, [data])
 
   useEffect(() => {
-    setCards(dataCards || [])
+    setCards(dataCards ?? [])
   }, [dataCards])
 
   useEffect(() => {
@@ -44,10 +55,9 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
       const card = cards.find((card) => card._id === cardId)
       if (card != null) showCardDetail(card._id)
       else {
-        void router.push({
-          pathname: router.route,
-          query: { ...router.query, card: undefined }
-        }, undefined, { shallow: true })
+        const query: any = { ...router.query }
+        delete query.card
+        void router.push({ query }, undefined, { shallow: true })
       }
     }
   }, [cardId, cards])
@@ -84,15 +94,29 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
     }, undefined, { shallow: true })
   }
 
-  const filterCards = (columnId: string): any[] => {
-    if (stage != null && String(stage).toUpperCase() !== 'ALL') {
-      return cards.filter(
-        card => String(card.columnId) === String(columnId) &&
-          card.category === categoryId &&
-          (card.stage === stage || (stage === 'PREPARATION' && (card.stage == null || card.stage.trim() === '')))
-      )
+  const filterCardsArrayFn = (card: any, columnId: string): boolean => {
+    let val = String(card.columnId) === columnId
+    if (val && categoryId != null) val = card.category === categoryId
+    if (val && stage != null && String(stage).toUpperCase() !== 'ALL') {
+      val = card.stage === stage || (stage === CardStage.PREPARATION && (card.stage == null || card.stage.trim() === ''))
     }
-    return cards.filter(card => String(card.columnId) === String(columnId) && card.category === categoryId)
+    if (val && assignedTo != null && assignedTo?.length > 0) {
+      const fileterUserIds = typeof assignedTo === 'string' ? [assignedTo] : assignedTo
+      const assignedToArr = card.userIds?.map(uid => String(uid)) ?? []
+      val = fileterUserIds.some(uid => assignedToArr.includes(uid))
+    }
+    if (val && dueDate != null) {
+      val = dueDate === DueDate.NOT_SET ? isEmpty(card.dueDate) : !isEmpty(card.dueDate)
+    }
+    if (val && assignment != null && assignment !== Assignment.ASSIGNED_TO) {
+      val = assignment === Assignment.UNASSIGNED ? isEmpty(card.userIds) : !isEmpty(card.userIds)
+    }
+    return val
+  }
+
+  const filterCards = (columnId: string): any[] => {
+    columnId = String(columnId)
+    return cards.filter(card => filterCardsArrayFn(card, columnId))
   }
 
   const onDragEnd = async (result): Promise<void> => {

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase, toObjectId } from '@/util/mongodb'
+import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
 import sanitize from 'mongo-sanitize'
 import { unstable_getServerSession } from 'next-auth'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getCards } from '@/util/card'
+import { getCards } from '@/src/models/card'
 import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

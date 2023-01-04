@@ -1,8 +1,9 @@
 import sanitize from 'mongo-sanitize'
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
-import { getColumnsByProjectId } from './columns'
-import { CardStage, Card, stageValues } from '../src/types/cards'
+import { getColumnsByProjectId } from './column'
+import { CardStage, Card, stageValues } from '../types/cards'
+import { isEmpty } from '@/util/index'
 
 export const TABLE_NAME = 'cards'
 
@@ -19,11 +20,11 @@ export const getCard = async (_id: string | ObjectId): Promise<Card> => {
   return card
 }
 
-export const deleteCards = async (projectId: string | ObjectId): Promise<boolean> => {
+export const deleteCards = async (where: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
-  const where: any = {
-    projectId: toObjectId(projectId)
-  }
+  where = sanitize(where)
+  if (where._id != null) where._id = toObjectId(where._id)
+  if (where.projectId != null) where.projectId = toObjectId(where.projectId)
   const res = await db
     .collection(TABLE_NAME)
     .deleteMany(where)
@@ -104,6 +105,11 @@ export const removeUserFromCard = async (cardId: ObjectId | string, userId: Obje
     }
   )
   return res.result.ok === 1
+}
+
+export const deleteProjectCards = async (projectId: string | ObjectId): Promise<boolean> => {
+  if (isEmpty(projectId)) return false
+  return await deleteCards({ projectId })
 }
 
 export const updateQuestion = async (cardId: ObjectId | string, questionId: string, data: any): Promise<boolean> => {

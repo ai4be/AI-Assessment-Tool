@@ -15,7 +15,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { isEmpty, timeAgo } from '@/util/index'
-import { getUserDisplayName } from '@/util/users-fe'
+import { getUserDisplayName } from '@/util/users'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Mention, MentionsInput } from 'react-mentions'
 import { GiCancel } from 'react-icons/gi'

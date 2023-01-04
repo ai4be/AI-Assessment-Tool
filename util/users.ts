@@ -1,5 +1,5 @@
 import { defaultFetchOptions } from './api'
-import { User } from './user'
+import { User } from '@/src/models/user'
 
 export const getUserDisplayName = (user: User): string => {
   let res = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()

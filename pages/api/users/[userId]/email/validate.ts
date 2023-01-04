@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { isConnected, isCurrentUser } from '@/util/temp-middleware'
-import { emailValidationTokenHandler } from '@/util/token'
+import { emailValidationTokenHandler } from '@/src/models/token'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { userId } = req.query
