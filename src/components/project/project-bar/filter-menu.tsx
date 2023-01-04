@@ -19,7 +19,6 @@ import ProjectContext from '@/src/store/project-context'
 import { isEmpty } from '@/util/index'
 import { getUserDisplayName } from '@/util/users'
 import { CloseIcon } from '@chakra-ui/icons'
-import { IoClose } from 'react-icons/io5'
 
 export enum Assignment {
   UNASSIGNED = 'unassigned',
@@ -47,6 +46,12 @@ export const DUE_DATE_LABELS = {
   [DueDate.NOT_SET]: 'Not set'
 }
 
+export enum QueryFilterKeys {
+  ASSIGNED_TO = 'filter[assigned_to]',
+  ASSIGNMENT = 'filter[assignment]',
+  DUE_DATE = 'filter[due_date]'
+}
+
 let timeoutId: any
 
 export const FilterMenu = (props: any): JSX.Element => {
@@ -61,20 +66,20 @@ export const FilterMenu = (props: any): JSX.Element => {
   useEffect(() => {
     let reroute = false
     const query: any = { ...router.query }
-    const assignmentVal = query['filter[assignment]']
+    const assignmentVal = query[QueryFilterKeys.ASSIGNMENT]
     if (assignmentVal != null && !ASSINGMENT_VALUES.includes(assignmentVal)) {
       reroute = true
-      delete query['filter[assignment]']
+      delete query[QueryFilterKeys.ASSIGNMENT]
     }
-    const dueDateVal = query['filter[due_date]']
+    const dueDateVal = query[QueryFilterKeys.DUE_DATE]
     if (dueDateVal != null && !DUE_DATE_VALUES.includes(dueDateVal)) {
       reroute = true
-      delete query['filter[due_date]']
+      delete query[QueryFilterKeys.DUE_DATE]
     }
-    let userIdsVal = query['filter[assigned_to]']
+    let userIdsVal = query[QueryFilterKeys.ASSIGNED_TO]
     if (userIdsVal != null && assignmentVal !== Assignment.ASSIGNED_TO) {
       reroute = true
-      delete query['filter[assigned_to]']
+      delete query[QueryFilterKeys.ASSIGNED_TO]
     }
     if (userIdsVal != null && typeof userIdsVal === 'string') {
       userIdsVal = [userIdsVal]
@@ -93,19 +98,19 @@ export const FilterMenu = (props: any): JSX.Element => {
   useEffect(() => {
     const query: any = { ...router.query }
     if (isEmpty(assignment)) {
-      delete query['filter[assignment]']
-      delete query['filter[assigned_to]']
+      delete query[QueryFilterKeys.ASSIGNMENT]
+      delete query[QueryFilterKeys.ASSIGNED_TO]
     } else {
-      query['filter[assignment]'] = assignment
+      query[QueryFilterKeys.ASSIGNMENT] = assignment
       if (assignment === Assignment.ASSIGNED_TO) {
-        if (includedUserIds.length > 0) query['filter[assigned_to]'] = includedUserIds
+        if (includedUserIds.length > 0) query[QueryFilterKeys.ASSIGNED_TO] = includedUserIds
       } else {
-        delete query['filter[assigned_to]']
+        delete query[QueryFilterKeys.ASSIGNED_TO]
       }
     }
-    if (isEmpty(dueDate)) delete query['filter[due_date]']
+    if (isEmpty(dueDate)) delete query[QueryFilterKeys.DUE_DATE]
     else {
-      query['filter[due_date]'] = dueDate
+      query[QueryFilterKeys.DUE_DATE] = dueDate
     }
     // timeout needed for when we clear all filters, because we then have concurrent state updates
     clearTimeout(timeoutId)
@@ -114,8 +119,8 @@ export const FilterMenu = (props: any): JSX.Element => {
         query
       }, undefined, { shallow: true })
       let counter = 0
-      if (query['filter[assignment]'] != null) counter++
-      if (query['filter[due_date]'] != null) counter++
+      if (query[QueryFilterKeys.ASSIGNMENT] != null) counter++
+      if (query[QueryFilterKeys.DUE_DATE] != null) counter++
       setFilterCounter(counter)
     }, 100)
   }, [assignment, dueDate])
@@ -123,9 +128,9 @@ export const FilterMenu = (props: any): JSX.Element => {
   useEffect(() => {
     const query: any = { ...router.query }
     if (assignment === Assignment.ASSIGNED_TO && includedUserIds.length > 0) {
-      query['filter[assigned_to]'] = includedUserIds
+      query[QueryFilterKeys.ASSIGNED_TO] = includedUserIds
     } else {
-      delete query['filter[assigned_to]']
+      delete query[QueryFilterKeys.ASSIGNED_TO]
     }
     void router.push({
       query
@@ -150,9 +155,10 @@ export const FilterMenu = (props: any): JSX.Element => {
     <Menu key='filter-menu' closeOnSelect={false}>
       <MenuButton {...props} as={Button} rightIcon={<FiFilter />} variant='outline' color='var(--main-blue)' size='sm'>
         Filter
-        {filterCounter > 0 && <Badge ml='1' size='sm' variant='solid' colorScheme='green' borderRadius='full'>
-          {filterCounter}
-        </Badge>}
+        {filterCounter > 0 &&
+          <Badge ml='1' size='sm' variant='solid' colorScheme='green' borderRadius='full'>
+            {filterCounter}
+          </Badge>}
       </MenuButton>
       <MenuList>
         <MenuOptionGroup title='Assignment' type='radio' value={assignment as string} onChange={(val: string) => setAssigment(val)}>

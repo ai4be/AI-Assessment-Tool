@@ -25,7 +25,6 @@ const InviteModal = ({ project, callback }): JSX.Element => {
   const validEmail = /^[a-zA-Z0-9._:$!%-+]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/
 
   const handleClick = async (e: SyntheticEvent): Promise<void> => {
-    console.log('InviteModal.handleClick', e)
     if (e?.preventDefault != null) e.preventDefault()
     if (e.nativeEvent instanceof KeyboardEvent && e.nativeEvent.key !== 'Enter') return
     setMailSending(true)

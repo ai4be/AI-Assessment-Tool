@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 import ProjectBar from '@/src/components/project/project-bar'
 import { stageValues, CardStage } from '@/src/types/cards'
 import { isEmpty } from '@/util/index'
-import { Assignment, DueDate } from '../project-bar/filter-menu'
+import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
 
 interface IProps {
   project: any
@@ -24,9 +24,9 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
     card: cardId,
     cat: categoryId,
     stage,
-    ['filter[assigned_to]']: assignedTo,
-    ['filter[due_date]']: dueDate,
-    ['filter[assignment]']: assignment
+    [QueryFilterKeys.ASSIGNED_TO]: assignedTo,
+    [QueryFilterKeys.DUE_DATE]: dueDate,
+    [QueryFilterKeys.ASSIGNMENT]: assignment
   } = router.query
   const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
   const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
