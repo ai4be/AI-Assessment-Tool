@@ -1,19 +1,21 @@
 import React, { useContext } from 'react'
 import {
-  Box, Button,
-  Drawer,
-  DrawerOverlay,
-  DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
-  DrawerContent,
-  useBreakpointValue,
-  useDisclosure,
-  IconButton
+  Box, Button
+  // ,
+  // Drawer,
+  // DrawerOverlay,
+  // DrawerCloseButton,
+  // DrawerHeader,
+  // DrawerBody,
+  // DrawerContent,
+  // useBreakpointValue,
+  // useDisclosure,
+  // IconButton
  } from '@chakra-ui/react'
- import { ChevronRightIcon } from '@chakra-ui/icons'
+//  import { ChevronRightIcon } from '@chakra-ui/icons'
 import ProjectContext from '@/src/store/project-context'
 import { useRouter } from 'next/router'
+import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 
 // (<IconButton
 //   icon={<ChevronRightIcon w={8} h={8} />}
@@ -24,7 +26,7 @@ import { useRouter } from 'next/router'
 
 const SideBar = (props: any): JSX.Element => {
   const router = useRouter()
-  const { cat: selectedCategoryId } = router.query ?? {}
+  const { [QueryFilterKeys.CATEGORY]: selectedCategoryId } = router.query ?? {}
   const context = useContext(ProjectContext)
   // const { isOpen, onClose, onOpen } = useDisclosure()
   // const variants = useBreakpointValue({ base: 'base', md: 'md' })

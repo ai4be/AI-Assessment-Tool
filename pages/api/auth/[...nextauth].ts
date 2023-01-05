@@ -47,7 +47,6 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.JWT_SECRET_KEY,
   callbacks: {
     async session ({ session, token, user }) {
-      console.log(session, token, user)
       return session
     }
   }

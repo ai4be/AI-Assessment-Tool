@@ -3,6 +3,7 @@ import { Category, Project } from '../types/projects'
 import { useRouter } from 'next/router'
 import { fetchUsersByProjectId } from '@/util/users'
 import { UserContextProvider } from './user-context'
+import { QueryFilterKeys } from '../components/project/project-bar/filter-menu'
 
 interface ProjectContextType {
   project?: Project | undefined
@@ -20,7 +21,7 @@ const ProjectContext: Context<ProjectContextType> = createContext({})
 
 export function ProjectContextProvider (props: any): JSX.Element {
   const router = useRouter()
-  const { stage = 'ALL' } = router.query
+  const { [QueryFilterKeys.STAGE]: stage = 'ALL' } = router.query ?? {}
   const [project, setProject] = useState<Project>(props.project)
   const [categories] = useState<Category[]>(props.categories)
   const [stages] = useState<any[]>(props.stages)
@@ -33,21 +34,21 @@ export function ProjectContextProvider (props: any): JSX.Element {
   }, [project.users])
 
   function categoryClickHandler (cat: Category): void {
-    const currentCat = router.query?.cat
-    const query: any = { ...router.query, cat: cat._id }
+    const {
+      [QueryFilterKeys.CATEGORY]: currentCat
+    } = router.query ?? {}
+    const query: any = { ...router.query, [QueryFilterKeys.CATEGORY]: cat._id }
     if (currentCat === cat._id) {
-      delete query.cat
+      delete query[QueryFilterKeys.CATEGORY]
     }
     void router.push({
-      pathname: `/projects/${String(project._id)}`,
       query
     }, undefined, { shallow: true })
   }
 
   function stageClickHandler (stage: string): void {
-    const query = { ...router.query, stage }
+    const query = { ...router.query, [QueryFilterKeys.STAGE]: stage }
     void router.push({
-      pathname: `/projects/${String(project._id)}`,
       query
     }, undefined, { shallow: true })
   }

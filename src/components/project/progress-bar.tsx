@@ -13,6 +13,7 @@ const ProgressBar: FC<any> = (): JSX.Element => {
   const { stageClickHandler, stage, stages } = useContext(ProjectContext)
   const SECTIONS: string[] = ['all', ...(stages != null ? stages : []), 'checklist']
   const SECTIONS_MAX_IDX = SECTIONS.length - 1
+  console.log(stage)
   return (
     <Flex width='100%' justifyContent='center' alignItems='center' backgroundColor='white'>
       {SECTIONS.map((s, idx) => (

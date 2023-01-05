@@ -22,8 +22,8 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   const projectId = String(project?._id)
   const {
     card: cardId,
-    cat: categoryId,
-    stage,
+    [QueryFilterKeys.CATEGORY]: categoryId,
+    [QueryFilterKeys.STAGE]: stage,
     [QueryFilterKeys.ASSIGNED_TO]: assignedTo,
     [QueryFilterKeys.DUE_DATE]: dueDate,
     [QueryFilterKeys.ASSIGNMENT]: assignment

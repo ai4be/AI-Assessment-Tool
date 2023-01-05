@@ -39,13 +39,10 @@ const Login = (): JSX.Element => {
     }
     if (token != null) signinOptions.token = token
     if (projectId != null) signinOptions.projectId = projectId
-    console.log(signinOptions)
     const result = await signIn('credentials', signinOptions)
 
     setIsFetching(false)
-    console.log('signIn', result)
     if (result?.ok === true) {
-      console.log('redirecting to home')
       await router.push('/home')
     }
 
