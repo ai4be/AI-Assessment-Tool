@@ -1,22 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { updateCard } from '@/src/models/card'
+import { updateCardAndCreateActivities } from '@/src/models/card'
 import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { cardId } = req.query
 
   switch (req.method) {
-    case 'GET': {
-      return res.send({ message: 'Get more details of the card' })
-    }
     case 'PATCH': {
-      await updateCard(cardId, req.body)
-      res.send({ message: 'Card updated' })
-      return
+      await updateCardAndCreateActivities(cardId, (req as any).locals.user._id, req.body)
+      return res.send({ message: 'Card updated' })
     }
     default:
-      res.send({ message: 'not found' })
-      break
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }
 

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createProjectWithDefaultColumnsAndCards, getProject, getUserProjects } from'@/src/models/project'
+import { createProjectWithDefaultColumnsAndCards, getProject, getUserProjects } from '@/src/models/project'
 import { dataToCards } from '@/src/models/data'
 import { defaultCards, defaultRoles } from '@/src/data'
 import { addRoles } from '@/src/models/role'

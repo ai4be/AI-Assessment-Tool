@@ -6,6 +6,7 @@ import { unstable_getServerSession } from 'next-auth/next'
 import { getProjectUsers } from '@/src/models/project'
 import { getUser } from '@/src/models/user'
 import { getCard } from '@/src/models/card'
+import { User } from '@/src/types/user'
 
 const returnUnauthorized = (res: NextApiResponse): void => {
   res.status(401).send({ message: 'Unauthorized', status: 401 })
@@ -86,4 +87,9 @@ export function cardBelongsToProject (handler: Function): Function {
     }
     return handler(req, res)
   }
+}
+
+export function getUserFromRequest (req: NextApiRequest): User | null {
+  const tempReq = req as any
+  return tempReq.locals?.user
 }

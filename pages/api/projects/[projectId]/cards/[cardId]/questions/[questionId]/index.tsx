@@ -3,18 +3,15 @@ import { cardBelongsToProject, hasProjectAccess, isConnected } from '@/util/temp
 import { updateQuestion } from '@/src/models/card'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  let { cardId, questionId } = req.query
-  cardId = String(cardId)
-  questionId = String(questionId)
+  const { cardId, questionId } = req.query
 
   switch (req.method) {
     case 'PATCH': {
-      const result = await updateQuestion(cardId, questionId, req.body)
+      const result = await updateQuestion(cardId, questionId as string, req.body)
       return result ? res.send(201) : res.status(400).send({ message: 'could not update question' })
     }
     default:
-      res.status(404).send({ message: 'Not found' })
-      break
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }
 

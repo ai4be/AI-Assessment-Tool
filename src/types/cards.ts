@@ -6,13 +6,9 @@ export interface Card {
   roleIds?: string[] | any[]
   projectId?: string | any[]
   sequence?: number
-  label?: Label
+  nuber?: number
   questions?: any[]
-}
-
-export interface Label {
-  bg: string
-  type: string
+  stage?: CardStage
 }
 
 export enum CardStage {

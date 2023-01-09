@@ -1,9 +1,10 @@
 import sanitize from 'mongo-sanitize'
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
-import { getColumnsByProjectId } from './column'
-import { CardStage, Card, stageValues } from '../types/cards'
+import { getColumnsByProjectId } from '@/src/models/column'
+import { Card, stageValues } from '@/src/types/cards'
 import { isEmpty } from '@/util/index'
+import Activity from '@/src/models/activity'
 
 export const TABLE_NAME = 'cards'
 
@@ -62,19 +63,37 @@ export const createCards = async (cards: Card[]): Promise<boolean> => {
   return res.result.ok === 1
 }
 
-export const updateCard = async (_id: string | ObjectId, data: any): Promise<boolean> => {
-  const { db } = await connectToDatabase()
-  _id = toObjectId(_id)
+export const updateCardAndCreateActivities = async (cardId: string | ObjectId, userId: string, data: any): Promise<boolean> => {
+  const sanitizedData = await cardDataSanitizer(cardId, data)
+  if (isEmpty(sanitizedData)) return false
+  const res = await updateCard(cardId, sanitizedData)
+  if (res) {
+    if (sanitizedData.stage != null) void Activity.createCardStageUpdateActivity(cardId, userId, sanitizedData.stage)
+    if (sanitizedData.columnId != null) void Activity.createCardColumnUpdateActivity(cardId, userId, sanitizedData.columnId)
+    if (sanitizedData.dueDate != null) void Activity.createCardDueDateUpdateActivity(cardId, userId, sanitizedData.dueDate)
+  }
+  return res
+}
+
+export const cardDataSanitizer = async (cardId: string, data: any): Promise<any> => {
   const updatableFields: any = {}
   UPDATABLE_FIELDS.forEach(field => {
     if (data[field] != null) updatableFields[field] = sanitize(data[field])
   })
-  const card = await getCard(_id)
+  const card = await getCard(cardId)
   const columns = await getColumnsByProjectId(card.projectId)
   if (updatableFields.columnId != null && columns.find(c => String(c._id) === String(updatableFields.columnId)) == null) throw new Error('Invalid columnId')
   if (updatableFields.columnId != null) updatableFields.columnId = toObjectId(updatableFields.columnId)
   if (typeof updatableFields.stage === 'string' && !stageValues.includes(updatableFields.stage.toUpperCase())) throw new Error('Invalid stage')
   if (updatableFields.stage != null) updatableFields.stage = updatableFields.stage.toUpperCase()
+  return updatableFields
+}
+
+export const updateCard = async (_id: string | ObjectId, data: any): Promise<boolean> => {
+  const { db } = await connectToDatabase()
+  _id = toObjectId(_id)
+  const updatableFields: any = await cardDataSanitizer(_id, data)
+  if (isEmpty(updatableFields)) return false
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: { ...updatableFields } })
@@ -105,6 +124,18 @@ export const removeUserFromCard = async (cardId: ObjectId | string, userId: Obje
     }
   )
   return res.result.ok === 1
+}
+
+export const addUserToCardAndCreateActivity = async (cardId: string | ObjectId, userId: string, userIdToAdd: string): Promise<boolean> => {
+  const res = await addUserToCard(cardId, userIdToAdd)
+  if (res) void Activity.createCardUserAddActivity(cardId, userId, userIdToAdd)
+  return res
+}
+
+export const removeUserFromCardAndCreateActivity = async (cardId: string | ObjectId, userId: string, userIdToAdd: string): Promise<boolean> => {
+  const res = await addUserToCard(cardId, userIdToAdd)
+  if (res) void Activity.createCardUserRemoveActivity(cardId, userId, userIdToAdd)
+  return res
 }
 
 export const deleteProjectCards = async (projectId: string | ObjectId): Promise<boolean> => {

@@ -135,28 +135,28 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
     const cardsFromColumn: any[] = cards.filter(
       (card) => card.columnId === destinationColumnId && card._id !== cardId
     )
-    const sortedCards = cardsFromColumn.sort((a, b) => a.sequence - b.sequence)
+    const sortedCardsFromColumn = cardsFromColumn.sort((a, b) => a.sequence - b.sequence)
     let sequence = +(destinationIndex === 0 ? 1 : sortedCards[destinationIndex - 1].sequence + 1)
 
-    const patchCard = {
+    const patchCard: any = {
       _id: cardId,
-      sequence,
-      columnId: destinationColumnId
+      sequence
     }
     const cardToPatch: any = cards.find(card => card._id === cardId)
     if (cardToPatch == null) return
     cardToPatch.sequence = sequence
-    cardToPatch.columnId = destinationColumnId
+    if (String(cardToPatch.columnId) !== String(destinationColumnId)) {
+      cardToPatch.columnId = destinationColumnId
+      patchCard.columnId = destinationColumnId
+    }
     const promises: Array<Promise<any>> = [updateCard(patchCard, project?._id)]
-    for (let i = destinationIndex; i < sortedCards.length; i++) {
-      const card = sortedCards[i]
+    for (const card of sortedCardsFromColumn) {
       sequence += 1
       card.sequence = sequence
 
       const patchCard = {
         _id: card._id,
-        sequence,
-        columnId: destinationColumnId
+        sequence
       }
       promises.push(updateCard(patchCard, project?._id))
     }
