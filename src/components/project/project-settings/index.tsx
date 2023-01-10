@@ -92,7 +92,7 @@ const ProjectName = ({ project }): JSX.Element => {
       </FormControl>
       <FormControl id='description' my='1.5'>
         <FormLabel>Project industry</FormLabel>
-        <Select size='xs' placeholder='Select the industry' onChange={e => setIndustry(e.target.value)} value={industry}>
+        <Select size='xs' placeholder='Select the industry' onChange={e => setIndustry(e.target.value)} value={String(industry)}>
           {industries?.map((industry, idx) => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
         </Select>
       </FormControl>

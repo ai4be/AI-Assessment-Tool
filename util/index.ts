@@ -85,7 +85,7 @@ export function randomIntFromInterval (min: number, max: number): number { // mi
 
 // WARNING: This is not a drop in replacement solution and
 // it might not work for some edge cases. Test your code!
-export const debounce = (func: Function, delay: number, { leading }: { leading?: boolean } = {}): Function => {
+export const debounce = (func: Function, delay: number, { leading }: { leading?: boolean } = {}): (...args: any[]) => any => {
   let timerId
 
   return (...args: any[]) => {
