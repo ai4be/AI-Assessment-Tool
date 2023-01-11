@@ -15,7 +15,7 @@ export interface Project {
   createdBy?: ObjectId
   createdAt: number
   backgroundImage?: string
-  users?: ObjectId[]
+  userIds?: ObjectId[]
   roles?: any[]
 }
 
@@ -29,7 +29,7 @@ export const createProject = async ({ name, createdBy, description, industry }: 
     name,
     createdAt,
     createdBy,
-    users: []
+    userIds: []
   }
   if (description != null) data.description = cleanText(description)
   if (industry != null) data.industry = cleanText(industry)
@@ -89,7 +89,7 @@ export const getUserProjects = async (userId: ObjectId | string, projectId?: str
   projectId = projectId != null ? toObjectId(projectId) : undefined
   const where: any = {
     $or: [
-      { users: userId },
+      { userIds: userId },
       { createdBy: userId }
     ]
   }
@@ -103,7 +103,7 @@ export const addUser = async (_id: ObjectId | string, userId: ObjectId | string)
   userId = toObjectId(userId)
   const result = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id }, { $addToSet: { users: userId } })
+    .updateOne({ _id }, { $addToSet: { userIds: userId } })
   return result.result.ok === 1
 }
 
@@ -113,7 +113,7 @@ export const removeUser = async (_id: ObjectId | string, userId: ObjectId | stri
   userId = toObjectId(userId)
   const result = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id }, { $pull: { users: userId } })
+    .updateOne({ _id }, { $pull: { userIds: userId } })
   return result.result.ok === 1
 }
 
@@ -122,7 +122,7 @@ export const getProjectUsers = async (_id: ObjectId | string, filterUserIds?: Ar
   _id = toObjectId(_id)
   const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { users: 1, createdBy: 1 } })
   let userIds: any = []
-  if (project?.users != null) userIds.push(...project.users, project.createdBy)
+  if (project?.userIds != null) userIds.push(...project.userIds, project.createdBy)
   if (filterUserIds != null) {
     filterUserIds = filterUserIds.map(String)
     userIds = userIds.filter(id => filterUserIds?.includes(String(id)))

@@ -5,7 +5,7 @@ export interface Project {
   createdBy?: string
   createdAt?: string
   backgroundImage?: string
-  users?: string[]
+  userIds?: string[]
 }
 
 interface Columns {

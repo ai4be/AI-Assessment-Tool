@@ -36,7 +36,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
     })
     if (response.ok) {
       context.users = context.users?.filter((u: any) => u._id !== user._id)
-      project.users = project.users.filter(uid => uid !== user._id)
+      project.userIds = project.userIds.filter(uid => uid !== user._id)
       context.setProject(project)
     }
     setDeleteHandler(() => emptyFn)

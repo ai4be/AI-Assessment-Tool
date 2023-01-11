@@ -15,15 +15,15 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
   const [users, setUsers] = useState<any[]>([])
 
   useEffect((): void => {
-    if (projectContext.project?.users != null) {
-      void fetchUsers(projectContext.project?.users).then(usersData => setUsers(usersData))
+    if (projectContext.project?.userIds != null) {
+      void fetchUsers(projectContext.project?.userIds).then(usersData => setUsers(usersData))
     } else {
       setUsers((prevValue) => {
         if (prevValue.length === 0) return prevValue
         return []
       })
     }
-  }, [projectContext.project?.users])
+  }, [projectContext.project?.userIds])
 
   const loadAssignedToUser = (): JSX.Element => {
     if (card.userIds == null) return <></>

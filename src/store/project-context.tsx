@@ -28,10 +28,10 @@ export function ProjectContextProvider (props: any): JSX.Element {
   const [users, setUsers] = useState<any[]>([])
 
   useEffect((): void => {
-    if (Array.isArray(project.users)) {
+    if (Array.isArray(project.userIds)) {
       void fetchUsersByProjectId(project._id).then(u => setUsers(u))
     }
-  }, [project.users])
+  }, [project.userIds])
 
   function categoryClickHandler (cat: Category): void {
     const {
