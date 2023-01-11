@@ -54,7 +54,7 @@ export const removeRole = async (projectId: ObjectId | string, roldId: ObjectId 
   projectId = toObjectId(projectId)
   const res = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id: projectId }, { $pull: { roles: toObjectId(roldId) } })
+    .updateOne({ _id: projectId }, { $pull: { roles: { _id: toObjectId(roldId) } } })
   return res.result.ok === 1
 }
 
