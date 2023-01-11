@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import { fetcher } from '@/util/api'
 import { categories } from '../api/categories'
-import { stageValues } from '@/src/types/cards'
+import { stageValues } from '@/src/types/card'
 
 function Page ({ session }): JSX.Element {
   const router = useRouter()

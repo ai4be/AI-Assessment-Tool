@@ -52,6 +52,12 @@ export const getComments = async (where: any): Promise<CommentTypeDef[]> => {
   return await db.collection(TABLE_NAME).find(where).toArray()
 }
 
+export const createCommentAndActivity = async (data: any): Promise<CommentTypeDef | null> => {
+  const comment = await createComment(data)
+  if (comment != null) void Activity.createCommentCreateActivity(comment)
+  return comment
+}
+
 export const createComment = async (data: any): Promise<CommentTypeDef | null> => {
   const { db } = await connectToDatabase()
   data = sanitize(data)
@@ -68,10 +74,15 @@ export const createComment = async (data: any): Promise<CommentTypeDef | null> =
   const result = await db.collection(TABLE_NAME).insertOne(localData)
   if (result.result.ok === 1) {
     const comment = await db.collection(TABLE_NAME).findOne({ _id: result.insertedId })
-    void Activity.createCommentCreateActivity(comment)
     return comment
   }
   return null
+}
+
+export const updateCommentAndCreateActivity = async (_id: ObjectId | string, data: any): Promise<boolean> => {
+  const updated = await updateComment(_id, data)
+  if (updated) void Activity.createCommentUpdateActivity(_id)
+  return updated
 }
 
 export const updateComment = async (_id: ObjectId | string, data: any): Promise<boolean> => {
@@ -84,9 +95,13 @@ export const updateComment = async (_id: ObjectId | string, data: any): Promise<
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: localData })
-  const updated = res.result.ok === 1
-  if (updated) void Activity.createCommentUpdateActivity(_id)
-  return updated
+  return res.result.ok === 1
+}
+
+export const deleteCommentAndCreateActivity = async (_id: ObjectId | string): Promise<boolean> => {
+  const deleted = await deleteComment(_id)
+  if (deleted) void Activity.createCommentDeleteActivity(_id)
+  return deleted
 }
 
 export const deleteComment = async (_id: ObjectId | string): Promise<boolean> => {
@@ -95,9 +110,7 @@ export const deleteComment = async (_id: ObjectId | string): Promise<boolean> =>
   const res = await db
     .collection(TABLE_NAME)
     .deleteOne({ _id })
-  const deleted = res.result.ok === 1
-  if (deleted) void Activity.createCommentDeleteActivity(_id)
-  return deleted
+  return res.result.ok === 1
 }
 
 export const deleteComments = async (where: any): Promise<boolean> => {

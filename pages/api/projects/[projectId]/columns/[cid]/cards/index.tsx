@@ -11,8 +11,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.send(cards)
     }
     default:
-      res.status(400).send({ message: 'Invalid request type' })
-      break
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }
 

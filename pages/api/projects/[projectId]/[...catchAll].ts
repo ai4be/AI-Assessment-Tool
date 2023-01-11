@@ -31,8 +31,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(404).json([])
     }
     default:
-      res.status(404).send({ message: 'not found' })
-      break
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }
 

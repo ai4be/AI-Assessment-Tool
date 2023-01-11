@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createProjectWithDefaultColumnsAndCards, getProject, getUserProjects } from '@/src/models/project'
+import { createProjectWithDefaultColumnsAndCardsAndActivity, getProject, getUserProjects } from '@/src/models/project'
 import { dataToCards } from '@/src/models/data'
 import { defaultCards, defaultRoles } from '@/src/data'
 import { addRoles } from '@/src/models/role'
@@ -12,7 +12,11 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
     case 'POST': {
       const { name, description, industry } = req.body
       const cardsData = await dataToCards(defaultCards)
-      const projectId = await createProjectWithDefaultColumnsAndCards({ name, description, industry, createdBy: user?._id }, cardsData)
+      const projectId = await createProjectWithDefaultColumnsAndCardsAndActivity(
+        { name, description, industry, createdBy: user?._id },
+        cardsData,
+        user?._id
+      )
       await addRoles(projectId, defaultRoles)
       const project = await getProject(projectId)
       return res.send(project)
@@ -22,7 +26,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.send(projects)
     }
     default:
-      return res.status(404).send({ message: 'Not found' })
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }
 

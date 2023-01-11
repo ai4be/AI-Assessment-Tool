@@ -179,30 +179,33 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const saveQuestion = async (question: any, responses?: any[], conclusion?: string): Promise<void> => {
     setIsLoading(true)
-    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}`
-    const data: any = {}
-    if (responses != null) {
-      if (question != null && !isEqual(question.responses?.sort(), responses.sort())) {
-        data.responses = responses
+    try {
+      const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}`
+      const data: any = {}
+      if (Array.isArray(responses)) {
+        if (!Array.isArray(question?.responses) || (Array.isArray(question?.responses) && !isEqual(question.responses?.sort(), responses.sort()))) {
+          data.responses = responses
+        }
       }
-    }
-    if (conclusion != null && question.conclusion !== conclusion) data.conclusion = conclusion
+      if (conclusion != null && question.conclusion !== conclusion) data.conclusion = conclusion
 
-    if (isEmpty(data)) return
+      if (isEmpty(data)) return
 
-    const response = await fetch(url, {
-      ...defaultFetchOptions,
-      method: 'PATCH',
-      body: JSON.stringify(data)
-    })
-    if (!response.ok) {
-      // TODO
-    } else {
-      if (conclusion != null) question.conclusion = conclusion
-      if (responses != null) question.responses = responses
+      const response = await fetch(url, {
+        ...defaultFetchOptions,
+        method: 'PATCH',
+        body: JSON.stringify(data)
+      })
+      if (!response.ok) {
+        // TODO
+      } else {
+        if (conclusion != null) question.conclusion = conclusion
+        if (responses != null) question.responses = responses
+      }
+      recalculateEnableing()
+    } finally {
+      setIsLoading(false)
     }
-    recalculateEnableing()
-    setIsLoading(false)
   }
 
   const saveComment = async (comment: any, data: any, question: any): Promise<void> => {

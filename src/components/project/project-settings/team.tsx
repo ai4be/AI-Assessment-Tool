@@ -9,18 +9,18 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import ProjectContext from '@/src/store/project-context'
-import { defaultFetchOptions, fetcher } from '@/util/api'
+import { defaultFetchOptions, fetcher, HTTP_METHODS } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
 import InviteModal from '../invite-user/modal'
-import { getDisplayName } from 'next/dist/shared/lib/utils'
 import { getUserDisplayName } from '@/util/users'
+import { Project } from '@/src/types/project'
 
 const InviteModalMemo = React.memo(InviteModal)
 const ConfirmDialogMemo = React.memo(ConfirmDialog)
 
 function emptyFn (): void {}
 
-const Team = ({ project }: { project: any }): JSX.Element => {
+const Team = ({ project }: { project: Project }): JSX.Element => {
   const context = useContext(ProjectContext)
   const { data, mutate } = useSWR(`/api/projects/${String(project._id)}/tokens/pending`, fetcher)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -32,11 +32,11 @@ const Team = ({ project }: { project: any }): JSX.Element => {
     const url = `/api/projects/${String(project._id)}/users/${String(user._id)}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'DELETE'
+      method: HTTP_METHODS.DELETE
     })
     if (response.ok) {
       context.users = context.users?.filter((u: any) => u._id !== user._id)
-      project.users = project.users.filter(uid => uid !== user._id)
+      project.users = project.users?.filter(uid => uid !== user._id)
       context.setProject(project)
     }
     setDeleteHandler(() => emptyFn)
@@ -48,7 +48,7 @@ const Team = ({ project }: { project: any }): JSX.Element => {
     const url = `/api/projects/${String(project._id)}/tokens/${String(token._id)}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'DELETE'
+      method: HTTP_METHODS.DELETE
     })
     if (response.ok) await mutate()
     setDeleteHandler(() => emptyFn)

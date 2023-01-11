@@ -21,18 +21,18 @@ export default abstract class Model {
     return res.result.ok === 1 ? String(data._id) : null
   }
 
-  static async get<Type> (_id: string | ObjectId): Promise<Type> {
+  static async get (_id: string | ObjectId): Promise<any> {
     const { db } = await connectToDatabase()
     const where: any = {
       _id: toObjectId(_id)
     }
-    const card = await db
+    const instance = await db
       .collection(this.TABLE_NAME)
       .findOne(where)
-    return card
+    return instance
   }
 
-  static async find<Type> (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: Type[], page: string }> {
+  static async find (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
     const { db } = await connectToDatabase()
     where = sanitize(where)
     if (where._id != null) where._id = toObjectId(where._id)

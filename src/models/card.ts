@@ -2,8 +2,8 @@ import sanitize from 'mongo-sanitize'
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import { getColumnsByProjectId } from '@/src/models/column'
-import { Card, stageValues } from '@/src/types/cards'
-import { isEmpty } from '@/util/index'
+import { Card, stageValues } from '@/src/types/card'
+import { isEmpty, isEqual } from '@/util/index'
 import Activity from '@/src/models/activity'
 
 export const TABLE_NAME = 'cards'
@@ -143,14 +143,35 @@ export const deleteProjectCards = async (projectId: string | ObjectId): Promise<
   return await deleteCards({ projectId })
 }
 
+export const updateQuestionAndCreateActivity = async (cardId: string | ObjectId, userId: string, questionId: string, data: any): Promise<boolean> => {
+  const sanitizedData = await sanitizeQuestionData(data, cardId, questionId)
+  const res = await updateQuestion(cardId, questionId, sanitizedData)
+  if (res) void Activity.createCardQuestionUpdateActivity(cardId, userId, questionId, sanitizedData)
+  return res
+}
+
+export const sanitizeQuestionData = async (data: any, cardId: string, questionId: string, card?: Card): Promise<{ responses?: string[], conculusion?: string }> => {
+  if (card == null) {
+    card = await getCard(cardId)
+  }
+  const question = card.questions.find(q => q.id === questionId)
+  if (question == null) throw new Error('Invalid questionId')
+  const sanitizedData: any = {}
+  if (data.responses != null && !isEqual(question?.responses?.sort(), data.responses.sort())) {
+    sanitizedData.responses = sanitize(data.responses)
+  }
+  if (data.conclusion != null && question.conclusion !== data.conclusion) {
+    sanitizedData.conclusion = sanitize(data.conclusion)
+  }
+  return sanitizedData
+}
+
 export const updateQuestion = async (cardId: ObjectId | string, questionId: string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
-  let { responses, conclusion } = data
-  responses = sanitize(responses)
-  conclusion = sanitize(conclusion)
+  const { responses, conclusion } = data
   const set = {}
-  if (responses != null) set['questions.$.responses'] = responses
-  if (conclusion != null) set['questions.$.conclusion'] = conclusion
+  if (responses != null) set['questions.$.responses'] = sanitize(responses)
+  if (conclusion != null) set['questions.$.conclusion'] = sanitize(conclusion)
   const res = await db.collection(TABLE_NAME).updateOne(
     { _id: toObjectId(cardId), 'questions.id': questionId },
     {

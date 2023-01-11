@@ -13,17 +13,50 @@ import {
 import { HiOutlinePencil } from 'react-icons/hi'
 import { RiAddCircleLine, RiDeleteBin6Line } from 'react-icons/ri'
 import { FiUserPlus } from 'react-icons/fi'
-import { useRouter } from 'next/router'
 import styles from './roles.module.css'
-import { defaultFetchOptions } from '@/util/api'
+import { defaultFetchOptions, HTTP_METHODS } from '@/util/api'
 import ProjectContext from '@/src/store/project-context'
 import ConfirmDialog from '@/src/components/confirm-dialog'
 import { UserMenu } from '@/src/components/user-menu'
 import { getUserDisplayName } from '@/util/users'
+import { Project, Role } from '@/src/types/project'
+// import { useRouter } from 'next/router'
 
 const UserMenuMemo = React.memo(UserMenu)
 
-export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element => {
+interface RoleBoxProps {
+  project: Project
+  role: Role
+  deleteRole: (role: any) => void
+  saveRole: (role: any, index: number) => Promise<Role | null>
+  index: number
+  [key: string]: any
+}
+
+const saveRoleApiCall = async (project: Project, role: Partial<Role>): Promise<Role | null> => {
+  const projectId = String(project._id)
+  const roleId = String(role._id)
+  let url = `/api/projects/${projectId}/roles/${roleId}`
+  let method = HTTP_METHODS.PATCH
+  if (role._id == null) {
+    url = `/api/projects/${projectId}/roles`
+    method = HTTP_METHODS.POST
+  }
+
+  const response = await fetch(url, {
+    ...defaultFetchOptions,
+    method,
+    body: JSON.stringify(role)
+  })
+
+  if (response.ok) {
+    const updatedRole = await response.json()
+    return updatedRole
+  }
+  return null
+}
+
+export const RoleBox = ({ project, role, deleteRole, saveRole, index }: RoleBoxProps): JSX.Element => {
   const [isEditing, setIsEditing] = useState(false)
   const [isUserAdd, setIsUserAdd] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -37,7 +70,8 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
 
   useEffect(() => {
     if (Array.isArray(users)) {
-      const iu: any[] = users.filter(u => role.userIds.includes(u._id))
+      role.userIds = role.userIds ?? []
+      const iu: any[] = users.filter(u => role.userIds?.includes(u._id))
       setIncludedUsers(iu)
     }
   }, [users, role.userIds, userIdTrigger])
@@ -51,22 +85,30 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
     setIsUserAdd(false)
   }
 
-  const handleSave = async (...args: any[]): Promise<void> => {
+  const handleSave = async (e?: any): Promise<Role | null> => {
+    if (e?.preventDefault != null) e.preventDefault()
     setIsEditingWrapper(false)
-    role.name = name
-    role.desc = description
-    await saveRole(role)
+    const data: any = {}
+    if (role._id != null) data._id = role._id
+    if (role.name !== name) data.name = name
+    if (role.desc !== description) data.desc = description
+    return await saveRole(data, index)
   }
 
   const handleDelete = async (...args: any[]): Promise<void> => deleteRole(role)
 
   const onUserAdd = async (userId: string): Promise<void> => {
+    role.userIds = role.userIds ?? []
     role.userIds.push(userId)
+    if (role._id == null) {
+      const updatedRole = await handleSave()
+      if (updatedRole != null) role._id = updatedRole._id
+    }
     setUserIdTrigger(userIdTrigger + 1)
     const url = `/api/projects/${String(project._id)}/roles/${String(role._id)}/users/${userId}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'POST',
+      method: HTTP_METHODS.POST,
       body: JSON.stringify({})
     })
     if (!response.ok) {
@@ -76,6 +118,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
   }
 
   const onUserRemove = async (userId: string): Promise<void> => {
+    role.userIds = role.userIds ?? []
     role.userIds = role.userIds.filter(id => id !== userId)
     setUserIdTrigger(userIdTrigger + 1)
     const url = `/api/projects/${String(project._id)}/roles/${String(role._id)}/users/${userId}`
@@ -95,11 +138,11 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
         <Flex justifyContent='space-between'>
           <Input
             placeholder='Role name' size='xs' className={styles.input_class} disabled={!isEditing} border='0' cursor='pointer !important'
-            value={name} onChange={(e): void => setName(e.target.value) }
+            value={name} onChange={(e): void => setName(e.target.value)}
           />
           {!isEditing &&
             <Flex>
-              <HiOutlinePencil onClick={() => setIsEditingWrapper(true)} color='var(--main-blue)' cursor='pointer'/>
+              <HiOutlinePencil onClick={() => setIsEditingWrapper(true)} color='var(--main-blue)' cursor='pointer' />
               <RiDeleteBin6Line onClick={onOpen} color='var(--main-blue)' cursor='pointer' />
             </Flex>}
           {isEditing &&
@@ -118,7 +161,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
             <AvatarGroup size='sm' max={5}>
               {includedUsers.map(user => <Avatar key={user?._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
             </AvatarGroup>
-            <UserMenuMemo users={users} includedUserIds={role.userIds} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
+            <UserMenuMemo users={users} includedUserIds={role.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
               <FiUserPlus color='var(--main-blue)' cursor='pointer' />
             </UserMenuMemo>
           </Flex>
@@ -130,67 +173,62 @@ export const RoleBox = ({ project, role, deleteRole, saveRole }): JSX.Element =>
   )
 }
 
-const Roles = ({ project }): JSX.Element => {
+const Roles = ({ project }: { project: Project }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [roles, setRoles] = useState(project.roles)
 
-  const handleSave = async (role): Promise<void> => {
+  const handleSave = async (role: Partial<Role>, index: number): Promise<Role | null> => {
     setIsLoading(true)
-    const url = `/api/projects/${String(project._id)}/roles/${String(role._id)}`
-
-    const response = await fetch(url, {
-      ...defaultFetchOptions,
-      method: 'PATCH',
-      body: JSON.stringify(role)
-    })
-
-    if (response.ok) {
-      const updatedRole = await response.json()
-      project.roles = project.roles.map(r => r._id === role._id ? updatedRole : r)
+    const updatedRole = await saveRoleApiCall(project, role)
+    if (updatedRole != null) {
+      // use of map to create new array to trigger rerender
+      let mapFn: any = (r: Role): Role => r._id === updatedRole._id ? updatedRole : r
+      if (role._id == null) {
+        mapFn = (r: Role, idx: number): Role => idx === index ? updatedRole : r
+      }
+      project.roles = project.roles?.map(mapFn) ?? [updatedRole]
+      setRoles(project.roles)
     }
     setIsLoading(false)
+    return updatedRole
   }
 
-  const deleteRole = async (role: any): Promise<void> => {
+  const deleteRole = async (role: Partial<Role>): Promise<void> => {
     setIsLoading(true)
-    const url = `/api/projects/${String(project._id)}/roles/${String(role._id)}`
-    const response = await fetch(url, {
-      ...defaultFetchOptions,
-      method: 'DELETE',
-      body: JSON.stringify({ _id: role._id })
-    })
-    if (response.ok) {
-      project.roles = project.roles.filter(r => r._id !== role._id)
+    if (role._id == null) {
+      project.roles = project.roles?.filter(r => r !== role) ?? []
+      setRoles(project.roles)
+    } else {
+      const url = `/api/projects/${String(project._id)}/roles/${String(role._id)}`
+      const response = await fetch(url, {
+        ...defaultFetchOptions,
+        method: HTTP_METHODS.DELETE,
+        body: JSON.stringify({ _id: role._id })
+      })
+      if (response.ok) {
+        project.roles = project.roles?.filter(r => r._id !== role._id) ?? []
+        setRoles(project.roles)
+      }
     }
     setIsLoading(false)
   }
 
   const addRole = async (): Promise<void> => {
     setIsLoading(true)
-    const data = {
+    const data: Role = {
       name: '',
-      description: ''
+      desc: '',
+      userIds: []
     }
-    const url = `/api/projects/${String(project._id)}/roles`
-
-    const response = await fetch(url, {
-      ...defaultFetchOptions,
-      method: 'POST',
-      body: JSON.stringify(data)
-    })
-
-    if (response.ok) {
-      const newRole = await response.json()
-      project.roles = project.roles ?? []
-      project.roles.push(newRole)
-    }
+    project.roles = [...(project.roles ?? []), data]
+    setRoles(project.roles)
     setIsLoading(false)
   }
 
   return (
     <Flex flexDirection='column'>
-      {Array.isArray(project.roles) && project.roles.map((role, index) =>
-        <RoleBox key={index} role={role} project={project} deleteRole={deleteRole} saveRole={handleSave} />)
+      {Array.isArray(roles) && roles.map((role, index) =>
+        <RoleBox key={`${index}-${String(role._id)}`} role={role} project={project} index={index} deleteRole={deleteRole} saveRole={handleSave} isLoading={isLoading} />)
       }
       <Flex
         width={[200, 350]} height={[120, 168]} boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' borderRadius='15px' justifyContent='center' alignItems='center'

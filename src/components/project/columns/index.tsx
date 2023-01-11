@@ -8,7 +8,7 @@ import { updateCard } from '@/util/cards'
 import { fetcher } from '@/util/api'
 import { useRouter } from 'next/router'
 import ProjectBar from '@/src/components/project/project-bar'
-import { stageValues, CardStage } from '@/src/types/cards'
+import { stageValues, CardStage, Card } from '@/src/types/card'
 import { isEmpty } from '@/util/index'
 import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
 
@@ -35,7 +35,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   const [cardDetail, setCardDetail] = useState<any>({ _id: '', title: '', description: '' })
 
   const [columns, setColumns] = useState<any[]>([])
-  const [cards, setCards] = useState<any[]>([])
+  const [cards, setCards] = useState<Card[]>([])
   // useRenderingTrace('ProjectColumns', { projectId, session, columns, cards, isLoading, cardDetail }, 'log')
 
   useEffect(() => {
@@ -132,11 +132,11 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   }
 
   const saveCardSequence = async (destinationIndex: number, destinationColumnId: string, cardId: string): Promise<void> => {
-    const cardsFromColumn: any[] = cards.filter(
+    const cardsFromColumn: Card[] = cards.filter(
       (card) => card.columnId === destinationColumnId && card._id !== cardId
     )
     const sortedCardsFromColumn = cardsFromColumn.sort((a, b) => a.sequence - b.sequence)
-    let sequence = +(destinationIndex === 0 ? 1 : sortedCards[destinationIndex - 1].sequence + 1)
+    let sequence = +(destinationIndex === 0 ? 1 : sortedCardsFromColumn[destinationIndex - 1].sequence + 1)
 
     const patchCard: any = {
       _id: cardId,

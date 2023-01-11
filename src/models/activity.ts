@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import { toObjectId } from './mongodb'
 import { Activity as ActivityTypeDef, ActivityData, ActivityType, ActivityVisibility } from '@/src/types/activity'
 import { isEmpty } from '@/util/index'
-import { CardStage } from '@/src/types/cards'
+import { CardStage } from '@/src/types/card'
 import Model from './model'
 import { Comment as CommentType } from '../types/comment'
 import { Comment } from './comment'
@@ -21,48 +21,20 @@ export default class Activity extends Model {
     return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_CREATE, data)
   }
 
-  static async createProjectUpdateTitleActivity (projectId: string, createdBy: string, title: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_TITLE, { title })
+  static async createProjectUpdateActivities (projectId: string, createdBy: string, newData: any): Promise<string[]> {
+    const newActivityIds: Array<string|null> = []
+    if (newData.title != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_TITLE, { title: newData.title }))
+    if (newData.description != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_DESCRIPTION))
+    if (newData.industry != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_INDUSTRY, { industry: newData.industry }))
+    return newActivityIds.filter(id => id != null) as string[]
   }
 
-  static async createProjectUpdateDescriptionActivity (projectId: string, createdBy: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_DESCRIPTION)
-  }
-
-  static async createProjectUpdateIndustryActivity (projectId: string, createdBy: string, industry: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_INDUSTRY, { industry })
-  }
-
-  static async createProjectUserAddActivity (projectId: string, createdBy: string, userId: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_USER_ADD, null, { userIds: [userId] })
-  }
-
-  static async createProjectUserRemoveActivity (projectId: string, createdBy: string, userId: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_USER_REMOVE, null, { userIds: [userId] })
-  }
-
-  static async createRoleCreateActivity (projectId: string, createdBy: string, roleId: string, data: any): Promise<string | null> {
-    return await this.createRoleUpdateActivity(projectId, createdBy, roleId, data, ActivityType.ROLE_CREATE)
-  }
-
-  static async createRoleUpdateActivity (projectId: string, createdBy: string, roleId: string, newData: any, activityType: ActivityType = ActivityType.ROLE_UPDATE): Promise<string | null> {
+  static async createRoleActivity (projectId: string, createdBy: string, roleId: string, newData: any, activityType: ActivityType = ActivityType.ROLE_UPDATE): Promise<string | null> {
     const data: ActivityData = {}
     if (newData.title != null) data.title = true
     if (newData.desc !== null) data.description = true
     if (isEmpty(data)) return null
-    return await this.createActivity(projectId, createdBy, ActivityType.ROLE_UPDATE, data, { roleId })
-  }
-
-  static async createRoleDeleteActivity (projectId: string, createdBy: string, roleId: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.ROLE_DELETE, null, { roleId })
-  }
-
-  static async createRoleUserAddActivity (projectId: string, createdBy: string, roleId: string, userId: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.ROLE_USER_ADD, null, { userIds: [userId], roleId })
-  }
-
-  static async createRoleUserRemoveActivity (projectId: string, createdBy: string, roleId: string, userId: string): Promise<string | null> {
-    return await this.createActivity(projectId, createdBy, ActivityType.ROLE_USER_REMOVE, null, { userIds: [userId], roleId })
+    return await this.createActivity(projectId, createdBy, activityType, data, { roleId })
   }
 
   static async createCardUserAddActivity (cardId: string, createdBy: string, userId: string): Promise<string | null> {
@@ -71,7 +43,7 @@ export default class Activity extends Model {
       // TODO: log error
       return null
     }
-    return await this.createActivity(card.projectId as string, createdBy, ActivityType.CARD_USER_ADD, null, { cardId, userIds: [userId] })
+    return await this.createActivity(card.projectId, createdBy, ActivityType.CARD_USER_ADD, null, { cardId, userIds: [userId] })
   }
 
   static async createCardUserRemoveActivity (cardId: string, createdBy: string, userId: string): Promise<string | null> {
@@ -80,7 +52,7 @@ export default class Activity extends Model {
       // TODO: log error
       return null
     }
-    return await this.createActivity(card.projectId as string, createdBy, ActivityType.CARD_USER_REMOVE, null, { cardId, userIds: [userId] })
+    return await this.createActivity(card.projectId, createdBy, ActivityType.CARD_USER_REMOVE, null, { cardId, userIds: [userId] })
   }
 
   static async createCardDueDateAddActivity (projectId: string, createdBy: string, cardId: string, dueDate: number): Promise<string | null> {
@@ -93,7 +65,10 @@ export default class Activity extends Model {
       // TODO: log error
       return null
     }
-    return await this.createActivity(card.projectId as string, createdBy, ActivityType.CARD_DUE_DATE_UPDATE, { dueDate }, { cardId })
+    if (isEmpty(dueDate)) {
+      return await this.createCardDueDateDeleteActivity(card.projectId, createdBy, cardId)
+    }
+    return await this.createActivity(card.projectId, createdBy, ActivityType.CARD_DUE_DATE_UPDATE, { dueDate }, { cardId })
   }
 
   static async createCardDueDateDeleteActivity (projectId: string, createdBy: string, cardId: string): Promise<string | null> {
@@ -125,7 +100,7 @@ export default class Activity extends Model {
       // TODO: log error
       return null
     }
-    return await this.createActivity(card.projectId as string, userId, ActivityType.CARD_STAGE_UPDATE, { stage }, { cardId })
+    return await this.createActivity(card.projectId, userId, ActivityType.CARD_STAGE_UPDATE, { stage }, { cardId })
   }
 
   static async createCardColumnUpdateActivity (cardId: string, userId: string, columnId: string): Promise<string | null> {
@@ -135,7 +110,7 @@ export default class Activity extends Model {
       return null
     }
     const column = await getColumn(columnId)
-    return await this.createActivity(card.projectId as string, userId, ActivityType.CARD_COLUMN_UPDATE, { columnName: column.name }, { cardId })
+    return await this.createActivity(card.projectId, userId, ActivityType.CARD_COLUMN_UPDATE, { columnName: column.name }, { cardId })
   }
 
   static async createCommentCreateActivity (comment: CommentType): Promise<string | null> {
@@ -174,10 +149,27 @@ export default class Activity extends Model {
   }
 
   static async get (_id: string | ObjectId): Promise<ActivityTypeDef> {
-    return await super.get<ActivityTypeDef>(_id)
+    return await super.get(_id)
   }
 
   static async find (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: ActivityTypeDef[], page: string }> {
-    return await super.find<ActivityTypeDef>(where, limit, sort, page)
+    return await super.find(where, limit, sort, page)
+  }
+
+  static async createCardQuestionUpdateActivity (cardId: string, questionId: string, userId: string, data: { conclusion?: string, responses?: string[] }): Promise<Array<string | null>> {
+    const card = await getCard(cardId)
+    if (card == null) {
+      // TODO: log error
+      return []
+    }
+    const question = card.questions.find(q => q.id === questionId)
+    if (question == null) {
+      // TODO: log error
+      return []
+    }
+    const activityIds: Array<string | null> = []
+    if (data.conclusion != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_CONCLUSION_UPDATE, { conclusion: data.conclusion }, { cardId, questionId }))
+    if (data.responses != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_RESPONSE_UPDATE, { responses: data.responses }, { cardId, questionId }))
+    return activityIds
   }
 }

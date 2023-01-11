@@ -1,23 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { addUserToRole, removeUserFromRole } from '@/src/models/role'
-import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
+import { addUserToRoleAndCreateActivity, removeUserFromRoleAndCreateActivity } from '@/src/models/role'
+import { isConnected, hasProjectAccess, getUserFromRequest } from '@/util/temp-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, roleId, userId } = req.query
+  const user = getUserFromRequest(req)
 
   switch (req.method) {
     case 'POST': {
-      await addUserToRole(projectId, roleId, userId)
+      await addUserToRoleAndCreateActivity(projectId, roleId, user?._id, userId)
       return res.send(201)
     }
     case 'DELETE': {
-      // const res =
-      await removeUserFromRole(projectId, roleId, userId)
+      await removeUserFromRoleAndCreateActivity(projectId, roleId, user?._id, userId)
       return res.send(201)
     }
     default:
-      res.status(404).send({ message: 'Not found' })
-      break
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }
 

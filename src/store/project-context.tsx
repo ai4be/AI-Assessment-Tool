@@ -1,9 +1,9 @@
 import { Context, createContext, useEffect, useState } from 'react'
-import { Category, Project } from '../types/projects'
 import { useRouter } from 'next/router'
+import { Category, Project } from '@/src/types/project'
 import { fetchUsersByProjectId } from '@/util/users'
-import { UserContextProvider } from './user-context'
-import { QueryFilterKeys } from '../components/project/project-bar/filter-menu'
+import { UserContextProvider } from '@/src/store/user-context'
+import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 
 interface ProjectContextType {
   project?: Project | undefined

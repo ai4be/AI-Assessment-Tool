@@ -1,18 +1,23 @@
+import { Card } from './card'
+
 export interface Project {
   _id: string
   name: string
+  createdBy: string
   columns?: Columns[]
-  createdBy?: string
-  createdAt?: string
+  createdAt?: number
   backgroundImage?: string
   users?: string[]
+  roles?: Role[]
+  industry?: string
+  description?: string
 }
 
 interface Columns {
   id: string
   name: string
   sequence: number
-  cards?: Cards[]
+  cards?: Card[]
   createdBy: string
   date: Date
 }
@@ -23,18 +28,11 @@ export interface Category {
   name: string
 }
 
-interface Cards {
-  id: string
+export interface Role {
+  _id?: string
   name: string
-  description: string
-  assignedTo?: User[]
-  sequence: number
-  createdBy: string
-  date: Date
-}
-
-interface User {
-  id: string
-  fullName: string
-  avatar: string
+  desc: string
+  createdAt?: number
+  updatedAt?: number
+  userIds?: string[]
 }

@@ -2,14 +2,10 @@ import sanitize from 'mongo-sanitize'
 import { ObjectId } from 'mongodb'
 import { TABLE_NAME } from './project'
 import { toObjectId, connectToDatabase } from './mongodb'
-
-export interface Role {
-  _id?: ObjectId
-  name: string
-  desc: string
-  createdAt: number
-  userIds?: ObjectId[]
-}
+import Activity from './activity'
+import { ActivityType } from '@/src/types/activity'
+import { Role } from '@/src/types/project'
+import { isEmpty } from '@/util/index'
 
 export const getRole = async (projectId: ObjectId | string, roleId: ObjectId | string): Promise<Role> => {
   const { db } = await connectToDatabase()
@@ -49,27 +45,60 @@ export const addRole = async (projectId: ObjectId | string, role: { _id?: Object
   return roleInserted
 }
 
+export const addRoleAndCreateActivity = async (projectId: ObjectId | string, role: { _id?: ObjectId | string, name: string, desc: string }, userId: ObjectId | string): Promise<Role> => {
+  const roleInserted = await addRole(projectId, role)
+  if (roleInserted != null) void Activity.createRoleActivity(projectId, userId, role._id, role, ActivityType.ROLE_CREATE)
+  return roleInserted
+}
+
 export const removeRole = async (projectId: ObjectId | string, roldId: ObjectId | string): Promise<boolean> => {
   const { db } = await connectToDatabase()
   projectId = toObjectId(projectId)
+  console.log('removeRole', projectId, roldId, TABLE_NAME)
   const res = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id: projectId }, { $pull: { roles: toObjectId(roldId) } })
+    .updateOne({ _id: projectId }, { $pull: { roles: { _id: toObjectId(roldId) } } })
   return res.result.ok === 1
+}
+
+export const removeRoleAndCreateActivity = async (projectId: ObjectId | string, roleId: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
+  const res = await removeRole(projectId, roleId)
+  if (res) void Activity.createActivity(projectId, userId, ActivityType.ROLE_DELETE, null, { roleId })
+  return res
+}
+
+export const updateRoleAndCreateActivity = async (projectId: ObjectId | string, userId: string, role: { _id: ObjectId | string, name: string, desc: string }): Promise<boolean> => {
+  const res = await updateRole(projectId, role)
+  if (res) void Activity.createRoleActivity(projectId, userId, role._id, role, ActivityType.ROLE_UPDATE)
+  return res
 }
 
 export const updateRole = async (projectId: ObjectId | string, role: { _id: ObjectId | string, name: string, desc: string }): Promise<boolean> => {
   const { db } = await connectToDatabase()
+  const set: any = {}
+  if (role.name != null) set['roles.$.name'] = sanitize(role.name)
+  if (role.desc != null) set['roles.$.desc'] = sanitize(role.desc)
+  if (isEmpty(set)) return false
+  set['roles.$.updateAt'] = Date.now()
   const res = await db.collection(TABLE_NAME).updateOne(
     { _id: toObjectId(projectId), 'roles._id': toObjectId(role._id) },
     {
-      $set: {
-        'roles.$.name': sanitize(role.name),
-        'roles.$.desc': sanitize(role.desc)
-      }
+      $set: set
     }
   )
   return res.result.ok === 1
+}
+
+export const addUserToRoleAndCreateActivity = async (projectId: ObjectId | string, roleId: ObjectId | string, userId: ObjectId | string, userIdAdded: ObjectId | string): Promise<boolean> => {
+  const res = await addUserToRole(projectId, roleId, userIdAdded)
+  if (res) void Activity.createActivity(projectId, userId, ActivityType.ROLE_USER_ADD, null, { roleId, userIds: [String(userIdAdded)] })
+  return res
+}
+
+export const removeUserFromRoleAndCreateActivity = async (projectId: ObjectId | string, roleId: ObjectId | string, userId: ObjectId | string, userIdRemoved: ObjectId | string): Promise<boolean> => {
+  const res = await removeUserFromRole(projectId, roleId, userIdRemoved)
+  if (res) void Activity.createActivity(projectId, userId, ActivityType.ROLE_USER_REMOVE, null, { roleId, userIds: [String(userIdRemoved)] })
+  return res
 }
 
 export const addUserToRole = async (projectId: ObjectId | string, roleId: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {

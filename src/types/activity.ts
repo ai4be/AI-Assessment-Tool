@@ -5,6 +5,7 @@ export enum ActivityType {
   PROJECT_UPDATE_DESCRIPTION = 'project_update_description',
   PROJECT_UPDATE_INDUSTRY = 'project_update_description',
   PROJECT_UPDATE = 'project_update',
+  PROJECT_DELETE = 'project_delete',
   PROJECT_USER_ADD = 'project_user_add',
   PROJECT_USER_REMOVE = 'project_user_remove',
   ROLE_CREATE = 'role_create',
@@ -25,8 +26,8 @@ export enum ActivityType {
   CARD_DUE_DATE_DELETE = 'card_due_date_delete',
   CARD_COLUMN_UPDATE = 'card_column_update',
   CARD_STAGE_UPDATE = 'card_stage_update',
-  QUESTION_ANSWER_CREATE = 'question_answer_create',
-  QUESTION_ANSWER_UPDATE = 'question_answer_update'
+  QUESTION_RESPONSE_UPDATE = 'question_answer_update',
+  QUESTION_CONCLUSION_UPDATE = 'question_conclusion_update'
 }
 
 export enum ActivityVisibility {

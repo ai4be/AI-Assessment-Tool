@@ -1,13 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
-import { removeUser } from '@/src/models/project'
+import { isConnected, hasProjectAccess, getUserFromRequest } from '@/util/temp-middleware'
+import { removeUserAndCreateActivity } from '@/src/models/project'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, userId } = req.query
+  const user = getUserFromRequest(req)
 
   switch (req.method) {
     case 'DELETE': {
-      await removeUser(projectId, userId)
+      await removeUserAndCreateActivity(projectId, user?._id, userId)
       return res.send(201)
     }
     default:

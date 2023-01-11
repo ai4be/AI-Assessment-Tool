@@ -1,30 +1,23 @@
 
-import { cleanText, connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
-import { getUsers, User } from './user'
 import sanitize from 'mongo-sanitize'
+import { cleanText, connectToDatabase, toObjectId } from '@/src/models/mongodb'
+import { getUsers, User } from '@/src/models/user'
 import { isEmpty } from '@/util/index'
 import { deleteProjectCards, createCards } from '@/src/models/card'
 import { deleteProjectColumns, createProjectDefaultColumns, getTodoColumn } from '@/src/models/column'
+import Activity from '@/src/models/activity'
+import { ActivityType } from '@/src/types/activity'
+import { Project } from '@/src/types/project'
 
 export const TABLE_NAME = 'projects'
-
-export interface Project {
-  _id?: ObjectId
-  name: string
-  createdBy?: ObjectId
-  createdAt: number
-  backgroundImage?: string
-  users?: ObjectId[]
-  roles?: any[]
-}
 
 export const createProject = async ({ name, createdBy, description, industry }: { name: string, createdBy: ObjectId | string, description?: string, industry?: string }, addDefaultColumns = true): Promise<string> => {
   const { db } = await connectToDatabase()
   name = cleanText(name)
   createdBy = toObjectId(createdBy)
   const createdAt = Date.now()
-  const data: any = {
+  const data: Partial<Project> = {
     _id: ObjectId(),
     name,
     createdAt,
@@ -35,11 +28,17 @@ export const createProject = async ({ name, createdBy, description, industry }: 
   if (industry != null) data.industry = cleanText(industry)
   const result = await db.collection(TABLE_NAME).insertOne(data)
   if (addDefaultColumns) await createProjectDefaultColumns(data._id, createdBy)
-  return String(result.insertedId)
+  return result.insertedId
 }
 
-export const createProjectWithDefaultColumnsAndCards = async (data: any, cards: any[]): Promise<string> => {
-  const projectId = await createProject(data, true)
+export const createProjectAndActivity = async (data: any, userId: ObjectId | string): Promise<string> => {
+  const res = await createProject(data)
+  if (res != null) void Activity.createProjectCreateActivity(res, userId, data)
+  return res
+}
+
+export const createProjectWithDefaultColumnsAndCardsAndActivity = async (data: any, cards: any[], userId: string): Promise<string> => {
+  const projectId = await createProjectAndActivity(data, userId)
   const todoColumn = await getTodoColumn(projectId)
   cards = sanitize(cards)
   cards = cards.map(c => ({
@@ -57,6 +56,12 @@ export const getProject = async (_id: ObjectId | string): Promise<Project> => {
   return await db.collection(TABLE_NAME).findOne({ _id })
 }
 
+export const updateProjectAndCreateActivity = async (_id: ObjectId | string, data: any, userId: ObjectId | string): Promise<boolean> => {
+  const res = await updateProject(_id, data)
+  if (res) void Activity.createProjectUpdateActivities(_id, userId, data)
+  return res
+}
+
 export const updateProject = async (_id: ObjectId | string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
@@ -70,6 +75,12 @@ export const updateProject = async (_id: ObjectId | string, data: any): Promise<
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: updateData })
   return res.result.ok === 1
+}
+
+export const deleteProjectAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
+  const res = await deleteProject(_id)
+  if (res) void Activity.createActivity(_id, userId, ActivityType.PROJECT_DELETE)
+  return res
 }
 
 export const deleteProject = async (_id: ObjectId | string): Promise<boolean> => {
@@ -95,6 +106,18 @@ export const getUserProjects = async (userId: ObjectId | string, projectId?: str
   }
   if (projectId != null) where._id = projectId
   return await db.collection(TABLE_NAME).find(where).toArray()
+}
+
+export const addUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, addedUserId: ObjectId | string): Promise<boolean> => {
+  const res = await addUser(_id, addedUserId)
+  if (res) void Activity.createActivity(_id, userId, ActivityType.PROJECT_USER_ADD, null, { userIds: [addedUserId] })
+  return res
+}
+
+export const removeUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, removedUserId: ObjectId | string): Promise<boolean> => {
+  const res = await removeUser(_id, removedUserId)
+  if (res) void Activity.createActivity(_id, userId, ActivityType.PROJECT_USER_REMOVE, null, { userIds: [removedUserId] })
+  return res
 }
 
 export const addUser = async (_id: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {

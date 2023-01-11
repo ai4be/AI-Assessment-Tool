@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { cardBelongsToProject, hasProjectAccess, isConnected } from '@/util/temp-middleware'
-import { deleteComment, getComment, updateComment } from '@/src/models/comment'
+import { deleteCommentAndCreateActivity, getComment, updateCommentAndCreateActivity } from '@/src/models/comment'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   let { projectId, commentId } = req.query
@@ -18,12 +18,12 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(200).send(comment)
     }
     case 'PATCH': {
-      const result = await updateComment(commentId, { ...req.body })
+      const result = await updateCommentAndCreateActivity(commentId, { ...req.body })
       const comment = await getComment({ _id: commentId })
       return result ? res.status(200).send(comment) : res.status(400).send({ message: 'could not update' })
     }
     case 'DELETE': {
-      const result = await deleteComment(commentId)
+      const result = await deleteCommentAndCreateActivity(commentId)
       return result ? res.status(204).end() : res.status(400).send({ message: 'could not delete' })
     }
     default:
