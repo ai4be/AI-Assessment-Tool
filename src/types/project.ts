@@ -7,7 +7,7 @@ export interface Project {
   columns?: Columns[]
   createdAt?: number
   backgroundImage?: string
-  users?: string[]
+  userIds?: string[]
   roles?: Role[]
   industry?: string
   description?: string

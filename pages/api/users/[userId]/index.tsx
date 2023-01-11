@@ -14,7 +14,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
     case 'GET': {
       if (userId !== 'me') {
         const projects = await getUserProjects(user._id)
-        const userIds = projects.map((project) => project.users).flat().map(uid => String(uid))
+        const userIds = projects.map((project) => project.userIds).flat().map(uid => String(uid))
         if (!userIds.includes(String(userId))) return res.status(403).json({ error: 'You are not authorized to view this user' })
         user = await getUser({ _id: userId })
       }

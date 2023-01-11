@@ -1,37 +1,38 @@
 import { ObjectId } from 'mongodb'
-import { toObjectId } from './mongodb'
+import { toObjectId, connectToDatabase } from './mongodb'
 import { Activity as ActivityTypeDef, ActivityData, ActivityType, ActivityVisibility } from '@/src/types/activity'
 import { isEmpty } from '@/util/index'
 import { CardStage } from '@/src/types/card'
-import Model from './model'
+import Model, { generatePaginationQuery } from './model'
 import { Comment as CommentType } from '../types/comment'
 import { Comment } from './comment'
 import { getCard } from './card'
 import { getColumn } from './column'
+import { Project, Role } from '../types/project'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class Activity extends Model {
   static TABLE_NAME = 'activities'
 
-  static async createProjectCreateActivity (projectId: string, createdBy: string, project: any): Promise<string | null> {
+  static async createProjectCreateActivity (projectId: string, createdBy: string, project: Partial<Project>): Promise<string | null> {
     const data = {
-      title: project.title,
+      name: project.name,
       industry: project.industry
     }
     return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_CREATE, data)
   }
 
-  static async createProjectUpdateActivities (projectId: string, createdBy: string, newData: any): Promise<string[]> {
+  static async createProjectUpdateActivities (projectId: string, createdBy: string, newData: Partial<Project>): Promise<string[]> {
     const newActivityIds: Array<string|null> = []
-    if (newData.title != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_TITLE, { title: newData.title }))
+    if (newData.name != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_TITLE, { title: newData.title }))
     if (newData.description != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_DESCRIPTION))
     if (newData.industry != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_INDUSTRY, { industry: newData.industry }))
     return newActivityIds.filter(id => id != null) as string[]
   }
 
-  static async createRoleActivity (projectId: string, createdBy: string, roleId: string, newData: any, activityType: ActivityType = ActivityType.ROLE_UPDATE): Promise<string | null> {
+  static async createRoleActivity (projectId: string, createdBy: string, roleId: string, newData: Partial<Role>, activityType: ActivityType = ActivityType.ROLE_UPDATE): Promise<string | null> {
     const data: ActivityData = {}
-    if (newData.title != null) data.title = true
+    if (newData.name != null) data.title = newData.name
     if (newData.desc !== null) data.description = true
     if (isEmpty(data)) return null
     return await this.createActivity(projectId, createdBy, activityType, data, { roleId })
@@ -152,10 +153,6 @@ export default class Activity extends Model {
     return await super.get(_id)
   }
 
-  static async find (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: ActivityTypeDef[], page: string }> {
-    return await super.find(where, limit, sort, page)
-  }
-
   static async createCardQuestionUpdateActivity (cardId: string, questionId: string, userId: string, data: { conclusion?: string, responses?: string[] }): Promise<Array<string | null>> {
     const card = await getCard(cardId)
     if (card == null) {
@@ -171,5 +168,94 @@ export default class Activity extends Model {
     if (data.conclusion != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_CONCLUSION_UPDATE, { conclusion: data.conclusion }, { cardId, questionId }))
     if (data.responses != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_RESPONSE_UPDATE, { responses: data.responses }, { cardId, questionId }))
     return activityIds
+  }
+
+  static async find (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
+    const { db } = await connectToDatabase()
+    if (where._id != null) where._id = toObjectId(where._id)
+    const { wherePagined, nextKeyFn } = generatePaginationQuery(where, sort, page)
+    const res = await db
+      .collection(this.TABLE_NAME)
+      .aggregate([
+        { $match: wherePagined },
+        { $sort: { [sort[0]]: sort[1] } },
+        { $limit: limit },
+        {
+          $lookup: {
+            from: 'projects',
+            localField: 'projectId',
+            foreignField: '_id',
+            as: 'project'
+          }
+        },
+        {
+          $lookup: {
+            from: 'projects',
+            localField: 'roleId',
+            foreignField: 'roles._id',
+            as: 'role'
+          }
+        },
+        {
+          $lookup: {
+            from: 'cards',
+            localField: 'cardId',
+            foreignField: '_id',
+            as: 'card'
+          }
+        },
+        {
+          $lookup: {
+            from: 'card',
+            localField: 'questionId',
+            foreignField: 'questions.id',
+            as: 'question'
+          }
+        },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: 'commnetId',
+            foreignField: '_id',
+            as: 'comment'
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'createdBy',
+            foreignField: '_id',
+            as: 'creator'
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'urserIds',
+            foreignField: '_id',
+            as: 'users'
+          }
+        },
+        // { $addFields: { project: { $first: '$projects' } } },
+        { $unwind: { path: '$project' } },
+        { $unwind: { path: '$role' } },
+        { $unwind: { path: '$card' } },
+        { $unwind: { path: '$question' } },
+        { $unwind: { path: '$comment' } },
+        { $unwind: { path: '$creator' } },
+        { $project: { projects: 0, 'project.roles': 0, 'project.userIds': 0, 'project.description': 0 } }
+      ])
+    const count = await db
+      .collection(this.TABLE_NAME)
+      .find(wherePagined)
+      .sort([sort])
+      .count()
+    const data = await res.toArray()
+    return {
+      count,
+      limit,
+      page: nextKeyFn(data),
+      data: await res.toArray()
+    }
   }
 }

@@ -62,18 +62,19 @@ export const removeRole = async (projectId: ObjectId | string, roldId: ObjectId 
 }
 
 export const removeRoleAndCreateActivity = async (projectId: ObjectId | string, roleId: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
+  const role = await getRole(projectId, roleId)
   const res = await removeRole(projectId, roleId)
-  if (res) void Activity.createActivity(projectId, userId, ActivityType.ROLE_DELETE, null, { roleId })
+  if (res) void Activity.createActivity(projectId, userId, ActivityType.ROLE_DELETE, { name: role.name }, { roleId })
   return res
 }
 
-export const updateRoleAndCreateActivity = async (projectId: ObjectId | string, userId: string, role: { _id: ObjectId | string, name: string, desc: string }): Promise<boolean> => {
+export const updateRoleAndCreateActivity = async (projectId: ObjectId | string, userId: string, role: Partial<Role>): Promise<boolean> => {
   const res = await updateRole(projectId, role)
-  if (res) void Activity.createRoleActivity(projectId, userId, role._id, role, ActivityType.ROLE_UPDATE)
+  if (res && role._id != null) void Activity.createRoleActivity(projectId, userId, role._id, role, ActivityType.ROLE_UPDATE)
   return res
 }
 
-export const updateRole = async (projectId: ObjectId | string, role: { _id: ObjectId | string, name: string, desc: string }): Promise<boolean> => {
+export const updateRole = async (projectId: ObjectId | string, role: Partial<Role>): Promise<boolean> => {
   const { db } = await connectToDatabase()
   const set: any = {}
   if (role.name != null) set['roles.$.name'] = sanitize(role.name)

@@ -34,14 +34,38 @@ export default abstract class Model {
 
   static async find (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
     const { db } = await connectToDatabase()
-    where = sanitize(where)
     if (where._id != null) where._id = toObjectId(where._id)
     const { wherePagined, nextKeyFn } = generatePaginationQuery(where, sort, page)
     const res = await db
       .collection(this.TABLE_NAME)
-      .find(wherePagined)
-      .limit(limit)
-      .sort([sort])
+      .aggregate([
+        { $match: wherePagined },
+        { $sort: { [sort[0]]: sort[1] } },
+        { $limit: limit },
+        {
+          $lookup: {
+            from: 'projects',
+            localField: 'projectId',
+            foreignField: '_id',
+            as: 'project'
+          }
+        },
+        {
+          $lookup: {
+            from: 'projects',
+            localField: 'roleId',
+            foreignField: 'roles._id',
+            as: 'role'
+          }
+        },
+        // { $addFields: { project: { $first: '$projects' } } },
+        { $unwind: { path: '$project', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } },
+        { $project: { projects: 0, 'project.roles': 0, 'project.userIds': 0, 'project.description': 0 } }
+      ])
+      // .find(wherePagined)
+      // .limit(limit)
+      // .sort([sort])
     const count = await db
       .collection(this.TABLE_NAME)
       .find(wherePagined)
