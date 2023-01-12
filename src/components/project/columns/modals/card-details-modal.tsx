@@ -14,7 +14,6 @@ import {
   Text,
   Textarea,
   Box,
-  Badge,
   RadioGroup,
   Radio,
   Select,
@@ -39,15 +38,17 @@ import { FiEdit2 } from 'react-icons/fi'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
-import Comment from './comment'
+import CommentComponent from './comment'
 import { questionEnabler } from '@/util/question'
+import { Question, DisplayQuestion, Card, CardStage } from '@/src/types/card'
+import { Comment } from '@/src/types/comment'
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 commodo consequat.`
 
-const QuestionHelp = ({ question }): JSX.Element => {
+const QuestionHelp = ({ question }: { question: Question }): JSX.Element => {
   const [help, setHelp] = useState('')
 
   useEffect(() => {
@@ -78,7 +79,7 @@ const QuestionHelp = ({ question }): JSX.Element => {
   )
 }
 
-const Question = ({ question, onChange, ...rest }): JSX.Element => {
+const QuestionComp = ({ question, onChange, ...rest }: { question: DisplayQuestion, onChange: Function, [key: string]: any }): JSX.Element => {
   const [conclusion, setConclusion] = useState(question.conclusion ?? '')
   const [timeoutId, setTimeoutId] = useState<any>(null)
   useEffect(() => {
@@ -144,7 +145,7 @@ const AccordionItemStyled = ({ title, desc }): JSX.Element => {
 interface Props {
   onClose: () => void
   isOpen: boolean
-  card: any
+  card: DisplayCard
   projectId: string
   fetchCards: () => any
 }
@@ -265,7 +266,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
   }
 
-  const fetchComments = async (question?: any): Promise<void> => {
+  const fetchComments = async (question?: Partial<DisplayQuestion>): Promise<void> => {
     const url = question != null
       ? `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}/comments`
       : `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/comments`
@@ -285,7 +286,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
   }
 
-  const saveCard = async (data: any): Promise<void> => {
+  const saveCard = async (data: Partial<Card>): Promise<void> => {
     setIsLoading(true)
     const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}`
     const response = await fetch(url, {
@@ -308,7 +309,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     void saveCard({ dueDate: card.dueDate })
   }
 
-  const setStage = (stage: string): void => {
+  const setStage = (stage: CardStage): void => {
     if (card.stage === stage) return
     card.stage = stage
     void saveCard({ stage })
@@ -318,7 +319,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     if (isOpen) void fetchComments()
   }, [isOpen])
 
-  const deleteComment = async (comment: any, question: any): Promise<void> => {
+  const deleteComment = async (comment: Comment, question: any): Promise<void> => {
     setIsLoading(true)
     const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}/comments/${String(comment._id)}`
     const response = await fetch(url, {
@@ -350,11 +351,6 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
       <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative'>
         <ModalBody p='0' height='100%' display='flex' width='100%' overflowY='scroll' position='relative'>
-          {(card.label != null) && (
-            <Badge bg={card.label.type} color='white'>
-              {card.label.type}
-            </Badge>
-          )}
           <Flex flexDirection='column' height='100%' width='100%' justifyContent='space-between'>
             <Box display='flex'>
               <Box width='100%' marginTop='2rem' ml='4'>
@@ -376,10 +372,10 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                 </Accordion>
                 {card?.questions?.map((q, index) =>
                   <Box key={`${card._id}-${q.id}-${index}`} p={3}>
-                    <Question question={q} onChange={saveQuestion} />
-                    <Comment comment={{}} onSave={data => saveComment({}, data, q)} />
+                    <QuestionComp question={q} onChange={saveQuestion} />
+                    <CommentComponent comment={{}} onSave={async data => await saveComment({}, data, q)} />
                     {q.comments?.map(c => (
-                      <Comment key={c._id} comment={c} onSave={data => saveComment(c, data, q)} onDelete={() => deleteComment(c, q)} />
+                      <CommentComponent key={c._id} comment={c} onSave={async data => await saveComment(c, data, q)} onDelete={async () => await deleteComment(c, q)} />
                     ))}
                   </Box>
                 )}
@@ -431,8 +427,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
 export default CardDetailsModal
 
-export const GenerateAnswers = ({ question, onChange }: { question: any, onChange?: Function }): JSX.Element => {
-  const [value, setValue] = React.useState<any>(question.responses ??  '')
+export const GenerateAnswers = ({ question, onChange }: { question: DisplayQuestion, onChange?: Function }): JSX.Element => {
+  const [value, setValue] = React.useState<any>(question.responses ?? '')
   const valueHandler = (value): void => {
     if (!Array.isArray(value)) value = [value]
     if (Array.isArray(value) && value.length > 1) {

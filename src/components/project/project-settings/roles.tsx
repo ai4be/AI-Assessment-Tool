@@ -228,8 +228,7 @@ const Roles = ({ project }: { project: Project }): JSX.Element => {
   return (
     <Flex flexDirection='column'>
       {Array.isArray(roles) && roles.map((role, index) =>
-        <RoleBox key={`${index}-${String(role._id)}`} role={role} project={project} index={index} deleteRole={deleteRole} saveRole={handleSave} isLoading={isLoading} />)
-      }
+        <RoleBox key={`${index}-${String(role._id)}`} role={role} project={project} index={index} deleteRole={deleteRole} saveRole={handleSave} isLoading={isLoading} />)}
       <Flex
         width={[200, 350]} height={[120, 168]} boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' borderRadius='15px' justifyContent='center' alignItems='center'
         cursor='pointer'

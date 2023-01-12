@@ -23,8 +23,8 @@ export default class Activity extends Model {
   }
 
   static async createProjectUpdateActivities (projectId: string, createdBy: string, newData: Partial<Project>): Promise<string[]> {
-    const newActivityIds: Array<string|null> = []
-    if (newData.name != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_TITLE, { title: newData.title }))
+    const newActivityIds: Array<string | null> = []
+    if (newData.name != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_TITLE, { name: newData.name }))
     if (newData.description != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_DESCRIPTION))
     if (newData.industry != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_INDUSTRY, { industry: newData.industry }))
     return newActivityIds.filter(id => id != null) as string[]
@@ -237,13 +237,28 @@ export default class Activity extends Model {
           }
         },
         // { $addFields: { project: { $first: '$projects' } } },
-        { $unwind: { path: '$project' } },
-        { $unwind: { path: '$role' } },
-        { $unwind: { path: '$card' } },
-        { $unwind: { path: '$question' } },
-        { $unwind: { path: '$comment' } },
-        { $unwind: { path: '$creator' } },
-        { $project: { projects: 0, 'project.roles': 0, 'project.userIds': 0, 'project.description': 0 } }
+        { $unwind: { path: '$project', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$card', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$question', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
+        { $unwind: { path: '$creator', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            'project.roles': 0,
+            'project.userIds': 0,
+            'project.description': 0,
+            'card.questions': 0,
+            'card.projectId': 0,
+            'card.createdAt': 0,
+            'card.updatedAt': 0,
+            'card.userIds': 0,
+            'creator.password': 0,
+            'creator.avatar': 0,
+            'users.password': 0,
+            'users.avatar': 0,
+          }
+        }
       ])
     const count = await db
       .collection(this.TABLE_NAME)

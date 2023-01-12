@@ -44,7 +44,7 @@ const Profile = (): JSX.Element => {
       avatar: user?.avatar ?? '',
       organization: user?.organization ?? '',
       department: user?.department ?? '',
-      role: user?.role ?? '',
+      role: user?.role ?? ''
     })
   }, [user])
 

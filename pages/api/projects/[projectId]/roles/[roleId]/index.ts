@@ -9,7 +9,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
   switch (req.method) {
     case 'PATCH': {
       const { name, desc } = req.body
-      await updateRoleAndCreateActivity(projectId, String(user?._id), { _id: roleId, name, desc })
+      await updateRoleAndCreateActivity(projectId, String(user?._id), { _id: String(roleId), name, desc })
       const role = await getRole(projectId, roleId)
       return res.status(200).json(role)
     }

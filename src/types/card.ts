@@ -1,3 +1,5 @@
+import { Comment } from './comment'
+
 export interface Card {
   _id: string
   originalId: string
@@ -12,6 +14,10 @@ export interface Card {
   roleIds?: string[] | any[]
   dueDate?: number
   stage?: CardStage
+}
+
+export type DisplayCard = Card & {
+  questions: DisplayQuestion[]
 }
 
 export enum QuestionType {
@@ -29,6 +35,15 @@ export interface Question {
   isScored: boolean
   responses?: any[]
   conclusion?: string
+}
+
+export type DisplayQuestion = Question & {
+  enabled?: boolean
+  TOCnumber?: number
+  comments?: Comment[]
+  enabledCondition?: {
+    disabledText: string
+  }
 }
 
 export enum CardStage {

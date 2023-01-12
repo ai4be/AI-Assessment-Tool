@@ -1,5 +1,6 @@
 import React, { FC, useContext } from 'react'
-import { Button, Flex, Box, Spacer,
+import {
+  Button, Flex, Box, Spacer,
   Menu,
   MenuButton,
   MenuItem,
@@ -41,7 +42,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
         <Flex flexDirection='column' justifyContent='center'>
           <IoIosNotificationsOutline className='icon-blue-color' size='20' strokeWidth='20px' />
         </Flex>
-        <Flex flexDirection='column' justifyContent='center' paddingX='2' >
+        <Flex flexDirection='column' justifyContent='center' paddingX='2'>
           <Divider orientation='vertical' height='50%' color='#F0EEF9' />
         </Flex>
         <Menu>
@@ -84,7 +85,7 @@ const NavaBarInner = ({ bg }: Props): JSX.Element => {
   return (
     <Box bg={bg} boxShadow='md'>
       <Flex>
-        <Box href='/' onClick={() => router.push('/home')}>
+        <Box href='/' onClick={async () => await router.push('/home')}>
           <AI4BelgiumIcon />
         </Box>
         <Spacer />

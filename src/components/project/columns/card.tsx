@@ -1,16 +1,17 @@
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { Box, Badge, Flex, Text, AvatarGroup, Avatar } from '@chakra-ui/react'
+import { Box, Flex, Text, AvatarGroup, Avatar } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import ProjectContext from '@/src/store/project-context'
 import { fetchUsers, getUserDisplayName } from '@/util/users'
+import { Card } from '@/src/types/card'
 
 interface Props {
   showCardDetail: (cardId: string) => void
   cardIndex: number
-  card: any
+  card: Card
 }
 
-const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
+const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
   const projectContext = useContext(ProjectContext)
   const [users, setUsers] = useState<any[]>([])
 
@@ -63,12 +64,7 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
           }}
           onClick={() => showCardDetail(card._id)}
         >
-          {(card.label != null) && (
-            <Badge bg={card.label.type} color='white'>
-              {card.label.type}
-            </Badge>
-          )}
-          <Text fontSize='sm' >{card.title?.replace(/(=g(b|e)=)/g, '')}</Text>
+          <Text fontSize='sm'>{card.title?.replace(/(=g(b|e)=)/g, '')}</Text>
           {loadAssignedToUser()}
         </Box>
       )}
@@ -76,4 +72,4 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
   )
 }
 
-export default Card
+export default CardComponent

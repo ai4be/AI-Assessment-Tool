@@ -1,5 +1,5 @@
 
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import useSWR from 'swr'
 import {
   Box,
@@ -14,6 +14,7 @@ import ConfirmDialog from '../../confirm-dialog'
 import InviteModal from '../invite-user/modal'
 import { getUserDisplayName } from '@/util/users'
 import { Project } from '@/src/types/project'
+import { User } from '@/src/types/user'
 
 const InviteModalMemo = React.memo(InviteModal)
 const ConfirmDialogMemo = React.memo(ConfirmDialog)
@@ -27,7 +28,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
   const [deleteHandler, setDeleteHandler] = useState<Function>(() => emptyFn)
 
-  const deleteUser = async (user: any): Promise<void> => {
+  const deleteUser = async (user: Partial<User>): Promise<void> => {
     setIsLoading(true)
     const url = `/api/projects/${String(project._id)}/users/${String(user._id)}`
     const response = await fetch(url, {
@@ -58,7 +59,6 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
   const setDeleteHandlerWrapper = (instance: any, isUser = true): void => {
     async function deleteUserFn (): Promise<any> { await deleteUser(instance) }
     async function deleteTokenFn (): Promise<any> { await deleteToken(instance) }
-    console.log('setDeleteHandlerWrapper', isUser, isUser ? deleteUserFn : deleteTokenFn)
     setDeleteHandler(isUser ? () => deleteUserFn : () => deleteTokenFn)
     onOpen()
   }

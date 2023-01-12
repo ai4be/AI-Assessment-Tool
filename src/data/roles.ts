@@ -1,7 +1,7 @@
 export const defaultRoles = [
   {
     name: 'Project Manager',
-    desc: 'Are responsible for planning, organizing, and overseeing the various tasks and activities involved in a project to ensure that it is completed on time and within budget. They are typically responsible for managing a team of individuals who are working on the project, and they may be involved in everything from setting project timelines and budgets, to coordinating with external stakeholders and clients, to monitoring progress and making adjustments as needed. Project managers often have strong communication skills and are able to effectively lead and motivate their teams in order to achieve project goals.',
+    desc: 'Are responsible for planning, organizing, and overseeing the various tasks and activities involved in a project to ensure that it is completed on time and within budget. They are typically responsible for managing a team of individuals who are working on the project, and they may be involved in everything from setting project timelines and budgets, to coordinating with external stakeholders and clients, to monitoring progress and making adjustments as needed. Project managers often have strong communication skills and are able to effectively lead and motivate their teams in order to achieve project goals.'
   },
   {
     name: 'AI Design & Development',

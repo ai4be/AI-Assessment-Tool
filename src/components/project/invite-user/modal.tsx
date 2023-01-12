@@ -10,7 +10,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Input,
+  Input
 } from '@chakra-ui/react'
 import { defaultFetchOptions } from '@/util/api'
 import ToastContext from '@/src/store/toast-context'

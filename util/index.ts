@@ -59,8 +59,8 @@ export const isEqual = (first: any, second: any): boolean => {
         if (first[fKeys[i]] === second[fKeys[i]]) {
           continue; // eslint-disable-line
         }
-        if (first[fKeys[i]] && (first[fKeys[i]].constructor.name === 'Array'
-          || first[fKeys[i]].constructor.name === 'Object')) {
+        if (first[fKeys[i]] && (first[fKeys[i]].constructor.name === 'Array' ||
+          first[fKeys[i]].constructor.name === 'Object')) {
           equal = isEqual(first[fKeys[i]], second[fKeys[i]])
           if (!equal) {
             break

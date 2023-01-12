@@ -144,7 +144,7 @@ export const removeUser = async (_id: ObjectId | string, userId: ObjectId | stri
 export const getProjectUsers = async (_id: ObjectId | string, filterUserIds?: Array<string | ObjectId>): Promise<User[]> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { users: 1, createdBy: 1 } })
+  const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { userIds: 1, createdBy: 1 } })
   let userIds: any = []
   if (project?.userIds != null) userIds.push(...project.userIds, project.createdBy)
   if (filterUserIds != null) {

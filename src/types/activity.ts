@@ -1,3 +1,9 @@
+import { User } from './user'
+import { Project } from './project'
+import { Card } from './card'
+import { Comment } from './comment'
+import { Question } from './question'
+import { Role } from './role'
 
 export enum ActivityType {
   PROJECT_CREATE = 'project_create',
@@ -52,4 +58,14 @@ export interface Activity {
   cardId?: string
   commentId?: string
   questionId?: string
+}
+
+export type DisplayActivity = Activity & {
+  creator: Omit<User, 'password'>
+  project: Omit<Project, 'userIds' | 'roles' | 'description'>
+  card?: Omit<Card, 'userIds' | 'questions' | 'projectId' | 'createdAt' | 'updatedAt'>
+  comment?: Comment
+  question?: Question
+  role?: Partial<Role>
+  users?: Array<Omit<User, 'password'>>
 }

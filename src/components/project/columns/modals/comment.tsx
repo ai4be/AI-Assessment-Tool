@@ -31,7 +31,7 @@ const Comment = ({ comment, onSave, onCancel, onDelete }: { comment: any, onSave
   const [value, setValue] = useState(comment?.text ?? '')
   const [showEditOptions, setShowEditOptions] = useState(false)
   const [disabled, setDisabled] = useState(false)
-  const [usersComment, setUsersComment] = useState<null|User>(null)
+  const [usersComment, setUsersComment] = useState<null | User>(null)
   const mentionsUsers = useMemo(
     () => users?.map(u => ({ id: String(u._id), display: getUserDisplayName(u) }))
       .filter(u => u.id !== user?._id) ?? []

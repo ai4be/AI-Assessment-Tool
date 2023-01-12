@@ -61,12 +61,15 @@ export function hasProjectAccess (handler: Function): Function {
     const tempReq = req as any
     const user = tempReq.locals?.user
     let { projectId } = req.query
+    console.log('projectId', projectId)
+    console.log('user', user)
     if (projectId == null) {
       projectId = req.body?.projectId
     }
     if (projectId != null && projectId !== 'undefined' && user != null) {
       const users = await getProjectUsers(projectId, [user._id])
       hasAccess = users.some(u => String(u._id) === String(user._id))
+      console.log('users', users)
     }
     if (!hasAccess) {
       return res.status(403).send({ message: 'Forbidden', status: 403 })
