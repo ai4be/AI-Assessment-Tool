@@ -215,7 +215,7 @@ export default class Activity extends Model {
         {
           $lookup: {
             from: 'comments',
-            localField: 'commnetId',
+            localField: 'commentId',
             foreignField: '_id',
             as: 'comment'
           }
@@ -231,7 +231,7 @@ export default class Activity extends Model {
         {
           $lookup: {
             from: 'users',
-            localField: 'urserIds',
+            localField: 'userIds',
             foreignField: '_id',
             as: 'users'
           }
@@ -256,7 +256,7 @@ export default class Activity extends Model {
             'creator.password': 0,
             'creator.avatar': 0,
             'users.password': 0,
-            'users.avatar': 0,
+            'users.avatar': 0
           }
         }
       ])
