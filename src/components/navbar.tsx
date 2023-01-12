@@ -16,7 +16,7 @@ import { RiArrowDropDownLine } from 'react-icons/ri'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import UserContext, { UserContextProvider } from '../store/user-context'
-import { User } from '../models/user'
+import { User } from '@/src/types/user'
 
 interface Props {
   bg?: string

@@ -3,19 +3,9 @@ import { ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
 import { hashPassword, verifyPassword } from '@/util/auth'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
+import { User } from '@/src/types/user'
 
 const TABLE_NAME = 'users'
-
-export interface User {
-  _id?: ObjectId
-  email: string
-  password?: string
-  firstName: string
-  lastName: string
-  emailVerified?: Boolean
-  avatar?: string
-  xsAvatar?: string
-}
 
 export const getUser = async ({ _id, email }: { _id?: string | ObjectId, email?: string }, omitFields: string[] = ['password']): Promise<User | null> => {
   const { db } = await connectToDatabase()

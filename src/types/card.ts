@@ -12,7 +12,7 @@ export interface Card {
   questions: Question[]
   userIds?: string[] | any[]
   roleIds?: string[] | any[]
-  dueDate?: number
+  dueDate?: number | null
   stage?: CardStage
 }
 
@@ -39,7 +39,7 @@ export interface Question {
 
 export type DisplayQuestion = Question & {
   enabled?: boolean
-  TOCnumber?: number
+  TOCnumber?: string
   comments?: Comment[]
   enabledCondition?: {
     disabledText: string
@@ -52,4 +52,4 @@ export enum CardStage {
   UTILISATION = 'UTILISATION'
 }
 
-export const stageValues: string[] = Object.values(CardStage)
+export const STAGE_VALUES: readonly string[] = Object.freeze(Object.values(CardStage))

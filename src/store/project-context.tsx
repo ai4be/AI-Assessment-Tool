@@ -4,6 +4,7 @@ import { Category, Project } from '@/src/types/project'
 import { fetchUsersByProjectId } from '@/util/users'
 import { UserContextProvider } from '@/src/store/user-context'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
+import { STAGE_VALUES } from '@/src/types/card'
 
 interface ProjectContextType {
   project?: Project | undefined
@@ -13,7 +14,7 @@ interface ProjectContextType {
   categoryClickHandler?: any
   stageClickHandler?: any
   users?: any[]
-  stages?: any[]
+  stages?: readonly string[]
   stage?: any
 }
 
@@ -24,7 +25,7 @@ export function ProjectContextProvider (props: any): JSX.Element {
   const { [QueryFilterKeys.STAGE]: stage = 'ALL' } = router.query ?? {}
   const [project, setProject] = useState<Project>(props.project)
   const [categories] = useState<Category[]>(props.categories)
-  const [stages] = useState<any[]>(props.stages)
+  const [stages] = useState<readonly string[]>(STAGE_VALUES)
   const [users, setUsers] = useState<any[]>([])
 
   useEffect((): void => {

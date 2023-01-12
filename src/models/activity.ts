@@ -248,6 +248,8 @@ export default class Activity extends Model {
             'project.roles': 0,
             'project.userIds': 0,
             'project.description': 0,
+            'project.createdAt': 0,
+            'project.createdBy': 0,
             'card.questions': 0,
             'card.projectId': 0,
             'card.createdAt': 0,

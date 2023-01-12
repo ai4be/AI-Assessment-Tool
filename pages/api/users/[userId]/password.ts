@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getUser, updatePassword } from '@/src/models/user'
+import { updatePassword } from '@/src/models/user'
 import { isConnected, isCurrentUser } from '@/util/temp-middleware'
-import { unstable_getServerSession } from 'next-auth'
-import { authOptions } from 'pages/api/auth/[...nextauth]'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { userId } = req.query

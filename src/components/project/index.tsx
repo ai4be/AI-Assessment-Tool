@@ -11,7 +11,6 @@ interface Props {
   project: Project
   session: any
   categories: any[]
-  stages?: any[]
 }
 
 const Project: FC<Props> = (props): JSX.Element => {

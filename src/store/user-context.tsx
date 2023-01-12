@@ -1,7 +1,7 @@
 import { Context, createContext, useEffect, useState } from 'react'
 // import { useRouter } from 'next/router'
 import { getCurrentUser } from '@/util/users'
-import { User } from '@/src/models/user'
+import { User } from '@/src/types/user'
 import { useSession } from 'next-auth/react'
 
 interface UserContextType {

@@ -8,7 +8,7 @@ import { updateCard } from '@/util/cards'
 import { fetcher } from '@/util/api'
 import { useRouter } from 'next/router'
 import ProjectBar from '@/src/components/project/project-bar'
-import { stageValues, CardStage, Card } from '@/src/types/card'
+import { CardStage, Card } from '@/src/types/card'
 import { isEmpty } from '@/util/index'
 import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
 

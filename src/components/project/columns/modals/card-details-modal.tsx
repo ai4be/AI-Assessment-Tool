@@ -32,7 +32,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { isEmpty, isEqual } from '@/util/index'
 import ProjectContext from '@/src/store/project-context'
 import { getUserDisplayName } from '@/util/users'
-import { defaultFetchOptions } from '@/util/api'
+import { defaultFetchOptions, HTTP_METHODS } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
 import { FiEdit2 } from 'react-icons/fi'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
@@ -40,7 +40,7 @@ import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
 import CommentComponent from './comment'
 import { questionEnabler } from '@/util/question'
-import { Question, DisplayQuestion, Card, CardStage } from '@/src/types/card'
+import { Question, DisplayQuestion, Card, CardStage, DisplayCard, STAGE_VALUES } from '@/src/types/card'
 import { Comment } from '@/src/types/comment'
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -152,14 +152,15 @@ interface Props {
 
 const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCards }) => {
   card.userIds = card.userIds ?? []
+  const cardId = String(card._id)
   const [isLoading, setIsLoading] = useState(false)
   const { users } = useContext(ProjectContext)
   const [renderTrigger, setRenderTrigger] = useState(0)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
-  const [chapterNb, setChapterNb] = useState(null)
+  const [chapterNb, setChapterNb] = useState<string | null>(null)
 
   useEffect(() => {
-    const stringIds = card.userIds.map(id => String(id)) ?? []
+    const stringIds = card.userIds?.map(id => String(id)) ?? []
     setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
   }, [card.userIds, renderTrigger])
 
@@ -174,14 +175,14 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   useEffect(() => {
     if (Array.isArray(card.questions) && chapterNb != null) {
-      card.questions.forEach((q, idx) => (q.TOCnumber = `${chapterNb}.${idx + 1}`))
+      card.questions.forEach((q: DisplayQuestion, idx: number) => (q.TOCnumber = `${chapterNb}.${idx + 1}`))
     }
   }, [chapterNb, card.questions])
 
   const saveQuestion = async (question: any, responses?: any[], conclusion?: string): Promise<void> => {
     setIsLoading(true)
     try {
-      const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}`
+      const url = `/api/projects/${projectId}/cards/${cardId}/questions/${String(question.id)}`
       const data: any = {}
       if (Array.isArray(responses)) {
         if (!Array.isArray(question?.responses) || (Array.isArray(question?.responses) && !isEqual(question.responses?.sort(), responses.sort()))) {
@@ -194,7 +195,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
       const response = await fetch(url, {
         ...defaultFetchOptions,
-        method: 'PATCH',
+        method: HTTP_METHODS.PATCH,
         body: JSON.stringify(data)
       })
       if (!response.ok) {
@@ -209,13 +210,13 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     }
   }
 
-  const saveComment = async (comment: any, data: any, question: any): Promise<void> => {
+  const saveComment = async (comment: Partial<Comment>, data: Partial<Comment>, question: DisplayQuestion): Promise<void> => {
     setIsLoading(true)
-    let method = 'PATCH'
-    let url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${question.id}/comments/${String(comment._id)}`
+    let method = HTTP_METHODS.PATCH
+    let url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments/${String(comment._id)}`
     if (isEmpty(comment._id)) {
-      method = 'POST'
-      url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${question.id}/comments`
+      method = HTTP_METHODS.POST
+      url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments`
     }
     const response = await fetch(url, {
       ...defaultFetchOptions,
@@ -239,10 +240,10 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     card.userIds = card.userIds ?? []
     card.userIds.push(userId)
     setRenderTrigger(renderTrigger + 1)
-    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
+    const url = `/api/projects/${projectId}/cards/${cardId}/users/${userId}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'POST',
+      method: HTTP_METHODS.POST,
       body: JSON.stringify({})
     })
     if (!response.ok) {
@@ -255,10 +256,10 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     card.userIds = card.userIds ?? []
     card.userIds = card.userIds.filter(id => String(id) !== String(userId))
     setRenderTrigger(renderTrigger + 1)
-    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
+    const url = `/api/projects/${projectId}/cards/${cardId}/users/${userId}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'DELETE',
+      method: HTTP_METHODS.DELETE,
       body: JSON.stringify({})
     })
     if (!response.ok) {
@@ -268,18 +269,18 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const fetchComments = async (question?: Partial<DisplayQuestion>): Promise<void> => {
     const url = question != null
-      ? `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}/comments`
-      : `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/comments`
+      ? `/api/projects/${projectId}/cards/${cardId}/questions/${String(question.id)}/comments`
+      : `/api/projects/${projectId}/cards/${cardId}/comments`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'GET'
+      method: HTTP_METHODS.GET
     })
     if (response.ok) {
       const comments = await response.json()
       comments.sort((a, b) => a.createdAt - b.createdAt).reverse()
       if (question != null) question.comments = comments
       else {
-        card.questions.forEach(q => {
+        card.questions.forEach((q: DisplayQuestion) => {
           q.comments = comments.filter(c => c.questionId === q.id)
         })
       }
@@ -288,10 +289,10 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const saveCard = async (data: Partial<Card>): Promise<void> => {
     setIsLoading(true)
-    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}`
+    const url = `/api/projects/${projectId}/cards/${cardId}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'PATCH',
+      method: HTTP_METHODS.PATCH,
       body: JSON.stringify(data)
     })
     if (response.ok) {
@@ -304,7 +305,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     setIsLoading(false)
   }
 
-  const setDate = (date: Date | null): void => {
+  const setDate = (date: Date | null | number): void => {
     card.dueDate = date instanceof Date ? +date : date
     void saveCard({ dueDate: card.dueDate })
   }
@@ -319,12 +320,12 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     if (isOpen) void fetchComments()
   }, [isOpen])
 
-  const deleteComment = async (comment: Comment, question: any): Promise<void> => {
+  const deleteComment = async (comment: Comment, question: DisplayQuestion): Promise<void> => {
     setIsLoading(true)
-    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}/comments/${String(comment._id)}`
+    const url = `/api/projects/${projectId}/cards/${cardId}/questions/${String(question.id)}/comments/${String(comment._id)}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'DELETE',
+      method: HTTP_METHODS.DELETE,
       body: JSON.stringify({})
     })
     if (response.ok) {
@@ -362,7 +363,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                 </Box>
                 <Box>
                   <Text fontSize={[16, 20]} color='var(--text-gray)' fontWeight='400' px='4'>
-                    {card.description?.replace(/=g(b|e)=/g, '') ?? ''}
+                    {card.desc?.replace(/=g(b|e)=/g, '') ?? ''}
                   </Text>
                 </Box>
 
@@ -370,7 +371,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                   <AccordionItemStyled title='Example' desc={loremIpsum} />
                   <AccordionItemStyled title='Recommandation' desc={loremIpsum} />
                 </Accordion>
-                {card?.questions?.map((q, index) =>
+                {card?.questions?.map((q: DisplayQuestion, index: number) =>
                   <Box key={`${card._id}-${q.id}-${index}`} p={3}>
                     <QuestionComp question={q} onChange={saveQuestion} />
                     <CommentComponent comment={{}} onSave={async data => await saveComment({}, data, q)} />
@@ -409,10 +410,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                     </Flex>))}
                   <label>
                     <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Stage</Text>
-                    <Select size='xs' value={card.stage ?? 'PREPARATION'} onChange={(e) => setStage(e?.target?.value || card.stage)}>
-                      <option value='PREPARATION'>Preparation</option>
-                      <option value='EXECUTION'>Execution</option>
-                      <option value='UTILISATION'>Utilisation</option>
+                    <Select size='xs' value={card.stage ?? CardStage.PREPARATION} onChange={(e) => setStage((e?.target?.value ?? card.stage) as CardStage)}>
+                      {STAGE_VALUES.map(stage => <option key={stage} value={stage} style={{ textTransform: 'capitalize' }}>{stage.toLowerCase()}</option>)}
                     </Select>
                   </label>
                 </Flex>

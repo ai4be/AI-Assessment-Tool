@@ -1,5 +1,5 @@
 import { defaultFetchOptions } from './api'
-import { User } from '@/src/models/user'
+import { User } from '@/src/types/user'
 
 export const getUserDisplayName = (user: User): string => {
   let res = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()
@@ -7,7 +7,7 @@ export const getUserDisplayName = (user: User): string => {
   return res
 }
 
-export const fetchUsers = async (userIds: string[]): Promise<any[]> => {
+export const fetchUsers = async (userIds: string[]): Promise<User[]> => {
   const promises: Array<Promise<Response>> = userIds.map(async (uid: string) => await fetch(`/api/users/${uid}`))
   const responses: Response[] = await Promise.all(promises)
   const texts: any[] = await Promise.all(responses.map(async (res: Response) => await res.text()))
@@ -24,7 +24,7 @@ export const getCurrentUser = async (): Promise<User | null> => {
   return null
 }
 
-export const fetchUsersByProjectId = async (projectId: string): Promise<any[]> => {
+export const fetchUsersByProjectId = async (projectId: string): Promise<User[]> => {
   const response = await fetch(`/api/projects/${projectId}/users`)
   if (response.ok) {
     const users = await response.json()

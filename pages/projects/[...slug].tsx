@@ -5,7 +5,6 @@ import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import { fetcher } from '@/util/api'
 import { categories } from '../api/categories'
-import { stageValues } from '@/src/types/card'
 
 function Page ({ session }): JSX.Element {
   const router = useRouter()
@@ -13,7 +12,7 @@ function Page ({ session }): JSX.Element {
   const { data, error } = useSWR(`/api/projects/${String(projectId)}`, fetcher)
   if (error != null) void router.push('/error')
   return (
-    <Project project={data} session={session} categories={categories} stages={stageValues} />
+    <Project project={data} session={session} categories={categories} />
   )
 }
 

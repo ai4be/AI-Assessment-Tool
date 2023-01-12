@@ -30,25 +30,25 @@ export function isConnected (handler: any): Function {
 export function isCurrentUser (handler: Function): Function {
   return addUserToReq(async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
     const { userId } = req.query
-    const tempReq = req as any
-    const user = tempReq.locals?.user
-    if (user?._id.toString() !== userId) return res.status(403).send({ message: 'forbidden' })
+    const user = getUserFromRequest(req)
+    if (user?._id?.toString() !== userId) return res.status(403).send({ message: 'forbidden' })
     return handler(req, res)
   })
 }
 
 export function addUserToReq (handler: Function): Function {
   return async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
-    const tempReq = req as any
-    if (tempReq?.locals?.user != null) return handler(req, res)
+    let user = getUserFromRequest(req)
+    if (user != null) return handler(req, res)
     const session = await unstable_getServerSession(req, res, authOptions)
     if (session?.user == null) {
       return returnUnauthorized(res)
     }
-    const user = await getUser({ _id: String(session?.user?.name) })
+    user = await getUser({ _id: String(session?.user?.name) })
     if (user == null) {
       return returnUnauthorized(res)
     }
+    const tempReq = req as any
     tempReq.locals = tempReq.locals ?? {}
     tempReq.locals.user = user
     return handler(req, res)
@@ -58,18 +58,14 @@ export function addUserToReq (handler: Function): Function {
 export function hasProjectAccess (handler: Function): Function {
   return addUserToReq(async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
     let hasAccess = false
-    const tempReq = req as any
-    const user = tempReq.locals?.user
+    const user = getUserFromRequest(req)
     let { projectId } = req.query
-    console.log('projectId', projectId)
-    console.log('user', user)
     if (projectId == null) {
       projectId = req.body?.projectId
     }
     if (projectId != null && projectId !== 'undefined' && user != null) {
       const users = await getProjectUsers(projectId, [user._id])
       hasAccess = users.some(u => String(u._id) === String(user._id))
-      console.log('users', users)
     }
     if (!hasAccess) {
       return res.status(403).send({ message: 'Forbidden', status: 403 })

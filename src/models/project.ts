@@ -2,13 +2,14 @@
 import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
 import { cleanText, connectToDatabase, toObjectId } from '@/src/models/mongodb'
-import { getUsers, User } from '@/src/models/user'
+import { getUsers } from '@/src/models/user'
 import { isEmpty } from '@/util/index'
 import { deleteProjectCards, createCards } from '@/src/models/card'
 import { deleteProjectColumns, createProjectDefaultColumns, getTodoColumn } from '@/src/models/column'
 import Activity from '@/src/models/activity'
 import { ActivityType } from '@/src/types/activity'
 import { Project } from '@/src/types/project'
+import { User } from '@/src/types/user'
 
 export const TABLE_NAME = 'projects'
 

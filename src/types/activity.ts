@@ -1,9 +1,7 @@
 import { User } from './user'
-import { Project } from './project'
-import { Card } from './card'
+import { Project, Role } from './project'
+import { Card, Question } from './card'
 import { Comment } from './comment'
-import { Question } from './question'
-import { Role } from './role'
 
 export enum ActivityType {
   PROJECT_CREATE = 'project_create',
