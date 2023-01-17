@@ -14,16 +14,16 @@ const WelcomeScreen = (): JSX.Element => {
           p='4rem'
         >
           <Box>
-            <Text fontSize={['40px', '40px', '50px', '50px']} fontWeight='bold' lineHeight='50px'>
-              Trello helps teams move work forward.
-            </Text>
-            <Text
+            <Title fontSize={['40px', '40px', '50px', '50px']} fontWeight='bold' lineHeight='50px'>
+              AI Assessment Tool
+            </Title>
+            <Header
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
             >
-              Collaborate, manage projects, and reach new productivity peaks. From high rises to the
-              home office, the way your team works is unique - accomplish it all with Trello.
-            </Text>
+              Is your AI system Racists|Fair|Trustworthy|Safe|Secure|Privacy preserving|Ethical?
+              Collaborate with your team to assess if your AI implementation follows ethical guidelines.
+            </Header>
           </Box>
           <Box>
             <Image

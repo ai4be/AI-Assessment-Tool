@@ -1,0 +1,213 @@
+{
+    "title": "Societal and Environmental Wellbeing ",
+    "processedTitle": "Societal and Environmental Wellbeing ",
+    "completedHtml": "<h3>Your submission has been validated.</h3> <h5>We are redirecting you to the right page!</h5>",
+    "description": " In line with the principles of fairness and prevention of harm, the broader society, other sentient beings and the environment should be considered as stakeholders throughout the AI system's life cycle. Ubiquitous exposure to social AI systems in all areas of our lives (be it in education, work, care or entertainment) may alter our conception of social agency, or negatively impact our social relationships and attachment. While AI systems can be used to enhance social skills, they can equally contribute to their deterioration. This could equally affect peoples' physical and mental well-being. The effects of AI systems must therefore be carefully monitored and considered. Sustainability and ecological responsibility of AI systems should be encouraged, and research should be fostered into AI solutions addressing areas of global concern, for instance the Sustainable Development Goals.  Overall, AI should be used to benefit all human beings, including future generations. AI systems should serve to maintain and foster democratic processes and respect the plurality of values and life choices of individuals. AI systems must not undermine democratic processes, human deliberation or democratic voting systems or pose a systemic threat to society at large.",
+    "pages": [
+        {
+            "name": "page1",
+            "elements": [{
+                    "type": "html",
+                    "name": "title",
+                    "html": "<h3>Environmental Wellbeing</h3>"
+                },
+                {
+                    "type": "html",
+                    "name": "details",
+                    "html": "This subsection helps to self-assess the (potential) positive and negative impacts of the AI system on the environment. AI systems, even if they promise to help tackle some of the most pressing societal concerns, e.g. climate change, must work in the most environmentally friendly way possible. The AI system’s development, deployment and use process, as well as its entire supply chain, should be assessed in this regard (e.g. via a critical examination of the resource usage and energy consumption during training, opting for less net negative choices). Measures to secure the environmental friendliness of an AI system’s entire supply chain should be encouraged."
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW1",
+                    "title": "Are there potential negative impacts of the =gb=AI system=ge= on the environment? =hb=AI systems promise to help tackling some of the most pressing societal concerns, yet it must be ensured that this occurs in the most environmentally friendly way possible. The system’s development, deployment and use process, as well as its entire supply chain, should be assessed in this regard, e.g. via a critical examination of the resource usage and energy consumption during training, opting for less harmful choices. Measures securing the environmental friendliness of AI systems’ entire supply chain should be encouraged. =br=EGTAI p. 19.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "To some extent", "No", "Don't know"
+                    ]
+                }, {
+                    "type": "comment",
+                    "name": "SEW1.1",
+                    "visibleIf": "not {SEW1} = 'No'",
+                    "title": "Which potential impact(s) do you identify?"
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q1.1-B",
+                    "visibleIf": "not {SEW1} = 'No'",
+                    "title": "Where possible, did you establish mechanisms to evaluate the environmental impact of the =gb=AI system=ge=’s development, deployment and/or use (for example amount of energy used and carbon emissions)? =hb=AI can provide tools to help safeguarding the environment (e.g. by improving the detection of pollutants and their sources). However, if not applied in a trustworthy manner, AI systems could cause adverse impacts to individuals, society and the environment, such as environmental decline. =br= Adequate protection should be put in place to counter such impacts.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "comment",
+                    "name": "SEW-Q1.1-EX-B",
+                    "visibleIf": "{SEW-Q1.1-B} = 'Yes'",
+                    "title": "Please describe the mechanisms:"
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q1.2-B",
+                    "visibleIf": "{SEW-Q1.1-B} notempty",
+                    "title": "  Did you define measures to reduce the environmental impact of the =gb=AI system=ge= throughout its =gb=lifecycle=ge=?     ",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "comment",
+                    "name": "SEW-Q1.2-EX-B",
+                    "visibleIf": "{SEW-Q1.2-B} = 'Yes'",
+                    "title": "Please describe the measures:"
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-S1-R",
+                    "title": "Based on your answers to the previous questions, how would you rate the risk that the =gb=AI system=ge= negatively affects the environment?",
+                    "visibleIf": "{SEW-Q1.2-B} notempty",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent", "Completely Inadequate", "Almost adequate", "Adequate", "Fully adequate"
+                    ]
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-S2-R",
+                    "title": "How would you rate the measures you have adopted to mitigate this risk?",
+                    "visibleIf": "{SEW-Q1.2-B} notempty",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent", "Completely Inadequate", "Almost adequate", "Adequate", "Fully adequate"
+                    ]
+                }, {
+                    "type": "html",
+                    "name": "title",
+                    "html": "<h3>Impact on work and skills</h3>"
+                },
+                {
+                    "type": "html",
+                    "name": "details",
+                    "html": "AI systems may fundamentally alter the work sphere. They should support humans in the working environment, and aim for the creation of meaningful work. This subsection helps self-assess the impact of the AI system and its use in a working environment on workers, the relationship between workers and employers, and on skills."
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "SEW2",
+                    "title": "Does the =gb=AI system=ge= impact human work and work arrangements? =hb=AI systems may have a great impact on work processes. AI systems should support humans in the working environment, and aim for the creation of meaningful work.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "To some extent", "No", "Don't know"
+                    ]
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q2.1-B",
+                    "visibleIf": "{SEW2} = 'Yes' or {SEW2} = 'To some extent'",
+                    "title": "Did you pave the way for the introduction of the =gb=AI system=ge= in your organisation by informing and consulting with impacted workers and their representatives (trade unions, (European) work councils) in advance? =hb=Communication, education and training play an important role to ensure that knowledge of the potential impact of AI systems is widespread. =br= Research demonstrates that involving all stakeholders in a company, organization or institution fosters the acceptance and the relevance of the introduction of any new process (whether or not technological). Thus, implementing a process that embraces both the involvement of operational level as well as top management level is necessary.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q2.2-B",
+                    "visibleIf": "{SEW-Q2.1-B} notempty",
+                    "title": "Did you adopt measures to ensure that the work impacts of the =gb=AI system=ge= are well understood? =hb=AI systems are implemented in organizational contexts (work processes), which will affect workers directly an indirectly. To understand these impacts, there is a need to analyse the whole socio-technical system around the AI system and include relevant workers, social partners from the design or decision-making phase for implementation of an AI system.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "comment",
+                    "name": "SEW-Q2.2-EX-B",
+                    "visibleIf": "{SEW-Q2.2-B} = 'Yes'",
+                    "title": "How?"
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW2.3",
+                    "title": "Could the =gb=AI system=ge= create the risk of de-skilling of the workforce?=hb=When AI systems assume roles that previously have been assumed by workers, undesirable de-skilling of workers could result, in particular in operations or processes that require human oversight or intervention.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q2.4-B",
+                    "visibleIf": "{SEW2.3} ='Yes'",
+                    "title": "Did  you take measures to counteract de-skilling risks? =hb=Define critical skills in sensitive areas with human safety and security critical implications and create measures against skill deterioration. Continuous training measures are key in helping workers to anticipate, adapt, upskill, retrain and take advantage of the opportunities presented by new AI-systems.=he= ",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "comment",
+                    "name": "SEW-Q2.4-EX-B",
+                    "visibleIf": "{SEW-Q2.4-B} = 'Yes'",
+                    "title": "Please describe the measures:"
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q2.5-B",
+                    "visibleIf": "{SEW-Q1-B} notempty",
+                    "title": "Did you adopt measures to ensure that the work impacts of the =gb=AI system=ge= are well understood?  =hb=The AI system’s capabilities and limitations should be communicated to AI practitioners or end-users in a manner appropriate to the use case at hand. This could encompass communication of the AI system's level of accuracy, as well as its limitations.=he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "comment",
+                    "name": "SEW-Q2.5-EX-B",
+                    "visibleIf": "{SEW-Q6-B} = 'Yes'",
+                    "title": "Please describe the measures:"
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q2.6-B",
+                    "visibleIf": "{SEW-Q2.5-B} notempty",
+                    "title": "Did you ensure that workers understand how the system operates, which capabilities it has and which not?  =hb==The AI system’s capabilities and limitations should be communicated to AI practitioners or end-users in a manner appropriate to the use case at hand. This could encompass communication of the AI system's level of accuracy, as well as its limitations.he=",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "comment",
+                    "name": "SEW-Q7-EX-B",
+                    "visibleIf": "{SEW-Q7-B} = 'Yes'",
+                    "title": "If yes, please describe the measures:"
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW2.7",
+                    "visibleIf": "{SEW-Q7-B} notempty",
+                    "title": "Does the system promote or require new (digital) skills?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No", "Don't know"
+                    ]
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-Q2.8-B",
+                    "visibleIf": "not {SEW2.7} = 'No'",
+                    "title": "Did you provide training opportunities and materials for re- and up-skilling measures?",
+                    "isRequired": true,
+                    "choices": [
+                        "Yes", "No"
+                    ]
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-S3-R",
+                    "visibleIf": "{SEW-Q2.8-B} notempty",
+                    "title": "Based on your answers to the previous questions, how would you rate the risk that the =gb=AI system=ge= negatively impacts work and work arrangements? ",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent", "Completely Inadequate", "Almost adequate", "Adequate", "Fully adequate"
+                    ]
+                }, {
+                    "type": "radiogroup",
+                    "name": "SEW-S4-R",
+                    "visibleIf": "{SEW-Q2.8-B} notempty",
+                    "title": "How would you rate the measures you have adopted to mitigate this risk?",
+                    "isRequired": true,
+                    "colCount": "5",
+                    "choices": [
+                        "Non-existent", "Completely Inadequate", "Almost adequate", "Adequate", "Fully adequate"
+                    ]
+                }
+            ]
+        }
+    ],
+    "showQuestionNumbers": "off"
+}

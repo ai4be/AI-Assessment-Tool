@@ -1,0 +1,82 @@
+{
+    "id": "1673970891",
+    "title": "Fundamental Rights",
+    "desc": "Fundamental rights encompass rights such as human dignity and non-discrimination, as well as rights in relation to data protection and privacy, to name just some examples. Prior to self-assessing an AI system with this Assessment List, a fundamental rights impact assessment (FRIA) should be performed. A FRIA could include questions such as the following – drawing on specific articles in the Charter and the European Convention on Human Rights (ECHR)14 its protocols and the European Social Charter.",
+    "sections": [
+    ],
+    "cards": [
+        {
+            "id": "1673971161",
+            "title": "Does the AI system potentially negatively discriminate against people on the basis of any of the following grounds (non-exhaustively)",
+            "desc": "sex, race, colour, ethnic or social origin, genetic features, language, religion or belief, political or any other opinion, membership of a national minority, property, birth, disability, age or sexual orientation?",
+            "section": "1670175634",
+            "questions": [
+                {
+                    "id": "1673974342",
+                    "title": "Have you put in place processes to test and monitor for potential negative discrimination (bias) during the development, deployment and use phases of the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }, {
+                    "id": "1673974480",
+                    "title": "Have you put in place processes to address and rectify for potential negative discrimination (bias) in the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }
+            ]
+        },
+        {
+            "id": "1673974585",
+            "title": "Does the AI system respect the rights of the child",
+            "desc": "",
+            "questions": [
+                {
+                    "id": "1673974656",
+                    "title": "Have you put in place processes to address and rectify for potential harm to children by the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }, {
+                    "id": "1673974733",
+                    "title": "Have you put in place processes to test and monitor for potential harm to children during the development, deployment and use phases of the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }
+            ]
+        },
+        {
+            "id": "1673974845",
+            "title": "Does the AI system protect personal data relating to individuals in line with GDPR?",
+            "desc": "",
+            "questions": [
+                {
+                    "id": "1673974870",
+                    "title": "Have you put in place processes to assess in detail the need for a data protection impact assessment, including an assessment of the necessity and proportionality of the processing operations in relation to their purpose, with respect to the development, deployment and use phases of the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }, {
+                    "id": "1673974892",
+                    "title": "Have you put in place measures envisaged to address the risks, including safeguards, security measures and mechanisms to ensure the protection of personal data with respect to the development, deployment and use phases of the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }
+            ]
+        },
+        {
+            "id": "1673974964",
+            "title": "Does the AI system respect the freedom of expression and information and/or freedom of assembly and association?",
+            "desc": "",
+            "questions": [
+                {
+                    "id": "1673975029",
+                    "title": "Have you put in place processes to test and monitor for potential infringement on freedom of expression and information, and/or freedom of assembly and association, during the development, deployment and use phases of the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }, {
+                    "id": "1673975054",
+                    "title": "Have you put in place processes to address and rectify for potential infringement on freedom of expression and information, and/or freedom of assembly and association, in the AI system?",
+                    "type": "comment",
+                    "isScored": 0
+                }
+            ]
+        }
+    ]
+}

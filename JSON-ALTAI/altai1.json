@@ -19,6 +19,12 @@
         {
             "id" : "1669036932",
             "tile" : "Evaluate the risk that the =gb=AI system=ge= negatively affects human autonomy.",
+            "example" : [
+                {
+                    "title": "AI generated example",
+                    "desc"  : "Is the =gb=AI system=ge= designed to interact, guide or take decisions by human =gb=end-users=ge= that affect humans ('=gb=subjects=ge=') or society? =hb=Users should be able to make informed autonomous decisions regarding AI systems. They should be given the knowledge and tools to comprehend and interact with AI systems to a satisfactory degree and, where possible, be enabled to reasonably self-assess or challenge the system. AI systems should support individuals in making better, more informed choices in accordance with their goals. =br=EGTAI(Ethics Guidelines for Trustworthy AI) p. 12, 15–16.=he="
+                }
+            ]
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669036901", 
             "questions": 

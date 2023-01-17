@@ -39,3 +39,8 @@ body {
 .icon-grey-color {
   color: #1B1819;
 }
+const Button = styled.button`
+
+`
++41
+reservation
