@@ -90,11 +90,11 @@ export function generatePaginationQuery (where: any, sort: any[], nextKey?: any)
   const sortOperator = sort[1] === 1 ? '$gt' : '$lt'
 
   const paginationQuery = [
-    { [sortField]: { [sortOperator]: nextKey[sortField] } },
+    { [sortField]: { [sortOperator]: sortField === '_id' ? toObjectId(nextKey[sortField]) : nextKey[sortField] } },
     {
       $and: [
-        { [sortField]: nextKey[sortField] },
-        { _id: { [sortOperator]: nextKey._id } }
+        { [sortField]: sortField === '_id' ? toObjectId(nextKey[sortField]) : nextKey[sortField] },
+        { _id: { [sortOperator]: toObjectId(nextKey._id) } }
       ]
     }
   ]

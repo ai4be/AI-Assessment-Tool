@@ -8,7 +8,7 @@ export const dataToCards = async (data: any[], projectId?: string | ObjectId, co
   for (const cat of data) {
     let idx = 0
     for (const card of cat.cards) {
-      const returnCard: any = {
+      const returnCard: Card = {
         ...card,
         category: cat.id,
         originalId: card.id,
@@ -16,12 +16,13 @@ export const dataToCards = async (data: any[], projectId?: string | ObjectId, co
         ...(projectId != null ? { projectId: toObjectId(projectId) } : {}),
         ...(columnId != null ? { columnId: toObjectId(columnId) } : {}),
         sequence: idx,
-        number: +`${catIdx}.${idx + 1}`,
-        title: `${catIdx}.${idx + 1} ${String(card.title)}`
+        TOCnumber: `${catIdx}.${idx + 1}`,
+        title: card.title
       }
       card.questions = card.questions.map((q: any, i: number): Question => ({
         ...q,
-        title: `${catIdx}.${idx + 1}.${i + 1} ${String(q.title)}`,
+        TOCnumber: `${returnCard.TOCnumber}.${i + 1}`,
+        title: q.title,
         ...(q.answers != null ? { answers: q.answers.map(a => typeof a === 'string' ? a.trim() : a) } : {})
       }))
       cards.push(returnCard)

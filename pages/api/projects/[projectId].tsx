@@ -5,7 +5,6 @@ import { getUserFromRequest, hasProjectAccess, isConnected } from '@/util/temp-m
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId } = req.query
   const user = getUserFromRequest(req)
-  console.log('getUserFromRequest(req)', user)
 
   switch (req.method) {
     case 'GET': {

@@ -5,6 +5,7 @@ import { getProjectUsers } from '@/src/models/project'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, cardId, userId } = req.query
+  const creator = getUserFromRequest(req)
 
   switch (req.method) {
     case 'POST': {
@@ -12,13 +13,11 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       const user = users?.find(u => String(u._id) === userId) ?? null
       if (user == null) return res.status(400).send({ message: 'invalid user' })
       // const res =
-      const creator = getUserFromRequest(req)
       if (creator == null) return res.status(404).send({ message: 'unauthorized' })
       await addUserToCardAndCreateActivity(cardId, creator._id as string, userId as string)
       return res.send(201)
     }
     case 'DELETE': {
-      const creator = getUserFromRequest(req)
       if (creator == null) return res.status(404).send({ message: 'unauthorized' })
       await removeUserFromCardAndCreateActivity(cardId, creator._id as string, userId as string)
       return res.send(201)

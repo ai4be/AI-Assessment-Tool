@@ -8,7 +8,7 @@ export interface Card {
   projectId: string
   columnId: string
   sequence: number
-  number: number
+  TOCnumber: string
   questions: Question[]
   userIds?: string[] | any[]
   roleIds?: string[] | any[]
@@ -33,13 +33,14 @@ export interface Question {
   isVisibleIf: string
   type: QuestionType
   isScored: boolean
+  TOCnumber?: string
   responses?: any[]
   conclusion?: string
 }
 
 export type DisplayQuestion = Question & {
   enabled?: boolean
-  TOCnumber?: string
+  cleanTitle?: string
   comments?: Comment[]
   enabledCondition?: {
     disabledText: string

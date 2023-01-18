@@ -9,6 +9,8 @@ import { Comment } from './comment'
 import { getCard } from './card'
 import { getColumn } from './column'
 import { Project, Role } from '../types/project'
+import { getUser } from './user'
+import { getUserDisplayName } from '@/util/users'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class Activity extends Model {
@@ -24,7 +26,7 @@ export default class Activity extends Model {
 
   static async createProjectUpdateActivities (projectId: string, createdBy: string, newData: Partial<Project>): Promise<string[]> {
     const newActivityIds: Array<string | null> = []
-    if (newData.name != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_TITLE, { name: newData.name }))
+    if (newData.name != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_NAME, { name: newData.name }))
     if (newData.description != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_DESCRIPTION))
     if (newData.industry != null) newActivityIds.push(await this.createActivity(projectId, createdBy, ActivityType.PROJECT_UPDATE_INDUSTRY, { industry: newData.industry }))
     return newActivityIds.filter(id => id != null) as string[]
@@ -38,22 +40,24 @@ export default class Activity extends Model {
     return await this.createActivity(projectId, createdBy, activityType, data, { roleId })
   }
 
-  static async createCardUserAddActivity (cardId: string, createdBy: string, userId: string): Promise<string | null> {
+  static async createCardUserChangeActivity (cardId: string, createdBy: string, userId: string, type: ActivityType): Promise<string | null> {
     const card = await getCard(cardId)
     if (card == null) {
       // TODO: log error
       return null
     }
-    return await this.createActivity(card.projectId, createdBy, ActivityType.CARD_USER_ADD, null, { cardId, userIds: [userId] })
+    const user = await getUser({ _id: toObjectId(userId) })
+    let data: any = null
+    if (user != null) data = { name: getUserDisplayName(user) }
+    return await this.createActivity(card.projectId, createdBy, type, data, { cardId, userIds: [userId] })
+  }
+
+  static async createCardUserAddActivity (cardId: string, createdBy: string, userId: string): Promise<string | null> {
+    return await this.createCardUserChangeActivity(cardId, createdBy, userId, ActivityType.CARD_USER_ADD)
   }
 
   static async createCardUserRemoveActivity (cardId: string, createdBy: string, userId: string): Promise<string | null> {
-    const card = await getCard(cardId)
-    if (card == null) {
-      // TODO: log error
-      return null
-    }
-    return await this.createActivity(card.projectId, createdBy, ActivityType.CARD_USER_REMOVE, null, { cardId, userIds: [userId] })
+    return await this.createCardUserChangeActivity(cardId, createdBy, userId, ActivityType.CARD_USER_REMOVE)
   }
 
   static async createCardDueDateAddActivity (projectId: string, createdBy: string, cardId: string, dueDate: number): Promise<string | null> {
@@ -88,11 +92,18 @@ export default class Activity extends Model {
       visibility: ActivityVisibility.PUBLIC
     }
     if (subjectEntity?.userIds != null) activity.userIds = subjectEntity.userIds.map(toObjectId)
-    if (subjectEntity?.questionId != null) activity.questionId = toObjectId(subjectEntity.questionId)
     if (subjectEntity?.commentId != null) activity.commentId = toObjectId(subjectEntity.commentId)
     if (subjectEntity?.roleId != null) activity.roleId = toObjectId(subjectEntity.roleId)
+    if (subjectEntity?.cardId != null) activity.cardId = toObjectId(subjectEntity.cardId)
+    if (subjectEntity?.questionId != null) activity.questionId = subjectEntity.questionId
 
     return await this.create(activity)
+  }
+
+  static async addUserToReadBy (activityId: string, userId: string): Promise<boolean> {
+    const { db } = await connectToDatabase()
+    const res = await db.collection(this.TABLE_NAME).updateOne({ _id: toObjectId(activityId) }, { $addToSet: { readBy: toObjectId(userId) } })
+    return res.modifiedCount === 1
   }
 
   static async createCardStageUpdateActivity (cardId: string, userId: string, stage: CardStage): Promise<string | null> {
@@ -149,10 +160,6 @@ export default class Activity extends Model {
     return await this.createActivity(projectId, userId, ActivityType.COMMENT_UPDATE, null, { commentId, cardId, questionId })
   }
 
-  static async get (_id: string | ObjectId): Promise<ActivityTypeDef> {
-    return await super.get(_id)
-  }
-
   static async createCardQuestionUpdateActivity (cardId: string, questionId: string, userId: string, data: { conclusion?: string, responses?: string[] }): Promise<Array<string | null>> {
     const card = await getCard(cardId)
     if (card == null) {
@@ -164,6 +171,7 @@ export default class Activity extends Model {
       // TODO: log error
       return []
     }
+
     const activityIds: Array<string | null> = []
     if (data.conclusion != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_CONCLUSION_UPDATE, { conclusion: data.conclusion }, { cardId, questionId }))
     if (data.responses != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_RESPONSE_UPDATE, { responses: data.responses }, { cardId, questionId }))
@@ -206,10 +214,16 @@ export default class Activity extends Model {
         },
         {
           $lookup: {
-            from: 'card',
-            localField: 'questionId',
-            foreignField: 'questions.id',
-            as: 'question'
+            from: 'cards',
+            // localField: 'questionId',
+            // foreignField: 'questions.id',
+            let: { question_id: '$questionId' },
+            pipeline: [
+              { $unwind: '$questions' },
+              { $match: { $expr: { $eq: ['$questions.id', '$$question_id'] } } },
+              { $replaceRoot: { newRoot: '$questions' } }
+            ],
+            as: 'questions'
           }
         },
         {
@@ -236,11 +250,11 @@ export default class Activity extends Model {
             as: 'users'
           }
         },
-        // { $addFields: { project: { $first: '$projects' } } },
+        { $addFields: { question: { $first: '$questions' } } },
         { $unwind: { path: '$project', preserveNullAndEmptyArrays: true } },
         { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } },
         { $unwind: { path: '$card', preserveNullAndEmptyArrays: true } },
-        { $unwind: { path: '$question', preserveNullAndEmptyArrays: true } },
+        // { $unwind: { path: '$question', preserveNullAndEmptyArrays: true } },
         { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
         { $unwind: { path: '$creator', preserveNullAndEmptyArrays: true } },
         {
@@ -251,6 +265,15 @@ export default class Activity extends Model {
             'project.createdAt': 0,
             'project.createdBy': 0,
             'card.questions': 0,
+            // 'card.questions.title': 0,
+            // 'card.questions.type': 0,
+            // 'card.questions.isVisibleIf': 0,
+            // 'card.questions.isScored': 0,
+            // 'card.questions.answers': 0,
+            // 'card.questions.responses': 0,
+            // 'card.questions.conclusion': 0,
+            // 'card.questions.TOCnumber': 0,
+            'card.originalId': 0,
             'card.projectId': 0,
             'card.createdAt': 0,
             'card.updatedAt': 0,

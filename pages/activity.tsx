@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { authOptions } from './api/auth/[...nextauth]'
 import { unstable_getServerSession } from 'next-auth/next'
-import { ActivityTimeLine } from '@/src/components/activity'
+import { ActivityTimeline } from '@/src/components/activity'
 
 export function Page (): JSX.Element {
-  return (<ActivityTimeLine />)
+  return (<ActivityTimeline />)
 }
 
 export async function getServerSideProps (ctx): Promise<any> {

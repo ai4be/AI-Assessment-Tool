@@ -112,13 +112,13 @@ export const getUserProjects = async (userId: ObjectId | string, projectId?: str
 
 export const addUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, addedUserId: ObjectId | string): Promise<boolean> => {
   const res = await addUser(_id, addedUserId)
-  if (res) void Activity.createActivity(_id, userId, ActivityType.PROJECT_USER_ADD, null, { userIds: [addedUserId] })
+  if (res) void Activity.createCardUserAddActivity(_id, userId, addedUserId)
   return res
 }
 
 export const removeUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, removedUserId: ObjectId | string): Promise<boolean> => {
   const res = await removeUser(_id, removedUserId)
-  if (res) void Activity.createActivity(_id, userId, ActivityType.PROJECT_USER_REMOVE, null, { userIds: [removedUserId] })
+  if (res) void Activity.createCardUserRemoveActivity(_id, userId, removedUserId)
   return res
 }
 

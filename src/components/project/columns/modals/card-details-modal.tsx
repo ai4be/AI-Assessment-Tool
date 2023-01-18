@@ -5,6 +5,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Button,
   Flex,
   Modal,
   ModalBody,
@@ -35,6 +36,7 @@ import { getUserDisplayName } from '@/util/users'
 import { defaultFetchOptions, HTTP_METHODS } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
 import { FiEdit2 } from 'react-icons/fi'
+import { GiCancel } from 'react-icons/gi'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
@@ -81,15 +83,16 @@ const QuestionHelp = ({ question }: { question: Question }): JSX.Element => {
 
 const QuestionComp = ({ question, onChange, ...rest }: { question: DisplayQuestion, onChange: Function, [key: string]: any }): JSX.Element => {
   const [conclusion, setConclusion] = useState(question.conclusion ?? '')
-  const [timeoutId, setTimeoutId] = useState<any>(null)
-  useEffect(() => {
-    if (timeoutId != null) clearTimeout(timeoutId)
-    const tId = setTimeout(() => onChange(question, null, conclusion), 800)
-    setTimeoutId(tId)
-    return () => {
-      if (timeoutId != null) clearTimeout(timeoutId)
-    }
-  }, [conclusion])
+  const [showEditOptions, setShowEditOptions] = useState(false)
+
+  const saveHandler = async (): Promise<void> => {
+    await onChange(question, null, conclusion.trim())
+    setShowEditOptions(false)
+  }
+  const cancelHandler = (): void => {
+    setConclusion(question.conclusion ?? '')
+    setShowEditOptions(false)
+  }
 
   return (
     <>
@@ -106,7 +109,23 @@ const QuestionComp = ({ question, onChange, ...rest }: { question: DisplayQuesti
         <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
           Justification
         </Text>
-        <Textarea disabled={!question.enabled} placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)} />
+        <Textarea
+          disabled={!question.enabled}
+          placeholder='Motivate your answer'
+          size='sm'
+          style={{ resize: 'none' }}
+          value={conclusion}
+          onChange={(e) => setConclusion(e.target.value)}
+          onFocus={() => setShowEditOptions(true)}
+          onBlur={() => setTimeout(() => setShowEditOptions(false), 500)} // needed otherwise the save button will not be clickable
+        />
+        {showEditOptions &&
+          <Flex alignItems='center' justifyContent='space-between' mt='1'>
+            <Flex alignItems='center'>
+              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={saveHandler}>Save</Button>
+              <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
+            </Flex>
+          </Flex>}
       </Box>
     </>
   )
@@ -157,32 +176,16 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   const { users } = useContext(ProjectContext)
   const [renderTrigger, setRenderTrigger] = useState(0)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
-  const [chapterNb, setChapterNb] = useState<string | null>(null)
 
   useEffect(() => {
     const stringIds = card.userIds?.map(id => String(id)) ?? []
     setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
   }, [card.userIds, renderTrigger])
 
-  useEffect(() => {
-    if (card.title != null) {
-      const nb = card.title.match(/^\s?([0-9.]+)/)
-      if (Array.isArray(nb)) {
-        setChapterNb(nb[1])
-      }
-    }
-  }, [card?.title])
-
-  useEffect(() => {
-    if (Array.isArray(card.questions) && chapterNb != null) {
-      card.questions.forEach((q: DisplayQuestion, idx: number) => (q.TOCnumber = `${chapterNb}.${idx + 1}`))
-    }
-  }, [chapterNb, card.questions])
-
-  const saveQuestion = async (question: any, responses?: any[], conclusion?: string): Promise<void> => {
+  const saveQuestion = async (question: Question, responses?: any[], conclusion?: string): Promise<void> => {
     setIsLoading(true)
     try {
-      const url = `/api/projects/${projectId}/cards/${cardId}/questions/${String(question.id)}`
+      const url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}`
       const data: any = {}
       if (Array.isArray(responses)) {
         if (!Array.isArray(question?.responses) || (Array.isArray(question?.responses) && !isEqual(question.responses?.sort(), responses.sort()))) {
@@ -358,7 +361,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                 <Box ml='-4' position='relative'>
                   <Box width='4px' bgColor='var(--main-blue)' borderRightRadius='15px' height='100%' position='absolute' left='0' top='0' />
                   <Text fontSize={[16, 20]} fontWeight='400' px='4'>
-                    {card.title.replace(/=g(b|e)=/g, '')}
+                    {card.TOCnumber} {card.title.replace(/=g(b|e)=/g, '')}
                   </Text>
                 </Box>
                 <Box>

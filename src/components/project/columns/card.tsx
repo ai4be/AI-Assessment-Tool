@@ -64,7 +64,7 @@ const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
           }}
           onClick={() => showCardDetail(card._id)}
         >
-          <Text fontSize='sm'>{card.title?.replace(/(=g(b|e)=)/g, '')}</Text>
+          <Text fontSize='sm'>{card.TOCnumber} {card.title?.replace(/(=g(b|e)=)/g, '')}</Text>
           {loadAssignedToUser()}
         </Box>
       )}

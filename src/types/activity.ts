@@ -5,7 +5,7 @@ import { Comment } from './comment'
 
 export enum ActivityType {
   PROJECT_CREATE = 'project_create',
-  PROJECT_UPDATE_TITLE = 'project_update_title',
+  PROJECT_UPDATE_NAME = 'project_update_name',
   PROJECT_UPDATE_DESCRIPTION = 'project_update_description',
   PROJECT_UPDATE_INDUSTRY = 'project_update_description',
   PROJECT_UPDATE = 'project_update',
@@ -39,6 +39,9 @@ export enum ActivityVisibility {
 }
 
 export interface ActivityData {
+  name?: string
+  industry?: string
+  columnName?: string
   [key: string]: any
 }
 
@@ -56,12 +59,13 @@ export interface Activity {
   cardId?: string
   commentId?: string
   questionId?: string
+  readBy?: string[]
 }
 
 export type DisplayActivity = Activity & {
   creator: Omit<User, 'password'>
   project: Omit<Project, 'userIds' | 'roles' | 'description'>
-  card?: Omit<Card, 'userIds' | 'questions' | 'projectId' | 'createdAt' | 'updatedAt'>
+  card?: Omit<Card, 'userIds' | 'projectId' | 'createdAt' | 'updatedAt'>
   comment?: Comment
   question?: Question
   role?: Partial<Role>

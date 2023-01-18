@@ -65,12 +65,13 @@ export const createCards = async (cards: Card[]): Promise<boolean> => {
 
 export const updateCardAndCreateActivities = async (cardId: string | ObjectId, userId: string, data: any): Promise<boolean> => {
   const sanitizedData = await cardDataSanitizer(cardId, data)
+  // console.log(data, sanitizedData)
   if (isEmpty(sanitizedData)) return false
   const res = await updateCard(cardId, sanitizedData)
   if (res) {
     if (sanitizedData.stage != null) void Activity.createCardStageUpdateActivity(cardId, userId, sanitizedData.stage)
     if (sanitizedData.columnId != null) void Activity.createCardColumnUpdateActivity(cardId, userId, sanitizedData.columnId)
-    if (sanitizedData.dueDate != null) void Activity.createCardDueDateUpdateActivity(cardId, userId, sanitizedData.dueDate)
+    if (Object.hasOwn(sanitizedData, 'dueDate')) void Activity.createCardDueDateUpdateActivity(cardId, userId, sanitizedData.dueDate)
   }
   return res
 }
@@ -78,7 +79,7 @@ export const updateCardAndCreateActivities = async (cardId: string | ObjectId, u
 export const cardDataSanitizer = async (cardId: string, data: any): Promise<any> => {
   const updatableFields: any = {}
   UPDATABLE_FIELDS.forEach(field => {
-    if (data[field] != null) updatableFields[field] = sanitize(data[field])
+    if (Object.hasOwn(data, field)) updatableFields[field] = sanitize(data[field])
   })
   const card = await getCard(cardId)
   const columns = await getColumnsByProjectId(card.projectId)
@@ -146,7 +147,7 @@ export const deleteProjectCards = async (projectId: string | ObjectId): Promise<
 export const updateQuestionAndCreateActivity = async (cardId: string | ObjectId, userId: string, questionId: string, data: any): Promise<boolean> => {
   const sanitizedData = await sanitizeQuestionData(data, cardId, questionId)
   const res = await updateQuestion(cardId, questionId, sanitizedData)
-  if (res) void Activity.createCardQuestionUpdateActivity(cardId, userId, questionId, sanitizedData)
+  if (res) void Activity.createCardQuestionUpdateActivity(cardId, questionId, userId, sanitizedData)
   return res
 }
 
