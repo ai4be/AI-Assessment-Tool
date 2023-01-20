@@ -59,7 +59,7 @@ export interface Activity {
   cardId?: string
   commentId?: string
   questionId?: string
-  readBy?: string[]
+  seenBy?: string[]
 }
 
 export type DisplayActivity = Activity & {

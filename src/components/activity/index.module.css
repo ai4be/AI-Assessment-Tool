@@ -119,7 +119,7 @@
 }
 
 /* Media queries - Responsive timeline on screens less than 600px wide */
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) { */
 /* Place the timelime to the left */
   .timeline::after {
     left: 31px;
@@ -128,14 +128,14 @@
 /* Full-width containers */
   .container {
     width: 100%;
-    padding-left: 70px;
-    padding-right: 25px;
+    padding-left: 50px;
+    padding-right: 5px;
   }
 
 /* Make sure that all arrows are pointing leftwards */
   .container::before {
     box-sizing: border-box;
-    left: 60px;
+    left: 41px;
     border: medium solid gray;
     border-width: 10px 10px 10px 0;
     border-color: transparent blue transparent transparent;
@@ -150,4 +150,37 @@
   .right {
     left: 0%;
   }
-}
+  .timeline::after {
+    width: 3px;
+  }
+
+  .container::after {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: 23px;
+    right: unset;
+    top: 22px;
+    border: 2px solid #FF9F55;
+  }
+
+  .content {
+    padding: 5px;
+    font-size: small;
+  }
+
+
+  .date {
+    box-sizing: border-box;
+    position: absolute;
+    top: 15px;
+  }
+
+  .left .date, .right .date {
+    left: -10px;
+    max-width: 30px;
+    transform: none;
+    font-size: x-small;
+  }
+
+/* } */

@@ -100,9 +100,9 @@ export default class Activity extends Model {
     return await this.create(activity)
   }
 
-  static async addUserToReadBy (activityId: string, userId: string): Promise<boolean> {
+  static async addUserToSeenBy (activityId: string, userId: string): Promise<boolean> {
     const { db } = await connectToDatabase()
-    const res = await db.collection(this.TABLE_NAME).updateOne({ _id: toObjectId(activityId) }, { $addToSet: { readBy: toObjectId(userId) } })
+    const res = await db.collection(this.TABLE_NAME).updateOne({ _id: toObjectId(activityId) }, { $addToSet: { seenBy: toObjectId(userId) } })
     return res.modifiedCount === 1
   }
 

@@ -54,3 +54,22 @@ export const toObjectId = (_id: string | ObjectId): ObjectId => typeof _id === '
 
 export const cleanEmail = (email: string): string => sanitize(email.trim().toLowerCase())
 export const cleanText = (email: string): string => sanitize(email.trim())
+
+export const addToWhere = (where: any, key: string, value: any, operator: string = '$eq'): void => {
+  if (where[key] == null) {
+    where[key] = value
+  } else {
+    where[key] = { $and: [where[key], value] }
+  }
+  if (typeof where[key] === 'object') {
+    if (where[key][operator] == null) where[key][operator] = value
+    else {
+      where.$and = where.$and ?? []
+      where.$and.push({ [key]: { [operator]: value } }, { [key]: where[key] })
+    }
+  } else if (typeof where[key] === 'string' || where[key] instanceof ObjectId) {
+    where[key] = { [operator]: value, $eq: where[key] }
+  } else {
+    where[key] = { operator: value }
+  }
+}

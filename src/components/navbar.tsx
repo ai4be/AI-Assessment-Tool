@@ -8,6 +8,9 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  FormControl,
+  FormLabel,
+  Switch,
   Input,
   Menu,
   MenuButton,
@@ -27,6 +30,7 @@ import { useRouter } from 'next/router'
 import UserContext, { UserContextProvider } from '../store/user-context'
 import { User } from '@/src/types/user'
 import { ActivityTimeline } from '@/src/components/activity'
+import { isEmpty } from '@/util/index'
 
 interface Props {
   bg?: string
@@ -38,9 +42,10 @@ export const AI4BelgiumIcon = (): JSX.Element => (
   </div>
 )
 
-function DrawerExample ({ isOpen, onOpen, onClose }): JSX.Element {
+function ActivityDrawer ({ isOpen, onOpen, onClose }): JSX.Element {
   const router = useRouter()
-  const projectId = router.query.projectId
+  const projectId = router.query.projectId as string
+
   return (
     <>
       <Drawer
@@ -51,14 +56,29 @@ function DrawerExample ({ isOpen, onOpen, onClose }): JSX.Element {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          {/* <DrawerHeader>Create your account</DrawerHeader> */}
+          <DrawerHeader>
+            Activity
+            <FormControl display='flex' alignItems='center'>
+              <Switch id='personal-activity' size='sm' mr='1' />
+              <FormLabel htmlFor='personal-activity' mb='0' fontSize='xs'>
+                Include my activity?
+              </FormLabel>
+            </FormControl>
+            {!isEmpty(projectId) &&
+              <FormControl display='flex' alignItems='center'>
+                <Switch id='project-activity' size='sm' mr='1' />
+                <FormLabel htmlFor='project-activity' mb='0' fontSize='xs'>
+                  Show only this project?
+                </FormLabel>
+              </FormControl>}
+          </DrawerHeader>
 
           <DrawerBody>
             <ActivityTimeline projectId={projectId} />
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClose}>
+            <Button variant='outline' mr={3} onClick={onClose} size='sm' >
               Close
             </Button>
           </DrawerFooter>
@@ -81,7 +101,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
 
     return (
       <>
-        <DrawerExample isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+        <ActivityDrawer isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
         <Flex flexDirection='column' justifyContent='center'>
           <IoIosNotificationsOutline className='icon-blue-color' size='20' strokeWidth='20px' onClick={onOpen} />
         </Flex>

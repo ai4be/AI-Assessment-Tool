@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import useSWR from 'swr'
-import { fetcher } from '@/util/api'
 import {
   Avatar,
   Box,
@@ -15,12 +14,15 @@ import { format } from 'date-fns'
 import { getUserDisplayName } from '@/util/users'
 import { isEmpty } from '@/util/index'
 import { QuestionType } from '@/src/types/card'
+import { useOnScreen } from '@/src/hooks/index'
+import UserContext from '@/src/store/user-context'
+import { defaultFetchOptions, HTTP_METHODS, fetcher } from '@/util/api'
 
 const formatDate = (date: string | Date): string => {
   const d = new Date(date)
   const currentDate = new Date()
   const skipYear = d.getFullYear() === currentDate.getFullYear()
-  const skipMonth = d.getMonth() === currentDate.getMonth() && d.getDay() === currentDate.getDay()
+  const skipMonth = d.getMonth() === currentDate.getMonth() && d.getDate() === currentDate.getDate()
   let formatExpression = 'H:mm'
   if (skipMonth) return format(d, formatExpression)
   formatExpression += ' d MMM'
@@ -39,17 +41,21 @@ const queryObjToQueryString = (query: any): string => {
 }
 
 export const ActivityTimeline = ({ projectId }: { projectId?: string }): JSX.Element => {
+  console.log('rendering timeline', projectId)
   const [query, setQuery] = useState<any>({
-    filter: {
-      ...(projectId != null ? { projectId } : {})
-    }
+    ...(projectId != null ? { projectId } : {}),
+    commentId: { exists: true, ne: 'adsfasf'}
   })
   const [activities, setActivities] = useState<DisplayActivity[]>([])
   const { data, error, mutate } = useSWR(`/api/activities?${queryObjToQueryString(query)}`, fetcher)
+  console.log('rendering timeline', projectId, activities)
 
   useEffect(() => {
     if (data?.data != null) {
-      setActivities(prev => [...prev, ...data.data])
+      const dataToAdd = data.data.filter((a: DisplayActivity) => !activities.some((b: DisplayActivity) => String(a._id) === String(b._id)))
+      const newActivities = [...activities, ...dataToAdd]
+      newActivities.sort((a: DisplayActivity, b: DisplayActivity) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      setActivities(newActivities)
     }
   }, [data])
 
@@ -66,12 +72,38 @@ export const ActivityTimeline = ({ projectId }: { projectId?: string }): JSX.Ele
 }
 
 export const TimelineItem = ({ activity, placement }: { activity: DisplayActivity, placement: string }): JSX.Element => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [promise, setPromise] = useState<null | Promise<any>>(null)
+  const [setSeenBy, setSetSeenBy] = useState<boolean>(false)
+  const isVisible = useOnScreen(ref)
+  const { user } = useContext(UserContext)
+  const userId = String(user?._id)
+  // const isCreator = String(activity.createdBy) === String(userId)
+  const isCreator = false
+  activity.seenBy = (activity.seenBy ?? []).map(uid => String(uid))
+  const isSeen = activity.seenBy.includes(userId)
+
+  useEffect(() => {
+    if (isVisible && !isSeen && !isCreator && promise == null && !setSeenBy) {
+      const url = `/api/activities/${activity._id}/seen`
+      const p = fetch(url, {
+        ...defaultFetchOptions,
+        method: HTTP_METHODS.POST,
+        body: JSON.stringify({})
+      })
+      setPromise(p)
+      void p.then(response => {
+        if (response.ok) setSetSeenBy(true)
+      }).finally(() => setPromise(null))
+    }
+  }, [isVisible, isSeen, isCreator, promise, setSeenBy])
+
   return (
-    <Box className={`${style.container} ${placement === 'left' ? style.left : style.right}`}>
+    <Box className={`${style.container} ${placement === 'left' ? style.left : style.right}`} ref={ref}>
       <Box className={style.content}>
         <Flex alignItems='center'>
-          <Avatar size='sm' name={getUserDisplayName(activity.creator)} src={activity.creator.xsAvatar} />
-          <Text ml='1' as='b'>{getUserDisplayName(activity.creator)}</Text>
+          <Avatar size='xs' name={getUserDisplayName(activity.creator)} src={activity.creator.xsAvatar} />
+          <Text ml='1' as='b' fontSize='sm'>{getUserDisplayName(activity.creator)}</Text>
         </Flex>
         &nbsp;
         {activityRenderer(activity)}
@@ -84,9 +116,9 @@ export const TimelineItem = ({ activity, placement }: { activity: DisplayActivit
 const getProjectLinkComp = (displayActivity: DisplayActivity, content: any, cardId?: string, questionId?: string, commentId?: string): JSX.Element => {
   if (displayActivity.project != null) {
     const query: any = {}
-    if (cardId != null) query.card = cardId
-    if (questionId != null) query.q = questionId
-    if (commentId != null) query.c = commentId
+    if (cardId != null) query.cardId = cardId
+    if (questionId != null) query.questionId = questionId
+    if (commentId != null) query.commentId = commentId
     const linkProps = {
       pathname: `/projects/${displayActivity.project._id}`,
       query
@@ -170,7 +202,12 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId)
     }
     case ActivityType.CARD_STAGE_UPDATE: {
-      const text: any = (<Text display='inline'>change card stage to "<Text display='inline' textTransform='capitalize'>{displayActivity.data?.stage?.toLowerCase()}</Text>"</Text>)
+      const text: any = (
+        <>
+          <Text display='inline'>change card stage to </Text>
+          <Text display='inline' textTransform='capitalize'>"{displayActivity.data?.stage?.toLowerCase()}"</Text>
+        </>
+      )
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId)
     }
     case ActivityType.COMMENT_CREATE: {
@@ -226,7 +263,7 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
         text = (<Text display='inline'>{text} {question.TOCnumber}</Text>)
       }
       if (data?.conclusion != null) {
-        text = (<>{text}: "<Text display='inline' nbOfLines={1} fontSize='xs'>{data.conclusion}</Text>"</>)
+        text = (<>{text}: "<Text display='inline' noOfLines={1} fontSize='xs'>{data.conclusion}</Text>"</>)
       }
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId, displayActivity.questionId)
     }
