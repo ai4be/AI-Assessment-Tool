@@ -12,39 +12,49 @@ import {
   ModalCloseButton,
   ModalFooter,
   Input,
-  Text
+  Text,
+  Textarea,
+  Select
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { AiOutlinePlus } from 'react-icons/ai'
+import { defaultFetchOptions, fetcher } from '@/util/api'
+import useSWR from 'swr'
 
-export default function Projects (props: any): JSX.Element {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
+  const { data: industries, error } = useSWR('/api/industries', fetcher)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const inputRef = useRef()
-  const { projects = [], fetchProjects }: { projects: any[], fetchProjects: Function } = props
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const inputRef: any = useRef()
+  const [description, setDescription] = useState<string>('')
+  const [industry, setIndustry] = useState<string>('')
+
+  // useEffect(() => {
+  //   console.log('inputRef', inputRef)
+  //   if (isOpen && inputRef.current != null) inputRef.current.focus()
+  // }, [isOpen, inputRef, inputRef.current])
+
+  const handleSubmit = async (e: any): Promise<void> => {
+    if (e != null) e.preventDefault()
+    if (e.key === 'Enter') await handleCreate()
+  }
 
   const handleCreate = async (): Promise<void> => {
     try {
       setIsLoading(true)
-      const data = {
-        name: inputRef.current.value
+      const data: any = {
+        name: inputRef?.current?.value ?? '',
+        description: description ?? '',
       }
+      if (industry != null && industry.length > 0) data.industry = industry
 
       const response = await fetch('/api/projects', {
+        ...defaultFetchOptions,
         method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        redirect: 'follow',
-        referrerPolicy: 'no-referrer',
         body: JSON.stringify(data)
       })
 
       const inJSON = await response.json()
-      console.log('handleCreate', inJSON)
       await fetchProjects()
     } finally {
       onClose()
@@ -52,40 +62,50 @@ export default function Projects (props: any): JSX.Element {
     }
   }
 
-  const createProjectModal = (): JSX.Element => {
-    return (
-      <>
-        <Button
-          onClick={onOpen}
-          leftIcon={<AiOutlinePlus />}
-          className='background-blue'
-          color='white'
-          size='lg'
-          mt='1rem'
-        >
-          Create a project
-        </Button>
-        <Modal onClose={onClose} isOpen={isOpen} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Create project</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Input
-                ref={inputRef}
-                placeholder='Project name'
-              />
-            </ModalBody>
-            <ModalFooter>
-              <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText='Creating Project'>
-                Create
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    )
-  }
+  return (
+    <>
+      <Button
+        onClick={onOpen}
+        leftIcon={<AiOutlinePlus />}
+        className='background-blue'
+        color='white'
+        size='lg'
+        mt='1rem'
+      >
+        Create a project
+      </Button>
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create project</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input
+              ref={el => { inputRef.current = el }}
+              placeholder='Project name'
+              onKeyUp={handleSubmit}
+            />
+            <Textarea
+              placeholder={`Project description
+What is the purpose of the project and applications?`}
+              mt='2' onChange={(e) => setDescription(e.target.value)} />
+            <Select size='xs' placeholder='Select the industry' onChange={e => setIndustry(e.target.value)}>
+              {industries?.map(industry => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
+            </Select>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText='Creating Project'>
+              Create
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
+
+export default function Projects (props: any): JSX.Element {
+  const { projects = [], fetchProjects }: { projects: any[], fetchProjects: Function } = props
 
   const loadExistingProjects = (): JSX.Element => {
     return (
@@ -94,8 +114,8 @@ export default function Projects (props: any): JSX.Element {
           <Link
             key={index}
             href={{
-              pathname: '/projects/[slug]',
-              query: { slug: pr._id }
+              pathname: '/projects/[projectId]',
+              query: { projectId: pr._id }
             }}
           >
             <Box
@@ -135,7 +155,7 @@ export default function Projects (props: any): JSX.Element {
 
   return (
     <Box flexGrow={3} mx='2%' boxShadow='base' rounded='lg' bg='white' p='1rem'>
-      {createProjectModal()}
+      <CreateProjectModal fetchProjects={fetchProjects} />
       {loadExistingProjects()}
     </Box>
   )

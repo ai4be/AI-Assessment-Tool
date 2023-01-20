@@ -1,21 +1,24 @@
-import Home from '@/src/components/home'
-import { getSession } from 'next-auth/react'
+import Projects from '@/src/components/projects'
 import SideBar from '@/src/components/side-bar'
+import { authOptions } from './api/auth/[...nextauth]'
+import useSWR from 'swr'
+import { fetcher } from '@/util/api'
+import { unstable_getServerSession } from 'next-auth/next'
 
-const PAGE = 'home'
-
-export default function HomePage ({ session }): JSX.Element {
+export default function Page ({ session }): JSX.Element {
+  const { data, error, mutate } = useSWR('/api/projects', fetcher)
+  const { data: industries, error: errorIndustries } = useSWR('/api/industries', fetcher)
   return (
-    <SideBar page={PAGE}>
-      <Home />
+    <SideBar page='projects'>
+      <Projects projects={data || []} session={session} fetchProjects={mutate} />
     </SideBar>
   )
 }
 
-export async function getServerSideProps (context): Promise<any> {
-  const session = await getSession(context)
+export async function getServerSideProps (ctx): Promise<any> {
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
 
-  if (session == null) {
+  if (session?.user == null) {
     return {
       redirect: {
         destination: '/login',
@@ -23,8 +26,9 @@ export async function getServerSideProps (context): Promise<any> {
       }
     }
   }
-
   return {
-    props: { session }
+    props: {
+      session: JSON.parse(JSON.stringify(session))
+    }
   }
 }

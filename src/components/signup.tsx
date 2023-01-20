@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
   Flex,
   Box,
@@ -12,45 +12,72 @@ import {
   AlertDescription,
   CloseButton,
   AlertTitle,
-  AlertIcon
+  AlertIcon,
+  Text
 } from '@chakra-ui/react'
-import shortId from 'shortid'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
+import { defaultFetchOptions } from '@/util/api'
+import { isEmpty } from '@/util/index'
+import { debounce } from '@/util/index'
+import { isEmailValid, isPasswordValid } from '@/util/validator'
 
 const SignUp = (): JSX.Element => {
+  const router = useRouter()
+  const toast = useToast()
+  const email = router.query.email as string
+  const token = router.query.token as string
   const [values, setValues] = useState({
-    email: '',
+    email: email ?? '',
     password: '',
-    fullName: '',
+    firstName: '',
+    lastName: '',
     confirmPassword: ''
+  })
+  const [touched, setTouched] = useState({
+    email: false,
+    password: false,
+    firstName: false,
+    lastName: false,
+    confirmPassword: false
   })
   const [isCreating, setIsCreatingStatus] = useState(false)
   const [hasError, setErrorState] = useState(false)
-
-  const toast = useToast()
-  const router = useRouter()
-
   const [emailErr, setEmailErr] = useState(false)
-  const [passwordErr, setPasswordErr] = useState(false)
-  const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$')
-  const validPassword = new RegExp('^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$')
+  const [passwordLengthErr, setPasswordLengthErr] = useState(false)
+  const [passwordCharErr, setPasswordCharErr] = useState(false)
+  const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
+  const [isButtonDisabled, setButtonState] = useState(true)
 
-  const validate = () => {
-    if (!validEmail.test(values.email)) {
-      setEmailErr(true)
+  useEffect(() => {
+    if (!touched.email) return
+    setEmailErr(!isEmailValid(values.email))
+  }, [values.email, touched.email])
+
+  useEffect(() => {
+    if (!touched.password || !touched.confirmPassword) return
+    if (values.password?.length > 0 && values.confirmPassword?.length > 0 && values.confirmPassword !== values.password) {
+      setConfirmPasswordErr(true)
     } else {
-      setEmailErr(false)
+      setConfirmPasswordErr(false)
     }
+  }, [values.password, values.confirmPassword, touched.password, touched.confirmPassword])
 
-    if (!validPassword.test(values.password)) {
-      setPasswordErr(true)
-    } else {
-      setPasswordErr(false)
-    }
-  }
+  useEffect(() => {
+    if (!touched.password) return
+    const isTooShort = values.password?.length < 8
+    setPasswordLengthErr(isTooShort)
+    setPasswordCharErr(!isPasswordValid(values.password))
+  }, [values.password, touched.password])
 
-  const showToast = () => {
+  useEffect(() => {
+    const hasErrors = emailErr || passwordLengthErr || passwordCharErr || confirmPasswordErr ||
+      isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword) ||
+      isEmpty(values.firstName) || isEmpty(values.lastName)
+    setButtonState(hasErrors)
+  }, [values.password, values.confirmPassword, values.firstName, values.lastName, values.email, emailErr, passwordLengthErr, passwordCharErr, confirmPasswordErr])
+
+  const showToast = (): void => {
     toast({
       position: 'top',
       title: 'Account created.',
@@ -61,61 +88,48 @@ const SignUp = (): JSX.Element => {
     })
   }
 
-  const registerUser = async (e) => {
+  const registerUser = async (e): Promise<void> => {
     e.preventDefault()
     setIsCreatingStatus(true)
-
-    const id = shortId.generate()
-    const { email, password, confirmPassword, fullName } = values
-
-    const data = {
-      id,
+    const { email, password, confirmPassword, firstName, lastName } = values
+    const data: any = {
       email,
       password,
       confirmPassword,
-      fullName
+      firstName,
+      lastName
     }
+    if (token != null) data.token = token
 
-    const url = '/api/register'
+    const url = '/api/auth/signup'
 
     const response = await fetch(url, {
+      ...defaultFetchOptions,
       method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
       body: JSON.stringify(data)
     })
 
     const result = await response.json()
-    setIsCreatingStatus(false)
 
     if (response.status === 404) {
       setErrorState(true)
     }
 
-    const { email: inviteEmail, token, projectId } = router.query
-    const isInvitedUser = inviteEmail && token && projectId
-
-    if (isInvitedUser && result.message === 'success') {
-      redirectToLoginPage(`/login?token=${token}&email=${inviteEmail}&projectId=${projectId}`)
-    } else {
-      if (result.message === 'success') {
-        redirectToLoginPage()
-      }
+    if (result.message === 'success') {
+      await redirectToLoginPage()
     }
+    setIsCreatingStatus(false)
   }
 
-  const redirectToLoginPage = (path = '/login') => {
+  const redirectToLoginPage = async (path = '/login'): Promise<void> => {
     showToast()
-
-    setTimeout(() => {
-      window.location.href = path
-    }, 3000)
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+    await router.push({
+      pathname: path,
+      query: {
+        email: values.email
+      }
+    })
   }
 
   const showSignUpError = (): JSX.Element => {
@@ -136,27 +150,27 @@ const SignUp = (): JSX.Element => {
     )
   }
 
+  const setPropTouched = (prop: string): void => {
+    setTouched({
+      ...touched,
+      [prop]: true
+    })
+  }
+  const setPropTouchedDebounced = useMemo(() => debounce(setPropTouched, 1000), [touched])
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const { name, value } = e.target
     setValues({
       ...values,
       [name]: value
     })
-
-    validate()
-  }
-
-  const isButtonDisabled = (): boolean => {
-    const isValidPassword = values.password !== values.confirmPassword
-    const isDisabled = !values.email || !values.fullName
-
-    return isValidPassword || isDisabled || !values.password || !values.confirmPassword
+    setPropTouchedDebounced(name)
   }
 
   return (
     <>
       <Box display='flex' alignItems='center' justifyContent='center'>
-        <AI4BelgiumIcon />
+        <Link href='/'><AI4BelgiumIcon /></Link>
       </Box>
       <Flex
         alignItems='center'
@@ -199,51 +213,68 @@ const SignUp = (): JSX.Element => {
             <h1>Sign up</h1>
           </Box>
           <Box my={4} textAlign='left'>
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={emailErr}>
               <Input
                 type='email'
                 name='email'
                 value={values.email}
                 placeholder='Enter Email'
                 onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, email: true })}
                 autoComplete='off'
               />
-              {emailErr && <p color='red'>Invalid email.</p>}
+              {emailErr && <Text size='xs' color='red'>Invalid email.</Text>}
             </FormControl>
             <FormControl my='4' isRequired>
               <Input
                 type='text'
-                name='fullName'
-                value={values.fullName}
-                placeholder='Full name'
+                name='firstName'
+                value={values.firstName}
+                placeholder='First name'
                 onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, firstName: true })}
                 autoComplete='off'
               />
             </FormControl>
-            <FormControl my='4'>
+            <FormControl my='4' isRequired>
+              <Input
+                type='text'
+                name='lastName'
+                value={values.lastName}
+                placeholder='Last name'
+                onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, lastName: true })}
+                autoComplete='off'
+              />
+            </FormControl>
+            <FormControl my='4' isInvalid={passwordLengthErr || passwordCharErr} isRequired>
               <Input
                 type='password'
                 name='password'
                 value={values.password}
                 placeholder='Create password'
+                onBlur={() => setTouched({ ...touched, password: true })}
                 onChange={handleChange}
               />
-              {passwordErr && <p color='red'>Invalid password.</p>}
+              {passwordLengthErr && <Text size='xs' color='red'>Password is too short</Text>}
+              {passwordCharErr && <Text size='xs' color='red'>Include a special character and number</Text>}
             </FormControl>
-            <FormControl my='4'>
+            <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
               <Input
                 type='password'
                 name='confirmPassword'
                 value={values.confirmPassword}
                 placeholder='Confirm password'
                 onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, confirmPassword: true })}
               />
+              {confirmPasswordErr && <Text size='xs' color='red'>Passwords don't match</Text>}
             </FormControl>
             <Button
               fontWeight='semibold'
               width='full'
               mt={4}
-              disabled={isButtonDisabled()}
+              disabled={isButtonDisabled}
               bg='success'
               color='white'
               onClick={registerUser}
@@ -253,7 +284,7 @@ const SignUp = (): JSX.Element => {
               Sign up
             </Button>
             <Box m='5' textAlign='center'>
-              <Link href='/login' color='brand' p='2'>
+              <Link href='/login' color='brand' p='2' >
                 Already have an account? Log in.
               </Link>
             </Box>

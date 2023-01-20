@@ -1,40 +1,74 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   Box,
-  Button,
   Heading,
-  Input,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Text,
-  MenuDivider
+  Input
 } from '@chakra-ui/react'
-import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'
-import { FiMoreHorizontal } from 'react-icons/fi'
-import Cards from '@/src/components/project/columns/cards'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import debounce from 'lodash.debounce'
-import { CardDetail } from '@/src/types/cards'
+import { debounce } from '@/util/index'
+import Card from '@/src/components/project/columns/card'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { Sort, Order } from '@/src/components/project/project-bar/sort-menu'
 import {
-  // deleteColumn,
   updateColumn
 } from '@/util/columns'
 
+enum SortKeys {
+  NUMBER = 'number',
+  DUE_DATE = 'dueDate'
+}
+
+function sortCards (cards: any[], sort: Sort, order: Order): any[] {
+  let key = SortKeys.NUMBER
+  switch (sort) {
+    case Sort.DUE_DATA:
+      key = SortKeys.DUE_DATE
+      break
+    default:
+      key = SortKeys.NUMBER
+  }
+  const noValPlaceholder = sort === Sort.NUMBER ? 0 : (order === Order.ASC ? Infinity : -Infinity)
+
+  const copy = [...cards]
+
+  copy.sort((a, b) => {
+    let valA = a[key]
+    let valB = b[key]
+    // backward compatibility hack
+    if (key === SortKeys.NUMBER && valA == null) {
+      valA = +(a.title.match(/^[0-9.]+/))
+      valB = +(b.title.match(/^[0-9.]+/))
+    }
+    valA = valA ?? noValPlaceholder
+    valB = valB ?? noValPlaceholder
+    if (order === Order.ASC) {
+      return valA - valB
+    } else {
+      return valB - valA
+    }
+  })
+  return copy
+}
+
 const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }): JSX.Element => {
   const { data } = useSession()
+  const router = useRouter()
+  const {
+    sort = Sort.NUMBER,
+    ord = Order.ASC
+  } = router.query
   const [showEditBox, setEditBoxVisibility] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [cardsInSortedSequence, setCardsInSortedSequence] = useState<any[]>(sortCards(cards, sort as Sort, ord as Order))
+  const [columnName, setColumnName] = useState<string>(column.name)
 
   const user: any = data?.user
 
-  const [columnName, setColumnName] = useState<string>(column.columnName)
-  const cardsInSortedSequence = cards.sort(
-    (cardA: CardDetail, cardB: CardDetail) => cardA.sequence - cardB.sequence
-  )
+  useEffect(() => {
+    setCardsInSortedSequence(sortCards(cards ?? [], sort as Sort, ord as Order))
+  }, [cards, sort, ord])
 
   const loadColumnTitle = (): JSX.Element => {
     if (showEditBox) {
@@ -93,7 +127,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
   const nameChange = async (value): Promise<void> => {
     setIsLoading(true)
     const data = {
-      columnName: value,
+      name: value,
       columnId: column._id,
       projectId
     }
@@ -105,27 +139,29 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     <Box
       key={index}
       width='272px'
-      height='calc(100vh - 90px)'
+      height='calc(100vh - 70px)'
       overflowY='auto'
       mt='10px'
       mr='10px'
       ml={index === 0 ? '0' : '10px'}
       className='background-light-blue rounded-lg'
     >
-      <Box pb='5px' rounded='lg'>
+      <Box pb='5px' rounded='lg' display='flex' flexDirection='column' height='100%'>
         <Box display='flex' alignItems='center' justifyContent='center' className='mt-1.5'>
           {loadColumnTitle()}
         </Box>
         <Droppable droppableId={column._id} type='card'>
           {(provided) => (
             // 2px height is needed to make the drop work when there is no card.
-            <Box ref={provided.innerRef} {...provided.droppableProps} minHeight='2px'>
-              <Cards showCardDetail={showCardDetail} cards={cardsInSortedSequence} />
+            <Box ref={provided.innerRef} {...provided.droppableProps} flexGrow={1}>
+              {cardsInSortedSequence?.map((card, index) => (
+                <Card key={index} card={card} cardIndex={index} showCardDetail={showCardDetail} />
+              ))}
               {provided.placeholder}
             </Box>
           )}
         </Droppable>
-        <Button
+        {/* <Button
           size='xs'
           my='10px'
           mx='auto'
@@ -139,7 +175,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
           onClick={handleCardAdd}
         >
           + Add a card
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   )

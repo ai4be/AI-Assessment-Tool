@@ -1,43 +1,75 @@
 import { Context, createContext, useEffect, useState } from 'react'
 import { Category, Project } from '../types/projects'
+import { useRouter } from 'next/router'
+import { fetchUsersByProjectId } from '@/util/users'
+import { UserContextProvider } from './user-context'
+import { QueryFilterKeys } from '../components/project/project-bar/filter-menu'
 
 interface ProjectContextType {
-  project: Project | undefined
-  categories: Category[]
-  selectedCategory: any
-  setProject: (project: Project) => {}
-  setSelectedCategory: (cat: any) => {}
+  project?: Project | undefined
+  categories?: Category[]
+  selectedStage?: any
+  setProject?: any
+  categoryClickHandler?: any
+  stageClickHandler?: any
+  users?: any[]
+  stages?: any[]
+  stage?: any
 }
 
-const ProjectContext: Context<ProjectContextType> = createContext({
-  project: null,
-  setProject: (project: Project) => {},
-  categories: [],
-  selectedCategory: null,
-  setSelectedCategory: (cat: Category) => {}
-})
+const ProjectContext: Context<ProjectContextType> = createContext({})
 
 export function ProjectContextProvider (props: any): JSX.Element {
+  const router = useRouter()
+  const { [QueryFilterKeys.STAGE]: stage = 'ALL' } = router.query ?? {}
   const [project, setProject] = useState<Project>(props.project)
-  const [categories, setCategories] = useState<Category[]>(props.categories)
-  const [selectedCategory, setSelectedCategory] = useState<Category>()
+  const [categories] = useState<Category[]>(props.categories)
+  const [stages] = useState<any[]>(props.stages)
+  const [users, setUsers] = useState<any[]>([])
 
-  useEffect(() => {
-    if (selectedCategory == null && categories?.length > 0) setSelectedCategory(categories[0])
-  }, [categories, selectedCategory])
+  useEffect((): void => {
+    if (Array.isArray(project.userIds)) {
+      void fetchUsersByProjectId(project._id).then(u => setUsers(u))
+    }
+  }, [project.userIds])
+
+  function categoryClickHandler (cat: Category): void {
+    const {
+      [QueryFilterKeys.CATEGORY]: currentCat
+    } = router.query ?? {}
+    const query: any = { ...router.query, [QueryFilterKeys.CATEGORY]: cat._id }
+    if (currentCat === cat._id) {
+      delete query[QueryFilterKeys.CATEGORY]
+    }
+    void router.push({
+      query
+    }, undefined, { shallow: true })
+  }
+
+  function stageClickHandler (stage: string): void {
+    const query = { ...router.query, [QueryFilterKeys.STAGE]: stage }
+    void router.push({
+      query
+    }, undefined, { shallow: true })
+  }
 
   const context: ProjectContextType = {
     project,
     setProject,
     categories,
-    selectedCategory,
-    setSelectedCategory
+    categoryClickHandler,
+    stageClickHandler,
+    users,
+    stage,
+    stages
   }
 
   return (
-    <ProjectContext.Provider value={context}>
-      {props.children}
-    </ProjectContext.Provider>
+    <UserContextProvider>
+      <ProjectContext.Provider value={context}>
+        {props.children}
+      </ProjectContext.Provider>
+    </UserContextProvider>
   )
 }
 

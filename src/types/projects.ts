@@ -1,11 +1,11 @@
 export interface Project {
-  _id?: string
+  _id: string
   name: string
   columns?: Columns[]
   createdBy?: string
-  dateCreated?: string
+  createdAt?: string
   backgroundImage?: string
-  users?: string[]
+  userIds?: string[]
 }
 
 interface Columns {
@@ -35,6 +35,6 @@ interface Cards {
 
 interface User {
   id: string
-  name: string
+  fullName: string
   avatar: string
 }

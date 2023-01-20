@@ -90,6 +90,5 @@
     {
         "accountability": "This terms refers to the idea that one is responsible for his or her action – and as a corollary their consequences – and must be able to explain their aims, motivations, and reasons. Accountability has several dimensions. Accountability is sometimes required by law. For example, the General Data Protection Regulation (“GDPR”) requires organisations that process personal data to ensure security measures are in place to prevent from data breaches and report if these fail.  But accountability might also express an ethical standard, and fall short of legal consequences. Some tech firms that do not to invest in facial recognition technology in spite of the absence of a ban or technological moratorium might do so out of ethical accountability considerations.",
         "redress by design": "Redress by design relates to the idea of establishing, from the design phase, mechanisms to ensure redundancy, alternative systems, alternative procedures, etc. in order to be able to effectively detect, audit, rectify the wrong decisions taken by a perfectly functioning system and, if possible, improve the system."
-    },
-
+    }
 }

@@ -1,5 +1,4 @@
-import shortId from 'shortid'
-// import findIndex from 'lodash.findindex'
+import { defaultFetchOptions } from './api'
 
 interface CardPatch {
   _id: string
@@ -17,10 +16,7 @@ export const addCard = async (columnId: string, projectId: string, userId: strin
     sequence = filteredCards[filteredCards.length - 1].sequence + 1
   }
 
-  const cardId = shortId.generate()
-
   const data = {
-    id: cardId,
     columnId,
     projectId,
     title: 'Add title',
@@ -35,42 +31,24 @@ export const addCard = async (columnId: string, projectId: string, userId: strin
   const url = `/api/projects/${projectId}/columns/${columnId}/cards`
 
   const response = await fetch(url, {
+    ...defaultFetchOptions,
     method: 'POST',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
     body: JSON.stringify(data)
   })
 
-  const inJSON = await response.json()
-
-  return inJSON
+  return await response.json()
 }
 
 export const updateCard = async (obj: CardPatch, projectId: string): Promise<any> => {
   const url = `/api/projects/${projectId}/cards/${obj._id}`
 
   const response = await fetch(url, {
+    ...defaultFetchOptions,
     method: 'PATCH',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
     body: JSON.stringify(obj)
   })
 
-  const inJSON = await response.json()
-
-  return inJSON
+  return await response.json()
 }
 
 export const updateCardSequence = async (obj: CardPatch, projectId: string): Promise<void> => {
@@ -86,19 +64,10 @@ export const updateCardSequence = async (obj: CardPatch, projectId: string): Pro
   const url = `/api/projects/${projectId}/cards/${_id}`
 
   const response = await fetch(url, {
+    ...defaultFetchOptions,
     method: 'PATCH',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
     body: JSON.stringify(data)
   })
 
-  const inJSON = await response.json()
-
-  return inJSON
+  return await response.json()
 }

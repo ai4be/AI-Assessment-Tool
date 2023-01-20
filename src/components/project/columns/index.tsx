@@ -2,25 +2,37 @@ import React, { useState, FC, useEffect } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import CardDetailsModal from '@/src/components/project/columns/modals/card-details-modal'
 import Column from '@/src/components/project/columns/column'
-import { CardDetail } from '@/src/types/cards'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
-import { updateColumn } from '@/util/columns'
 import { fetcher } from '@/util/api'
-// import useRenderingTrace from '@/src/hooks'
+import { useRouter } from 'next/router'
+import ProjectBar from '@/src/components/project/project-bar'
+import { stageValues, CardStage } from '@/src/types/cards'
+import { isEmpty } from '@/util/index'
+import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
 
 interface IProps {
-  projectId: string
+  project: any
   session: any
 }
 
-const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string, session: any }): JSX.Element => {
+const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, session: any }): JSX.Element => {
+  const router = useRouter()
+  const projectId = String(project?._id)
+  const {
+    card: cardId,
+    [QueryFilterKeys.CATEGORY]: categoryId,
+    [QueryFilterKeys.STAGE]: stage,
+    [QueryFilterKeys.ASSIGNED_TO]: assignedTo,
+    [QueryFilterKeys.DUE_DATE]: dueDate,
+    [QueryFilterKeys.ASSIGNMENT]: assignment
+  } = router.query
   const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
   const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [cardDetail, setCardDetail] = useState<CardDetail>({ _id: '', title: '', description: '' })
+  const [cardDetail, setCardDetail] = useState<any>({ _id: '', title: '', description: '' })
 
   const [columns, setColumns] = useState<any[]>([])
   const [cards, setCards] = useState<any[]>([])
@@ -33,7 +45,29 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
       setColumns([])
     }
   }, [data])
-  useEffect(() => setCards(dataCards || []), [dataCards])
+
+  useEffect(() => {
+    setCards(dataCards ?? [])
+  }, [dataCards])
+
+  useEffect(() => {
+    if (cardId != null && Array.isArray(cards)) {
+      const card = cards.find((card) => card._id === cardId)
+      if (card != null) showCardDetail(card._id)
+      else {
+        const query: any = { ...router.query }
+        delete query.card
+        void router.push({ query }, undefined, { shallow: true })
+      }
+    }
+  }, [cardId, cards])
+
+  // useEffect(() => {
+  //   if (categoryId != null && Array.isArray(cards)) {
+  //     const catCards = cards.filter(card => card.categoryId === categoryId)
+  //     catCards.sort((a, b) => a.order - b.order)
+  //   }
+  // }, [categoryId, cards])
 
   const setColumnsSorted = (cols: any[]): void => {
     cols.sort((a, b) => a.sequence - b.sequence)
@@ -41,13 +75,48 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
   }
 
   const showCardDetail = (cardId: string): void => {
-    const card = cards.filter((card) => card._id === cardId)
-    setCardDetail(card[0])
+    const card = cards.find(card => card._id === cardId)
+    void router.push({
+      pathname: router.route,
+      query: { ...router.query, card: cardId }
+    }, undefined, { shallow: true })
+    setCardDetail(card)
     onOpen()
   }
 
+  const hideCardDetail = async (): Promise<void> => {
+    onClose()
+    const query = { ...router.query }
+    delete query.card
+    await router.push({
+      pathname: router.route,
+      query
+    }, undefined, { shallow: true })
+  }
+
+  const filterCardsArrayFn = (card: any, columnId: string): boolean => {
+    let val = String(card.columnId) === columnId
+    if (val && categoryId != null) val = card.category === categoryId
+    if (val && stage != null && String(stage).toUpperCase() !== 'ALL') {
+      val = card.stage === stage || (stage === CardStage.PREPARATION && (card.stage == null || card.stage.trim() === ''))
+    }
+    if (val && assignedTo != null && assignedTo?.length > 0) {
+      const fileterUserIds = typeof assignedTo === 'string' ? [assignedTo] : assignedTo
+      const assignedToArr = card.userIds?.map(uid => String(uid)) ?? []
+      val = fileterUserIds.some(uid => assignedToArr.includes(uid))
+    }
+    if (val && dueDate != null) {
+      val = dueDate === DueDate.NOT_SET ? isEmpty(card.dueDate) : !isEmpty(card.dueDate)
+    }
+    if (val && assignment != null && assignment !== Assignment.ASSIGNED_TO) {
+      val = assignment === Assignment.UNASSIGNED ? isEmpty(card.userIds) : !isEmpty(card.userIds)
+    }
+    return val
+  }
+
   const filterCards = (columnId: string): any[] => {
-    return cards.filter(card => card.columnId === columnId)
+    columnId = String(columnId)
+    return cards.filter(card => filterCardsArrayFn(card, columnId))
   }
 
   const onDragEnd = async (result): Promise<void> => {
@@ -59,10 +128,6 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     // If card is being dragged
     if (type === 'card') {
       return await saveCardSequence(destination.index, destination.droppableId, draggableId)
-    }
-    // If column is being dragged
-    if (type === 'column') {
-      return await saveColumnSequence(destination.index, draggableId)
     }
   }
 
@@ -82,7 +147,7 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
     if (cardToPatch == null) return
     cardToPatch.sequence = sequence
     cardToPatch.columnId = destinationColumnId
-    const promises: Array<Promise<any>> = [updateCard(patchCard, projectId)]
+    const promises: Array<Promise<any>> = [updateCard(patchCard, project?._id)]
     for (let i = destinationIndex; i < sortedCards.length; i++) {
       const card = sortedCards[i]
       sequence += 1
@@ -93,41 +158,16 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
         sequence,
         columnId: destinationColumnId
       }
-      promises.push(updateCard(patchCard, projectId))
+      promises.push(updateCard(patchCard, project?._id))
     }
     setCards([...cards])
     await Promise.all(promises)
     // await mutateCards()
   }
 
-  const saveColumnSequence = async (destinationIndex: number, columnId: string): Promise<void> => {
-    // Remove the column which is dragged from the list
-    const filteredColumns: any[] = columns.filter((column) => column._id !== columnId)
-    const sortedColumns = filteredColumns.sort((a, b) => a.sequence - b.sequence)
-    let sequence = +(destinationIndex === 0 ? 1 : sortedColumns[destinationIndex - 1].sequence + 1)
-
-    const column = columns.find(c => c._id === columnId)
-    if (column == null) return
-    column.sequence = sequence
-    const promises: Array<Promise<any>> = [updateColumn({ columnId, projectId, sequence })]
-    for (let i = destinationIndex; i < sortedColumns.length; i++) {
-      const column = sortedColumns[i]
-      sequence += 1
-      column.sequence = sequence
-      const patchColumn = {
-        columnId: column._id,
-        sequence,
-        projectId
-      }
-      promises.push(updateColumn(patchColumn))
-    }
-    setColumnsSorted([...columns])
-    await Promise.all(promises)
-    // await mutate()
-  }
-
   return (
     <Box>
+      <ProjectBar project={project} />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='all-collumns' direction='horizontal' type='column'>
           {(provided) => (
@@ -140,7 +180,7 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
                   index={index}
                   cards={filterCards(column._id)}
                   showCardDetail={showCardDetail}
-                  projectId={projectId}
+                  projectId={project?._id}
                   fetchColumns={mutate}
                   fetchCards={mutateCards}
                 />
@@ -150,7 +190,7 @@ const ProjectColumns: FC<IProps> = ({ projectId, session }: { projectId: string,
           )}
         </Droppable>
       </DragDropContext>
-      {isOpen && <CardDetailsModal isOpen={isOpen} onClose={onClose} card={cardDetail} projectId={projectId} fetchCards={mutateCards} />}
+      <CardDetailsModal isOpen={isOpen} onClose={hideCardDetail} card={cardDetail} projectId={project?._id} fetchCards={mutateCards} />
     </Box>
   )
 }

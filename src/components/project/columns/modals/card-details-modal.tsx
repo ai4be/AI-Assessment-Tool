@@ -1,202 +1,474 @@
 import React, { FC, useContext, useEffect, useState } from 'react'
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Flex,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  Button,
-  Input,
   ModalOverlay,
   Text,
+  Textarea,
   Box,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Badge
+  Badge,
+  RadioGroup,
+  Radio,
+  Select,
+  Stack,
+  CheckboxGroup,
+  Checkbox,
+  Avatar,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody
 } from '@chakra-ui/react'
-import { CardDetail } from '@/src/types/cards'
-import { AiOutlineDelete, AiOutlineClose, AiOutlineLaptop, AiOutlineDown } from 'react-icons/ai'
-import { GrTextAlignFull } from 'react-icons/gr'
-import CardLabel from '@/src/components/project/columns/modals/card-labels-menu'
-import QuillEditor from '@/src/components/quill-editor'
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import { isEmpty, isEqual } from '@/util/index'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers } from '@/util/users'
-import { updateCard } from '@/util/cards'
+import { getUserDisplayName } from '@/util/users'
+import { defaultFetchOptions } from '@/util/api'
+import { SingleDatepicker } from '@/src/components/date-picker'
+import { FiEdit2 } from 'react-icons/fi'
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
+import { format } from 'date-fns'
+import { UserMenu } from '@/src/components/user-menu'
+import Comment from './comment'
+import { questionEnabler } from '@/util/question'
+
+const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat.`
+
+const QuestionHelp = ({ question }): JSX.Element => {
+  const [help, setHelp] = useState('')
+
+  useEffect(() => {
+    if (question.title != null) {
+      const match = question.title.match(/=hb=(.*)=he=/)
+      if (match?.[1] != null) {
+        const h = match[1].replace(/=br=/g, '<br />').trim()
+        setHelp(h)
+      }
+    }
+  }
+  , [question.title])
+
+  return (
+    <>
+      {!isEmpty(help) &&
+        <Popover>
+          <PopoverTrigger>
+            <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
+          </PopoverTrigger>
+          <PopoverContent opacity='1' _opacity='1 !important'>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverBody opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
+          </PopoverContent>
+        </Popover>}
+    </>
+  )
+}
+
+const Question = ({ question, onChange, ...rest }): JSX.Element => {
+  const [conclusion, setConclusion] = useState(question.conclusion ?? '')
+  const [timeoutId, setTimeoutId] = useState<any>(null)
+  useEffect(() => {
+    if (timeoutId != null) clearTimeout(timeoutId)
+    const tId = setTimeout(() => onChange(question, null, conclusion), 800)
+    setTimeoutId(tId)
+    return () => {
+      if (timeoutId != null) clearTimeout(timeoutId)
+    }
+  }, [conclusion])
+
+  return (
+    <>
+      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
+        {`${question.TOCnumber} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
+        <QuestionHelp question={question} />
+      </Text>
+      {question.enabled === false &&
+        <Text color='var(--main-blue)' fontSize='xs' as='b' textDecoration='underline' display='block'>
+          {question.enabledCondition?.disabledText}
+        </Text>}
+      <Box ml='1.5'>
+        <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
+        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
+          Justification
+        </Text>
+        <Textarea disabled={!question.enabled} placeholder='Motivate your answer' size='sm' style={{ resize: 'none' }} value={conclusion} onChange={(e) => setConclusion(e.target.value)} />
+      </Box>
+    </>
+  )
+}
+
+const AccordionItemStyled = ({ title, desc }): JSX.Element => {
+  return (
+    <AccordionItem
+      border='none'
+      isFocusable={false}
+      _hover={{
+        boxShadow: 'none',
+        border: 'none'
+      }}
+      _focus={{ boxShadow: 'none !important' }}
+      _expanded={{ boxShadow: 'none' }}
+    >
+      <AccordionButton
+        display='flex' alignItems='center' boxShadow='none'
+        _hover={{
+          boxShadow: 'none',
+          border: 'none'
+        }}
+        _focus={{ boxShadow: 'none !important' }}
+      >
+        <Text color='var(--main-blue)' fontSize='sm' as='b'>{title}</Text>
+        <AccordionIcon />
+      </AccordionButton>
+      <AccordionPanel pb={4} border='none'>
+        {desc}
+      </AccordionPanel>
+    </AccordionItem>
+  )
+}
 
 interface Props {
   onClose: () => void
   isOpen: boolean
-  card: CardDetail
+  card: any
   projectId: string
   fetchCards: () => any
 }
 
 const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCards }) => {
-  const [title, setTitle] = useState(card?.title)
-  const [description, setDescription] = useState(card?.description)
-  const [assigned, assignUser] = useState(card?.assignedTo)
+  card.userIds = card.userIds ?? []
   const [isLoading, setIsLoading] = useState(false)
-  const projectContext = useContext(ProjectContext)
+  const { users } = useContext(ProjectContext)
+  const [renderTrigger, setRenderTrigger] = useState(0)
+  const [assignedUsers, setAssignedUsers] = useState<any[]>([])
+  const [chapterNb, setChapterNb] = useState(null)
 
-  const [users, setUsers] = useState<any[]>([])
+  useEffect(() => {
+    const stringIds = card.userIds.map(id => String(id)) ?? []
+    setAssignedUsers(users?.filter(user => stringIds.includes(String(user._id))) ?? [])
+  }, [card.userIds, renderTrigger])
 
-  useEffect(async (): Promise<void> => {
-    const userIds = projectContext.project?.users
-    if (Array.isArray(userIds) && userIds.length > 0) {
-      const usersData = await fetchUsers(userIds)
-      setUsers(usersData)
-    } else {
-      setUsers((prevState) => {
-        if (Array.isArray(prevState) && prevState.length === 0) return prevState
-        else return []
-      })
+  useEffect(() => {
+    if (card.title != null) {
+      const nb = card.title.match(/^\s?([0-9.]+)/)
+      if (Array.isArray(nb)) {
+        setChapterNb(nb[1])
+      }
     }
-  }, [projectContext.project?.users])
+  }, [card?.title])
 
-  const handleCardDelete = async (): Promise<void> => {
+  useEffect(() => {
+    if (Array.isArray(card.questions) && chapterNb != null) {
+      card.questions.forEach((q, idx) => (q.TOCnumber = `${chapterNb}.${idx + 1}`))
+    }
+  }, [chapterNb, card.questions])
+
+  const saveQuestion = async (question: any, responses?: any[], conclusion?: string): Promise<void> => {
     setIsLoading(true)
-    const url = `/api/projects/${projectId}/cards/${card._id}`
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}`
+    const data: any = {}
+    if (responses != null) {
+      if (question != null && !isEqual(question.responses?.sort(), responses.sort())) {
+        data.responses = responses
+      }
+    }
+    if (conclusion != null && question.conclusion !== conclusion) data.conclusion = conclusion
+
+    if (isEmpty(data)) return
 
     const response = await fetch(url, {
-      method: 'DELETE',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer'
+      ...defaultFetchOptions,
+      method: 'PATCH',
+      body: JSON.stringify(data)
     })
-
-    const inJSON = await response.json()
-    console.log('handleCardDelete', inJSON)
-    setIsLoading(false)
-    await fetchCards()
-    onClose()
-  }
-
-  const handleModalClose = async (): Promise<void> => {
-    setIsLoading(true)
-    const data = {
-      _id: card._id,
-      title,
-      description,
-      columnId: card.columnId,
-      assignedTo: assigned
+    if (!response.ok) {
+      // TODO
+    } else {
+      if (conclusion != null) question.conclusion = conclusion
+      if (responses != null) question.responses = responses
     }
-
-    await updateCard(data, projectId)
-    await fetchCards()
+    recalculateEnableing()
     setIsLoading(false)
-    onClose()
   }
 
-  const handleClick = async (userId: string): Promise<void> => {
+  const saveComment = async (comment: any, data: any, question: any): Promise<void> => {
     setIsLoading(true)
-    assignUser(userId)
-
-    const data = {
-      _id: card._id,
-      title,
-      description,
-      columnId: card.columnId,
-      assignedTo: userId
+    let method = 'PATCH'
+    let url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${question.id}/comments/${String(comment._id)}`
+    if (isEmpty(comment._id)) {
+      method = 'POST'
+      url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${question.id}/comments`
     }
-
-    await updateCard(data, projectId)
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method,
+      body: JSON.stringify(data)
+    })
+    if (response.ok) {
+      const newComment = await response.json()
+      question.comments = question.comments ?? []
+      const commentIdx = question.comments.findIndex(c => String(c._id) === String(comment._id))
+      if (commentIdx >= 0) question.comments.splice(commentIdx, 1, newComment)
+      else question.comments = [newComment, ...question.comments]
+      setRenderTrigger(renderTrigger + 1)
+    } else {
+      // TODO
+    }
     setIsLoading(false)
   }
 
-  const assignToMenu = (): JSX.Element => {
-    return (
-      <Menu>
-        <MenuButton as={Button} size='xs' rightIcon={<AiOutlineDown />}>
-          Assign To
-        </MenuButton>
-        <MenuList>
-          {users.map((user, index) => (
-            <MenuItem key={index} onClick={async () => await handleClick(user._id)}>
-              {user?.fullName}
-            </MenuItem>
-          ))}
-          <MenuItem onClick={async () => await handleClick('')}>Unassign</MenuItem>
-        </MenuList>
-      </Menu>
-    )
+  const onUserAdd = async (userId: string): Promise<void> => {
+    card.userIds = card.userIds ?? []
+    card.userIds.push(userId)
+    setRenderTrigger(renderTrigger + 1)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'POST',
+      body: JSON.stringify({})
+    })
+    if (!response.ok) {
+      card.userIds = card.userIds.filter(id => String(id) !== String(userId))
+      setRenderTrigger(renderTrigger + 1)
+    }
   }
+
+  const onUserRemove = async (userId: string): Promise<void> => {
+    card.userIds = card.userIds ?? []
+    card.userIds = card.userIds.filter(id => String(id) !== String(userId))
+    setRenderTrigger(renderTrigger + 1)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/users/${userId}`
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'DELETE',
+      body: JSON.stringify({})
+    })
+    if (!response.ok) {
+      // TODO
+    }
+  }
+
+  const fetchComments = async (question?: any): Promise<void> => {
+    const url = question != null
+      ? `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}/comments`
+      : `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/comments`
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'GET'
+    })
+    if (response.ok) {
+      const comments = await response.json()
+      comments.sort((a, b) => a.createdAt - b.createdAt).reverse()
+      if (question != null) question.comments = comments
+      else {
+        card.questions.forEach(q => {
+          q.comments = comments.filter(c => c.questionId === q.id)
+        })
+      }
+    }
+  }
+
+  const saveCard = async (data: any): Promise<void> => {
+    setIsLoading(true)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}`
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    })
+    if (response.ok) {
+      Object.keys(data).forEach(key => {
+        card[key] = data[key]
+      })
+    } else {
+      // TODO
+    }
+    setIsLoading(false)
+  }
+
+  const setDate = (date: Date | null): void => {
+    card.dueDate = date instanceof Date ? +date : date
+    void saveCard({ dueDate: card.dueDate })
+  }
+
+  const setStage = (stage: string): void => {
+    if (card.stage === stage) return
+    card.stage = stage
+    void saveCard({ stage })
+  }
+
+  useEffect(() => {
+    if (isOpen) void fetchComments()
+  }, [isOpen])
+
+  const deleteComment = async (comment: any, question: any): Promise<void> => {
+    setIsLoading(true)
+    const url = `/api/projects/${String(card.projectId)}/cards/${String(card._id)}/questions/${String(question.id)}/comments/${String(comment._id)}`
+    const response = await fetch(url, {
+      ...defaultFetchOptions,
+      method: 'DELETE',
+      body: JSON.stringify({})
+    })
+    if (response.ok) {
+      question.comments = question.comments ?? []
+      question.comments = question.comments.filter(c => String(c._id) !== String(comment._id))
+      setRenderTrigger(renderTrigger + 1)
+    } else {
+      // TODO
+    }
+    setIsLoading(false)
+  }
+
+  const recalculateEnableing = (): void => {
+    if (Array.isArray(card?.questions)) {
+      questionEnabler(card?.questions)
+    }
+  }
+
+  useEffect(recalculateEnableing, [card._id, card?.questions])
 
   return (
-    <>
-      <Modal size='xl' onClose={handleModalClose} isOpen={isOpen} isCentered>
-        <ModalOverlay />
-        {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
-        <ModalContent maxW='64rem'>
-          <ModalBody>
-            {(card.label != null) && (
-              <Badge bg={card.label.type} color='white'>
-                {card.label.type}
-              </Badge>
-            )}
-            <Box display='flex' marginTop='1rem'>
-              <AiOutlineLaptop />
-              <Input
-                name='title'
-                size='sm'
-                marginLeft='1rem'
-                value={title}
-                fontWeight='bold'
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder='Card title'
-              />
-            </Box>
+    <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
+      <ModalOverlay maxHeight='100vh' />
+      {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
+      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative'>
+        <ModalBody p='0' height='100%' display='flex' width='100%' overflowY='scroll' position='relative'>
+          {(card.label != null) && (
+            <Badge bg={card.label.type} color='white'>
+              {card.label.type}
+            </Badge>
+          )}
+          <Flex flexDirection='column' height='100%' width='100%' justifyContent='space-between'>
             <Box display='flex'>
-              <Box width='100%' marginTop='2rem'>
-                <Box display='flex' fontWeight='bold'>
-                  <GrTextAlignFull />
-                  <Text marginLeft='1rem'>Description</Text>
+              <Box width='100%' marginTop='2rem' ml='4'>
+                <Box ml='-4' position='relative'>
+                  <Box width='4px' bgColor='var(--main-blue)' borderRightRadius='15px' height='100%' position='absolute' left='0' top='0' />
+                  <Text fontSize={[16, 20]} fontWeight='400' px='4'>
+                    {card.title.replace(/=g(b|e)=/g, '')}
+                  </Text>
                 </Box>
-                <Box marginLeft='1.5rem' minHeight='200px' width='90%'>
-                  <QuillEditor value={description} onChange={setDescription} />
+                <Box>
+                  <Text fontSize={[16, 20]} color='var(--text-gray)' fontWeight='400' px='4'>
+                    {card.description?.replace(/=g(b|e)=/g, '') ?? ''}
+                  </Text>
                 </Box>
+
+                <Accordion allowToggle allowMultiple>
+                  <AccordionItemStyled title='Example' desc={loremIpsum} />
+                  <AccordionItemStyled title='Recommandation' desc={loremIpsum} />
+                </Accordion>
+                {card?.questions?.map((q, index) =>
+                  <Box key={`${card._id}-${q.id}-${index}`} p={3}>
+                    <Question question={q} onChange={saveQuestion} />
+                    <Comment comment={{}} onSave={data => saveComment({}, data, q)} />
+                    {q.comments?.map(c => (
+                      <Comment key={c._id} comment={c} onSave={data => saveComment(c, data, q)} onDelete={() => deleteComment(c, q)} />
+                    ))}
+                  </Box>
+                )}
               </Box>
-              <Box display='flex' flexDirection='column'>
-                <CardLabel id={card._id} projectId={card.projectId} />
-                {assignToMenu()}
-              </Box>
+              <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='2'>
+                <Flex flexDirection='column'>
+                  <Flex justifyContent='flex-end'>
+                    <ModalCloseButton position='relative' />
+                  </Flex>
+                  <Flex justifyContent='space-between' alignItems='center'>
+                    <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Due date</Text>
+                  </Flex>
+                  <SingleDatepicker name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
+                    <Flex justifyContent='space-between' alignItems='center'>
+                      <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
+                        {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : 'click to set'}
+                      </Text>
+                      {card.dueDate != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
+                    </Flex>
+                  </SingleDatepicker>
+                  <Flex justifyContent='space-between' alignItems='center'>
+                    <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>Assigned to</Text>
+                    <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
+                      <FiEdit2 color='#C9C9C9' cursor='pointer' />
+                    </UserMenu>
+                  </Flex>
+                  {assignedUsers.map(user => (
+                    <Flex key={user._id} paddingY='1'>
+                      <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} />
+                      <Text fontSize='sm' fontWeight='600' ml='2'>{getUserDisplayName(user)}</Text>
+                    </Flex>))}
+                  <label>
+                    <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Stage</Text>
+                    <Select size='xs' value={card.stage ?? 'PREPARATION'} onChange={(e) => setStage(e?.target?.value || card.stage)}>
+                      <option value='PREPARATION'>Preparation</option>
+                      <option value='EXECUTION'>Execution</option>
+                      <option value='UTILISATION'>Utilisation</option>
+                    </Select>
+                  </label>
+                </Flex>
+              </Flex>
             </Box>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              size='xs'
-              marginRight='1rem'
-              onClick={handleCardDelete}
-              disabled={isLoading}
-              isLoading={isLoading}
-              loadingText='Deleting'
-              bg='red.500'
-              color='white'
-              _hover={{
-                backgroundColor: 'red.600'
-              }}
-            >
-              <AiOutlineDelete />
-            </Button>
-            <Button
-              size='xs'
-              onClick={handleModalClose}
-              disabled={isLoading}
-              isLoading={isLoading}
-              loadingText='Updating'
-            >
-              <AiOutlineClose /> Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+          </Flex>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
 
 export default CardDetailsModal
+
+export const GenerateAnswers = ({ question, onChange }: { question: any, onChange?: Function }): JSX.Element => {
+  const [value, setValue] = React.useState<any>(question.responses ??  '')
+  const valueHandler = (value): void => {
+    if (!Array.isArray(value)) value = [value]
+    if (Array.isArray(value) && value.length > 1) {
+      value = value.filter(v => v !== '')
+      value = Array.from(new Set<any>(value))
+    }
+    setValue(value)
+    if (onChange != null) onChange(value)
+  }
+  if (question.type === 'radio') {
+    return (
+      <RadioGroup onChange={valueHandler} value={value[0]} name={question.id}>
+        <Stack direction='row'>
+          {question?.answers?.map((a, idx) => (
+            <Radio
+              key={idx} value={`${String(idx)}`} disabled={!question.enabled} size='sm' fontSize='sm'
+              opacity={question.enabled ? 1 : 0.5}
+            >
+              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
+            </Radio>
+          ))}
+        </Stack>
+      </RadioGroup>
+    )
+  } else if (question.type === 'checkbox') {
+    return (
+      <CheckboxGroup onChange={valueHandler} value={Array.isArray(value) ? value : [value]}>
+        <Stack direction='row'>
+          {question?.answers?.map((a, idx) => (
+            <Checkbox
+              size='sm' key={idx} value={`${idx}`} disabled={!question.enabled} fontSize='sm'
+              opacity={question.enabled ? 1 : 0.5}
+            >
+              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
+            </Checkbox>
+          ))}
+        </Stack>
+      </CheckboxGroup>
+    )
+  }
+  return <></>
+}

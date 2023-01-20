@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Head from 'next/head'
 import NextNprogress from 'nextjs-progressbar'
 import { SessionProvider } from 'next-auth/react'
+import { ToastContextProvider } from '@/src/store/toast-context'
 
 import 'nprogress/nprogress.css'
 
@@ -37,9 +38,11 @@ const App = ({ Component, pageProps }): JSX.Element => {
       </Head>
       <NextNprogress color='#0079bf' startPosition={0.3} stopDelayMs={200} height={4} />
       <ChakraProvider theme={theme}>
-        <SessionProvider session={pageProps.session}>
-          <Component {...pageProps} />
-        </SessionProvider>
+        <ToastContextProvider>
+          <SessionProvider session={pageProps.session}>
+            <Component {...pageProps} />
+          </SessionProvider>
+        </ToastContextProvider>
       </ChakraProvider>
     </>
   )

@@ -1,3 +1,4 @@
+import { defaultFetchOptions } from './api'
 
 export const fetchColumns = async (projectId: string): Promise<any> => {
   const response = await fetch(`/api/projects/${projectId}/columns`).then(async (response) =>
@@ -10,19 +11,10 @@ export const deleteColumn = async (columnId: string, projectId: string): Promise
   const url = `$/api/projects/${projectId}/columns/${columnId}`
 
   const response = await fetch(url, {
-    method: 'DELETE',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer'
+    ...defaultFetchOptions,
+    method: 'DELETE'
   })
-
   const inJSON = await response.json()
-
   return inJSON
 }
 
@@ -36,7 +28,7 @@ export const addColumnToProject = async (columnId: string, projectId: string, co
   const data = {
     id: columnId,
     projectId,
-    columnName: 'Add title',
+    name: 'Add title',
     dateCreated: new Date().toLocaleString(),
     sequence
   }
@@ -44,15 +36,8 @@ export const addColumnToProject = async (columnId: string, projectId: string, co
   const url = `/api/projects/${data.projectId}/columns`
 
   const response = await fetch(url, {
+    ...defaultFetchOptions,
     method: 'POST',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
     body: JSON.stringify(data)
   })
 
@@ -61,26 +46,19 @@ export const addColumnToProject = async (columnId: string, projectId: string, co
   return inJSON
 }
 
-export const updateColumn = async (obj: { sequence?: number, columnName?: string, columnId: string, projectId: string }): Promise<any> => {
+export const updateColumn = async (obj: { sequence?: number, name?: string, columnId: string, projectId: string }): Promise<any> => {
   const data: any = {
     _id: obj.columnId
   }
   if (obj.sequence != null) data.sequence = obj.sequence
-  if (obj.columnName != null) data.columnName = obj.columnName
+  if (obj.name != null) data.name = obj.name
   if (Object.keys(data).length === 1) return
 
   const url = `/api/projects/${obj.projectId}/columns/${obj.columnId}`
 
   const response = await fetch(url, {
+    ...defaultFetchOptions,
     method: 'PATCH',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
     body: JSON.stringify(data)
   })
 

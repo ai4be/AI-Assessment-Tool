@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { MdLabelOutline } from 'react-icons/md'
 import { Label } from '@/src/types/cards'
+import { defaultFetchOptions } from '@/util/api'
 
 interface IProps {
   id: string
@@ -50,15 +51,8 @@ const CardLabel: FC<IProps> = ({ id, projectId }) => {
     }
     const url = `/api/projects/${projectId}/cards/${data._id}`
     const response = await fetch(url, {
+      ...defaultFetchOptions,
       method: 'PATCH',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
       body: JSON.stringify(data)
     })
     const inJSON = await response.json()
@@ -66,9 +60,6 @@ const CardLabel: FC<IProps> = ({ id, projectId }) => {
 
   return (
     <Box marginTop='2rem' flexDirection='column' width='20%'>
-      <Text as='samp' whiteSpace='nowrap'>
-        ADD TO CARD
-      </Text>
       <List spacing={3} p='5px'>
         <ListItem>
           <Menu size='xs'>

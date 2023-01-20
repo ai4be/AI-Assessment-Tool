@@ -14,16 +14,16 @@ const WelcomeScreen = (): JSX.Element => {
           p='4rem'
         >
           <Box>
-            <Title fontSize={['40px', '40px', '50px', '50px']} fontWeight='bold' lineHeight='50px'>
+            <Text fontSize={['40px', '40px', '50px', '50px']} fontWeight='bold' lineHeight='50px'>
               AI Assessment Tool
-            </Title>
-            <Header
+            </Text>
+            <Text
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
             >
               Is your AI system Racists|Fair|Trustworthy|Safe|Secure|Privacy preserving|Ethical?
               Collaborate with your team to assess if your AI implementation follows ethical guidelines.
-            </Header>
+            </Text>
           </Box>
           <Box>
             <Image

@@ -14,8 +14,6 @@ const SideBar = (props): JSX.Element => {
 
   const sidebarMenu = [
     { path: '/home', buttonName: 'Home', page: 'home', icon: AiOutlineHome },
-    { path: '/projects', buttonName: 'Projects', page: 'project', icon: AiOutlineCreditCard },
-    { path: '/templates', buttonName: 'Templates', page: 'templates', icon: AiOutlineBuild },
     { path: '/settings', buttonName: 'Settings', page: 'settings', icon: AiOutlineSetting }
   ]
 

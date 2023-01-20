@@ -1,12 +1,13 @@
-export interface CardDetail {
+export interface Card {
   _id: string
   title: string
-  description: string
-  columnId?: string
-  assignedTo?: string
-  projectId?: string
+  desc: string
+  userIds?: string[] | any[]
+  roleIds?: string[] | any[]
+  projectId?: string | any[]
   sequence?: number
   label?: Label
+  questions?: any[]
 }
 
 export interface Label {
@@ -14,6 +15,10 @@ export interface Label {
   type: string
 }
 
-export interface CardSlice {
-  cards: CardDetail[]
+export enum CardStage {
+  PREPARATION = 'PREPARATION',
+  EXECUTION = 'EXECUTION',
+  UTILISATION = 'UTILISATION'
 }
+
+export const stageValues: string[] = Object.values(CardStage)

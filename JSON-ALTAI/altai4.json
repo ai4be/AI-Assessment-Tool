@@ -1,21 +1,21 @@
 {
     "id": "1669813623",
     "title": "Transparency",
-    "description": "A crucial component of achieving Trustworthy AI is transparency which encompasses three elements: 1) traceability, 2) explainability and 3) open communication about the limitations of the AI system. Technical robustness requires that AI systems be developed with a preventative approach to risks and in a manner such that they reliably behave as intended while minimising unintentional and unexpected harm, and preventing unacceptable harm. This should also apply to potential changes in their operating environment or the presence of other agents (human and artificial) that may interact with the system in an adversarial manner. In addition, the physical and mental integrity of humans should be ensured.",
+    "desc": "A crucial component of achieving Trustworthy AI is transparency which encompasses three elements: 1) traceability, 2) explainability and 3) open communication about the limitations of the AI system. Technical robustness requires that AI systems be developed with a preventative approach to risks and in a manner such that they reliably behave as intended while minimising unintentional and unexpected harm, and preventing unacceptable harm. This should also apply to potential changes in their operating environment or the presence of other agents (human and artificial) that may interact with the system in an adversarial manner. In addition, the physical and mental integrity of humans should be ensured.",
     "sections" :
     [
         {
-            "id" : "1669813752", 
+            "id" : "1669813752",
             "title" : "Traceability",
             "desc" : "This subsection helps to self-assess whether the processes of the development of the AI system, i.e. the data and processes that yield the AI systemís decisions, is properly documented to allow for traceability, increase transparency and, ultimately, build trust in AI in society."
-        },        
+        },
         {
-            "id" : "1669813766", 
+            "id" : "1669813766",
             "title" : "Explainability",
             "desc" : "This subsection helps to self-assess the explainability of the AI system. The questions refer to the ability to explain both the technical processes of the AI system and the reasoning behind the decisions or predictions that the AI system makes. Explainability is crucial for building and maintaining trust in AI systems."
         },
         {
-            "id" : "1669813782", 
+            "id" : "1669813782",
             "title" : "Communication",
             "desc" : "This subsection helps to self-assess whether the AI system's capabilities and limitations have been communicated to the users in a manner appropriate to the use case at hand. This could encompass communication of the AI system's level of accuracy as well as its limitations."
         }
@@ -32,9 +32,9 @@
                 {
                     "id": "T-Q1.1-B",
                     "title": "Did you put in place measures to continuously assess the quality of the input data to the =gb=AI system=ge=?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "isScored": 0,
-                    "answers": 
+                    "answers":
                     [
                         "Yes", "To some extent", "No", "Don't know"
                     ]
@@ -42,18 +42,18 @@
                 {
                     "id": "T-Q1.2-B",
                     "title": "Can you trace back which data was used by the =gb=AI system=ge= to make a certain decision or recommendation? ",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
                         "Yes", "No", "Don't know"
                     ]
-                
+
                 },
                 {
                     "id": "T-Q1.3-B",
                     "title": "Can you trace back which AI model or rules led to the decision(s) or recommendation(s) of the =gb=AI system=ge=?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
@@ -63,7 +63,7 @@
                 {
                     "id": "T-Q1.4-B",
                     "title": "Did you put adequate logging practices in place to record the decision(s) or recommendation(s) of the =gb=AI system=ge=?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
@@ -73,7 +73,7 @@
                 {
                     "id" : "T-Q1.5-R",
                     "title" : "What is the level of traceability of the =gb=AI system=ge=?",
-                    "type" : "radiogroup",
+                    "type" : "radio",
                     "visibleIf" : "",
                     "isScored" : 1,
                     "answers" : [
@@ -85,16 +85,16 @@
         {
             "id" : "1669976136",
             "title" : "Evaluate Your AI System's explainability",
-            "desc" : "This subsection is about evaluating how well an AI system can explain itself. The questions in this subsection focus on the ability of the AI system to explain both how it works and why it makes the decisions it does. It's important for AI systems to be able to explain themselves because this helps people trust them. When an AI system makes a decision, it should be able to explain why it made that decision, if possible. If it's not possible to explain why a decision was made, the system is considered a "black box" and requires special attention. In these cases, other ways of making the system more explainable, such as by making it easy to track its decisions or by being transparent about its capabilities, may be necessary. The amount of explainability needed depends on the situation and how serious the consequences could be if the AI system makes a mistake.",           
+            "desc" : "This subsection is about evaluating how well an AI system can explain itself. The questions in this subsection focus on the ability of the AI system to explain both how it works and why it makes the decisions it does. It's important for AI systems to be able to explain themselves because this helps people trust them. When an AI system makes a decision, it should be able to explain why it made that decision, if possible. If it's not possible to explain why a decision was made, the system is considered a \"black box\" and requires special attention. In these cases, other ways of making the system more explainable, such as by making it easy to track its decisions or by being transparent about its capabilities, may be necessary. The amount of explainability needed depends on the situation and how serious the consequences could be if the AI system makes a mistake.",
             "section" : "1669813766",
-            "questions": 
+            "questions":
             [
                 {
                     "id": "T-Q2.1-B",
                     "title": "Does the AI system explain its decisions?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "isScored": 0,
-                    "answers": 
+                    "answers":
                     [
                         "Yes", "To some extent", "No", "Don't know"
                     ]
@@ -102,7 +102,7 @@
                 {
                     "id": "T-Q2.2-B",
                     "title": "Do you continuously survey the =gb=users=ge= to ask them whether they understand the decision(s) of the =gb=AI system=ge=?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
@@ -112,7 +112,7 @@
                 {
                     "id" : "T-Q2.3-R",
                     "title" : "What is the level of explainability of the =gb=AI system=ge=?",
-                    "type" : "radiogroup",
+                    "type" : "radio",
                     "visibleIf" : "",
                     "isScored" : 1,
                     "answers" : [
@@ -127,11 +127,11 @@
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669813782",
             "questions":
-            [    
+            [
                 {
                     "id": "T-Q3.1-B",
                     "title": "In cases of interactive =gb=AI systems=ge= (e.g., chatbots, robo-lawyers), do you communicate to =gb=users=ge= that they are interacting with an AI system instead of a human?",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "isScored": 0,
                     "answers": [
                         "Yes", "To some extent", "No", "Don't know"
@@ -139,27 +139,27 @@
                 },
                 {
                     "id": "T-Q3.2-B",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "",
                     "title": "Did you establish mechanisms to inform =gb=users=ge= about the purpose, criteria and limitations of the decision(s) generated by the =gb=AI system=ge=?",
                     "isRequired": 0,
-                    "choices": [
+                    "answers": [
                         "Yes", "No", "Don't know"
                     ]
                 },
                 {
-                    "type": "radiogroup",
-                    "name": "T-Q3.3-B",
+                    "id": "T-Q3.3-B",
+                    "type": "radio",
                     "visibleIf": "",
                     "title": "Did you communicate the technical limitations and potential risks of the =gb=AI system=ge= to =gb=end-users=ge=, such as its level of accuracy and/or error rates?",
                     "isRequired": true,
-                    "choices": [
+                    "answers": [
                         "Yes", "No", "To some extent", "Don't know"
                     ]
                 },
                 {
                     "id": "T-Q3.4-B",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "",
                     "title": "Did you provide appropriate training material and disclaimers to users on how to adequately use the =gb=AI system=ge=?",
                     "isScored": 0,
@@ -170,7 +170,7 @@
                 {
                     "id": "T-S1-R",
                     "title": "Based on your answers to the previous questions, how would you rate the measures you have adopted to ensure transparency? ",
-                    "type": "radiogroup",
+                    "type": "radio",
                     "visibleIf": "",
                     "isScored": 1,
                     "answers": [

@@ -1,41 +1,43 @@
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { Box, Badge, Avatar } from '@chakra-ui/react'
+import { Box, Badge, Flex, Text, AvatarGroup, Avatar } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
-import { CardDetail } from '@/src/types/cards'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers } from '@/util/users'
+import { fetchUsers, getUserDisplayName } from '@/util/users'
 
 interface Props {
   showCardDetail: (cardId: string) => void
   cardIndex: number
-  card: CardDetail
+  card: any
 }
 
 const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
   const projectContext = useContext(ProjectContext)
   const [users, setUsers] = useState<any[]>([])
 
-  useEffect(async (): Promise<void> => {
-    if (projectContext.project?.users != null) {
-      const usersData = await fetchUsers(projectContext.project?.users)
-      setUsers(usersData)
+  useEffect((): void => {
+    if (projectContext.project?.userIds != null) {
+      void fetchUsers(projectContext.project?.userIds).then(usersData => setUsers(usersData))
     } else {
       setUsers((prevValue) => {
         if (prevValue.length === 0) return prevValue
         return []
       })
     }
-  }, [projectContext.project?.users])
+  }, [projectContext.project?.userIds])
 
   const loadAssignedToUser = (): JSX.Element => {
-    if (card.assignedTo == null) return
-
-    const user = users.filter((user) => user._id === card.assignedTo)
+    if (card.userIds == null) return <></>
+    const stringUserIds = card.userIds.map(String)
+    const assignedUsers = users.filter((user) => stringUserIds.includes(String(user._id)))
 
     return (
-      <Box display='flex' justifyContent='flex-end'>
-        <Avatar size='xs' name={user[0]?.fullName} />
-      </Box>
+      <Flex justifyContent='flex-end'>
+        <AvatarGroup max={5}>
+          {assignedUsers.map((user) => (
+            <Avatar key={user._id} size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} />
+          ))}
+        </AvatarGroup>
+      </Flex>
     )
   }
 
@@ -66,7 +68,7 @@ const Card: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
               {card.label.type}
             </Badge>
           )}
-          <p>{card.title}</p>
+          <Text fontSize='sm' >{card.title?.replace(/(=g(b|e)=)/g, '')}</Text>
           {loadAssignedToUser()}
         </Box>
       )}
