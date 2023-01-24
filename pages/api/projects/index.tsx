@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createProjectWithDefaultColumnsAndCardsAndActivity, getProject, getUserProjects } from '@/src/models/project'
-import { dataToCards } from '@/src/models/data'
+import { dataToCards } from '@/src/models/card'
 import { defaultCards, defaultRoles } from '@/src/data'
 import { addRoles } from '@/src/models/role'
 import { isConnected } from '@/util/temp-middleware'

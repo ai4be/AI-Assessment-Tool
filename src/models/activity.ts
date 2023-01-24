@@ -1,16 +1,17 @@
 import { ObjectId } from 'mongodb'
-import { toObjectId, connectToDatabase } from './mongodb'
+import { toObjectId, connectToDatabase, addToWhere } from './mongodb'
 import { Activity as ActivityTypeDef, ActivityData, ActivityType, ActivityVisibility } from '@/src/types/activity'
 import { isEmpty } from '@/util/index'
 import { CardStage } from '@/src/types/card'
+import { Comment as CommentType } from '@/src/types/comment'
+import { Project, Role } from '@/src/types/project'
 import Model, { generatePaginationQuery } from './model'
-import { Comment as CommentType } from '../types/comment'
 import { Comment } from './comment'
 import { getCard } from './card'
 import { getColumn } from './column'
-import { Project, Role } from '../types/project'
 import { getUser } from './user'
 import { getUserDisplayName } from '@/util/users'
+import { getUserProjects } from './project'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class Activity extends Model {
@@ -151,7 +152,7 @@ export default class Activity extends Model {
   }
 
   static async createCommentUpdateActivity (commentId: string): Promise<string | null> {
-    const comment = await Comment.get({ _id: commentId })
+    const comment = await Comment.get(commentId)
     if (comment == null) return null
     const { projectId, userId, userIds, questionId, cardId } = comment
     if (userIds != null && userIds?.length > 0) {
@@ -176,6 +177,14 @@ export default class Activity extends Model {
     if (data.conclusion != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_CONCLUSION_UPDATE, { conclusion: data.conclusion }, { cardId, questionId }))
     if (data.responses != null) activityIds.push(await this.createActivity(card.projectId, userId, ActivityType.QUESTION_RESPONSE_UPDATE, { responses: data.responses }, { cardId, questionId }))
     return activityIds
+  }
+
+  // WIP this function is not finished
+  static async getActivitiesForUser (userId: string, where: any, limit: number = 500, sort: [field: string, order: number], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
+    const projects = await getUserProjects(userId)
+    if (projects == null || projects.length === 0) return { count: 0, limit, data: [], page: '' }
+    addToWhere(where, 'projectId', projects.map((p) => p._id), '$in')
+    return await Activity.find(where, limit, Object.entries(sort)[0], page)
   }
 
   static async find (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
@@ -216,7 +225,7 @@ export default class Activity extends Model {
           $lookup: {
             from: 'cards',
             // localField: 'questionId',
-            // foreignField: 'questions.id',
+            // foreignField: 'questions.id', // doesn't work, we end up with the cards and not the questions
             let: { question_id: '$questionId' },
             pipeline: [
               { $unwind: '$questions' },
@@ -287,9 +296,10 @@ export default class Activity extends Model {
       ])
     const count = await db
       .collection(this.TABLE_NAME)
-      .find(wherePagined)
+      .find(where)
       .sort([sort])
       .count()
+
     const data = await res.toArray()
     return {
       count,

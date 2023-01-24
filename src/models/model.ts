@@ -1,11 +1,14 @@
 import { ObjectId } from 'mongodb'
 import { connectToDatabase, toObjectId } from './mongodb'
 import sanitize from 'mongo-sanitize'
+import clonedeep from 'lodash.clonedeep'
 // import { isEmpty } from '@/util/index'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default abstract class Model {
   static TABLE_NAME = 'TODO'
+  static DEFAULT_LIMIT = 500
+  static DEFAULT_SORT: [field: string, dir: number] = ['_id', 1]
 
   static async create (data: any): Promise<string | null> {
     const { db } = await connectToDatabase()
@@ -57,6 +60,7 @@ export default abstract class Model {
 }
 
 export function generatePaginationQuery (where: any, sort: any[], nextKey?: any): { wherePagined: any, nextKeyFn: Function } {
+  where = clonedeep(where)
   const sortField = sort == null ? null : sort[0]
 
   function nextKeyFn (items: any[]): string | null {
@@ -79,6 +83,8 @@ export function generatePaginationQuery (where: any, sort: any[], nextKey?: any)
   }
 
   nextKey = JSON.parse(Buffer.from(nextKey, 'base64').toString('utf-8'))
+
+  console.log('nextKey', nextKey)
 
   let wherePagined = where
 

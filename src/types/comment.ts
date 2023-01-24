@@ -1,3 +1,4 @@
+
 export interface Comment {
   _id: string
   text: string
@@ -8,4 +9,5 @@ export interface Comment {
   userIds?: string[]
   createdAt: Date
   updatedAt?: Date
+  deletedAt?: Date
 }

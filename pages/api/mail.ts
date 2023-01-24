@@ -27,7 +27,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       }
       const user = await getUser({ email })
       const page = user != null ? 'login' : 'signup'
-      const html = templates.invitation(page, tokenInstance.token, email, projectId, String(req.headers.origin))
+      const html = templates.getInvitationHtml(page, tokenInstance.token, email, projectId, String(req.headers.origin))
       await sendMail(email, 'Invitation to AI4Belgium', html)
       return res.status(200).send(null)
     }

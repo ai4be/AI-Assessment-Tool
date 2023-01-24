@@ -4,8 +4,13 @@ import { isEmpty } from '@/util/index'
 import { hashPassword, verifyPassword } from '@/util/auth'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 import { User } from '@/src/types/user'
+import Model from '@/src/models/model'
 
 const TABLE_NAME = 'users'
+
+export default class UserModel extends Model {
+  static TABLE_NAME = TABLE_NAME
+}
 
 export const getUser = async ({ _id, email }: { _id?: string | ObjectId, email?: string }, omitFields: string[] = ['password']): Promise<User | null> => {
   const { db } = await connectToDatabase()

@@ -1,3 +1,14 @@
+import { Project } from '@/src/types/project'
+
+const BASE_URL = process.env.BASE_URL ?? ''
+
+export const htmlLogo = `
+  <h1 style="font-size: 40px;">
+    <p style="color: #0000E6; font-weight: 600; font-family: Helvetica,Arial,sans-serif; text-align: center;">
+      AI<sub style="color: #000;">4</sub>Belgium
+    </p>
+  </h1>
+`
 
 export function getInvitationHtml (page: string, token: string, email: string, projectId: string, hostname: string): string {
   return `
@@ -6,7 +17,7 @@ export function getInvitationHtml (page: string, token: string, email: string, p
     </style>
 
     <article style="display: block; text-align: left; width: 650px; margin: 0 auto;">
-      <h1 style="font-size: 40px;"><p style="color: #0000E6; font-weight: 600; font-family: Helvetica,Arial,sans-serif; text-align: center;">AI<sub style="color: #000;">4</sub>Belgium</p></h1>
+      ${htmlLogo}
 
       <div style="font: 20px Helvetica, sans-serif; color: #333;">
           <p>You have been invited for the assessment of an AI project!</p>
@@ -21,14 +32,14 @@ export function getInvitationHtml (page: string, token: string, email: string, p
   `
 }
 
-export function resetPasswordHtml (token: string, hostname: string): string {
+export function getResetPasswordHtml (token: string, hostname: string): string {
   return `
     <style>
       a:hover { color: #333; text-decoration: none; }
     </style>
 
     <article style="display: block; text-align: left; width: 650px; margin: 0 auto;">
-      <h1 style="font-size: 40px;"><p style="color: #0000E6; font-weight: 600; font-family: Helvetica,Arial,sans-serif; text-align: center;">AI<sub style="color: #000;">4</sub>Belgium</p></h1>
+      ${htmlLogo}
 
       <div style="font: 20px Helvetica, sans-serif; color: #333;">
           <p>You have requested a password reset!</p>
@@ -50,11 +61,7 @@ export function resetPasswordHtml (token: string, hostname: string): string {
 export function validateEmailHtml (code: string): string {
   return `
   <article style="display: block; text-align: center; width: 370px; margin: 0 auto;">
-    <h1 style="font-size: 40px;">
-      <p style="color: #0000E6; font-weight: 600; font-family: Helvetica,Arial,sans-serif; text-align: center;">
-        AI<sub style="color: #000;">4</sub>Belgium
-      </p>
-    </h1>
+    ${htmlLogo}
 
     <div style="font: 20px Helvetica, sans-serif; color: #333; display: flex; flex-direction: column; justify-content: center; align-items: center;">
       <p>Use this code to validate your email</p>
@@ -70,10 +77,38 @@ export function validateEmailHtml (code: string): string {
   `
 }
 
+export function commentMentionHtml (commentId: string, projectId: string, cardId: string, hostname: string = BASE_URL): string {
+  return `
+    <div style='display: flex; flex-direction: column; justify-content: center; align-items: center;'>
+      ${htmlLogo}
+      <span>
+        You have been mentioned in a comment,
+          <a href='${hostname}/projects/${projectId}?card=${cardId}&comment=${commentId}' style="color: #dc8100; text-decoration: underline;">
+            click here
+          </a> to see it
+      </span>
+    </div>
+  `
+}
+
+export function getProjectActivityHtml (projects: Project[], hostname: string = BASE_URL): string {
+  return `
+    <div style='display: flex; flex-direction: column; justify-content: center; align-items: center;'>
+      ${htmlLogo}
+      <span>
+        There is new activity on your project${projects.length > 1 ? 's' : ''}:
+      </span>
+      ${projects.map(project => `<a href='${hostname}/projects/${project._id}' style="color: #dc8100; text-decoration: underline;">${project.name}</a>`).join('')}
+    </div>
+  `
+}
+
 const templates = {
-  invitation: getInvitationHtml,
-  resetPassword: resetPasswordHtml,
-  validateEmailHtml
+  getInvitationHtml,
+  getResetPasswordHtml,
+  validateEmailHtml,
+  commentMentionHtml,
+  getProjectActivityHtml
 }
 
 export default templates

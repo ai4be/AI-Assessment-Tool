@@ -3,6 +3,9 @@ import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
 import { Comment as CommentTypeDef } from '@/src/types/comment'
 import Activity from './activity'
+import Model from './model'
+import { JobMentionNotification } from './job'
+import { isEmpty } from '@/util/index'
 
 export const TABLE_NAME = 'comments'
 
@@ -26,7 +29,7 @@ export const getComment = async (where: string | ObjectId | any): Promise<Commen
 }
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class Comment {
+export class Comment extends Model {
   static TABLE_NAME = TABLE_NAME
 
   static getUserIdsFromMentions (comment: CommentTypeDef): ObjectId[] {
@@ -36,10 +39,6 @@ export class Comment {
     * (?=\)) - Lookahead for ). This is the end of the mention
     */
     return comment?.text?.match(/(?<=@\[[^\]]+\]\()[^)]+(?=\))/g)?.map(toObjectId) ?? []
-  }
-
-  static async get (where: any): Promise<CommentTypeDef> {
-    return await getComment(where)
   }
 }
 
@@ -74,6 +73,7 @@ export const createComment = async (data: any): Promise<CommentTypeDef | null> =
   const result = await db.collection(TABLE_NAME).insertOne(localData)
   if (result.result.ok === 1) {
     const comment = await db.collection(TABLE_NAME).findOne({ _id: result.insertedId })
+    void JobMentionNotification.createMentionNotificationJob(comment)
     return comment
   }
   return null
@@ -95,6 +95,7 @@ export const updateComment = async (_id: ObjectId | string, data: any): Promise<
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: localData })
+  void JobMentionNotification.createMentionNotificationJob(_id)
   return res.result.ok === 1
 }
 
@@ -109,7 +110,7 @@ export const deleteComment = async (_id: ObjectId | string): Promise<boolean> =>
   _id = toObjectId(_id)
   const res = await db
     .collection(TABLE_NAME)
-    .deleteOne({ _id })
+    .updateOne({ _id }, { $set: { deletedAt: Date.now(), text: null, userIds: [] } })
   return res.result.ok === 1
 }
 

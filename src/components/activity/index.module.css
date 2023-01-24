@@ -102,6 +102,11 @@
   border: 1px solid blue;
 }
 
+.unSeen .content {
+  border-width: 2px;
+  background-color: #f1f1f1;
+}
+
 .date {
   box-sizing: border-box;
   position: absolute;

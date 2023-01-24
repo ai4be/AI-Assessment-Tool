@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import useSWR from 'swr'
 import {
   Avatar,
   Box,
@@ -16,7 +15,7 @@ import { isEmpty } from '@/util/index'
 import { QuestionType } from '@/src/types/card'
 import { useOnScreen } from '@/src/hooks/index'
 import UserContext from '@/src/store/user-context'
-import { defaultFetchOptions, HTTP_METHODS, fetcher } from '@/util/api'
+import { defaultFetchOptions, HTTP_METHODS } from '@/util/api'
 
 const formatDate = (date: string | Date): string => {
   const d = new Date(date)
@@ -31,41 +30,23 @@ const formatDate = (date: string | Date): string => {
   return format(d, formatExpression)
 }
 
-const queryObjToQueryString = (query: any): string => {
-  return Object.keys(query).map(k => {
-    if (typeof query[k] === 'object') {
-      return Object.keys(query[k]).map(kk => `${k}[${kk}]=${String(query[k][kk])}`).join('&')
-    }
-    return `${k}=${String(query[k])}`
-  }).join('&')
-}
+// const queryObjToQueryString = (query: any): string => {
+//   return Object.keys(query).map(k => {
+//     if (typeof query[k] === 'object') {
+//       return Object.keys(query[k]).map(kk => `${k}[${kk}]=${String(query[k][kk])}`).join('&')
+//     }
+//     return `${k}=${String(query[k])}`
+//   }).join('&')
+// }
 
-export const ActivityTimeline = ({ projectId }: { projectId?: string }): JSX.Element => {
-  console.log('rendering timeline', projectId)
-  const [query, setQuery] = useState<any>({
-    ...(projectId != null ? { projectId } : {}),
-    commentId: { exists: true, ne: 'adsfasf'}
-  })
-  const [activities, setActivities] = useState<DisplayActivity[]>([])
-  const { data, error, mutate } = useSWR(`/api/activities?${queryObjToQueryString(query)}`, fetcher)
-  console.log('rendering timeline', projectId, activities)
-
-  useEffect(() => {
-    if (data?.data != null) {
-      const dataToAdd = data.data.filter((a: DisplayActivity) => !activities.some((b: DisplayActivity) => String(a._id) === String(b._id)))
-      const newActivities = [...activities, ...dataToAdd]
-      newActivities.sort((a: DisplayActivity, b: DisplayActivity) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      setActivities(newActivities)
-    }
-  }, [data])
-
+export const ActivityTimeline = ({ activities = [], total, loadMoreFn }: { activities: DisplayActivity[], total: number, loadMoreFn?: Function }): JSX.Element => {
   return (
     <Box className={style.timeline}>
       {activities.map((activity: DisplayActivity, idx: number) =>
         <TimelineItem key={activity._id} activity={activity} placement={idx % 2 === 0 ? 'left' : 'right'} />)}
-      {data?.page != null && data?.total !== activities?.length &&
-        <Flex justifyContent='center' position='relative' zIndex='1' >
-          <Button onClick={() => setQuery({ ...query, page: data.page })}>Load more</Button>
+      {loadMoreFn != null && total !== activities?.length &&
+        <Flex justifyContent='center' position='relative' zIndex='1'>
+          <Button onClick={() => loadMoreFn()}>Load more</Button>
         </Flex>}
     </Box>
   )
@@ -77,11 +58,10 @@ export const TimelineItem = ({ activity, placement }: { activity: DisplayActivit
   const [setSeenBy, setSetSeenBy] = useState<boolean>(false)
   const isVisible = useOnScreen(ref)
   const { user } = useContext(UserContext)
-  const userId = String(user?._id)
-  // const isCreator = String(activity.createdBy) === String(userId)
-  const isCreator = false
-  activity.seenBy = (activity.seenBy ?? []).map(uid => String(uid))
-  const isSeen = activity.seenBy.includes(userId)
+  const userId = user?._id
+  const isCreator = activity.createdBy === userId
+  activity.seenBy = activity.seenBy ?? []
+  const isSeen = activity.seenBy.includes(userId) || isCreator
 
   useEffect(() => {
     if (isVisible && !isSeen && !isCreator && promise == null && !setSeenBy) {
@@ -99,7 +79,7 @@ export const TimelineItem = ({ activity, placement }: { activity: DisplayActivit
   }, [isVisible, isSeen, isCreator, promise, setSeenBy])
 
   return (
-    <Box className={`${style.container} ${placement === 'left' ? style.left : style.right}`} ref={ref}>
+    <Box className={`${style.container} ${placement === 'left' ? style.left : style.right} ${isSeen ? '' : style.unSeen}`} ref={ref}>
       <Box className={style.content}>
         <Flex alignItems='center'>
           <Avatar size='xs' name={getUserDisplayName(activity.creator)} src={activity.creator.xsAvatar} />

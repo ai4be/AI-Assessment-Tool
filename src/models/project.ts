@@ -96,10 +96,11 @@ export const deleteProject = async (_id: ObjectId | string): Promise<boolean> =>
   return res.result.ok === 1
 }
 
-export const getUserProjects = async (userId: ObjectId | string, projectId?: string | ObjectId): Promise<Project[]> => {
+export const getUserProjects = async (userId: ObjectId | string, projectId?: string | ObjectId | Array<string | ObjectId>): Promise<Project[]> => {
   const { db } = await connectToDatabase()
   userId = toObjectId(userId)
-  projectId = projectId != null ? toObjectId(projectId) : undefined
+  if (typeof projectId === 'string') projectId = toObjectId(projectId)
+  if (Array.isArray(projectId)) projectId = projectId.map(p => toObjectId(p))
   const where: any = {
     $or: [
       { userIds: userId },
