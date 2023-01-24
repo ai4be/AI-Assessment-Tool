@@ -309,7 +309,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   }
 
   const setDate = (date: Date | null | number): void => {
-    card.dueDate = date instanceof Date ? +date : date
+    card.dueDate = typeof date === 'number' ? new Date(date) : date
     void saveCard({ dueDate: card.dueDate })
   }
 

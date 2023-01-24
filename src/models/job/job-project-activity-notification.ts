@@ -17,24 +17,28 @@ export class JobProjectActivityNotification extends Job {
   static JOB_TYPE = 'project-activity-notification'
 
   static async createProjectActivityNotificationJobs (): Promise<void> {
-    const maxAge = Date.now() - 60 * 60 * 1000 * 24 // last 24 hours
+    const maxAgeDate = new Date(Date.now() - 60 * 60 * 1000 * 24) // last 24 hours
     let userResult = await UserModel.find({}, 500)
+    console.log('createProjectActivityNotificationJobs')
     while (!isEmpty(userResult?.data)) {
       for (const user of userResult.data) {
         const projectIds: ObjectId[] = []
         const where = {
-          createdAt: { $gt: maxAge },
-          createdby: { $neq: user._id },
-          seenBy: { $neq: user._id }
+          createdAt: { $gt: maxAgeDate },
+          createdBy: { $ne: user._id },
+          seenBy: { $ne: user._id }
         }
         let activitieResult = await Activity.find(where, Activity.DEFAULT_LIMIT)
+        console.log(activitieResult)
         while (!isEmpty(activitieResult?.data)) {
           for (const activity of activitieResult.data) {
             const { projectId } = activity
             if (projectId != null && !projectIds.includes(projectId)) projectIds.push(projectId)
           }
           if (!isEmpty(activitieResult.page)) activitieResult = await Activity.find(where, Activity.DEFAULT_LIMIT, Activity.DEFAULT_SORT, activitieResult.page)
+          else break
         }
+        console.log('projectIds', projectIds)
         if (!isEmpty(projectIds)) {
           const job: Partial<JobInterface> = {
             data: {
@@ -42,10 +46,11 @@ export class JobProjectActivityNotification extends Job {
               userId: user._id
             }
           }
-          await super.createJob(job, this.JOB_TYPE)
+          await this.createJob(job, this.JOB_TYPE)
         }
       }
       if (!isEmpty(userResult.page)) userResult = await UserModel.find({}, UserModel.DEFAULT_LIMIT, Activity.DEFAULT_SORT, userResult.page)
+      else break
     }
   }
 

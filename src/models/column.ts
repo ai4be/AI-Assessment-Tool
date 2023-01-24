@@ -46,7 +46,7 @@ export const createColumn = async (data: any): Promise<any> => {
 
 export const createColumns = async (data: any[]): Promise<boolean> => {
   const { db } = await connectToDatabase()
-  const createdAt = Date.now()
+  const createdAt = new Date()
   data = sanitize(data)
   data = data.map(d => {
     if (d.projectId != null) d.projectId = toObjectId(d.projectId)

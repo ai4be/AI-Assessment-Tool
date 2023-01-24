@@ -61,11 +61,11 @@ export default class Activity extends Model {
     return await this.createCardUserChangeActivity(cardId, createdBy, userId, ActivityType.CARD_USER_REMOVE)
   }
 
-  static async createCardDueDateAddActivity (projectId: string, createdBy: string, cardId: string, dueDate: number): Promise<string | null> {
+  static async createCardDueDateAddActivity (projectId: string, createdBy: string, cardId: string, dueDate: Date): Promise<string | null> {
     return await this.createActivity(projectId, createdBy, ActivityType.CARD_DUE_DATE_ADD, { dueDate }, { cardId })
   }
 
-  static async createCardDueDateUpdateActivity (cardId: string, createdBy: string, dueDate: number): Promise<string | null> {
+  static async createCardDueDateUpdateActivity (cardId: string, createdBy: string, dueDate: Date): Promise<string | null> {
     const card = await getCard(cardId)
     if (card == null) {
       // TODO: log error

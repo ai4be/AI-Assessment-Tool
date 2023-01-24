@@ -90,7 +90,7 @@ export const updateComment = async (_id: ObjectId | string, data: any): Promise<
   _id = toObjectId(_id)
   const { text }: any = data
   const localData: any = sanitize({ text })
-  localData.updatedAt = Date.now()
+  localData.updatedAt = new Date()
   localData.userIds = Comment.getUserIdsFromMentions(localData)
   const res = await db
     .collection(TABLE_NAME)
@@ -110,7 +110,7 @@ export const deleteComment = async (_id: ObjectId | string): Promise<boolean> =>
   _id = toObjectId(_id)
   const res = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id }, { $set: { deletedAt: Date.now(), text: null, userIds: [] } })
+    .updateOne({ _id }, { $set: { deletedAt: new Date(), text: null, userIds: [] } })
   return res.result.ok === 1
 }
 

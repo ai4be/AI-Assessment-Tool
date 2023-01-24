@@ -10,7 +10,7 @@ export interface ActivityData {
 }
 
 export enum JobStatus {
-  SUCCESS = 'success',
+  FINISHED = 'finished',
   FAILED = 'failed',
   PENDING = 'pending',
   EXECUTING = 'executing',
@@ -19,15 +19,15 @@ export enum JobStatus {
 
 export interface Job {
   _id?: string
-  createdAt: number
+  createdAt: Date
   type: string
   data?: any
-  updatedAt?: number
+  updatedAt?: Date
   delaySeconds: number
   status: JobStatus
   error?: string
   result?: any
-  runAt?: number
-  finishedAt?: number
+  runAt?: Date
+  finishedAt?: Date
   runCount: number
 }

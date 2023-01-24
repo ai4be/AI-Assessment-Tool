@@ -43,7 +43,8 @@ export const createUser = async ({ email, password, firstName, lastName }: { ema
   email = cleanEmail(email)
   firstName = cleanText(firstName)
   lastName = cleanText(lastName)
-  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName })
+  const createdAt = new Date()
+  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt })
   return { email, password, firstName, lastName, _id: res.insertedId }
 }
 

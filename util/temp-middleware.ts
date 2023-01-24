@@ -8,8 +8,18 @@ import { getUser } from '@/src/models/user'
 import { getCard } from '@/src/models/card'
 import { User } from '@/src/types/user'
 
+const API_KEY = process.env.API_KEY
+
 const returnUnauthorized = (res: NextApiResponse): void => {
   res.status(401).send({ message: 'Unauthorized', status: 401 })
+}
+
+export function hasApiKey (handler: any): Function {
+  return async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
+    const { 'x-api-key': apiKey } = req.headers
+    if (apiKey !== API_KEY) return returnUnauthorized(res)
+    return handler(req, res)
+  }
 }
 
 export function isConnected (handler: any): Function {

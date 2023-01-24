@@ -31,7 +31,7 @@ export interface Token {
   email: string
   projectId: ObjectId
   createdBy?: ObjectId
-  createdAt: number
+  createdAt: Date
 }
 
 export const getToken = async (where: any): Promise<Token | null> => {
@@ -95,7 +95,7 @@ export const inviteUser = async (projectId: string | ObjectId, email: string, cr
     if (invitedUser != null) throw new Error('Duplicate invite. Email already used for invitation.')
   }
   await db.collection(TABLE_NAME)
-    .insertOne({ token, userId: user?._id, createdBy, status: TokenStatus.PENDING, type: TokenType.INVITE, email, projectId, createdAt: Date.now() })
+    .insertOne({ token, userId: user?._id, createdBy, status: TokenStatus.PENDING, type: TokenType.INVITE, email, projectId, createdAt: new Date() })
   return await db.collection(TABLE_NAME).findOne({ token })
 }
 

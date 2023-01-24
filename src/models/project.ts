@@ -17,7 +17,7 @@ export const createProject = async ({ name, createdBy, description, industry }: 
   const { db } = await connectToDatabase()
   name = cleanText(name)
   createdBy = toObjectId(createdBy)
-  const createdAt = Date.now()
+  const createdAt = new Date()
   const data: Partial<Project> = {
     _id: ObjectId(),
     name,
@@ -107,7 +107,8 @@ export const getUserProjects = async (userId: ObjectId | string, projectId?: str
       { createdBy: userId }
     ]
   }
-  if (projectId != null) where._id = projectId
+  if (Array.isArray(projectId)) where._id = { $in: projectId }
+  else if (projectId != null) where._id = projectId
   return await db.collection(TABLE_NAME).find(where).toArray()
 }
 

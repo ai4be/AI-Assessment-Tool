@@ -21,7 +21,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       }
     }
     default:
-      return res.status(404).send({ message: 'Not found' })
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }
 

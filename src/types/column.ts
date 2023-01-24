@@ -2,7 +2,7 @@ export interface Column {
   _id: string
   projectId: string
   name: string
-  createdAt: number
+  createdAt: Date
   createdBy: string
   sequence?: number
 }

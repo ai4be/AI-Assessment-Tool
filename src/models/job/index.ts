@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb'
 import { connectToDatabase } from '@/src/models/mongodb'
 import Model from '@/src/models/model'
 import { Job as JobInterface, JobStatus } from '@/src/types/job'
+import { isEmpty } from '@/util/index'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class Job extends Model implements JobInterface {
@@ -9,17 +10,19 @@ export default class Job extends Model implements JobInterface {
   static JOB_TYPE = 'base'
 
   _id: ObjectId
-  createdAt: number
+  createdAt: Date
   type: string
   data?: any
-  updatedAt?: number
+  updatedAt?: Date
   delaySeconds: number
   status: JobStatus
   error?: string
   result?: any
-  runAt?: number
-  finishedAt?: number
+  runAt?: Date
+  finishedAt?: Date
   runCount: number
+
+  private static executingPromise: Promise<void> | null = null
 
   constructor (job: JobInterface) {
     super()
@@ -41,7 +44,7 @@ export default class Job extends Model implements JobInterface {
     const { db } = await connectToDatabase()
     const job: JobInterface = {
       _id: new ObjectId(),
-      createdAt: Date.now(),
+      createdAt: new Date(),
       type,
       status: JobStatus.PENDING,
       delaySeconds: 0,
@@ -54,7 +57,10 @@ export default class Job extends Model implements JobInterface {
 
   static async executeJob (job: Job): Promise<void> {
     const { db } = await connectToDatabase()
-    await db.collection(this.TABLE_NAME).updateOne({ _id: job._id }, { status: JobStatus.EXECUTING, runAt: Date.now() })
+    await db.collection(this.TABLE_NAME).updateOne(
+      { _id: job._id },
+      { $set: { status: JobStatus.EXECUTING, runAt: new Date() } }
+    )
     let error = null
     try {
       await job.run()
@@ -64,23 +70,24 @@ export default class Job extends Model implements JobInterface {
     await db
       .collection(this.TABLE_NAME)
       .updateOne({ _id: job._id }, {
-        status: error != null ? JobStatus.FAILED : job.status,
-        error: job.error ?? error,
-        result: job.result,
-        finishedAt: Date.now(),
-        runCount: job.runCount + 1
+        $set: {
+          status: error != null ? JobStatus.FAILED : (job.status ?? JobStatus.FINISHED),
+          error: job.error ?? error,
+          result: job.result,
+          finishedAt: new Date(),
+          runCount: job.runCount + 1
+        }
       })
   }
 
-  static async getJobsToExecute (): Promise<JobInterface[]> {
-    const { db } = await connectToDatabase()
+  static async getJobsToExecute (limit: number = 10, page?: string): Promise<{ data: JobInterface[], count: number, page: string, limit: number }> {
     const where: any = {
       $expr: {
         $gt: [
           {
-            $datediff: {
-              startDate: new Date(),
-              endDate: '$createdAt',
+            $dateDiff: {
+              startDate: { $toDate: '$createdAt' },
+              endDate: new Date(),
               unit: 'second'
             }
           },
@@ -89,11 +96,38 @@ export default class Job extends Model implements JobInterface {
       },
       $or: [{ status: JobStatus.PENDING }, { status: JobStatus.FAILED, runCount: { $lt: 3 } }]
     }
-    const jobs = await db
-      .collection(this.TABLE_NAME)
-      .find(where).toArray()
+    return await this.find(where, limit, this.DEFAULT_SORT, page)
+  }
 
-    return jobs
+  static async findAndExecuteJobs (): Promise<void> {
+    // avoid concurrent executions
+    if (this.executingPromise != null) return await this.executingPromise
+    console.log('findAndExecuteJobs: started')
+    try {
+      this.executingPromise = this._findAndExecuteJobs()
+      await this.executingPromise
+    } catch (error) {
+      console.error('findAndExecuteJobs:', error)
+    } finally {
+      this.executingPromise = null
+    }
+  }
+
+  private static async _findAndExecuteJobs (): Promise<void> {
+    let jobsResult = await this.getJobsToExecute()
+    console.log(`Found ${jobsResult.count} jobs to execute`)
+    while (!isEmpty(jobsResult?.data)) {
+      const { jobFactory } = await import('@/src/models/job/job-factory')
+      const jobs = jobsResult.data
+      console.log(`Found ${jobs.length} jobs to execute`)
+      const promises = jobs.map(async (job) => {
+        const jobInstance = jobFactory(job)
+        return await this.executeJob(jobInstance)
+      })
+      await Promise.all(promises)
+      if (!isEmpty(jobsResult.page)) jobsResult = await this.getJobsToExecute(jobsResult.limit, jobsResult.page)
+      else break
+    }
   }
 
   async run (): Promise<boolean> {

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "ts-standard --fix ."
+    "lint": "ts-standard --fix .",
+    "start-cron": "source .env.local && node cron/index.js"
   },
   "keywords": [],
   "license": "MIT",

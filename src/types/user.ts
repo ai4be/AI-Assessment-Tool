@@ -7,4 +7,5 @@ export interface User {
   emailVerified?: Boolean
   avatar?: string
   xsAvatar?: string
+  createdAt?: Date
 }

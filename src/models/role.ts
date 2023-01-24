@@ -29,7 +29,7 @@ export const addRoles = async (projectId: ObjectId | string, roles: Array<{ _id?
     r.name = sanitize(r.name ?? '')
     r.desc = sanitize(r.desc ?? '')
     const { _id, name, desc } = r
-    const result = { _id, name, desc, userIds: [], createdAt: Date.now() }
+    const result = { _id, name, desc, userIds: [], createdAt: new Date() }
     return result
   })
 
@@ -80,7 +80,7 @@ export const updateRole = async (projectId: ObjectId | string, role: Partial<Rol
   if (role.name != null) set['roles.$.name'] = sanitize(role.name)
   if (role.desc != null) set['roles.$.desc'] = sanitize(role.desc)
   if (isEmpty(set)) return false
-  set['roles.$.updateAt'] = Date.now()
+  set['roles.$.updateAt'] = new Date()
   const res = await db.collection(TABLE_NAME).updateOne(
     { _id: toObjectId(projectId), 'roles._id': toObjectId(role._id) },
     {

@@ -5,7 +5,7 @@ export interface Project {
   name: string
   createdBy: string
   columns?: Columns[]
-  createdAt?: number
+  createdAt?: Date
   backgroundImage?: string
   userIds?: string[]
   roles?: Role[]
@@ -32,7 +32,7 @@ export interface Role {
   _id?: string
   name: string
   desc: string
-  createdAt?: number
-  updatedAt?: number
+  createdAt?: Date
+  updatedAt?: Date
   userIds?: string[]
 }

@@ -1,1 +1,6 @@
 node_modules/
+.env.local
+.env.development
+cron
+docker-compose.yml
+.github

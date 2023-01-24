@@ -33,7 +33,7 @@ export class JobMentionNotification extends Job {
       },
       delaySeconds
     }
-    return await super.createJob(job, this.JOB_TYPE)
+    return await this.createJob(job, this.JOB_TYPE)
   }
 
   async run (): Promise<any> {

@@ -12,7 +12,7 @@ export interface Card {
   questions: Question[]
   userIds?: string[] | any[]
   roleIds?: string[] | any[]
-  dueDate?: number | null
+  dueDate?: Date | null
   stage?: CardStage
 }
 
