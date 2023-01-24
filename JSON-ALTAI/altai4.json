@@ -25,6 +25,12 @@
         {
             "id" : "1669815665",
             "title" : "Evaluate if your AI System's documentation allows for traceability",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Can you describe a process for tracing the source of data used in your AI System's documentation?"
+                }
+            ],
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669813752",
             "questions":
@@ -85,6 +91,12 @@
         {
             "id" : "1669976136",
             "title" : "Evaluate Your AI System's explainability",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Can you explain how your AI system arrived at its decisions?"
+                }
+            ],
             "desc" : "This subsection is about evaluating how well an AI system can explain itself. The questions in this subsection focus on the ability of the AI system to explain both how it works and why it makes the decisions it does. It's important for AI systems to be able to explain themselves because this helps people trust them. When an AI system makes a decision, it should be able to explain why it made that decision, if possible. If it's not possible to explain why a decision was made, the system is considered a \"black box\" and requires special attention. In these cases, other ways of making the system more explainable, such as by making it easy to track its decisions or by being transparent about its capabilities, may be necessary. The amount of explainability needed depends on the situation and how serious the consequences could be if the AI system makes a mistake.",
             "section" : "1669813766",
             "questions":
@@ -124,6 +136,12 @@
         {
             "id" : "1669217872",
             "title" : "Evaluate how well people using the AI system understand its abilities and limitations.",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Can the people using the AI system explain its abilities and limitations accurately?"
+                }
+            ],
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669813782",
             "questions":

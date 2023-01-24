@@ -8,6 +8,12 @@
         {
             "id" : "1669727403",
             "title" : "Rate the privacy & data governance measures and procedures you have set up for the AI system?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Would you be able to provide an overview of the privacy and data governance measures and procedures you have put in place for the AI system?"
+                }
+            ],
             "desc" : "The following questions will help you in your evaluation",
             "questions":
             [

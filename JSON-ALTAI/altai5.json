@@ -23,6 +23,12 @@
         {
             "id": "1669988713",
             "title": "Evaluate the measures you have adopted to detect and avoid =gb=bias=ge=, and ensure =gb=fairness=ge=?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Have you identified and implemented any strategies to identify and reduce potential biases, and ensure fairness in decision-making?"
+                }
+            ],
             "desc": "The following questions will help you in your evaluation",
             "section": "1669988372",
             "questions":
@@ -213,6 +219,12 @@
         {
             "id": "1669988898",
             "title": "rate the measures you implemented to ensure =gb=accessibility=ge= and =gb=Universal Design=ge=?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "What measures have you implemented to ensure accessibility and Universal Design, and how would you rate them?"
+                }
+            ],
             "desc": "The following questions will help you in your evaluation",
             "section": "1669988459",
             "questions": [
@@ -345,6 +357,12 @@
         {
             "id": "1669988916",
             "title": "rate the measures you put in place to ensure the involvement of the relevant stakeholders?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "What measures have you put in place to ensure the involvement of relevant stakeholders, and how would you rate them?"
+                }
+            ],
             "desc": "The following questions will help you in your evaluation",
             "section": "1669988588",
             "questions": [

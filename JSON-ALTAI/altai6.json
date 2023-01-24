@@ -17,6 +17,12 @@
         {
             "id": "1670170371",
             "title": "rate the risk that the =gb=AI system=ge= negatively affects the environment?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "What potential risks exist for human autonomy if an AI system is implemented?"
+                }
+            ],
             "desc": "The following questions will help you in your evaluation",
             "section": "1670170307",
             "questions": [
@@ -82,6 +88,12 @@
         {
             "id": "1670170378",
             "title": "Rate the risk that the =gb=AI system=ge= negatively impacts work and work arrangements?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "What potential risks exist for human autonomy if an AI system is implemented?"
+                }
+            ],
             "desc": "The following questions will help you in your evaluation",
             "section": "1670170336",
             "questions": [

@@ -30,6 +30,12 @@
         {
             "id" : "1669217856",
             "title" : "Evaluate the resilience to attacks of the =gb=AI system=ge=.",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Could the AI system withstand a security breach or malicious attack?"
+                }
+            ],
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669217049",
             "questions":
@@ -134,6 +140,12 @@
         {
             "id" : "1669217872",
             "title" : "Evaluate the safety of the =gb=AI system=ge=?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Could you describe what safety measures have been put into place to ensure the AI system is secure and safe?"
+                }
+            ],
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669217102",
             "questions":
@@ -276,6 +288,12 @@
         {
             "id" : "1669218219",
             "title" : "Evaluate the accuracy of the =gb=AI system=ge=?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "How accurate is the AI system in predicting outcomes?"
+                }
+            ],
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669217118",
             "questions":
@@ -362,6 +380,12 @@
         {
             "id" : "1669218235",
             "title" : "Evaluate the reliability, fall-back plans and reproducibility of the =gb=AI system=ge=?",
+            "example" : [
+                {
+                    "title": "AI GPT3 generated example",
+                    "desc"  : "Are there any documented cases where the AI system has failed, and if so, how was it addressed and resolved?"
+                }
+            ],
             "desc" : "The following questions will help you in your evaluation",
             "section" : "1669217134",
             "questions":
