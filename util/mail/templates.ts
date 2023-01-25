@@ -22,7 +22,7 @@ export function getInvitationHtml (page: string, token: string, email: string, p
       <div style="font: 20px Helvetica, sans-serif; color: #333;">
           <p>You have been invited for the assessment of an AI project!</p>
           <p>To accept the invite please click
-            <a href='${hostname}/${page}?token=${token}&email=${email}&projectId=${projectId}' style="color: #dc8100; text-decoration: underline;">
+            <a href='${hostname}/${page}?token=${token}&email=${email}&projectId=${projectId}'>
               here
             </a>
           </p>
@@ -44,7 +44,7 @@ export function getResetPasswordHtml (token: string, hostname: string): string {
       <div style="font: 20px Helvetica, sans-serif; color: #333;">
           <p>You have requested a password reset!</p>
           <p>To reset your password please click
-            <a href='${hostname}/reset-password?token=${token}' style="color: #dc8100; text-decoration: underline;">
+            <a href='${hostname}/reset-password?token=${token}'>
               here
             </a>
             .
@@ -79,11 +79,11 @@ export function validateEmailHtml (code: string): string {
 
 export function commentMentionHtml (commentId: string, projectId: string, cardId: string, hostname: string = BASE_URL): string {
   return `
-    <div style='display: flex; flex-direction: column; justify-content: center; align-items: center;'>
+  <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
       ${htmlLogo}
       <span>
         You have been mentioned in a comment,
-          <a href='${hostname}/projects/${projectId}?card=${cardId}&comment=${commentId}' style="color: #dc8100; text-decoration: underline;">
+          <a href='${hostname}/projects/${projectId}?card=${cardId}&comment=${commentId}'>
             click here
           </a> to see it
       </span>
@@ -93,12 +93,12 @@ export function commentMentionHtml (commentId: string, projectId: string, cardId
 
 export function getProjectActivityHtml (projects: Project[], hostname: string = BASE_URL): string {
   return `
-    <div style='display: flex; flex-direction: column; justify-content: center; align-items: center;'>
+    <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
       ${htmlLogo}
       <span>
         There is new activity on your project${projects.length > 1 ? 's' : ''}:
       </span>
-      ${projects.map(project => `<a href='${hostname}/projects/${project._id}' style="color: #dc8100; text-decoration: underline;">${project.name}</a>`).join('')}
+      ${projects.map(project => `<a href='${hostname}/projects/${project._id}'>${project.name}</a>`).join('')}
     </div>
   `
 }
