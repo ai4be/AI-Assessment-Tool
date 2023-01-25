@@ -5,7 +5,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Button,
   Flex,
   Modal,
   ModalBody,
@@ -13,21 +12,9 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
-  Textarea,
   Box,
-  RadioGroup,
-  Radio,
   Select,
-  Stack,
-  CheckboxGroup,
-  Checkbox,
-  Avatar,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverBody
+  Avatar
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { isEmpty, isEqual } from '@/util/index'
@@ -36,100 +23,18 @@ import { getUserDisplayName } from '@/util/users'
 import { defaultFetchOptions, HTTP_METHODS } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
 import { FiEdit2 } from 'react-icons/fi'
-import { GiCancel } from 'react-icons/gi'
-import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { format } from 'date-fns'
 import { UserMenu } from '@/src/components/user-menu'
 import CommentComponent from './comment'
 import { questionEnabler } from '@/util/question'
 import { Question, DisplayQuestion, Card, CardStage, DisplayCard, STAGE_VALUES } from '@/src/types/card'
 import { Comment } from '@/src/types/comment'
+import { QuestionComp } from './question'
 
 const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 commodo consequat.`
-
-const QuestionHelp = ({ question }: { question: Question }): JSX.Element => {
-  const [help, setHelp] = useState('')
-
-  useEffect(() => {
-    if (question.title != null) {
-      const match = question.title.match(/=hb=(.*)=he=/)
-      if (match?.[1] != null) {
-        const h = match[1].replace(/=br=/g, '<br />').trim()
-        setHelp(h)
-      }
-    }
-  }
-  , [question.title])
-
-  return (
-    <>
-      {!isEmpty(help) &&
-        <Popover>
-          <PopoverTrigger>
-            <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
-          </PopoverTrigger>
-          <PopoverContent opacity='1' _opacity='1 !important'>
-            <PopoverArrow />
-            <PopoverCloseButton />
-            <PopoverBody opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
-          </PopoverContent>
-        </Popover>}
-    </>
-  )
-}
-
-const QuestionComp = ({ question, onChange, ...rest }: { question: DisplayQuestion, onChange: Function, [key: string]: any }): JSX.Element => {
-  const [conclusion, setConclusion] = useState(question.conclusion ?? '')
-  const [showEditOptions, setShowEditOptions] = useState(false)
-
-  const saveHandler = async (): Promise<void> => {
-    await onChange(question, null, conclusion.trim())
-    setShowEditOptions(false)
-  }
-  const cancelHandler = (): void => {
-    setConclusion(question.conclusion ?? '')
-    setShowEditOptions(false)
-  }
-
-  return (
-    <>
-      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
-        {`${question.TOCnumber} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
-        <QuestionHelp question={question} />
-      </Text>
-      {question.enabled === false &&
-        <Text color='var(--main-blue)' fontSize='xs' as='b' textDecoration='underline' display='block'>
-          {question.enabledCondition?.disabledText}
-        </Text>}
-      <Box ml='1.5'>
-        <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
-        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
-          Justification
-        </Text>
-        <Textarea
-          disabled={!question.enabled}
-          placeholder='Motivate your answer'
-          size='sm'
-          style={{ resize: 'none' }}
-          value={conclusion}
-          onChange={(e) => setConclusion(e.target.value)}
-          onFocus={() => setShowEditOptions(true)}
-          onBlur={() => setTimeout(() => setShowEditOptions(false), 500)} // needed otherwise the save button will not be clickable
-        />
-        {showEditOptions &&
-          <Flex alignItems='center' justifyContent='space-between' mt='1'>
-            <Flex alignItems='center'>
-              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={saveHandler}>Save</Button>
-              <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
-            </Flex>
-          </Flex>}
-      </Box>
-    </>
-  )
-}
 
 const AccordionItemStyled = ({ title, desc }): JSX.Element => {
   return (
@@ -428,48 +333,3 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 }
 
 export default CardDetailsModal
-
-export const GenerateAnswers = ({ question, onChange }: { question: DisplayQuestion, onChange?: Function }): JSX.Element => {
-  const [value, setValue] = React.useState<any>(question.responses ?? '')
-  const valueHandler = (value): void => {
-    if (!Array.isArray(value)) value = [value]
-    if (Array.isArray(value) && value.length > 1) {
-      value = value.filter(v => v !== '')
-      value = Array.from(new Set<any>(value))
-    }
-    setValue(value)
-    if (onChange != null) onChange(value)
-  }
-  if (question.type === 'radio') {
-    return (
-      <RadioGroup onChange={valueHandler} value={value[0]} name={question.id}>
-        <Stack direction='row'>
-          {question?.answers?.map((a, idx) => (
-            <Radio
-              key={idx} value={`${String(idx)}`} disabled={!question.enabled} size='sm' fontSize='sm'
-              opacity={question.enabled ? 1 : 0.5}
-            >
-              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
-            </Radio>
-          ))}
-        </Stack>
-      </RadioGroup>
-    )
-  } else if (question.type === 'checkbox') {
-    return (
-      <CheckboxGroup onChange={valueHandler} value={Array.isArray(value) ? value : [value]}>
-        <Stack direction='row'>
-          {question?.answers?.map((a, idx) => (
-            <Checkbox
-              size='sm' key={idx} value={`${idx}`} disabled={!question.enabled} fontSize='sm'
-              opacity={question.enabled ? 1 : 0.5}
-            >
-              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
-            </Checkbox>
-          ))}
-        </Stack>
-      </CheckboxGroup>
-    )
-  }
-  return <></>
-}

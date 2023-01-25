@@ -88,6 +88,8 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
     onClose()
     const query = { ...router.query }
     delete query.card
+    delete query.question
+    delete query.comment
     await router.push({
       pathname: router.route,
       query

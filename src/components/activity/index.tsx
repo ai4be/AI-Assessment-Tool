@@ -96,16 +96,16 @@ export const TimelineItem = ({ activity, placement }: { activity: DisplayActivit
 const getProjectLinkComp = (displayActivity: DisplayActivity, content: any, cardId?: string, questionId?: string, commentId?: string): JSX.Element => {
   if (displayActivity.project != null) {
     const query: any = {}
-    if (cardId != null) query.cardId = cardId
-    if (questionId != null) query.questionId = questionId
-    if (commentId != null) query.commentId = commentId
+    if (cardId != null) query.card = cardId
+    if (questionId != null) query.question = questionId
+    if (commentId != null) query.comment = commentId
     const linkProps = {
       pathname: `/projects/${displayActivity.project._id}`,
       query
     }
     return (
-      <Link href={linkProps}>
-        {content}
+      <Link href={linkProps} shallow legacyBehavior>
+        <a>{content}</a>
       </Link>
     )
   }
@@ -193,8 +193,8 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
     case ActivityType.COMMENT_CREATE: {
       const { comment } = displayActivity
       if (question != null) { // means the project is deleted
-        const text: any = <Text noOfLines={1} display='inline'>commented on question "${question.TOCnumber}"`</Text>
-        return getProjectLinkComp(displayActivity, text, displayActivity.cardId, displayActivity.questionId, comment != null ? displayActivity.commentId : undefined)
+        const text: any = <Text noOfLines={1} display='inline'>commented on question "{question.TOCnumber}"`</Text>
+        return getProjectLinkComp(displayActivity, text, displayActivity.cardId, undefined, comment != null ? displayActivity.commentId : undefined)
       }
       const text: any = (<Text display='inline'>commented on card</Text>)
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId)
@@ -211,7 +211,7 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
       if (question != null) {
         text += ` "${question.TOCnumber ?? ''}"`
       }
-      return getProjectLinkComp(displayActivity, text, displayActivity.cardId, displayActivity.questionId, comment != null ? displayActivity.commentId : undefined)
+      return getProjectLinkComp(displayActivity, text, displayActivity.cardId, undefined, comment != null ? displayActivity.commentId : undefined)
     }
     case ActivityType.COMMENT_UPDATE:
     case ActivityType.COMMENT_UPDATE_AND_MENTION: {
@@ -227,7 +227,7 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
       if (question != null) {
         text = (<Text display='inline'>{text} {question.TOCnumber} </Text>)
       }
-      return getProjectLinkComp(displayActivity, text, displayActivity.cardId, displayActivity.questionId, comment != null ? displayActivity.commentId : undefined)
+      return getProjectLinkComp(displayActivity, text, displayActivity.cardId, undefined, comment != null ? displayActivity.commentId : undefined)
     }
     case ActivityType.COMMENT_DELETE: {
       let text: any = 'deleted comment on question'
@@ -243,7 +243,7 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
         text = (<Text display='inline'>{text} {question.TOCnumber}</Text>)
       }
       if (data?.conclusion != null) {
-        text = (<>{text}: "<Text display='inline' noOfLines={1} fontSize='xs'>{data.conclusion}</Text>"</>)
+        text = (<>{text}: "<Text display='inline' noOfLines={1} fontSize='xs' style={{ display: 'inline' }}>{data.conclusion}</Text>"</>)
       }
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId, displayActivity.questionId)
     }

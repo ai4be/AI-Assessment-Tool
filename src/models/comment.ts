@@ -4,8 +4,8 @@ import sanitize from 'mongo-sanitize'
 import { Comment as CommentTypeDef } from '@/src/types/comment'
 import Activity from './activity'
 import Model from './model'
-import { JobMentionNotification } from './job'
-import { isEmpty } from '@/util/index'
+import { JobMentionNotification } from '@/src/models/job/job-mention-notification'
+// import { isEmpty } from '@/util/index'
 
 export const TABLE_NAME = 'comments'
 
