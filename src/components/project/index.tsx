@@ -5,12 +5,12 @@ import { ProjectContextProvider } from '@/src/store/project-context'
 import SideBar from './side-bar'
 import NavBar from '../navbar'
 import ProgressBar from './progress-bar'
+import { Project } from '@/src/types/project'
 
 interface Props {
-  project: any
+  project: Project
   session: any
   categories: any[]
-  stages?: any[]
 }
 
 const Project: FC<Props> = (props): JSX.Element => {

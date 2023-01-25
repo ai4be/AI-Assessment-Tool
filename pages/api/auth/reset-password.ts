@@ -42,7 +42,7 @@ async function handler (req, res): Promise<any> {
         return res.status(400).json({ message: 'Too many consecutive requests. Wait at least two minutes before asking for a new password reset.' })
       }
       const tokenEnt2 = await createResetPasswordToken(user._id)
-      const htmlContent = templates.resetPassword(tokenEnt2.token, String(req.headers.origin))
+      const htmlContent = templates.getResetPasswordHtml(tokenEnt2.token, String(req.headers.origin))
       const result = await sendMail(user.email, 'Reset password', htmlContent)
       return res.status(200).json({ message: 'An email was sent to your address. Follow the instructions in the email to reset your password. Check you spam folder if you do not get the email.' })
     }

@@ -3,6 +3,7 @@ import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
 import { isEmpty } from '@/util/index'
+import { deleteCards } from './card'
 
 export const TABLE_NAME = 'columns'
 
@@ -34,17 +35,18 @@ export const getColumn = async (where: string | ObjectId | any): Promise<any> =>
   return await db.collection(TABLE_NAME).findOne(where)
 }
 
-export const createColumn = async (data: any): Promise<boolean> => {
+export const createColumn = async (data: any): Promise<any> => {
   const { db } = await connectToDatabase()
   data = sanitize(data)
   data.projectId = toObjectId(data.projectId)
   const result = await db.collection(TABLE_NAME).insertOne(data)
-  return result.result.ok === 1
+  if (result.result.ok !== 1) return null
+  return await getColumn({ _id: result.insertedId })
 }
 
 export const createColumns = async (data: any[]): Promise<boolean> => {
   const { db } = await connectToDatabase()
-  const createdAt = Date.now()
+  const createdAt = new Date()
   data = sanitize(data)
   data = data.map(d => {
     if (d.projectId != null) d.projectId = toObjectId(d.projectId)
@@ -70,11 +72,19 @@ export const updateColumn = async (_id: ObjectId | string, data: any): Promise<b
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
   const { name, sequence } = sanitize(data)
-  data = sanitize({ name, sequence })
+  if (name == null && sequence == null) return false
+  const set: any = {}
+  if (name != null) set.name = name
+  if (sequence != null) set.sequence = sequence
   const res = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id }, { $set: data })
+    .updateOne({ _id }, { $set: set })
   return res.result.ok === 1
+}
+
+export const deleteColumnAndCards = async (_id: ObjectId | string): Promise<boolean> => {
+  await deleteCards({ columnId: _id })
+  return await deleteColumn(_id)
 }
 
 export const deleteColumn = async (_id: ObjectId | string): Promise<boolean> => {

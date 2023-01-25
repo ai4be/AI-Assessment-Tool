@@ -18,8 +18,7 @@ import {
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
 import { defaultFetchOptions } from '@/util/api'
-import { isEmpty } from '@/util/index'
-import { debounce } from '@/util/index'
+import { isEmpty, debounce } from '@/util/index'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 
 const SignUp = (): JSX.Element => {
@@ -284,7 +283,7 @@ const SignUp = (): JSX.Element => {
               Sign up
             </Button>
             <Box m='5' textAlign='center'>
-              <Link href='/login' color='brand' p='2' >
+              <Link href='/login' color='brand' p='2'>
                 Already have an account? Log in.
               </Link>
             </Box>

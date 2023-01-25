@@ -8,7 +8,7 @@ import { updateCard } from '@/util/cards'
 import { fetcher } from '@/util/api'
 import { useRouter } from 'next/router'
 import ProjectBar from '@/src/components/project/project-bar'
-import { stageValues, CardStage } from '@/src/types/cards'
+import { CardStage, Card } from '@/src/types/card'
 import { isEmpty } from '@/util/index'
 import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
 
@@ -35,7 +35,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   const [cardDetail, setCardDetail] = useState<any>({ _id: '', title: '', description: '' })
 
   const [columns, setColumns] = useState<any[]>([])
-  const [cards, setCards] = useState<any[]>([])
+  const [cards, setCards] = useState<Card[]>([])
   // useRenderingTrace('ProjectColumns', { projectId, session, columns, cards, isLoading, cardDetail }, 'log')
 
   useEffect(() => {
@@ -88,6 +88,8 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
     onClose()
     const query = { ...router.query }
     delete query.card
+    delete query.question
+    delete query.comment
     await router.push({
       pathname: router.route,
       query
@@ -97,8 +99,8 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   const filterCardsArrayFn = (card: any, columnId: string): boolean => {
     let val = String(card.columnId) === columnId
     if (val && categoryId != null) val = card.category === categoryId
-    if (val && stage != null && String(stage).toUpperCase() !== 'ALL') {
-      val = card.stage === stage || (stage === CardStage.PREPARATION && (card.stage == null || card.stage.trim() === ''))
+    if (val && stage != null) {
+      val = card.stage === stage || (stage === CardStage.PREPARATION && isEmpty(card.stage))
     }
     if (val && assignedTo != null && assignedTo?.length > 0) {
       const fileterUserIds = typeof assignedTo === 'string' ? [assignedTo] : assignedTo
@@ -132,31 +134,31 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   }
 
   const saveCardSequence = async (destinationIndex: number, destinationColumnId: string, cardId: string): Promise<void> => {
-    const cardsFromColumn: any[] = cards.filter(
+    const cardsFromColumn: Card[] = cards.filter(
       (card) => card.columnId === destinationColumnId && card._id !== cardId
     )
-    const sortedCards = cardsFromColumn.sort((a, b) => a.sequence - b.sequence)
-    let sequence = +(destinationIndex === 0 ? 1 : sortedCards[destinationIndex - 1].sequence + 1)
+    const sortedCardsFromColumn = cardsFromColumn.sort((a, b) => a.sequence - b.sequence)
+    let sequence = +(destinationIndex === 0 ? 1 : sortedCardsFromColumn[destinationIndex - 1].sequence + 1)
 
-    const patchCard = {
+    const patchCard: any = {
       _id: cardId,
-      sequence,
-      columnId: destinationColumnId
+      sequence
     }
     const cardToPatch: any = cards.find(card => card._id === cardId)
     if (cardToPatch == null) return
     cardToPatch.sequence = sequence
-    cardToPatch.columnId = destinationColumnId
+    if (String(cardToPatch.columnId) !== String(destinationColumnId)) {
+      cardToPatch.columnId = destinationColumnId
+      patchCard.columnId = destinationColumnId
+    }
     const promises: Array<Promise<any>> = [updateCard(patchCard, project?._id)]
-    for (let i = destinationIndex; i < sortedCards.length; i++) {
-      const card = sortedCards[i]
+    for (const card of sortedCardsFromColumn) {
       sequence += 1
       card.sequence = sequence
 
       const patchCard = {
         _id: card._id,
-        sequence,
-        columnId: destinationColumnId
+        sequence
       }
       promises.push(updateCard(patchCard, project?._id))
     }

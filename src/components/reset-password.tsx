@@ -112,7 +112,7 @@ const ResetPassword = (props: any): JSX.Element => {
         title: result.message,
         status: 'success',
         duration: 5000,
-        onCloseComplete: () => router.push('/login')
+        onCloseComplete: async () => await router.push('/login')
       })
     } else {
       try {

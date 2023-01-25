@@ -47,11 +47,11 @@ export const DUE_DATE_LABELS = {
 }
 
 export enum QueryFilterKeys {
-  ASSIGNED_TO = 'filter[assigned_to]',
-  ASSIGNMENT = 'filter[assignment]',
-  DUE_DATE = 'filter[due_date]',
-  CATEGORY = 'filter[category]',
-  STAGE = 'filter[stage]'
+  ASSIGNED_TO = 'assigned_to',
+  ASSIGNMENT = 'assignment',
+  DUE_DATE = 'due_date',
+  CATEGORY = 'category',
+  STAGE = 'stage'
 }
 
 let timeoutId: any

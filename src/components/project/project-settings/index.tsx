@@ -26,21 +26,22 @@ import {
 } from '@chakra-ui/react'
 import { AiFillSetting, AiOutlineDelete, AiOutlineCheck } from 'react-icons/ai'
 import { useRouter } from 'next/router'
+import useSWR from 'swr'
 import Roles from './roles'
 import Team from './team'
-import { defaultFetchOptions, fetcher } from '@/util/api'
+import { defaultFetchOptions, fetcher, HTTP_METHODS } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
 import { isEmpty } from '@/util/index'
 import ToastContext from '@/src/store/toast-context'
-import useSWR from 'swr'
+import { Project } from '@/src/types/project'
 
-const ProjectName = ({ project }): JSX.Element => {
+const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element => {
   const { data: industries, error } = useSWR('/api/industries', fetcher)
   const { isBusy, setIsBusy } = useContext(ProjectSettingsContext)
   const { showToast } = useContext(ToastContext)
   const [projectName, setProjectName] = useState(project.name)
   const [description, setDescription] = useState(project.description)
-  const [industry, setIndustry] = useState<string | null>(project.industry)
+  const [industry, setIndustry] = useState<string | undefined>(project.industry)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -49,7 +50,7 @@ const ProjectName = ({ project }): JSX.Element => {
 
   const handleSave = async (): Promise<void> => {
     setIsLoading(true)
-    const data: any = {}
+    const data: Partial<Project> = {}
 
     if (projectName !== project.name) data.name = projectName
     if (description !== project.description) data.description = description
@@ -58,7 +59,7 @@ const ProjectName = ({ project }): JSX.Element => {
       const url = `/api/projects/${String(project._id)}`
       const response = await fetch(url, {
         ...defaultFetchOptions,
-        method: 'PATCH',
+        method: HTTP_METHODS.PATCH,
         body: JSON.stringify(data)
       })
       if (response.ok) {
@@ -126,7 +127,7 @@ const DeleteProject = ({ project }): JSX.Element => {
     const url = `/api/projects/${String(project._id)}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: 'DELETE'
+      method: HTTP_METHODS.DELETE
     })
     if (response.ok) {
       await router.push('/projects')
@@ -209,7 +210,7 @@ const ProjectSettings = ({ project }): JSX.Element => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <ProjectName project={project} />
+                  <ProjectBaseProperties project={project} />
                   <hr className='my-3' />
                   <DeleteProject project={project} />
                 </TabPanel>

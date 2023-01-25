@@ -36,7 +36,7 @@ function sortCards (cards: any[], sort: Sort, order: Order): any[] {
   copy.sort((a, b) => {
     let valA = a[key]
     let valB = b[key]
-    // backward compatibility hack
+    // backward compatibility hack, get number from title
     if (key === SortKeys.NUMBER && valA == null) {
       valA = +(a.title.match(/^[0-9.]+/))
       valB = +(b.title.match(/^[0-9.]+/))
@@ -44,9 +44,9 @@ function sortCards (cards: any[], sort: Sort, order: Order): any[] {
     valA = valA ?? noValPlaceholder
     valB = valB ?? noValPlaceholder
     if (order === Order.ASC) {
-      return valA - valB
+      return +valA - +valB
     } else {
-      return valB - valA
+      return +valB - +valA
     }
   })
   return copy

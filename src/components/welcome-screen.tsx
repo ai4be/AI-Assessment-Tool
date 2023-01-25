@@ -15,13 +15,14 @@ const WelcomeScreen = (): JSX.Element => {
         >
           <Box>
             <Text fontSize={['40px', '40px', '50px', '50px']} fontWeight='bold' lineHeight='50px'>
-              AI assessment tool
+              AI Assessment Tool
             </Text>
             <Text
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
             >
-              Collaborate, manage projects, and get feedback on your AI models.
+              Is your AI system Racists|Fair|Trustworthy|Safe|Secure|Privacy preserving|Ethical?
+              Collaborate with your team to assess if your AI implementation follows ethical guidelines.
             </Text>
           </Box>
           <Box>

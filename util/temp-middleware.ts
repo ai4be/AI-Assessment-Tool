@@ -6,9 +6,20 @@ import { unstable_getServerSession } from 'next-auth/next'
 import { getProjectUsers } from '@/src/models/project'
 import { getUser } from '@/src/models/user'
 import { getCard } from '@/src/models/card'
+import { User } from '@/src/types/user'
+
+const API_KEY = process.env.API_KEY
 
 const returnUnauthorized = (res: NextApiResponse): void => {
   res.status(401).send({ message: 'Unauthorized', status: 401 })
+}
+
+export function hasApiKey (handler: any): Function {
+  return async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
+    const { 'x-api-key': apiKey } = req.headers
+    if (apiKey !== API_KEY) return returnUnauthorized(res)
+    return handler(req, res)
+  }
 }
 
 export function isConnected (handler: any): Function {
@@ -29,25 +40,25 @@ export function isConnected (handler: any): Function {
 export function isCurrentUser (handler: Function): Function {
   return addUserToReq(async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
     const { userId } = req.query
-    const tempReq = req as any
-    const user = tempReq.locals?.user
-    if (user?._id.toString() !== userId) return res.status(403).send({ message: 'forbidden' })
+    const user = getUserFromRequest(req)
+    if (user?._id?.toString() !== userId) return res.status(403).send({ message: 'forbidden' })
     return handler(req, res)
   })
 }
 
 export function addUserToReq (handler: Function): Function {
   return async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
-    const tempReq = req as any
-    if (tempReq?.locals?.user != null) return handler(req, res)
+    let user = getUserFromRequest(req)
+    if (user != null) return handler(req, res)
     const session = await unstable_getServerSession(req, res, authOptions)
     if (session?.user == null) {
       return returnUnauthorized(res)
     }
-    const user = await getUser({ _id: String(session?.user?.name) })
+    user = await getUser({ _id: String(session?.user?.name) })
     if (user == null) {
       return returnUnauthorized(res)
     }
+    const tempReq = req as any
     tempReq.locals = tempReq.locals ?? {}
     tempReq.locals.user = user
     return handler(req, res)
@@ -57,8 +68,7 @@ export function addUserToReq (handler: Function): Function {
 export function hasProjectAccess (handler: Function): Function {
   return addUserToReq(async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
     let hasAccess = false
-    const tempReq = req as any
-    const user = tempReq.locals?.user
+    const user = getUserFromRequest(req)
     let { projectId } = req.query
     if (projectId == null) {
       projectId = req.body?.projectId
@@ -86,4 +96,9 @@ export function cardBelongsToProject (handler: Function): Function {
     }
     return handler(req, res)
   }
+}
+
+export function getUserFromRequest (req: NextApiRequest): User | null {
+  const tempReq = req as any
+  return tempReq.locals?.user
 }

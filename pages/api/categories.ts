@@ -13,6 +13,6 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.send(categories)
     }
     default:
-      return res.status(404).send({ message: 'Not found' })
+      return res.status(400).send({ message: 'Invalid request' })
   }
 }

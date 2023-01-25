@@ -1,9 +1,10 @@
 import sanitize from 'mongo-sanitize'
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
-import { getColumnsByProjectId } from './column'
-import { CardStage, Card, stageValues } from '../types/cards'
-import { isEmpty } from '@/util/index'
+import { getColumnsByProjectId } from '@/src/models/column'
+import { Card, STAGE_VALUES } from '@/src/types/card'
+import { isEmpty, isEqual } from '@/util/index'
+import Activity from '@/src/models/activity'
 
 export const TABLE_NAME = 'cards'
 
@@ -62,19 +63,38 @@ export const createCards = async (cards: Card[]): Promise<boolean> => {
   return res.result.ok === 1
 }
 
-export const updateCard = async (_id: string | ObjectId, data: any): Promise<boolean> => {
-  const { db } = await connectToDatabase()
-  _id = toObjectId(_id)
+export const updateCardAndCreateActivities = async (cardId: string | ObjectId, userId: string, data: any): Promise<boolean> => {
+  const sanitizedData = await cardDataSanitizer(cardId, data)
+  // console.log(data, sanitizedData)
+  if (isEmpty(sanitizedData)) return false
+  const res = await updateCard(cardId, sanitizedData)
+  if (res) {
+    if (sanitizedData.stage != null) void Activity.createCardStageUpdateActivity(cardId, userId, sanitizedData.stage)
+    if (sanitizedData.columnId != null) void Activity.createCardColumnUpdateActivity(cardId, userId, sanitizedData.columnId)
+    if (Object.hasOwn(sanitizedData, 'dueDate')) void Activity.createCardDueDateUpdateActivity(cardId, userId, sanitizedData.dueDate)
+  }
+  return res
+}
+
+export const cardDataSanitizer = async (cardId: string, data: any): Promise<any> => {
   const updatableFields: any = {}
   UPDATABLE_FIELDS.forEach(field => {
-    if (data[field] != null) updatableFields[field] = sanitize(data[field])
+    if (Object.hasOwn(data, field)) updatableFields[field] = sanitize(data[field])
   })
-  const card = await getCard(_id)
+  const card = await getCard(cardId)
   const columns = await getColumnsByProjectId(card.projectId)
   if (updatableFields.columnId != null && columns.find(c => String(c._id) === String(updatableFields.columnId)) == null) throw new Error('Invalid columnId')
   if (updatableFields.columnId != null) updatableFields.columnId = toObjectId(updatableFields.columnId)
-  if (typeof updatableFields.stage === 'string' && !stageValues.includes(updatableFields.stage.toUpperCase())) throw new Error('Invalid stage')
+  if (typeof updatableFields.stage === 'string' && !STAGE_VALUES.includes(updatableFields.stage.toUpperCase())) throw new Error('Invalid stage')
   if (updatableFields.stage != null) updatableFields.stage = updatableFields.stage.toUpperCase()
+  return updatableFields
+}
+
+export const updateCard = async (_id: string | ObjectId, data: any): Promise<boolean> => {
+  const { db } = await connectToDatabase()
+  _id = toObjectId(_id)
+  const updatableFields: any = await cardDataSanitizer(_id, data)
+  if (isEmpty(updatableFields)) return false
   const res = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $set: { ...updatableFields } })
@@ -107,19 +127,52 @@ export const removeUserFromCard = async (cardId: ObjectId | string, userId: Obje
   return res.result.ok === 1
 }
 
+export const addUserToCardAndCreateActivity = async (cardId: string | ObjectId, userId: string, userIdToAdd: string): Promise<boolean> => {
+  const res = await addUserToCard(cardId, userIdToAdd)
+  if (res) void Activity.createCardUserAddActivity(cardId, userId, userIdToAdd)
+  return res
+}
+
+export const removeUserFromCardAndCreateActivity = async (cardId: string | ObjectId, userId: string, userIdToAdd: string): Promise<boolean> => {
+  const res = await addUserToCard(cardId, userIdToAdd)
+  if (res) void Activity.createCardUserRemoveActivity(cardId, userId, userIdToAdd)
+  return res
+}
+
 export const deleteProjectCards = async (projectId: string | ObjectId): Promise<boolean> => {
   if (isEmpty(projectId)) return false
   return await deleteCards({ projectId })
 }
 
+export const updateQuestionAndCreateActivity = async (cardId: string | ObjectId, userId: string, questionId: string, data: any): Promise<boolean> => {
+  const sanitizedData = await sanitizeQuestionData(data, cardId, questionId)
+  const res = await updateQuestion(cardId, questionId, sanitizedData)
+  if (res) void Activity.createCardQuestionUpdateActivity(cardId, questionId, userId, sanitizedData)
+  return res
+}
+
+export const sanitizeQuestionData = async (data: any, cardId: string, questionId: string, card?: Card): Promise<{ responses?: string[], conculusion?: string }> => {
+  if (card == null) {
+    card = await getCard(cardId)
+  }
+  const question = card.questions.find(q => q.id === questionId)
+  if (question == null) throw new Error('Invalid questionId')
+  const sanitizedData: any = {}
+  if (data.responses != null && !isEqual(question?.responses?.sort(), data.responses.sort())) {
+    sanitizedData.responses = sanitize(data.responses)
+  }
+  if (data.conclusion != null && question.conclusion !== data.conclusion) {
+    sanitizedData.conclusion = sanitize(data.conclusion)
+  }
+  return sanitizedData
+}
+
 export const updateQuestion = async (cardId: ObjectId | string, questionId: string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
-  let { responses, conclusion } = data
-  responses = sanitize(responses)
-  conclusion = sanitize(conclusion)
+  const { responses, conclusion } = data
   const set = {}
-  if (responses != null) set['questions.$.responses'] = responses
-  if (conclusion != null) set['questions.$.conclusion'] = conclusion
+  if (responses != null) set['questions.$.responses'] = sanitize(responses)
+  if (conclusion != null) set['questions.$.conclusion'] = sanitize(conclusion)
   const res = await db.collection(TABLE_NAME).updateOne(
     { _id: toObjectId(cardId), 'questions.id': questionId },
     {
@@ -127,4 +180,35 @@ export const updateQuestion = async (cardId: ObjectId | string, questionId: stri
     }
   )
   return res.result.ok === 1
+}
+
+export const dataToCards = async (data: any[], projectId?: string | ObjectId, columnId?: string | ObjectId): Promise<Card[]> => {
+  const cards: Card[] = []
+  let catIdx = 1
+  for (const cat of data) {
+    let idx = 0
+    for (const card of cat.cards) {
+      const returnCard: Card = {
+        ...card,
+        category: cat.id,
+        originalId: card.id,
+        _id: ObjectId(),
+        ...(projectId != null ? { projectId: toObjectId(projectId) } : {}),
+        ...(columnId != null ? { columnId: toObjectId(columnId) } : {}),
+        sequence: idx,
+        TOCnumber: `${catIdx}.${idx + 1}`,
+        title: card.title
+      }
+      card.questions = card.questions.map((q: any, i: number): Question => ({
+        ...q,
+        TOCnumber: `${returnCard.TOCnumber}.${i + 1}`,
+        title: q.title,
+        ...(q.answers != null ? { answers: q.answers.map(a => typeof a === 'string' ? a.trim() : a) } : {})
+      }))
+      cards.push(returnCard)
+      idx++
+    }
+    catIdx++
+  }
+  return cards
 }

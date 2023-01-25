@@ -1,10 +1,12 @@
 
 import nodemailer, { SentMessageInfo } from 'nodemailer'
+import { isEmpty } from '@/util/index'
 
 const EMAIL_FROM: string | undefined = process.env.EMAIL_FROM
 const SMTP_HOST: string | undefined = process.env.SMTP_HOST
 const SMTP_USER: string | undefined = process.env.SMTP_USER
 const SMTP_PASS: string | undefined = process.env.SMTP_PASS
+const BASE_URL: string | undefined = process.env.BASE_URL
 
 const throwMissingEnvVar = (varName: string): void => {
   throw new Error(`missing ${varName} environment variable`)
@@ -12,7 +14,15 @@ const throwMissingEnvVar = (varName: string): void => {
 
 ['EMAIL_FROM', 'SMTP_USER', 'SMTP_PASS'].forEach((key) => process.env[key] == null && throwMissingEnvVar(key))
 
-export const sendMail = async (to: string | string[], subject: string, html: string | null = null, text = null): Promise<SentMessageInfo> => {
+export const sendMailToBcc = async (subject: string, html: string | null = null, text = null, bcc: string | string[] = []): Promise<SentMessageInfo> => {
+  return await sendMail(String(EMAIL_FROM), subject, html, text, [], bcc)
+}
+
+export const sendMailWithSelfInBcc = async (to: string | string[], subject: string, html: string | null = null, text = null, cc: string | string[] = [], bcc: string | string[] = [EMAIL_FROM as string]): Promise<SentMessageInfo> => {
+  return await sendMail(String(EMAIL_FROM), subject, html, text, cc, bcc)
+}
+
+export const sendMail = async (to: string | string[], subject: string, html: string | null = null, text = null, cc: string | string[] = [], bcc: string | string[] = []): Promise<SentMessageInfo> => {
   const port: number = +(process.env.SMTP_PORT ?? 587)
   const options = {
     host: SMTP_HOST ?? 'smtp.ethereal.email',
@@ -29,10 +39,13 @@ export const sendMail = async (to: string | string[], subject: string, html: str
     to, // list of receivers
     subject // Subject line
   }
-  if (html != null) mailOptions.html = html
-  if (text != null) mailOptions.text = text
+  if (!isEmpty(html)) mailOptions.html = html
+  if (!isEmpty(text)) mailOptions.text = text
+  if (!isEmpty(cc)) mailOptions.cc = cc
+  if (!isEmpty(bcc)) mailOptions.bcc = bcc
   // send mail with defined transport object
   const info = await transporter.sendMail(mailOptions)
   console.log(info)
+  transporter.close()
   return info
 }

@@ -44,7 +44,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
       setIsLoading(true)
       const data: any = {
         name: inputRef?.current?.value ?? '',
-        description: description ?? '',
+        description: description ?? ''
       }
       if (industry != null && industry.length > 0) data.industry = industry
 
@@ -88,7 +88,8 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
             <Textarea
               placeholder={`Project description
 What is the purpose of the project and applications?`}
-              mt='2' onChange={(e) => setDescription(e.target.value)} />
+              mt='2' onChange={(e) => setDescription(e.target.value)}
+            />
             <Select size='xs' placeholder='Select the industry' onChange={e => setIndustry(e.target.value)}>
               {industries?.map(industry => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
             </Select>

@@ -3,18 +3,13 @@ import { ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
 import { hashPassword, verifyPassword } from '@/util/auth'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
+import { User } from '@/src/types/user'
+import Model from '@/src/models/model'
 
 const TABLE_NAME = 'users'
 
-export interface User {
-  _id?: ObjectId
-  email: string
-  password?: string
-  firstName: string
-  lastName: string
-  emailVerified?: Boolean
-  avatar?: string
-  xsAvatar?: string
+export default class UserModel extends Model {
+  static TABLE_NAME = TABLE_NAME
 }
 
 export const getUser = async ({ _id, email }: { _id?: string | ObjectId, email?: string }, omitFields: string[] = ['password']): Promise<User | null> => {
@@ -48,7 +43,8 @@ export const createUser = async ({ email, password, firstName, lastName }: { ema
   email = cleanEmail(email)
   firstName = cleanText(firstName)
   lastName = cleanText(lastName)
-  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName })
+  const createdAt = new Date()
+  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt })
   return { email, password, firstName, lastName, _id: res.insertedId }
 }
 

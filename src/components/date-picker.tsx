@@ -15,7 +15,7 @@ import {
   Text,
   useOutsideClick,
   VStack,
-  Input as InputComponent,
+  Input as InputComponent
 } from '@chakra-ui/react'
 import { CalendarIcon } from '@chakra-ui/icons'
 import {

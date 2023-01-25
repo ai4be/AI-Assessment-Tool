@@ -10,7 +10,9 @@
 // const hasOrBefore = orBefore.test(question.isVisibleIf)
 // console.log('hasOrBefore', hasOrBefore)
 
-export const questionEnabler = (questions: any[]) => {
+import { DisplayQuestion } from '@/src/types/card'
+
+export const questionEnabler = (questions: DisplayQuestion[]): void => {
   questions.forEach((question, idx, arr) => {
     question.enabled = true
     const conditionObjs: any = []
@@ -21,7 +23,7 @@ export const questionEnabler = (questions: any[]) => {
       if (conditionGroups != null) {
         for (let condition of conditionGroups) {
           const group: any = {}
-          condition = String(condition).trim() as String
+          condition = String(condition).trim()
           const hasNotBefore: boolean = condition.startsWith('!')
           const hasBracketBefore: boolean = hasNotBefore ? condition.startsWith('!(') : condition.startsWith('(')
           const hasBracketAfter: boolean = condition.endsWith(')')
@@ -30,11 +32,11 @@ export const questionEnabler = (questions: any[]) => {
           if (q == null) continue
           let disabledText = ''
           let isConditionTrue = false
-          if (condition.includes('notempty') === true) {
+          if (condition.includes('notempty')) {
             const isNotEmpty = q?.responses?.length > 0
             isConditionTrue = hasNotBefore ? !isNotEmpty : isNotEmpty
             disabledText = hasNotBefore ? `${q?.TOCnumber} is not empty` : `${q?.TOCnumber} is empty`
-          } else if (condition.includes('=') === true) {
+          } else if (condition.includes('=')) {
             const [_, value] = condition.match(/=\s?'(.+)'/i)
             const responsesValues = Array.isArray(q?.responses) ? q?.responses.map((r: any) => q.answers[r]) : []
             const includesValue: boolean = responsesValues.includes(value)
@@ -78,4 +80,9 @@ export const questionEnabler = (questions: any[]) => {
       }
     }
   })
+}
+
+export const setQuestionCleanTitle = (question: DisplayQuestion): DisplayQuestion => {
+  question.cleanTitle = question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '').trim()
+  return question
 }

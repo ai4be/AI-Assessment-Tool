@@ -1,0 +1,66 @@
+import { ObjectId } from 'mongodb'
+import { toObjectId } from '@/src/models/mongodb'
+import { Job as JobInterface, JobStatus } from '@/src/types/job'
+import { Comment as CommentInterface } from '@/src/types/comment'
+import { Comment as CommentModel } from '@/src/models/comment'
+import { isEmpty } from '@/util/index'
+import { getUser } from '@/src/models/user'
+import { sendMailToBcc } from '@/util/mail'
+import { commentMentionHtml } from '@/util/mail/templates'
+import Job from '@/src/models/job'
+
+export interface JobMentionNotificationData {
+  userIds: string[]
+  commentId: string
+  updatedAt: number
+}
+
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class JobMentionNotification extends Job {
+  static JOB_TYPE = 'mention-notification'
+
+  static async createMentionNotificationJob (comment: CommentInterface | ObjectId, delaySeconds = 60 * 60): Promise<string | null> {
+    if (comment instanceof ObjectId) {
+      comment = await CommentModel.get(comment)
+    }
+    const { _id, userIds, updatedAt } = comment
+    if (userIds == null || isEmpty(userIds) == null || _id == null) return null
+    const job: Partial<JobInterface> = {
+      data: {
+        userIds,
+        commentId: _id,
+        updatedAt
+      },
+      delaySeconds
+    }
+    return await this.createJob(job, this.JOB_TYPE)
+  }
+
+  async run (): Promise<any> {
+    const { commentId, updatedAt: originalUpdatedAt }: JobMentionNotificationData = this.data
+    const comment = await CommentModel.get(commentId)
+    if (comment == null) throw Error('Comment not found')
+    let result: string = ''
+    if (comment.deletedAt != null) result = 'Comment deleted'
+    const { projectId, userId, userIds = [], text, updatedAt, cardId } = comment
+    if (updatedAt !== originalUpdatedAt) result = `${result} Comment was updated`
+    if (isEmpty(userIds)) result = `${result} No users to notify`
+    if (result != null) {
+      this.status = JobStatus.CANCELLED
+      this.result = result
+      return false
+    }
+    if (projectId == null || userId == null || text == null) throw Error('Invalid comment')
+    const emails: string[] = []
+    for (const uid of userIds) {
+      const user = await getUser({ _id: toObjectId(uid) })
+      if (user == null) continue
+      const { email } = user
+      emails.push(email)
+    }
+    if (!isEmpty(emails)) {
+      const html = commentMentionHtml(commentId, projectId, cardId)
+      this.result = await sendMailToBcc('You are mentioned in a comment', html, null, emails)
+    }
+  }
+}

@@ -2,7 +2,8 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState
+  useState,
+  useRef
 } from 'react'
 import {
   Box,
@@ -23,19 +24,36 @@ import UserContext from '@/src/store/user-context'
 import ProjectContext from '@/src/store/project-context'
 import ConfirmDialog from '@/src/components/confirm-dialog'
 import { User } from '@/src/types/user'
+import { useRouter } from 'next/router'
 
-const Comment = ({ comment, onSave, onCancel, onDelete }: { comment: any, onSave?: Function, onCancel?: Function, onDelete?: Function }): JSX.Element => {
+interface CommentProps {
+  comment: any,
+  onSave?: Function,
+  onCancel?: Function,
+  onDelete?: Function
+}
+
+const Comment = ({ comment, onSave, onCancel, onDelete }: CommentProps): JSX.Element => {
+  const router = useRouter()
+  const { comment: commentId } = router.query
+  const commentElement = useRef<HTMLElement>(null) // to be able to access the current one
   const { users } = useContext(ProjectContext)
   const { user } = useContext(UserContext)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [value, setValue] = useState(comment?.text ?? '')
   const [showEditOptions, setShowEditOptions] = useState(false)
   const [disabled, setDisabled] = useState(false)
-  const [usersComment, setUsersComment] = useState<null|User>(null)
+  const [usersComment, setUsersComment] = useState<null | User>(null)
   const mentionsUsers = useMemo(
     () => users?.map(u => ({ id: String(u._id), display: getUserDisplayName(u) }))
       .filter(u => u.id !== user?._id) ?? []
     , [users])
+
+  useEffect(() => {
+    if (commentElement?.current != null && commentId != null && commentId === comment._id) {
+      setTimeout(() => commentElement.current?.scrollIntoView({ behavior: 'smooth' }), 400)
+    }
+  }, [])
 
   useEffect(() => {
     if (comment?._id == null) setDisabled(false)
@@ -76,7 +94,7 @@ const Comment = ({ comment, onSave, onCancel, onDelete }: { comment: any, onSave
   }
 
   return (
-    <Grid templateRows='min-content min-content' templateColumns='min-content auto' rowGap='0' _notFirst={{ marginTop: 2 }}>
+    <Grid templateRows='min-content min-content' templateColumns='min-content auto' rowGap='0' _notFirst={{ marginTop: 2 }} ref={commentElement}>
       <GridItem colSpan={1} />
       <GridItem colSpan={1} display='flex'>
         {comment.createdAt != null && <Text fontSize='xs' color='var(--text-grey)'>{timeAgo(comment.createdAt)}</Text>}
