@@ -14,6 +14,7 @@ export interface Card {
   roleIds?: string[] | any[]
   dueDate?: Date | null
   stage?: CardStage
+  example?: string[] | string
 }
 
 export type DisplayCard = Card & {

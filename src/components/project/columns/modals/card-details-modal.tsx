@@ -275,10 +275,12 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                   </Text>
                 </Box>
 
-                <Accordion allowToggle allowMultiple>
-                  <AccordionItemStyled title='Example' desc={card.example.map(txt => <p>{txt}</p>)} />
-                  {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
-                </Accordion>
+                {card.example != null &&
+                  <Accordion allowToggle allowMultiple>
+                    {Array.isArray(card.example) && <AccordionItemStyled title='Example' desc={card.example.map((txt, idx) => <p key={idx}>{txt}</p>)} />}
+                    {typeof card.example === 'string' && <AccordionItemStyled title='Example' desc={card.example} />}
+                    {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
+                  </Accordion>}
                 {card?.questions?.map((q: DisplayQuestion, index: number) =>
                   <Box key={`${card._id}-${q.id}-${index}`} p={3}>
                     <QuestionComp question={q} onChange={saveQuestion} />
