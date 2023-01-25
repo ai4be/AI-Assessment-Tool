@@ -16,6 +16,7 @@ export interface JobProjectActivityNotificationData {
 export class JobProjectActivityNotification extends Job {
   static JOB_TYPE = 'project-activity-notification'
 
+  // TODO break this up into smaller functions
   static async createProjectActivityNotificationJobs (): Promise<void> {
     const maxAgeDate = new Date(Date.now() - 60 * 60 * 1000 * 24) // last 24 hours
     let userResult = await UserModel.find({}, 500)

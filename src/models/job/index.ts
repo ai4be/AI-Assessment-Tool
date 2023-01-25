@@ -117,7 +117,7 @@ export default class Job extends Model implements JobInterface {
     let jobsResult = await this.getJobsToExecute()
     console.log(`Found ${jobsResult.count} jobs to execute`)
     while (!isEmpty(jobsResult?.data)) {
-      const { jobFactory } = await import('@/src/models/job/job-factory')
+      const { jobFactory } = await import('@/src/models/job/job-factory') // dynamic import to avoid circular dependency
       const jobs = jobsResult.data
       console.log(`Found ${jobs.length} jobs to execute`)
       const promises = jobs.map(async (job) => {
