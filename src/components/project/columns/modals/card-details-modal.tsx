@@ -368,8 +368,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                 </Box>
 
                 <Accordion allowToggle allowMultiple>
-                  <AccordionItemStyled title='Example' desc={loremIpsum} />
-                  <AccordionItemStyled title='Recommandation' desc={loremIpsum} />
+                  <AccordionItemStyled title='Example' desc={card.example.map(txt => <p>{txt}</p>)} />
+                  {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
                 </Accordion>
                 {card?.questions?.map((q, index) =>
                   <Box key={`${card._id}-${q.id}-${index}`} p={3}>
