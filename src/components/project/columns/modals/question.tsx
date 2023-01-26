@@ -102,7 +102,7 @@ export const GenerateAnswers = ({ question, onChange }: { question: DisplayQuest
 export const QuestionComp = ({ question, onChange, ...rest }: { question: DisplayQuestion, onChange: Function, [key: string]: any }): JSX.Element => {
   const router = useRouter()
   const { question: questionId } = router.query
-  const element = useRef<HTMLElement>(null)
+  const element = useRef<HTMLDivElement>(null)
   const [conclusion, setConclusion] = useState(question.conclusion ?? '')
   const [showEditOptions, setShowEditOptions] = useState(false)
 

@@ -45,6 +45,7 @@ export type DisplayQuestion = Question & {
   comments?: Comment[]
   enabledCondition?: {
     disabledText: string
+    [key: string]: any
   }
 }
 

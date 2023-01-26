@@ -2,7 +2,7 @@ import sanitize from 'mongo-sanitize'
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import { getColumnsByProjectId } from '@/src/models/column'
-import { Card, STAGE_VALUES } from '@/src/types/card'
+import { Card, STAGE_VALUES, Question } from '@/src/types/card'
 import { isEmpty, isEqual } from '@/util/index'
 import Activity from '@/src/models/activity'
 
@@ -71,7 +71,7 @@ export const updateCardAndCreateActivities = async (cardId: string | ObjectId, u
   if (res) {
     if (sanitizedData.stage != null) void Activity.createCardStageUpdateActivity(cardId, userId, sanitizedData.stage)
     if (sanitizedData.columnId != null) void Activity.createCardColumnUpdateActivity(cardId, userId, sanitizedData.columnId)
-    if (Object.hasOwn(sanitizedData, 'dueDate')) void Activity.createCardDueDateUpdateActivity(cardId, userId, sanitizedData.dueDate)
+    if (Object.keys(sanitizedData).includes('dueDate')) void Activity.createCardDueDateUpdateActivity(cardId, userId, sanitizedData.dueDate)
   }
   return res
 }
@@ -79,7 +79,7 @@ export const updateCardAndCreateActivities = async (cardId: string | ObjectId, u
 export const cardDataSanitizer = async (cardId: string, data: any): Promise<any> => {
   const updatableFields: any = {}
   UPDATABLE_FIELDS.forEach(field => {
-    if (Object.hasOwn(data, field)) updatableFields[field] = sanitize(data[field])
+    if (Object.keys(data).includes(field)) updatableFields[field] = sanitize(data[field])
   })
   const card = await getCard(cardId)
   const columns = await getColumnsByProjectId(card.projectId)
