@@ -36,7 +36,7 @@ interface CommentProps {
 const Comment = ({ comment, onSave, onCancel, onDelete }: CommentProps): JSX.Element => {
   const router = useRouter()
   const { comment: commentId } = router.query
-  const commentElement = useRef<HTMLElement>(null) // to be able to access the current one
+  const commentElement = useRef<HTMLDivElement>(null) // to be able to access the current one
   const { users } = useContext(ProjectContext)
   const { user } = useContext(UserContext)
   const { isOpen, onOpen, onClose } = useDisclosure()

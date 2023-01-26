@@ -16,6 +16,7 @@ import { QuestionType } from '@/src/types/card'
 import { useOnScreen } from '@/src/hooks/index'
 import UserContext from '@/src/store/user-context'
 import { defaultFetchOptions, HTTP_METHODS } from '@/util/api'
+import { User } from '@/src/types/user'
 
 const formatDate = (date: string | Date): string => {
   const d = new Date(date)

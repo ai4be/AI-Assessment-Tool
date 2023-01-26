@@ -12,6 +12,17 @@
 
 import { DisplayQuestion } from '@/src/types/card'
 
+interface ConditionObj {
+  condition: string
+  questionId: string
+  question: DisplayQuestion
+  hasNotBefore: boolean
+  hasBracketBefore: boolean
+  hasBracketAfter: boolean
+  isConditionTrue: boolean
+  disabledText: string
+}
+
 export const questionEnabler = (questions: DisplayQuestion[]): void => {
   questions.forEach((question, idx, arr) => {
     question.enabled = true
@@ -22,7 +33,7 @@ export const questionEnabler = (questions: DisplayQuestion[]): void => {
 
       if (conditionGroups != null) {
         for (let condition of conditionGroups) {
-          const group: any = {}
+          const group: Partial<ConditionObj> = {}
           condition = String(condition).trim()
           const hasNotBefore: boolean = condition.startsWith('!')
           const hasBracketBefore: boolean = hasNotBefore ? condition.startsWith('!(') : condition.startsWith('(')
@@ -33,15 +44,16 @@ export const questionEnabler = (questions: DisplayQuestion[]): void => {
           let disabledText = ''
           let isConditionTrue = false
           if (condition.includes('notempty')) {
-            const isNotEmpty = q?.responses?.length > 0
+            const isNotEmpty = q?.responses?.length != null && q?.responses?.length > 0
             isConditionTrue = hasNotBefore ? !isNotEmpty : isNotEmpty
-            disabledText = hasNotBefore ? `${q?.TOCnumber} is not empty` : `${q?.TOCnumber} is empty`
+            disabledText = hasNotBefore ? `${q?.TOCnumber as string} is not empty` : `${q?.TOCnumber as string} is empty`
           } else if (condition.includes('=')) {
-            const [_, value] = condition.match(/=\s?'(.+)'/i)
+            const res = condition.match(/=\s?'(.+)'/i)
+            const [_, value] = res ?? []
             const responsesValues = Array.isArray(q?.responses) ? q?.responses.map((r: any) => q.answers[r]) : []
             const includesValue: boolean = responsesValues.includes(value)
             isConditionTrue = hasNotBefore ? !includesValue : includesValue
-            disabledText = hasNotBefore ? `${q?.TOCnumber} equals '${value}'` : `${q?.TOCnumber} does not equals '${value}'`
+            disabledText = hasNotBefore ? `${q?.TOCnumber as string} equals '${value}'` : `${q?.TOCnumber as string} does not equals '${value}'`
           }
           group.condition = condition
           group.questionId = questionId
@@ -54,13 +66,13 @@ export const questionEnabler = (questions: DisplayQuestion[]): void => {
           conditionObjs.push(group)
         }
         let disabledText = 'Question is disabled because '
-        const logicalOperators = question.isVisibleIf.match(andOrRegex)
+        const logicalOperators = question.isVisibleIf.match(andOrRegex) ?? []
         for (let i = 0; i < conditionObjs.length - 1; i++) {
-          const conditionObj = conditionObjs[i]
-          const conditionObjNext = conditionObjs[i + 1]
+          const conditionObj: ConditionObj = conditionObjs[i]
+          const conditionObjNext: ConditionObj = conditionObjs[i + 1]
           const { isConditionTrue } = conditionObj
           const logicalOperator = logicalOperators[i]
-          disabledText += conditionObj.disabledText
+          disabledText = `${disabledText}${conditionObj.disabledText}`
           if (logicalOperator === 'and') {
             conditionObjNext.isConditionTrue = conditionObjNext.isConditionTrue && isConditionTrue
             disabledText += ` or ${conditionObjNext.disabledText}`

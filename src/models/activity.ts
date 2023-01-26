@@ -180,12 +180,12 @@ export default class Activity extends Model {
   }
 
   // WIP this function is not finished
-  static async getActivitiesForUser (userId: string, where: any, limit: number = 500, sort: [field: string, order: number], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
-    const projects = await getUserProjects(userId)
-    if (projects == null || projects.length === 0) return { count: 0, limit, data: [], page: '' }
-    addToWhere(where, 'projectId', projects.map((p) => p._id), '$in')
-    return await Activity.find(where, limit, Object.entries(sort)[0], page)
-  }
+  // static async getActivitiesForUser (userId: string, where: any, limit: number = 500, sort: [field: string, order: number], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
+  //   const projects = await getUserProjects(userId)
+  //   if (projects == null || projects.length === 0) return { count: 0, limit, data: [], page: '' }
+  //   addToWhere(where, 'projectId', projects.map((p) => p._id), '$in')
+  //   return await Activity.find(where, limit, Object.entries(sort)[0], page)
+  // }
 
   static async find (where: any, limit: number = 500, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
     const { db } = await connectToDatabase()
