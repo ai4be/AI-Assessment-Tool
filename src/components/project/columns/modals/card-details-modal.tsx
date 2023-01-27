@@ -20,7 +20,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { isEmpty, isEqual } from '@/util/index'
 import ProjectContext from '@/src/store/project-context'
 import { getUserDisplayName } from '@/util/users'
-import { defaultFetchOptions, HTTP_METHODS } from '@/util/api'
+import { defaultFetchOptions, HTTP_METHODS, getResponseHandler } from '@/util/api'
 import { SingleDatepicker } from '@/src/components/date-picker'
 import { FiEdit2 } from 'react-icons/fi'
 import { format } from 'date-fns'
@@ -29,12 +29,8 @@ import CommentComponent from './comment'
 import { questionEnabler } from '@/util/question'
 import { Question, DisplayQuestion, Card, CardStage, DisplayCard, STAGE_VALUES } from '@/src/types/card'
 import { Comment } from '@/src/types/comment'
-import { QuestionComp } from './question'
-
-const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-commodo consequat.`
+import { QuestionComp } from '@/src/components/project/columns/modals/question'
+import ToastContext from '@/src/store/toast-context'
 
 const AccordionItemStyled = ({ title, desc }): JSX.Element => {
   return (
@@ -79,8 +75,11 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   const cardId = String(card._id)
   const [isLoading, setIsLoading] = useState(false)
   const { users } = useContext(ProjectContext)
+  const { showToast } = useContext(ToastContext)
   const [renderTrigger, setRenderTrigger] = useState(0)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
+
+  const responseHandler = getResponseHandler(showToast)
 
   useEffect(() => {
     const stringIds = card.userIds?.map(id => String(id)) ?? []
@@ -107,7 +106,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
         body: JSON.stringify(data)
       })
       if (!response.ok) {
-        // TODO
+        await responseHandler(response)
       } else {
         if (conclusion != null) question.conclusion = conclusion
         if (responses != null) question.responses = responses
@@ -121,7 +120,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
   const saveComment = async (comment: Partial<Comment>, data: Partial<Comment>, question: DisplayQuestion): Promise<void> => {
     setIsLoading(true)
     let method = HTTP_METHODS.PATCH
-    let url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments/${String(comment._id)}`
+    let url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments/${comment._id}`
     if (isEmpty(comment._id)) {
       method = HTTP_METHODS.POST
       url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments`
@@ -134,12 +133,12 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     if (response.ok) {
       const newComment = await response.json()
       question.comments = question.comments ?? []
-      const commentIdx = question.comments.findIndex(c => String(c._id) === String(comment._id))
+      const commentIdx = question.comments.findIndex(c => c._id === comment._id)
       if (commentIdx >= 0) question.comments.splice(commentIdx, 1, newComment)
       else question.comments = [newComment, ...question.comments]
       setRenderTrigger(renderTrigger + 1)
     } else {
-      // TODO
+      await responseHandler(response)
     }
     setIsLoading(false)
   }
@@ -152,32 +151,32 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
     const response = await fetch(url, {
       ...defaultFetchOptions,
       method: HTTP_METHODS.POST,
-      body: JSON.stringify({})
+      body: '{}'
     })
     if (!response.ok) {
-      card.userIds = card.userIds.filter(id => String(id) !== String(userId))
+      card.userIds = card.userIds.filter(id => id !== userId)
       setRenderTrigger(renderTrigger + 1)
     }
   }
 
   const onUserRemove = async (userId: string): Promise<void> => {
     card.userIds = card.userIds ?? []
-    card.userIds = card.userIds.filter(id => String(id) !== String(userId))
+    card.userIds = card.userIds.filter(id => id !== userId)
     setRenderTrigger(renderTrigger + 1)
     const url = `/api/projects/${projectId}/cards/${cardId}/users/${userId}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
       method: HTTP_METHODS.DELETE,
-      body: JSON.stringify({})
+      body: '{}'
     })
     if (!response.ok) {
-      // TODO
+      await responseHandler(response)
     }
   }
 
   const fetchComments = async (question?: Partial<DisplayQuestion>): Promise<void> => {
     const url = question != null
-      ? `/api/projects/${projectId}/cards/${cardId}/questions/${String(question.id)}/comments`
+      ? `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments`
       : `/api/projects/${projectId}/cards/${cardId}/comments`
     const response = await fetch(url, {
       ...defaultFetchOptions,
@@ -208,7 +207,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
         card[key] = data[key]
       })
     } else {
-      // TODO
+      await responseHandler(response)
     }
     setIsLoading(false)
   }
@@ -230,18 +229,19 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
 
   const deleteComment = async (comment: Comment, question: DisplayQuestion): Promise<void> => {
     setIsLoading(true)
-    const url = `/api/projects/${projectId}/cards/${cardId}/questions/${String(question.id)}/comments/${String(comment._id)}`
+    const url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments/${comment._id}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
       method: HTTP_METHODS.DELETE,
-      body: JSON.stringify({})
+      body: '{}'
     })
     if (response.ok) {
+      const deletedComment = await response.json()
       question.comments = question.comments ?? []
-      question.comments = question.comments.filter(c => String(c._id) !== String(comment._id))
+      question.comments = question.comments.map(c => c._id === comment._id ? deletedComment : c)
       setRenderTrigger(renderTrigger + 1)
     } else {
-      // TODO
+      await responseHandler(response)
     }
     setIsLoading(false)
   }
@@ -284,9 +284,9 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCa
                 {card?.questions?.map((q: DisplayQuestion, index: number) =>
                   <Box key={`${card._id}-${q.id}-${index}`} p={3}>
                     <QuestionComp question={q} onChange={saveQuestion} />
-                    <CommentComponent comment={{}} onSave={async data => await saveComment({}, data, q)} />
+                    <CommentComponent comment={{}} onSave={async (data: Partial<Comment>) => await saveComment({}, data, q)} ml='3' />
                     {q.comments?.map(c => (
-                      <CommentComponent key={c._id} comment={c} onSave={async data => await saveComment(c, data, q)} onDelete={async () => await deleteComment(c, q)} />
+                      <CommentComponent key={c._id} comment={c} onSave={async data => await saveComment(c, data, q)} onDelete={async () => await deleteComment(c, q)} ml='3' />
                     ))}
                   </Box>
                 )}

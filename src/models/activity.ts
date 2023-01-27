@@ -134,7 +134,8 @@ export default class Activity extends Model {
     return await this.createActivity(projectId, userId, ActivityType.COMMENT_CREATE, null, { commentId, cardId, questionId })
   }
 
-  static async createCommentDeleteActivity (commentId: string): Promise<string | null> {
+  static async createCommentDeleteActivity (commentId: string, userId: string | ObjectId): Promise<string | null> {
+    userId = toObjectId(userId)
     const result = await this.find({
       commentId: toObjectId(commentId),
       $or: [
@@ -147,8 +148,8 @@ export default class Activity extends Model {
       // TODO should be logged
       return null
     }
-    const { projectId, createdBy } = activity
-    return await this.createActivity(projectId, createdBy, ActivityType.COMMENT_DELETE, null, { commentId })
+    const { projectId } = activity
+    return await this.createActivity(projectId, userId, ActivityType.COMMENT_DELETE, null, { commentId })
   }
 
   static async createCommentUpdateActivity (commentId: string): Promise<string | null> {

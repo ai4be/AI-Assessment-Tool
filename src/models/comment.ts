@@ -2,8 +2,8 @@ import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
 import { Comment as CommentTypeDef } from '@/src/types/comment'
-import Activity from './activity'
-import Model from './model'
+import Activity from '@/src/models/activity'
+import Model from '@/src/models/model'
 import { JobMentionNotification } from '@/src/models/job/job-mention-notification'
 // import { isEmpty } from '@/util/index'
 
@@ -51,13 +51,13 @@ export const getComments = async (where: any): Promise<CommentTypeDef[]> => {
   return await db.collection(TABLE_NAME).find(where).toArray()
 }
 
-export const createCommentAndActivity = async (data: any): Promise<CommentTypeDef | null> => {
+export const createCommentAndActivity = async (data: Partial<CommentTypeDef>): Promise<CommentTypeDef | null> => {
   const comment = await createComment(data)
   if (comment != null) void Activity.createCommentCreateActivity(comment)
   return comment
 }
 
-export const createComment = async (data: any): Promise<CommentTypeDef | null> => {
+export const createComment = async (data: Partial<CommentTypeDef>): Promise<CommentTypeDef | null> => {
   const { db } = await connectToDatabase()
   data = sanitize(data)
   data.projectId = toObjectId(data.projectId)
@@ -79,16 +79,16 @@ export const createComment = async (data: any): Promise<CommentTypeDef | null> =
   return null
 }
 
-export const updateCommentAndCreateActivity = async (_id: ObjectId | string, data: any): Promise<boolean> => {
+export const updateCommentAndCreateActivity = async (_id: ObjectId | string, data: Partial<CommentTypeDef>): Promise<boolean> => {
   const updated = await updateComment(_id, data)
   if (updated) void Activity.createCommentUpdateActivity(_id)
   return updated
 }
 
-export const updateComment = async (_id: ObjectId | string, data: any): Promise<boolean> => {
+export const updateComment = async (_id: ObjectId | string, data: Partial<CommentTypeDef>): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  const { text }: any = data
+  const { text } = data
   const localData: any = sanitize({ text })
   localData.updatedAt = new Date()
   localData.userIds = Comment.getUserIdsFromMentions(localData)
@@ -99,18 +99,20 @@ export const updateComment = async (_id: ObjectId | string, data: any): Promise<
   return res.result.ok === 1
 }
 
-export const deleteCommentAndCreateActivity = async (_id: ObjectId | string): Promise<boolean> => {
-  const deleted = await deleteComment(_id)
-  if (deleted) void Activity.createCommentDeleteActivity(_id)
+export const deleteCommentAndCreateActivity = async (_id: ObjectId | string, userId: string | ObjectId): Promise<boolean> => {
+  const deleted = await deleteComment(_id, userId)
+  if (deleted) void Activity.createCommentDeleteActivity(_id, userId)
   return deleted
 }
 
-export const deleteComment = async (_id: ObjectId | string): Promise<boolean> => {
+export const deleteComment = async (_id: ObjectId | string, deleteBy?: string | ObjectId): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
+  const set: Partial<CommentTypeDef> = { deletedAt: new Date(), text: undefined, userIds: [] }
+  if (deleteBy != null) set.deletedBy = toObjectId(deleteBy)
   const res = await db
     .collection(TABLE_NAME)
-    .updateOne({ _id }, { $set: { deletedAt: new Date(), text: null, userIds: [] } })
+    .updateOne({ _id }, { $set: set })
   return res.result.ok === 1
 }
 
