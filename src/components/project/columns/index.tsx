@@ -1,7 +1,7 @@
 import React, { useState, FC, useEffect } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import CardDetailsModal from '@/src/components/project/columns/modals/card-details-modal'
-import Column from '@/src/components/project/columns/column'
+import { default as ColumnComponent } from '@/src/components/project/columns/column'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
@@ -11,11 +11,20 @@ import ProjectBar from '@/src/components/project/project-bar'
 import { CardStage, Card } from '@/src/types/card'
 import { isEmpty } from '@/util/index'
 import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
+import { Column } from '@/src/types/column'
 
 interface IProps {
   project: any
   session: any
 }
+
+// defined to avoid style issues while columns are loading
+const dummyData = { projectId: '', createdAt: new Date(), createdBy: '' }
+const defaultColumns: Column[] = [
+  { _id: '1', name: 'TO DO', ...dummyData },
+  { _id: '2', name: 'BUSY', ...dummyData },
+  { _id: '3', name: 'DONE', ...dummyData }
+]
 
 const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, session: any }): JSX.Element => {
   const router = useRouter()
@@ -34,7 +43,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [cardDetail, setCardDetail] = useState<any>({ _id: '', title: '', description: '' })
 
-  const [columns, setColumns] = useState<any[]>([])
+  const [columns, setColumns] = useState<Column[]>(defaultColumns)
   const [cards, setCards] = useState<Card[]>([])
   // useRenderingTrace('ProjectColumns', { projectId, session, columns, cards, isLoading, cardDetail }, 'log')
 
@@ -42,7 +51,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
     if (Array.isArray(data)) {
       setColumnsSorted(data)
     } else {
-      setColumns([])
+      setColumns(defaultColumns)
     }
   }, [data])
 
@@ -175,7 +184,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
           {(provided) => (
             <Box ref={provided.innerRef} {...provided.droppableProps} display='flex'>
               {Array.isArray(columns) && columns.map((column, index) => (
-                <Column
+                <ColumnComponent
                   key={column._id}
                   column={column}
                   id={column._id}
