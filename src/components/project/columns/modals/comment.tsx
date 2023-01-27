@@ -16,18 +16,19 @@ import {
   useDisclosure,
   GridProps
 } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { format } from 'date-fns'
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import { GiCancel } from 'react-icons/gi'
+import { Mention, MentionsInput } from 'react-mentions'
+import { BsReply } from 'react-icons/bs'
 import { isEmpty, timeAgo } from '@/util/index'
 import { getUserDisplayName } from '@/util/users'
-import { RiDeleteBin6Line } from 'react-icons/ri'
-import { Mention, MentionsInput } from 'react-mentions'
-import { GiCancel } from 'react-icons/gi'
 import UserContext from '@/src/store/user-context'
 import ProjectContext from '@/src/store/project-context'
 import ConfirmDialog from '@/src/components/confirm-dialog'
 import { User } from '@/src/types/user'
-import { useRouter } from 'next/router'
 import { Comment } from '@/src/types/comment'
-import { format } from 'date-fns'
 
 type CommentProps = {
   comment: Partial<Comment>
