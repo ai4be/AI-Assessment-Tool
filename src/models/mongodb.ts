@@ -54,7 +54,7 @@ export async function connectToDatabase (): Promise<{ client: MongoClient, db: D
 export const toObjectId = (_id: string | ObjectId): ObjectId => typeof _id === 'string' ? ObjectId(sanitize(_id)) : _id
 
 export const cleanEmail = (email: string): string => sanitize(email.trim().toLowerCase())
-export const cleanText = (email: string): string => sanitize(email.trim())
+export const cleanText = (txt: string): string => sanitize(txt.trim())
 
 export const addToWhere = (where: any, key: string, value: any, operator: string = '$eq'): void => {
   if (typeof where[key] === 'object') {

@@ -8,7 +8,7 @@ import { addUser, getUserProjects } from './project'
 
 const TABLE_NAME = 'tokens'
 export const RESET_PASSWORD_TOKEN_EXPIRATION = +(process.env.RESET_PASSWORD_TOKEN_EXPIRATION ?? 3600 * 2 * 1000) // 2 hours
-export const EMAIL_VALIDATION_TOKEN_EXPIRATION = +(process.env.EMAIL_VALIDATION_TOKEN_EXPIRATION ?? 3600 * 24 * 1000) // 24 hours
+export const EMAIL_VERIFICATION_TOKEN_EXPIRATION = +(process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION ?? 3600 * 24 * 1000) // 24 hours
 
 export enum TokenStatus {
   PENDING = 'PENDING',
@@ -19,7 +19,7 @@ export enum TokenStatus {
 export enum TokenType {
   INVITE = 'INVITE',
   RESET_PASSWORD = 'RESET_PASSWORD',
-  EMAIL_VALIDATION = 'EMAIL_VALIDATION'
+  EMAIL_VERIFICATION = 'EMAIL_VERIFICATION'
 }
 
 export interface Token {
@@ -99,11 +99,11 @@ export const inviteUser = async (projectId: string | ObjectId, email: string, cr
   return await db.collection(TABLE_NAME).findOne({ token })
 }
 
-export const emailValidationTokenHandler = async (token: string, createdBy: string): Promise<void> => {
+export const emailVerificationTokenHandler = async (token: string, createdBy: string): Promise<void> => {
   token = sanitize(token)
   createdBy = toObjectId(createdBy)
   const { db } = await connectToDatabase()
-  const dbToken = await db.collection(TABLE_NAME).findOne({ $or: [{ token }, { token: parseInt(token) }], createdBy, type: TokenType.EMAIL_VALIDATION })
+  const dbToken = await db.collection(TABLE_NAME).findOne({ $or: [{ token }, { token: parseInt(token) }], createdBy, type: TokenType.EMAIL_VERIFICATION })
   if (dbToken == null) throw new Error('Invalid token')
   if (dbToken.status !== TokenStatus.PENDING) throw new Error('Token already used or expired')
   if (isTokenExpired(dbToken)) {
@@ -111,18 +111,18 @@ export const emailValidationTokenHandler = async (token: string, createdBy: stri
     throw new Error('Token expired')
   }
   const email = dbToken.email
-  await updateUser(createdBy, { email, emailValidated: true })
+  await updateUser(createdBy, { email, emailVerified: true })
   await setStatus(dbToken, TokenStatus.REDEEMED)
 }
 
-export const createEmailValidationToken = async (email: string, createdBy: string): Promise<Token> => {
+export const createEmailVerificationToken = async (email: string, createdBy: string): Promise<Token> => {
   const token = randomIntFromInterval(100000, 999999)
   const { db } = await connectToDatabase()
   createdBy = toObjectId(createdBy)
   email = cleanEmail(email)
-  await db.collection(TABLE_NAME).updateMany({ createdBy, type: TokenType.EMAIL_VALIDATION }, { $set: { status: TokenStatus.EXPIRED } })
+  await db.collection(TABLE_NAME).updateMany({ createdBy, type: TokenType.EMAIL_VERIFICATION }, { $set: { status: TokenStatus.EXPIRED } })
   await db.collection(TABLE_NAME)
-    .insertOne({ token, userId: createdBy, createdBy, status: TokenStatus.PENDING, type: TokenType.EMAIL_VALIDATION, email, createdAt: Date.now() })
+    .insertOne({ token, userId: createdBy, createdBy, status: TokenStatus.PENDING, type: TokenType.EMAIL_VERIFICATION, email, createdAt: new Date() })
   return await db.collection(TABLE_NAME).findOne({ token, email, createdBy })
 }
 
@@ -131,8 +131,8 @@ export const isTokenExpired = (token: Token): boolean => {
   if (token.type === TokenType.RESET_PASSWORD) {
     return +token.createdAt + RESET_PASSWORD_TOKEN_EXPIRATION < Date.now()
   }
-  if (token.type === TokenType.EMAIL_VALIDATION) {
-    return +token.createdAt + EMAIL_VALIDATION_TOKEN_EXPIRATION < Date.now()
+  if (token.type === TokenType.EMAIL_VERIFICATION) {
+    return +token.createdAt + EMAIL_VERIFICATION_TOKEN_EXPIRATION < Date.now()
   }
   return false
 }
@@ -145,7 +145,7 @@ export const createResetPasswordToken = async (createdBy: string | ObjectId): Pr
   // expire all other reset password tokens
   await db.collection(TABLE_NAME).updateMany({ userId: user._id, type: TokenType.RESET_PASSWORD }, { $set: { status: TokenStatus.EXPIRED } })
   await db.collection(TABLE_NAME)
-    .insertOne({ token, userId: user._id, createdBy: user._id, status: TokenStatus.PENDING, type: TokenType.RESET_PASSWORD, email: user.email, createdAt: Date.now() })
+    .insertOne({ token, userId: user._id, createdBy: user._id, status: TokenStatus.PENDING, type: TokenType.RESET_PASSWORD, email: user.email, createdAt: new Date() })
   return await db.collection(TABLE_NAME).findOne({ token })
 }
 
