@@ -28,11 +28,12 @@ import Link from 'next/link'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import UserContext, { UserContextProvider } from '../store/user-context'
+import UserContext, { UserContextProvider } from '@/src/store/user-context'
 import { User } from '@/src/types/user'
 import { ActivityTimeline } from '@/src/components/activity'
 import NotificationIcon from '@/src/components/notification-icon'
-import { DisplayActivity } from '../types/activity'
+import { DisplayActivity } from '@/src/types/activity'
+import EmailVerificationCheck from '@/src/components/email-verification-check'
 
 interface Props {
   bg?: string
@@ -195,6 +196,7 @@ const NavBar: FC<Props> = (props) => {
   return (
     <UserContextProvider>
       <NavaBarInner {...props} />
+      <EmailVerificationCheck />
     </UserContextProvider>
   )
 }

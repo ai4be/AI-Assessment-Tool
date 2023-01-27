@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 import { unstable_getServerSession } from 'next-auth/next'
 
-export default function Page ({ session }): JSX.Element {
+export default function Page ({ session }: { session: any, emailVerified: boolean }): JSX.Element {
   const { data, error, mutate } = useSWR('/api/projects', fetcher)
   const { data: industries, error: errorIndustries } = useSWR('/api/industries', fetcher)
   return (

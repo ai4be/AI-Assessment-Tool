@@ -75,7 +75,7 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
               }}
               initial='rest'
               animate='rest'
-              whileHover='hover'
+              // whileHover='hover'
               overflow='hidden'
             >
               <Stack p='8' textAlign='center' spacing='1' alignItems='center' height='100%' width='100%'>

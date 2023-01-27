@@ -9,3 +9,5 @@ export interface User {
   xsAvatar?: string
   createdAt?: Date
 }
+
+export type UserCreate = Pick<User, 'email' | 'password' | 'firstName' | 'lastName'>

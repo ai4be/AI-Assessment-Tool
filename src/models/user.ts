@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
 import { hashPassword, verifyPassword } from '@/util/auth'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
-import { User } from '@/src/types/user'
+import { User, UserCreate } from '@/src/types/user'
 import Model from '@/src/models/model'
 
 const TABLE_NAME = 'users'
@@ -38,13 +38,13 @@ export const getUsers = async (userIds?: Array<string | ObjectId>, omitFields: s
   return await db.collection(TABLE_NAME).find(where, { projection }).toArray()
 }
 
-export const createUser = async ({ email, password, firstName, lastName }: { email: string, password: string, firstName: string, lastName: string }): Promise<User> => {
+export const createUser = async ({ email, password, firstName, lastName }: UserCreate): Promise<User> => {
   const { db } = await connectToDatabase()
   email = cleanEmail(email)
   firstName = cleanText(firstName)
   lastName = cleanText(lastName)
   const createdAt = new Date()
-  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt })
+  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt, emailVerified: false })
   return { email, password, firstName, lastName, _id: res.insertedId }
 }
 
@@ -74,16 +74,18 @@ export const resetPassword = async (_id: string | ObjectId, password: string): P
   return res.modifiedCount === 1
 }
 
-export const updateUser = async (_id: string | ObjectId, updateData: any): Promise<boolean> => {
+export const updateUser = async (_id: string | ObjectId, updateData: Partial<User>): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
-  const updateableFields = ['email', 'firstName', 'lastName', 'avatar', 'xsAvatar', 'organization', 'department', 'role']
-  const update: any = {}
-  for (const field of updateableFields) {
+  const objectKeys = Object.keys(updateData)
+  const updateableTxtFields = ['email', 'firstName', 'lastName', 'avatar', 'xsAvatar', 'organization', 'department', 'role']
+  const update: Partial<User> = {}
+  for (const field of updateableTxtFields) {
     if (updateData[field] != null) update[field] = cleanText(updateData[field])
   }
   if (update.email != null) update.email = cleanEmail(update.email)
   if (update.email != null && !isEmailValid(update.email)) throw new Error('Invalid email')
+  if (objectKeys.includes('emailVerified')) update.emailVerified = updateData.emailVerified === true
   if (isEmpty(update)) return false
 
   const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: update })

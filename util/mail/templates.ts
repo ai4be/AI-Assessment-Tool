@@ -41,7 +41,7 @@ export function getResetPasswordHtml (token: string, hostname: string): string {
     <article style="display: block; text-align: left; width: 650px; margin: 0 auto;">
       ${htmlLogo}
 
-      <div style="font: 20px Helvetica, sans-serif; color: #333;">
+      <div style="font: 20px Helvetica, sans-serif; color: #333; text-align: center;">
           <p>You have requested a password reset!</p>
           <p>To reset your password please click
             <a href='${hostname}/reset-password?token=${token}'>
@@ -58,20 +58,20 @@ export function getResetPasswordHtml (token: string, hostname: string): string {
   `
 }
 
-export function validateEmailHtml (code: string): string {
+export function getVerifyEmailHtml (code: string): string {
   return `
   <article style="display: block; text-align: center; width: 370px; margin: 0 auto;">
     ${htmlLogo}
 
-    <div style="font: 20px Helvetica, sans-serif; color: #333; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-      <p>Use this code to validate your email</p>
-      <div style='display:flex; justify-content: center; align-items: center;'>
+    <div style="font: 20px Helvetica,sans-serif; color: #333; text-align: center;">
+      <div>Use this code to verify your email</div>
+      <div style='text-align: center; padding: 10px;'>
         <span style="padding: 10px; color: black; background-color: lightgrey; border-radius: 15px; font-size: 30px;" >
           ${code}
         </span>
       </div>
-      <p>This code is valid for 24h!</p>
-      <p>&mdash; The Team</p>
+      <div style='text-align: center;'>This code is valid for 24h!</div>
+      <div style='text-align: center;'>&mdash; The Team</div>
     </div>
   </article>
   `
@@ -79,7 +79,7 @@ export function validateEmailHtml (code: string): string {
 
 export function commentMentionHtml (commentId: string, projectId: string, cardId: string, hostname: string = BASE_URL): string {
   return `
-  <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
+  <div style="text-align: center;">
       ${htmlLogo}
       <span>
         You have been mentioned in a comment,
@@ -106,7 +106,7 @@ export function getProjectActivityHtml (projects: Project[], hostname: string = 
 const templates = {
   getInvitationHtml,
   getResetPasswordHtml,
-  validateEmailHtml,
+  getVerifyEmailHtml,
   commentMentionHtml,
   getProjectActivityHtml
 }
