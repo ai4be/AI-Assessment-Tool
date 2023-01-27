@@ -10,4 +10,5 @@ export interface Comment {
   createdAt: Date
   updatedAt?: Date
   deletedAt?: Date
+  deletedBy?: string
 }
