@@ -1,17 +1,16 @@
 import { ObjectId } from 'mongodb'
-import { toObjectId, connectToDatabase, addToWhere } from './mongodb'
+import { toObjectId, connectToDatabase } from '@/src/models/mongodb'
 import { Activity as ActivityTypeDef, ActivityData, ActivityType, ActivityVisibility } from '@/src/types/activity'
 import { isEmpty } from '@/util/index'
 import { CardStage } from '@/src/types/card'
 import { Comment as CommentType } from '@/src/types/comment'
 import { Project, Role } from '@/src/types/project'
-import Model, { generatePaginationQuery } from './model'
-import { Comment } from './comment'
-import { getCard } from './card'
-import { getColumn } from './column'
-import { getUser } from './user'
+import Model, { generatePaginationQuery } from '@/src/models/model'
+import { Comment } from '@/src/models/comment'
+import { getCard } from '@/src/models/card'
+import { getColumn } from '@/src/models/column'
+import { getUser } from '@/src/models/user'
 import { getUserDisplayName } from '@/util/users'
-import { getUserProjects } from './project'
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class Activity extends Model {
