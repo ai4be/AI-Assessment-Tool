@@ -14,7 +14,8 @@ import {
   Grid,
   GridItem,
   useDisclosure,
-  GridProps
+  GridProps,
+  Tooltip
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { format } from 'date-fns'
@@ -30,14 +31,26 @@ import ConfirmDialog from '@/src/components/confirm-dialog'
 import { User } from '@/src/types/user'
 import { Comment } from '@/src/types/comment'
 
+const style = {
+  control: {
+    fontSize: 'var(--chakra-fontSizes-xs)'
+  },
+  input: {
+    fontSize: 'var(--chakra-fontSizes-xs)'
+  }
+}
+
 type CommentProps = {
   comment: Partial<Comment>
+  setParentComment?: (comment) => void
   onSave?: Function
   onCancel?: Function
   onDelete?: Function
 } & GridProps
 
-const CommentComponent = ({ comment, onSave, onCancel, onDelete, ...rest }: CommentProps): JSX.Element => {
+const maxLength = 1000
+
+const CommentComponent = ({ comment, onSave, onCancel, onDelete, setParentComment, ...rest }: CommentProps): JSX.Element => {
   const router = useRouter()
   const { comment: commentId } = router.query
   const commentElement = useRef<HTMLDivElement>(null) // to be able to access the current one
@@ -48,6 +61,8 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, ...rest }: Comm
   const [showEditOptions, setShowEditOptions] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const [usersComment, setUsersComment] = useState<null | User>(null)
+  const [parent, setParent] = useState<Comment | undefined>(comment?.parent)
+
   const mentionsUsers = useMemo(
     () => users?.map(u => ({ id: String(u._id), display: getUserDisplayName(u) }))
       .filter(u => u.id !== user?._id) ?? []
@@ -65,6 +80,10 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, ...rest }: Comm
   }, [comment?.userId, user?._id])
 
   useEffect(() => {
+    setParent(comment.parent)
+  }, [comment.parent])
+
+  useEffect(() => {
     if (comment?._id == null) setUsersComment(user)
     else {
       const userComment = users?.find(u => u._id === comment.userId)
@@ -72,37 +91,46 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, ...rest }: Comm
     }
   }, [comment?.userId, user, users])
 
+  useEffect(() => {
+    if (comment.parent != null && comment.parent.user == null) {
+      const parentUser = users?.find(u => u._id === comment.parent?.userId)
+      comment.parent.user = parentUser
+    }
+  }, [comment?.parent?.user, users])
+
   const saveHandler = (e: any): void => {
     e.preventDefault()
     e.stopPropagation()
     const val = value.trim().replace(/\n+$/, '')
-    if (onSave != null) onSave({ text: val })
-    if (comment._id == null) setValue('')
-    else setValue(val)
+    const parentId = parent?._id
+    const payload = { text: val, parentId: parentId ?? null }
+    if (onSave != null) onSave(payload)
+    if (comment._id == null) {
+      setValue('')
+      setParent(undefined)
+    } else {
+      setValue(val)
+    }
     setShowEditOptions(false)
   }
 
   const cancelHandler = (): void => {
     setValue(comment?.text ?? '')
+    setParent(comment?.parent)
     onCancel != null && onCancel({ text: value }) // eslint-disable-line @typescript-eslint/prefer-optional-chain
     setShowEditOptions(false)
   }
 
-  const style = {
-    control: {
-      fontSize: 'var(--chakra-fontSizes-xs)'
-    },
-    input: {
-      fontSize: 'var(--chakra-fontSizes-xs)'
-    }
+  const replyToHandler = (): void => {
+    if (setParentComment != null) setParentComment(comment)
   }
 
   return (
-    <Grid templateRows='min-content min-content' templateColumns='min-content auto' rowGap='0' _notFirst={{ marginTop: 2 }} ref={commentElement} {...rest}>
+    <Grid templateColumns='min-content auto min-content' rowGap='0' _notFirst={{ marginTop: 2 }} ref={commentElement} {...rest}>
       <GridItem colSpan={1} />
-      <GridItem colSpan={1} display='flex'>
-        {comment.createdAt != null && <Text fontSize='xs' color='var(--text-grey)'>{timeAgo(comment.createdAt)}</Text>}
-        {comment.updatedAt != null && <Text fontSize='xs' ml='1' textDecoration='underline' color='var(--text-grey)'>(Edited)</Text>}
+      <GridItem colSpan={2} display='flex'>
+        {comment.createdAt != null && <Text fontSize='x-small' color='var(--text-grey)'>{timeAgo(comment.createdAt)}</Text>}
+        {comment.updatedAt != null && <Text fontSize='x-small' ml='1' textDecoration='underline' color='var(--text-grey)'>(Edited)</Text>}
       </GridItem>
       <GridItem colSpan={1}>
         {usersComment != null && <Avatar size='xs' name={getUserDisplayName(usersComment)} src={usersComment?.xsAvatar} mr='1' mt='1' />}
@@ -111,14 +139,32 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, ...rest }: Comm
         <Box width='100%' boxShadow='rgb(0 0 0 / 10%) 0 0 10px' borderRadius='0.5rem' padding='2'>
           {comment.deletedAt == null &&
             <>
+              {parent != null && <ParentComment comment={parent} />}
               <MentionsInput
                 style={style}
                 disabled={disabled}
                 value={value}
+                maxLength={maxLength}
                 onFocus={() => setShowEditOptions(true)}
                 onBlur={(e, isFromSuggestion: boolean) => {
                   // console.log(e)
                   // !isFromSuggestion ? setShowEditOptions(false) : null
+                }}
+                onKeyDown={(e) => {
+                  const target = e.target as HTMLInputElement
+                  if (e.key === 'Backspace' && target.selectionStart === 0 && parent != null) {
+                    setParent(undefined)
+                  }
+                }}
+                onPaste={(e) => {
+                  const pastedData = e.clipboardData.getData('Text')
+                  const isAdditionToLong = value.length + pastedData.length > maxLength
+                  if (value.length >= maxLength || isAdditionToLong) {
+                    // prevent default paste
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (isAdditionToLong) setValue(value + pastedData.substring(0, maxLength - value.length))
+                  }
                 }}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder='Write a comment'
@@ -127,10 +173,16 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, ...rest }: Comm
               >
                 <Mention trigger='@' data={mentionsUsers} className='mentions__mention' appendSpaceOnAdd displayTransform={(id, display) => `@${display}`} />
               </MentionsInput>
-              {showEditOptions && <EditOptions comment={comment} value={value} saveHandler={saveHandler} cancelHandler={cancelHandler} onOpen={onOpen} />}
+              {showEditOptions && <EditOptions comment={comment} parent={parent} value={value} saveHandler={saveHandler} cancelHandler={cancelHandler} onOpen={onOpen} />}
             </>}
           {comment.deletedAt != null && <Text fontSize='xs' color='var(--text-grey)'>Comment deleted on {format(new Date(comment.deletedAt), 'dd MMM yyyy')}</Text>}
         </Box>
+      </GridItem>
+      <GridItem colSpan={1} display='flex' flexDirection='column' justifyContent='flex-end'>
+        {comment._id != null && comment.deletedAt == null &&
+          <Tooltip label='Reply' fontSize='sm' aria-label='Reply'>
+            <BsReply size='20px' className='ml-1 cursor-pointer -scale-x-100 mb-0.5' color='var(--main-blue)' onClick={replyToHandler} />
+          </Tooltip>}
       </GridItem>
       <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={(e) => onDelete != null ? onDelete(comment) : null} />
     </Grid>
@@ -139,20 +191,62 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, ...rest }: Comm
 
 export default CommentComponent
 
+const ParentComment = ({ comment, ...rest }: CommentProps): JSX.Element => {
+  const userName = comment.user != null ? getUserDisplayName(comment.user) : ''
+  const nbOflines = (comment.text ?? '').split(/\n/).length
+  const values = (comment.text ?? '').split(/\n/, 2)
+  if (values[0].length > 100) {
+    values[0] = values[0].substring(0, 100) + '...'
+    values[1] = ''
+  }
+  if (values[1] != null && values[1].length > 100) {
+    values[1] = values[1].substring(0, 100) + '...'
+  }
+  let value = values.join('\n').trim()
+  if (nbOflines > 2 && !value.endsWith('...')) value += '...'
+  return (
+    <Box backgroundColor='lightcyan' borderLeftColor='var(--main-blue)' borderLeftWidth='2px' borderRadius='0.5rem' {...rest} p='1'>
+      <Box display='flex'>
+        <Avatar size='2xs' name={userName} src={comment.user?.xsAvatar} mr='1' display='block' />
+        <Text fontSize='x-small' fontWeight='600' ml='1' mr='1'>{userName}</Text>
+      </Box>
+      <MentionsInput
+        style={style}
+        disabled
+        value={value}
+        className='mentions'
+        maxLength={20}
+      >
+        <Mention trigger='@' data={[]} className='mentions__mention' appendSpaceOnAdd displayTransform={(id, display) => `@${display}`} />
+      </MentionsInput>
+    </Box>
+  )
+}
+
 interface EditOptionsProps {
   comment: Partial<Comment>
+  parent: Comment | undefined,
   value: string
   saveHandler: (e: any) => void
   cancelHandler: (e: any) => void
   onOpen: () => void
 }
 
-const EditOptions = ({ comment, value, saveHandler, cancelHandler, onOpen }: EditOptionsProps): JSX.Element => (
-  <Flex alignItems='center' justifyContent='space-between' mt='1'>
-    <Flex alignItems='center'>
-      <Button size='sm' colorScheme='blue' disabled={isEmpty(value) || value === comment.text} onClick={saveHandler}>Save</Button>
-      <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
+const EditOptions = ({ comment, value, parent, saveHandler, cancelHandler, onOpen }: EditOptionsProps): JSX.Element => {
+  const [disabled, setDisabled] = useState(false)
+  useEffect(() => {
+    if (isEmpty(value)) setDisabled(true)
+    else if (comment.text === value && comment.parentId === parent?._id) setDisabled(true)
+    else setDisabled(false)
+  }, [value, comment.text, parent, comment.parentId])
+
+  return (
+    <Flex alignItems='center' justifyContent='space-between' mt='1'>
+      <Flex alignItems='center'>
+        <Button size='sm' colorScheme='blue' disabled={disabled} onClick={saveHandler}>Save</Button>
+        <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
+      </Flex>
+      {comment._id != null && <RiDeleteBin6Line cursor='pointer' color='#286cc3' onClick={onOpen} />}
     </Flex>
-    {comment._id != null && <RiDeleteBin6Line cursor='pointer' color='#286cc3' onClick={onOpen} />}
-  </Flex>
-)
+  )
+}

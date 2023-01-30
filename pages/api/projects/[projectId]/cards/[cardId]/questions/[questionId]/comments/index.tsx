@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { hasProjectAccess, isConnected, cardBelongsToProject } from '@/util/temp-middleware'
-import { createCommentAndActivity, getComments } from '@/src/models/comment'
+import Comment, { createCommentAndActivity } from '@/src/models/comment'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId, cardId, questionId } = req.query
@@ -14,7 +14,8 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return comment != null ? res.status(201).send(comment) : res.status(400).send({ message: 'could not create' })
     }
     case 'GET': {
-      const comments = await getComments({ projectId, cardId })
+      const result = await Comment.find({ projectId, cardId })
+      const comments = result.data
       return res.status(200).send(comments)
     }
     default:

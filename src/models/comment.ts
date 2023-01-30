@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
 import { Comment as CommentTypeDef } from '@/src/types/comment'
 import Activity from '@/src/models/activity'
-import Model from '@/src/models/model'
+import Model, { generatePaginationQuery } from '@/src/models/model'
 import { JobMentionNotification } from '@/src/models/job/job-mention-notification'
 // import { isEmpty } from '@/util/index'
 
@@ -40,14 +40,76 @@ export class Comment extends Model {
     */
     return comment?.text?.match(/(?<=@\[[^\]]+\]\()[^)]+(?=\))/g)?.map(toObjectId) ?? []
   }
+
+  static async find (where: any, limit: number = 10000, sort: [field: string, order: number] = ['_id', 1], page?: string): Promise<{ count: number, limit: number, data: any[], page: string }> {
+    const { db } = await connectToDatabase()
+    where = sanitizeData(where)
+    const { wherePagined, nextKeyFn } = generatePaginationQuery(where, sort, page)
+    const pipeline = [
+      { $match: wherePagined },
+      { $sort: { [sort[0]]: sort[1] } },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: 'parentId',
+          foreignField: '_id',
+          as: 'parent'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      { $unwind: { path: '$parent', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: '$user', preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          'user.password': 0,
+          'user.avatar': 0,
+          'users.password': 0,
+          'users.avatar': 0
+        }
+      }
+    ]
+    console.log(pipeline)
+    const res = await db
+      .collection(this.TABLE_NAME)
+      .aggregate(pipeline)
+    const count = await db
+      .collection(this.TABLE_NAME)
+      .find(where)
+      .sort([sort])
+      .count()
+
+    const data = await res.toArray()
+    return {
+      count,
+      limit,
+      page: nextKeyFn(data),
+      data: await res.toArray()
+    }
+  }
+}
+
+export const sanitizeData = (data: any): any => {
+  data = sanitize(data)
+  if (data._id != null) data._id = toObjectId(data._id)
+  if (data.projectId != null) data.projectId = toObjectId(data.projectId)
+  if (data.cardId != null) data.cardId = toObjectId(data.cardId)
+  if (data.userId != null) data.userId = toObjectId(data.userId)
+  if (data.parentId != null) data.parentId = toObjectId(data.parentId)
+  if (data.userIds != null) data.userIds = data.userIds.map(toObjectId)
+  return data
 }
 
 export const getComments = async (where: any): Promise<CommentTypeDef[]> => {
   const { db } = await connectToDatabase()
-  where = sanitize(where)
-  if (where._id != null) where._id = toObjectId(where._id)
-  if (where.projectId != null) where.projectId = toObjectId(where.projectId)
-  if (where.cardId != null) where.cardId = toObjectId(where.cardId)
+  where = sanitizeData(where)
   return await db.collection(TABLE_NAME).find(where).toArray()
 }
 
@@ -59,13 +121,10 @@ export const createCommentAndActivity = async (data: Partial<CommentTypeDef>): P
 
 export const createComment = async (data: Partial<CommentTypeDef>): Promise<CommentTypeDef | null> => {
   const { db } = await connectToDatabase()
-  data = sanitize(data)
-  data.projectId = toObjectId(data.projectId)
-  data.userId = toObjectId(data.userId)
-  data.cardId = toObjectId(data.cardId)
+  data = sanitizeData(data)
   data.createdAt = new Date()
   let localData: any = {};
-  ['projectId', 'userId', 'text', 'cardId', 'createdAt', 'questionId'].forEach(k => {
+  ['projectId', 'userId', 'text', 'cardId', 'createdAt', 'questionId', 'parentId'].forEach(k => {
     if (data[k] != null) localData[k] = data[k]
   })
   localData = sanitize(localData)
@@ -89,7 +148,9 @@ export const updateComment = async (_id: ObjectId | string, data: Partial<Commen
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
   const { text } = data
+  const keys = Object.keys(data)
   const localData: any = sanitize({ text })
+  if (keys.includes('parentId') && data.parentId == null) localData.parentId = null
   localData.updatedAt = new Date()
   localData.userIds = Comment.getUserIdsFromMentions(localData)
   const res = await db
@@ -126,3 +187,5 @@ export const deleteComments = async (where: any): Promise<boolean> => {
     .deleteMany(where)
   return res.result.ok === 1
 }
+
+export default Comment
