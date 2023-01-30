@@ -110,7 +110,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
     if (element?.current != null && questionId != null && questionId === question.id) {
       setTimeout(() => element.current?.scrollIntoView({ behavior: 'smooth' }), 400)
     }
-  }, [])
+  }, [questionId])
 
   const saveHandler = async (): Promise<void> => {
     await onChange(question, null, conclusion.trim())

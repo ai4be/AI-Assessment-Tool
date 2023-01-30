@@ -11,6 +11,8 @@ import { Comment } from '@/src/types/comment'
 import { QuestionComp } from '@/src/components/project/columns/modals/question'
 import ToastContext from '@/src/store/toast-context'
 
+import { useRouter } from 'next/router'
+
 type Props = {
   projectId: string
   cardId: string
@@ -18,7 +20,8 @@ type Props = {
   questionSaveCallback?: Function
 } & BoxProps
 
-const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionSaveCallback, ...rest }) => {
+const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionSaveCallback, ...rest }): JSX.Element => {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const { showToast } = useContext(ToastContext)
   const [renderTrigger, setRenderTrigger] = useState(0)
@@ -106,18 +109,23 @@ const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionS
     setIsLoading(false)
   }
 
-  const setParentComment = (comment: Comment | undefined): void => {
+  const setNewCommentParent = (comment: Comment | undefined): void => {
     newComment.parent = comment
     newComment.parentId = comment?._id
     setNewComment({ ...newComment })
+    const query: any = { ...router.query }
+    delete query.comment
+    delete query.question
+    void router.push({ query }, undefined, { shallow: true })
+      .then(async () => await router.push({ query: { ...query, question: question.id } }, undefined, { shallow: true }))
   }
 
   return (
     <Box {...rest}>
       <QuestionComp question={question} onChange={saveQuestion} />
-      <CommentComponent comment={newComment} onSave={async (data: Partial<Comment>) => await saveComment(newComment, data, question)} ml='3' setParentComment={setParentComment} />
+      <CommentComponent comment={newComment} onSave={async (data: Partial<Comment>) => await saveComment(newComment, data, question)} ml='3' />
       {question.comments?.map(c => (
-        <CommentComponent key={c._id} comment={c} setParentComment={setParentComment} onSave={async data => await saveComment(c, data, question)} onDelete={async () => await deleteComment(c, question)} ml='3' />
+        <CommentComponent key={c._id} comment={c} setNewCommentParent={setNewCommentParent} onSave={async data => await saveComment(c, data, question)} onDelete={async () => await deleteComment(c, question)} ml='3' />
       ))}
     </Box>
   )

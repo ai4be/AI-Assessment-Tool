@@ -42,7 +42,7 @@ const style = {
 
 type CommentProps = {
   comment: Partial<Comment>
-  setParentComment?: (comment) => void
+  setNewCommentParent?: (comment: Comment | undefined) => void
   onSave?: Function
   onCancel?: Function
   onDelete?: Function
@@ -50,7 +50,7 @@ type CommentProps = {
 
 const maxLength = 1000
 
-const CommentComponent = ({ comment, onSave, onCancel, onDelete, setParentComment, ...rest }: CommentProps): JSX.Element => {
+const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentParent, ...rest }: CommentProps): JSX.Element => {
   const router = useRouter()
   const { comment: commentId } = router.query
   const commentElement = useRef<HTMLDivElement>(null) // to be able to access the current one
@@ -72,7 +72,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setParentCommen
     if (commentElement?.current != null && commentId != null && commentId === comment._id) {
       setTimeout(() => commentElement.current?.scrollIntoView({ behavior: 'smooth' }), 400)
     }
-  }, [])
+  }, [commentId])
 
   useEffect(() => {
     if (comment?._id == null) setDisabled(false)
@@ -122,7 +122,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setParentCommen
   }
 
   const replyToHandler = (): void => {
-    if (setParentComment != null) setParentComment(comment)
+    if (setNewCommentParent != null) setNewCommentParent(comment as Comment)
   }
 
   return (
@@ -192,6 +192,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setParentCommen
 export default CommentComponent
 
 const ParentComment = ({ comment, ...rest }: CommentProps): JSX.Element => {
+  const router = useRouter()
   const userName = comment.user != null ? getUserDisplayName(comment.user) : ''
   const nbOflines = (comment.text ?? '').split(/\n/).length
   const values = (comment.text ?? '').split(/\n/, 2)
@@ -204,21 +205,33 @@ const ParentComment = ({ comment, ...rest }: CommentProps): JSX.Element => {
   }
   let value = values.join('\n').trim()
   if (nbOflines > 2 && !value.endsWith('...')) value += '...'
+
+  const clikHandler = (): void => {
+    const query = router.query
+    query.comment = ''
+    void router
+      .push({ query }, undefined, { shallow: true })
+      .then(async () => await router.push({ query: { ...query, comment: comment._id } }, undefined, { shallow: true }))
+  }
+
   return (
-    <Box backgroundColor='lightcyan' borderLeftColor='var(--main-blue)' borderLeftWidth='2px' borderRadius='0.5rem' {...rest} p='1'>
+    <Box backgroundColor='lightcyan' borderLeftColor='var(--main-blue)' borderLeftWidth='2px' borderRadius='0.5rem' {...rest} p='1' cursor='pointer'>
       <Box display='flex'>
         <Avatar size='2xs' name={userName} src={comment.user?.xsAvatar} mr='1' display='block' />
         <Text fontSize='x-small' fontWeight='600' ml='1' mr='1'>{userName}</Text>
       </Box>
-      <MentionsInput
-        style={style}
-        disabled
-        value={value}
-        className='mentions'
-        maxLength={20}
-      >
-        <Mention trigger='@' data={[]} className='mentions__mention' appendSpaceOnAdd displayTransform={(id, display) => `@${display}`} />
-      </MentionsInput>
+      <Box position='relative'>
+        <MentionsInput
+          style={style}
+          disabled
+          value={value}
+          className='mentions'
+          maxLength={20}
+        >
+          <Mention trigger='@' data={[]} className='mentions__mention' appendSpaceOnAdd displayTransform={(id, display) => `@${display}`} />
+        </MentionsInput>
+        <Box position='absolute' top='0' right='0' bottom='0' left='0' cursor='pointer' onClick={clikHandler} />
+      </Box>
     </Box>
   )
 }

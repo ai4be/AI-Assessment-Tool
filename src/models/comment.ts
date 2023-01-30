@@ -76,7 +76,6 @@ export class Comment extends Model {
         }
       }
     ]
-    console.log(pipeline)
     const res = await db
       .collection(this.TABLE_NAME)
       .aggregate(pipeline)
