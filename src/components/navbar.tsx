@@ -139,8 +139,8 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
         <Flex flexDirection='column' justifyContent='center'>
           <ActivityDrawer />
         </Flex>
-        <Flex flexDirection='column' justifyContent='center' paddingX='2'>
-          <Divider orientation='vertical' height='50%' color='#F0EEF9' position='absolute' zIndex='100' />
+        <Flex flexDirection='column' justifyContent='center' paddingX='2' position='relative'>
+          <Divider orientation='vertical' height='50%' color='#F0EEF9' position='absolute' />
         </Flex>
         <Menu>
           <MenuButton size='xs' mr='5px'>
