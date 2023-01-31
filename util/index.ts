@@ -97,3 +97,10 @@ export const debounce = (func: Function, delay: number, { leading }: { leading?:
     timerId = setTimeout(() => func(...args), delay)
   }
 }
+
+export const timeIt = async (callback: () => Promise<void>): Promise<number> => {
+  const start = Date.now()
+  await callback()
+  const end = Date.now()
+  return end - start
+}

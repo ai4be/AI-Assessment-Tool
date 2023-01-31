@@ -1,9 +1,10 @@
-import { Context, createContext, useEffect, useState } from 'react'
+import { Context, createContext, useState } from 'react'
 import { useRouter } from 'next/router'
+import useSWR from 'swr'
 import { Category, Project } from '@/src/types/project'
-import { fetchUsersByProjectId } from '@/util/users'
 import { UserContextProvider } from '@/src/store/user-context'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
+import { fetcher } from '@/util/api'
 
 interface ProjectContextType {
   project?: Project | undefined
@@ -19,13 +20,7 @@ export function ProjectContextProvider (props: any): JSX.Element {
   const router = useRouter()
   const [project, setProject] = useState<Project>(props.project)
   const [categories] = useState<Category[]>(props.categories)
-  const [users, setUsers] = useState<any[]>([])
-
-  useEffect((): void => {
-    if (Array.isArray(project.userIds)) {
-      void fetchUsersByProjectId(project._id).then(u => setUsers(u))
-    }
-  }, [project.userIds])
+  const { data: users } = useSWR(`/api/projects/${project._id}/users`, fetcher)
 
   function categoryClickHandler (cat: Category): void {
     const {

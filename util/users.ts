@@ -7,14 +7,6 @@ export const getUserDisplayName = (user: User): string => {
   return res
 }
 
-export const fetchUsers = async (userIds: string[]): Promise<User[]> => {
-  const promises: Array<Promise<Response>> = userIds.map(async (uid: string) => await fetch(`/api/users/${uid}`))
-  const responses: Response[] = await Promise.all(promises)
-  const texts: any[] = await Promise.all(responses.map(async (res: Response) => await res.text()))
-  const jsons = texts.filter(t => t?.length > 0).map(t => JSON.parse(t))
-  return jsons
-}
-
 export const getCurrentUser = async (): Promise<User | null> => {
   const response = await fetch('/api/users/me')
   if (response.ok) {

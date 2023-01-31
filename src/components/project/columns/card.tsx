@@ -1,8 +1,8 @@
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useContext } from 'react'
 import { Box, Flex, Text, AvatarGroup, Avatar } from '@chakra-ui/react'
 import { Draggable } from 'react-beautiful-dnd'
 import ProjectContext from '@/src/store/project-context'
-import { fetchUsers, getUserDisplayName } from '@/util/users'
+import { getUserDisplayName } from '@/util/users'
 import { Card } from '@/src/types/card'
 
 interface Props {
@@ -12,24 +12,12 @@ interface Props {
 }
 
 const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
-  const projectContext = useContext(ProjectContext)
-  const [users, setUsers] = useState<any[]>([])
-
-  useEffect((): void => {
-    if (projectContext.project?.userIds != null) {
-      void fetchUsers(projectContext.project?.userIds).then(usersData => setUsers(usersData))
-    } else {
-      setUsers((prevValue) => {
-        if (prevValue.length === 0) return prevValue
-        return []
-      })
-    }
-  }, [projectContext.project?.userIds])
+  const { users = [] } = useContext(ProjectContext)
 
   const loadAssignedToUser = (): JSX.Element => {
     if (card.userIds == null) return <></>
     const stringUserIds = card.userIds.map(String)
-    const assignedUsers = users.filter((user) => stringUserIds.includes(String(user._id)))
+    const assignedUsers = users.filter(user => stringUserIds.includes(user._id))
 
     return (
       <Flex justifyContent='flex-end'>
