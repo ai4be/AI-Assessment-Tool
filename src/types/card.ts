@@ -35,7 +35,7 @@ export interface Question {
   answers: string[]
   isVisibleIf: string
   type: QuestionType
-  isScored: boolean
+  isScored: boolean | number
   TOCnumber?: string
   responses?: any[]
   conclusion?: string
@@ -52,9 +52,9 @@ export type DisplayQuestion = Question & {
 }
 
 export enum CardStage {
-  PREPARATION = 'PREPARATION',
-  EXECUTION = 'EXECUTION',
-  UTILISATION = 'UTILISATION'
+  DEVELOPMENT = 'development',
+  STAGING = 'staging',
+  PRODUCTION = 'production'
 }
 
 export const STAGE_VALUES: readonly string[] = Object.freeze(Object.values(CardStage))

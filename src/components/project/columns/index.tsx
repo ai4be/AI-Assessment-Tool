@@ -65,9 +65,10 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
 
   const filterCardsArrayFn = (card: any, columnId: string): boolean => {
     let val = String(card.columnId) === columnId
+    const queryStage = String(stage).toLowerCase()
     if (val && categoryId != null) val = card.category === categoryId
     if (val && stage != null) {
-      val = card.stage === stage || (stage === CardStage.PREPARATION && isEmpty(card.stage))
+      val = card.stage?.toLowerCase() === queryStage || (queryStage === CardStage.DEVELOPMENT && isEmpty(card.stage))
     }
     if (val && assignedTo != null && assignedTo?.length > 0) {
       const fileterUserIds = typeof assignedTo === 'string' ? [assignedTo] : assignedTo

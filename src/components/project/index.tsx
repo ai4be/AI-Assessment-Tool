@@ -35,7 +35,7 @@ const ProjectComponent: FC<Props> = (props): JSX.Element => {
               : <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
                 <Box display='flex' position='relative'>
                   <SideBar />
-                  <ProjectColumns project={props.project} session={props.session} />
+                  <ProjectColumns project={props.project} />
                 </Box>
               </Box>}
           </Box>

@@ -25,6 +25,8 @@ type Props = {
   categories: Category[]
 } & BoxProps
 
+const PLACEHOLDER_SECTION_ID = 'placeholder-section-id'
+
 const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX.Element => {
   const router = useRouter()
   const projectId = String(project?._id)
@@ -33,7 +35,7 @@ const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX
   } = router.query
   const { data: dataCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
   const [filteredCategories, setFilteredCategories] = useState<Category[]>(categories)
-  const [categoriesToShow, setToShowCategories] = useState<Category[]>(categories)
+  const [categoriesToShow, setCategoriesToShow] = useState<Category[]>(categories)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { card, setCardQuery, unSetCardQuery } = useQueryCardId(dataCards, () => onOpen(), () => onClose())
 
@@ -53,19 +55,20 @@ const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX
       for (const cat of filteredCategories) {
         if (isEmpty(cat.sections)) {
           cat.sections = [{
-            _id: 'default',
-            id: 'default',
+            _id: PLACEHOLDER_SECTION_ID,
+            id: PLACEHOLDER_SECTION_ID,
             title: '',
             cards: dataCards.filter((card: Card) => card.category === cat._id)
           }]
         } else {
           for (const section of cat.sections) {
-            section.cards = dataCards.filter((card: Card) => card.category === cat._id && card.section === section.id)
+            if (section._id === PLACEHOLDER_SECTION_ID) section.cards = dataCards.filter((card: Card) => card.category === cat._id)
+            else section.cards = dataCards.filter((card: Card) => card.category === cat._id && card.section === section.id)
           }
         }
         catToShow.push(cat)
       }
-      setToShowCategories(catToShow)
+      setCategoriesToShow(catToShow)
     }
   }, [filteredCategories, dataCards])
 

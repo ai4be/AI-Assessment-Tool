@@ -85,7 +85,7 @@ export const cardDataSanitizer = async (cardId: string, data: any): Promise<any>
   const columns = await getColumnsByProjectId(card.projectId)
   if (updatableFields.columnId != null && columns.find(c => String(c._id) === String(updatableFields.columnId)) == null) throw new Error('Invalid columnId')
   if (updatableFields.columnId != null) updatableFields.columnId = toObjectId(updatableFields.columnId)
-  if (typeof updatableFields.stage === 'string' && !STAGE_VALUES.includes(updatableFields.stage.toUpperCase())) throw new Error('Invalid stage')
+  if (typeof updatableFields.stage === 'string' && !STAGE_VALUES.includes(updatableFields.stage.toLowerCase())) throw new Error('Invalid stage')
   if (updatableFields.stage != null) updatableFields.stage = updatableFields.stage.toUpperCase()
   return updatableFields
 }
