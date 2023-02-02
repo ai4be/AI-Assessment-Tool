@@ -63,13 +63,12 @@ interface Props {
   onClose: () => void
   isOpen: boolean
   card: DisplayCard
-  projectId: string
-  fetchCards: () => any
 }
 
-const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card, projectId, fetchCards }) => {
-  card.userIds = card.userIds ?? []
+const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
+  card.userIds = card?.userIds ?? []
   const cardId = String(card._id)
+  const projectId = String(card.projectId)
   const [isLoading, setIsLoading] = useState(false)
   const { users } = useContext(ProjectContext)
   const { showToast } = useContext(ToastContext)

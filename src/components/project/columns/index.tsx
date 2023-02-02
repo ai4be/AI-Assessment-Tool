@@ -13,10 +13,10 @@ import { isEmpty } from '@/util/index'
 import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
 import { Column } from '@/src/types/column'
 import { useQueryCardId } from '@/src/hooks/index'
+import { Project } from '@/src/types/project'
 
 interface IProps {
-  project: any
-  session: any
+  project: Project
 }
 
 // defined to avoid style issues while columns are loading
@@ -27,11 +27,10 @@ const defaultColumns: Column[] = [
   { _id: '3', name: 'DONE', ...dummyData }
 ]
 
-const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, session: any }): JSX.Element => {
+const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
   const router = useRouter()
   const projectId = String(project?._id)
   const {
-    card: cardId,
     [QueryFilterKeys.CATEGORY]: categoryId,
     [QueryFilterKeys.STAGE]: stage,
     [QueryFilterKeys.ASSIGNED_TO]: assignedTo,
@@ -40,13 +39,10 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
   } = router.query
   const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
   const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
-
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [cardDetail, setCardDetail] = useState<any>({ _id: '', title: '', description: '' })
-
   const [columns, setColumns] = useState<Column[]>(defaultColumns)
   const [cards, setCards] = useState<Card[]>([])
-  const card = useQueryCardId(cards)
+  const { card, setCardQuery, unSetCardQuery } = useQueryCardId(cards, () => onOpen(), () => onClose())
 
   // useRenderingTrace('ProjectColumns', { projectId, session, columns, cards, isLoading, cardDetail }, 'log')
 
@@ -62,50 +58,9 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
     setCards(dataCards ?? [])
   }, [dataCards])
 
-  useEffect(() => {
-    if (cardId != null && Array.isArray(cards)) {
-      const card = cards.find((card) => card._id === cardId)
-      if (card != null) showCardDetail(card._id)
-      else {
-        const query: any = { ...router.query }
-        delete query.card
-        void router.push({ query }, undefined, { shallow: true })
-      }
-    }
-  }, [cardId, cards])
-
-  // useEffect(() => {
-  //   if (categoryId != null && Array.isArray(cards)) {
-  //     const catCards = cards.filter(card => card.categoryId === categoryId)
-  //     catCards.sort((a, b) => a.order - b.order)
-  //   }
-  // }, [categoryId, cards])
-
   const setColumnsSorted = (cols: any[]): void => {
     cols.sort((a, b) => a.sequence - b.sequence)
     setColumns(cols)
-  }
-
-  const showCardDetail = (cardId: string): void => {
-    const card = cards.find(card => card._id === cardId)
-    void router.push({
-      pathname: router.route,
-      query: { ...router.query, card: cardId }
-    }, undefined, { shallow: true })
-    setCardDetail(card)
-    onOpen()
-  }
-
-  const hideCardDetail = async (): Promise<void> => {
-    onClose()
-    const query = { ...router.query }
-    delete query.card
-    delete query.question
-    delete query.comment
-    await router.push({
-      pathname: router.route,
-      query
-    }, undefined, { shallow: true })
   }
 
   const filterCardsArrayFn = (card: any, columnId: string): boolean => {
@@ -193,7 +148,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
                   id={column._id}
                   index={index}
                   cards={filterCards(column._id)}
-                  showCardDetail={showCardDetail}
+                  showCardDetail={setCardQuery}
                   projectId={project?._id}
                   fetchColumns={mutate}
                   fetchCards={mutateCards}
@@ -204,7 +159,7 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
           )}
         </Droppable>
       </DragDropContext>
-      <CardDetailsModal isOpen={isOpen} onClose={hideCardDetail} card={cardDetail} projectId={project?._id} fetchCards={mutateCards} />
+      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery} card={card} />}
     </Box>
   )
 }

@@ -6,7 +6,8 @@ import {
   BoxProps,
   Grid,
   GridItem,
-  Select
+  Select,
+  useDisclosure
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
@@ -16,6 +17,8 @@ import { fetcher } from '@/util/api'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 import { isEmpty } from '@/util/index'
 import { setQuestionCleanTitle } from '@/util/question'
+import { useQueryCardId } from '@/src/hooks/index'
+import CardDetailsModal from '@/src/components/project/modals/card-details-modal'
 
 type Props = {
   project: Project
@@ -26,20 +29,19 @@ const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX
   const router = useRouter()
   const projectId = String(project?._id)
   const {
-    // card: cardId,
     [QueryFilterKeys.CATEGORY]: categoryId
   } = router.query
   const { data: dataCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
   const [filteredCategories, setFilteredCategories] = useState<Category[]>(categories)
   const [categoriesToShow, setToShowCategories] = useState<Category[]>(categories)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { card, setCardQuery, unSetCardQuery } = useQueryCardId(dataCards, () => onOpen(), () => onClose())
 
   useEffect(() => {
     if (Array.isArray(categories) && categoryId != null) {
       const localCategories = categoryId == null
         ? categories
         : categories.filter((category: Category) => category._id === categoryId)
-      console.log(localCategories)
-      console.log('cat sections', localCategories.map(c => c.sections.map(s => s.id)).flatMap(s => s))
       setFilteredCategories(localCategories)
     }
   }, [categories, categoryId])
@@ -67,12 +69,6 @@ const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX
     }
   }, [filteredCategories, dataCards])
 
-  useEffect(() => {
-    if (Array.isArray(dataCards) && categoryId != null) {
-      console.log(dataCards.filter((card: Card) => card.category === categoryId).map(c => c.section))
-    }
-  }, [dataCards, categoryId])
-
   return (
     <Box backgroundColor='white' {...boxProps}>
       {categoriesToShow.map(category =>
@@ -82,14 +78,14 @@ const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX
             {category.sections?.map((section, idx) =>
               <Grid templateColumns='min-content auto 8rem' key={`${category._id}-${section.id ?? idx}`} _last={{ marginBottom: '1rem' }} alignItems='center'>
                 {!isEmpty(section.title) && <GridItem colSpan={3} marginTop={idx !== 0 ? '1rem' : '0'}><Text textTransform='uppercase' color='var(--main-blue)' marginBottom='1rem' marginLeft='1rem'>{section.title}</Text></GridItem>}
-                {section.cards?.map((card, idxc) => card.questions.filter((q: Question) => q.isScored).map((q: Question, idxq) =>
+                {section.cards?.map((c, idxc) => c.questions.filter((q: Question) => q.isScored).map((q: Question, idxq) =>
                   <Fragment key={q.id}>
                     {(idxq !== 0 || idxc !== 0) && <><GridItem colSpan={1} height='3rem' justifySelf='center' paddingY='0.5rem'><Divider orientation='vertical' height='100%' color='#9f9e9f' /></GridItem><GridItem colSpan={2} /></>}
                     <GridItem colSpan={1}>
                       <Box height='2rem' width='2rem' borderRadius='full' backgroundColor='var(--main-light-blue)' />
                     </GridItem>
-                    <GridItem colSpan={1} paddingLeft='1rem'>
-                      <Text fontWeight='semibold' fontSize='sm'>{(q as DisplayQuestion).cleanTitle}</Text>
+                    <GridItem colSpan={1} paddingLeft='1rem' onClick={() => setCardQuery(c._id, q.id)} cursor='pointer'>
+                      <Text fontWeight='semibold' fontSize='sm' cursor='pointer'>{(q as DisplayQuestion).cleanTitle}</Text>
                     </GridItem>
                     <GridItem colSpan={1}>
                       <Select fontSize='xs' placeholder='-' value={Array.isArray(q.responses) ? q.responses[0] : ''}>
@@ -101,6 +97,7 @@ const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX
               </Grid>)}
           </Box>
         </Fragment>)}
+      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery} card={card} />}
     </Box>
   )
 }
