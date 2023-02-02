@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { Box, Button } from '@chakra-ui/react'
 import {
   AiOutlineHome,
-  AiOutlineSetting,
-  AiOutlineCreditCard,
-  AiOutlineBuild
+  AiOutlineSetting
 } from 'react-icons/ai'
 import Link from 'next/link'
 import NavBar from '@/src/components/navbar'
 
-const SideBar = (props): JSX.Element => {
+interface Props {
+  page: string
+}
+
+const SideBar: FC<Props> = (props): JSX.Element => {
   const { page } = props
 
   const sidebarMenu = [

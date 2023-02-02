@@ -1,7 +1,7 @@
 import React, { useState, FC, useEffect } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import CardDetailsModal from '@/src/components/project/columns/modals/card-details-modal'
-import { default as ColumnComponent } from '@/src/components/project/columns/column'
+import CardDetailsModal from '@/src/components/project/modals/card-details-modal'
+import ColumnComponent from '@/src/components/project/columns/column'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import useSWR from 'swr'
 import { updateCard } from '@/util/cards'
@@ -12,6 +12,7 @@ import { CardStage, Card } from '@/src/types/card'
 import { isEmpty } from '@/util/index'
 import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu'
 import { Column } from '@/src/types/column'
+import { useQueryCardId } from '@/src/hooks/index'
 
 interface IProps {
   project: any
@@ -45,6 +46,8 @@ const ProjectColumns: FC<IProps> = ({ project, session }: { project: any, sessio
 
   const [columns, setColumns] = useState<Column[]>(defaultColumns)
   const [cards, setCards] = useState<Card[]>([])
+  const card = useQueryCardId(cards)
+
   // useRenderingTrace('ProjectColumns', { projectId, session, columns, cards, isLoading, cardDetail }, 'log')
 
   useEffect(() => {

@@ -13,6 +13,8 @@ const gradientBGC = 'linear-gradient(89.87deg, #182FFF 7.28%, rgba(234, 226, 253
 
 const SECTION_ALL: string = 'all'
 
+export const SECTION_CHECKLIST: string = 'checklist'
+
 function stageClickHandler (router: NextRouter, stage: string | null): void {
   const query: any = { ...router.query, [QueryFilterKeys.STAGE]: stage }
   if (stage == null) delete query[QueryFilterKeys.STAGE]
@@ -24,7 +26,7 @@ function stageClickHandler (router: NextRouter, stage: string | null): void {
 const ProgressBar: FC<any> = (): JSX.Element => {
   const router = useRouter()
   const { [QueryFilterKeys.STAGE]: stage = null } = router.query ?? {}
-  const SECTIONS: string[] = [SECTION_ALL, ...STAGE_VALUES, 'checklist']
+  const SECTIONS: string[] = [SECTION_ALL, ...STAGE_VALUES, SECTION_CHECKLIST]
   const SECTIONS_MAX_IDX = SECTIONS.length - 1
 
   return (

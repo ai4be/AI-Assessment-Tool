@@ -3,11 +3,13 @@ import { Comment } from './comment'
 export interface Card {
   _id: string
   originalId: string
+  category: string
   title: string
   desc: string
   projectId: string
   columnId: string
   sequence: number
+  section?: string
   TOCnumber: string
   questions: Question[]
   userIds?: string[] | any[]

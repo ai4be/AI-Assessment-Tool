@@ -27,7 +27,7 @@ import { UserMenu } from '@/src/components/user-menu'
 import { questionEnabler } from '@/util/question'
 import { DisplayQuestion, Card, CardStage, DisplayCard, STAGE_VALUES } from '@/src/types/card'
 import ToastContext from '@/src/store/toast-context'
-import QuestionAndComments from '@/src/components/project/columns/modals/question-and-comments'
+import QuestionAndComments from '@/src/components/project/modals/question-and-comments'
 
 const AccordionItemStyled = ({ title, desc }): JSX.Element => {
   return (

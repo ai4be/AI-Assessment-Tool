@@ -1,10 +1,11 @@
-import Project from '@/src/components/project'
-import { authOptions } from '../api/auth/[...nextauth]'
-import { unstable_getServerSession } from 'next-auth/next'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
+import { unstable_getServerSession } from 'next-auth/next'
 import { fetcher } from '@/util/api'
-import { categories } from '../api/categories'
+import Project from '@/src/components/project'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { categories } from 'pages/api/categories'
+import { sections } from 'pages/api/sections'
 
 function Page ({ session }): JSX.Element {
   const router = useRouter()
@@ -12,7 +13,7 @@ function Page ({ session }): JSX.Element {
   const { data, error } = useSWR(`/api/projects/${String(projectId)}`, fetcher)
   if (error != null) void router.push('/error')
   return (
-    <Project project={data} session={session} categories={categories} />
+    <Project project={data} session={session} categories={categories} sections={sections} />
   )
 }
 

@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { defaultCards } from '../../src/data/index'
+import { defaultCards } from '@/src/data/index'
+import { Category, Section } from '@/src/types/project'
 
-export const categories = defaultCards.map(c => ({
+export const categories: Category[] = defaultCards.map(c => ({
   _id: c.id,
   key: c.title.toLowerCase().replace(/ /g, '_'),
-  name: c.title
+  name: c.title,
+  sections: (c.sections ?? []) as Section[]
 }))
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { defaultCards } from '../../src/data'
+import { defaultCards } from '@/src/data'
 
 export const sections = defaultCards.map(c => c?.sections?.map((s: any) => {
   const section = {
@@ -7,7 +7,7 @@ export const sections = defaultCards.map(c => c?.sections?.map((s: any) => {
     _id: s.id
   }
   return section
-})).flat()
+})).flat().filter(s => s)
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   switch (req.method) {
