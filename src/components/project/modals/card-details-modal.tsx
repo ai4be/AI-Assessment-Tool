@@ -302,7 +302,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
           </Flex>))}
         <label>
           <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Stage</Text>
-          <Select size='xs' value={card.stage ?? CardStage.PREPARATION} onChange={(e) => setStage((e?.target?.value ?? card.stage) as CardStage)}>
+          <Select size='xs' value={card.stage ?? CardStage.DEVELOPMENT} onChange={(e) => setStage((e?.target?.value ?? card.stage) as CardStage)}>
             {STAGE_VALUES.map(stage => <option key={stage} value={stage} style={{ textTransform: 'capitalize' }}>{stage.toLowerCase()}</option>)}
           </Select>
         </label>

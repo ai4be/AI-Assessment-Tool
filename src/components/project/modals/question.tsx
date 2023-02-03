@@ -25,6 +25,7 @@ import { GiCancel } from 'react-icons/gi'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { Question, DisplayQuestion, QuestionType } from '@/src/types/card'
 import { useRouter } from 'next/router'
+import { StringOrNumber } from '@chakra-ui/utils'
 
 export const QuestionHelp = ({ question }: { question: Question }): JSX.Element => {
   const [help, setHelp] = useState('')
@@ -74,8 +75,9 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
     if (onChange != null) onChange(value)
   }
   if (question.type === QuestionType.RADIO) {
+    const radioGroupProps = boxProps as RadioGroupProps
     return (
-      <RadioGroup onChange={valueHandler} value={value[0]} name={question.id} {...boxProps}>
+      <RadioGroup {...radioGroupProps} onChange={valueHandler} value={value[0]} name={question.id}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Radio
@@ -89,8 +91,10 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
       </RadioGroup>
     )
   } else if (question.type === QuestionType.CHECKBOX) {
+    const checkoxGroupProps = boxProps as CheckboxGroupProps
+    const valueCheck: StringOrNumber[] = (Array.isArray(value) ? value : [value]) as StringOrNumber[]
     return (
-      <CheckboxGroup onChange={valueHandler} value={Array.isArray(value) ? value : [value]} {...boxProps}>
+      <CheckboxGroup {...checkoxGroupProps} onChange={valueHandler} value={valueCheck}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Checkbox
