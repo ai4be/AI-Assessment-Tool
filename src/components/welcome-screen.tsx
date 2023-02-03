@@ -21,8 +21,12 @@ const WelcomeScreen = (): JSX.Element => {
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
             >
-              Is your AI system Racists|Fair|Trustworthy|Safe|Secure|Privacy preserving|Ethical?
+              <p>
+              Is your AI system Trustworthy?
+              </p>
+              <p>
               Collaborate with your team to assess if your AI implementation follows ethical guidelines.
+              </p>
             </Text>
           </Box>
           <Box>
