@@ -15,13 +15,17 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverBody
+  PopoverBody,
+  BoxProps,
+  RadioGroupProps,
+  CheckboxGroupProps
 } from '@chakra-ui/react'
 import { isEmpty } from '@/util/index'
 import { GiCancel } from 'react-icons/gi'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { Question, DisplayQuestion } from '@/src/types/card'
+import { Question, DisplayQuestion, QuestionType } from '@/src/types/card'
 import { useRouter } from 'next/router'
+import { StringOrNumber } from '@chakra-ui/utils'
 
 export const QuestionHelp = ({ question }: { question: Question }): JSX.Element => {
   const [help, setHelp] = useState('')
@@ -54,7 +58,12 @@ export const QuestionHelp = ({ question }: { question: Question }): JSX.Element 
   )
 }
 
-export const GenerateAnswers = ({ question, onChange }: { question: DisplayQuestion, onChange?: Function }): JSX.Element => {
+type QuestionAnswerProps = BoxProps & {
+  question: DisplayQuestion
+  onChange?: Function
+} & (RadioGroupProps | CheckboxGroupProps)
+
+export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAnswerProps): JSX.Element => {
   const [value, setValue] = React.useState<any>(question.responses ?? '')
   const valueHandler = (value): void => {
     if (!Array.isArray(value)) value = [value]
@@ -65,9 +74,10 @@ export const GenerateAnswers = ({ question, onChange }: { question: DisplayQuest
     setValue(value)
     if (onChange != null) onChange(value)
   }
-  if (question.type === 'radio') {
+  if (question.type === QuestionType.RADIO) {
+    const radioGroupProps = boxProps as RadioGroupProps
     return (
-      <RadioGroup onChange={valueHandler} value={value[0]} name={question.id}>
+      <RadioGroup {...radioGroupProps} onChange={valueHandler} value={value[0]} name={question.id}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Radio
@@ -80,9 +90,11 @@ export const GenerateAnswers = ({ question, onChange }: { question: DisplayQuest
         </Stack>
       </RadioGroup>
     )
-  } else if (question.type === 'checkbox') {
+  } else if (question.type === QuestionType.CHECKBOX) {
+    const checkoxGroupProps = boxProps as CheckboxGroupProps
+    const valueCheck: StringOrNumber[] = (Array.isArray(value) ? value : [value]) as StringOrNumber[]
     return (
-      <CheckboxGroup onChange={valueHandler} value={Array.isArray(value) ? value : [value]}>
+      <CheckboxGroup {...checkoxGroupProps} onChange={valueHandler} value={valueCheck}>
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Checkbox
@@ -110,7 +122,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
     if (element?.current != null && questionId != null && questionId === question.id) {
       setTimeout(() => element.current?.scrollIntoView({ behavior: 'smooth' }), 400)
     }
-  }, [questionId])
+  }, [questionId, element?.current])
 
   const saveHandler = async (): Promise<void> => {
     await onChange(question, null, conclusion.trim())
@@ -132,7 +144,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
           {question.enabledCondition?.disabledText}
         </Text>}
       <Box ml='1.5'>
-        <GenerateAnswers question={question} onChange={value => onChange(question, value)} />
+        <QuestionAnswers question={question} onChange={value => onChange(question, value)} marginY='1rem' />
         <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
           Justification
         </Text>

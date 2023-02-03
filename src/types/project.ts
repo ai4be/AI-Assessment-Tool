@@ -26,6 +26,15 @@ export interface Category {
   _id: string
   key: string
   name: string
+  sections: Section[]
+}
+
+export interface Section {
+  _id?: string
+  id?: string
+  title: string
+  desc?: string
+  cards?: Card[]
 }
 
 export interface Role {

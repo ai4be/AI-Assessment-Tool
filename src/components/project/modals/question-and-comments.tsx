@@ -8,7 +8,7 @@ import { defaultFetchOptions, HTTP_METHODS, getResponseHandler } from '@/util/ap
 import CommentComponent from './comment'
 import { Question, DisplayQuestion } from '@/src/types/card'
 import { Comment } from '@/src/types/comment'
-import { QuestionComp } from '@/src/components/project/columns/modals/question'
+import { QuestionComp } from '@/src/components/project/modals/question'
 import ToastContext from '@/src/store/toast-context'
 
 import { useRouter } from 'next/router'

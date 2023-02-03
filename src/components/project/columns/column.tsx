@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { debounce } from '@/util/index'
-import Card from '@/src/components/project/columns/card'
+import Card from '@/src/components/project/card'
 import { addCard } from '@/util/cards'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
