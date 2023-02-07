@@ -2,9 +2,9 @@ import React from 'react'
 import {
   Flex
 } from '@chakra-ui/react'
-import PasswordSettings from './password'
-import Profile from './profile'
-import Email from './email'
+import PasswordSettings from '@/src/components/settings/password'
+import Profile from '@/src/components/settings/profile'
+import Email from '@/src/components/settings/email'
 
 const Settings = (): JSX.Element => {
   return (

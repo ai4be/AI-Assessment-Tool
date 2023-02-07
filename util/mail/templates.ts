@@ -22,7 +22,7 @@ export function getInvitationHtml (page: string, token: string, email: string, p
       <div style="font: 20px Helvetica, sans-serif; color: #333;">
           <p>You have been invited for the assessment of an AI project!</p>
           <p>To accept the invite please click
-            <a href='${hostname}/${page}?token=${token}&email=${email}&projectId=${projectId}'>
+            <a href='${hostname}/${page}?token=${token}&email=${encodeURIComponent(email)}&projectId=${projectId}'>
               here
             </a>
           </p>

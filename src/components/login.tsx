@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState, useMemo } from 'react'
 import { signIn } from 'next-auth/react'
 import {
   Flex,
@@ -7,29 +7,42 @@ import {
   Input,
   Button,
   Image,
-  Link,
-  Alert,
-  AlertDescription,
-  CloseButton,
-  AlertTitle,
-  AlertIcon
+  Link
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
+import { isEmailValid } from '@/util/validator'
+import { isEmpty } from '@/util/index'
+import ToastContext from '@/src/store/toast-context'
 
 const Login = (): JSX.Element => {
+  const { showToast } = useContext(ToastContext)
+  const [disabled, setDisabled] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
   const router = useRouter()
-  const { email: emailQuery, token, projectId } = router.query
+  let { email: emailQuery, token, projectId } = router.query
+
+  emailQuery = isEmpty(emailQuery) ? undefined : decodeURIComponent(emailQuery as string)
+
   const [values, setValues] = useState({
     email: emailQuery ?? '',
     password: ''
   })
 
-  const [isFetching, setIsFetching] = useState(false)
-  const [hasError, setErrorState] = useState(false)
+  useEffect(() => {
+    setDisabled(isEmpty(values.email) || isEmpty(values.password))
+  }, [values.email, values.password])
 
   const loginUser = async (e): Promise<void> => {
     e.preventDefault()
+    if (!isEmailValid(values.email)) {
+      showToast({
+        title: 'Invalid email',
+        description: 'Please enter a valid email address',
+        status: 'error'
+      })
+      return
+    }
     setIsFetching(true)
 
     const signinOptions: any = {
@@ -45,9 +58,18 @@ const Login = (): JSX.Element => {
     if (result?.ok === true) {
       await router.push('/home')
     }
-
     if (result?.status === 404 || result?.status === 401) {
-      setErrorState(true)
+      showToast({
+        title: 'Invalid credentials',
+        description: 'Please check your email and password',
+        status: 'error'
+      })
+    } else {
+      showToast({
+        title: 'Something went wrong',
+        description: 'Please try again later',
+        status: 'error'
+      })
     }
   }
 
@@ -57,24 +79,6 @@ const Login = (): JSX.Element => {
       ...values,
       [name]: value
     })
-  }
-
-  const showLoginError = (): JSX.Element => {
-    if (!hasError) return (<></>)
-
-    return (
-      <Alert status='error'>
-        <AlertIcon />
-        <AlertTitle mr={2}>Error</AlertTitle>
-        <AlertDescription>Invalid username or password</AlertDescription>
-        <CloseButton
-          position='absolute'
-          right='8px'
-          top='8px'
-          onClick={() => setErrorState(!hasError)}
-        />
-      </Alert>
-    )
   }
 
   return (
@@ -153,6 +157,7 @@ const Login = (): JSX.Element => {
                 onClick={loginUser}
                 isLoading={isFetching}
                 loadingText='Logging'
+                disabled={disabled}
               >
                 Sign In
               </Button>
@@ -164,7 +169,6 @@ const Login = (): JSX.Element => {
                   Forgot you password? Reset it here.
                 </Link>
               </Box>
-              {showLoginError()}
             </form>
           </Box>
         </Box>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useContext } from 'react'
 import {
   Flex,
   Box,
@@ -7,24 +7,20 @@ import {
   Button,
   Image,
   Link,
-  useToast,
-  Alert,
-  AlertDescription,
-  CloseButton,
-  AlertTitle,
-  AlertIcon,
   Text
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { AI4BelgiumIcon } from './navbar'
-import { defaultFetchOptions } from '@/util/api'
+import { AI4BelgiumIcon } from '@/src/components/navbar'
+import { defaultFetchOptions, getResponseHandler } from '@/util/api'
 import { isEmpty, debounce } from '@/util/index'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
+import ToastContext from '@/src/store/toast-context'
 
 const SignUp = (): JSX.Element => {
   const router = useRouter()
-  const toast = useToast()
-  const email = router.query.email as string
+  const { showToast } = useContext(ToastContext)
+  let email: string | null = router.query.email as string
+  email = isEmpty(email) ? null : decodeURIComponent(email)
   const token = router.query.token as string
   const [values, setValues] = useState({
     email: email ?? '',
@@ -41,12 +37,13 @@ const SignUp = (): JSX.Element => {
     confirmPassword: false
   })
   const [isCreating, setIsCreatingStatus] = useState(false)
-  const [hasError, setErrorState] = useState(false)
   const [emailErr, setEmailErr] = useState(false)
   const [passwordLengthErr, setPasswordLengthErr] = useState(false)
   const [passwordCharErr, setPasswordCharErr] = useState(false)
   const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
   const [isButtonDisabled, setButtonState] = useState(true)
+
+  const responseHandler = getResponseHandler(showToast)
 
   useEffect(() => {
     if (!touched.email) return
@@ -76,8 +73,8 @@ const SignUp = (): JSX.Element => {
     setButtonState(hasErrors)
   }, [values.password, values.confirmPassword, values.firstName, values.lastName, values.email, emailErr, passwordLengthErr, passwordCharErr, confirmPasswordErr])
 
-  const showToast = (): void => {
-    toast({
+  const _showToast = (): void => {
+    showToast({
       position: 'top',
       title: 'Account created.',
       description: "We've created your account. Redirecting you to login page in 3 seconds ",
@@ -108,45 +105,26 @@ const SignUp = (): JSX.Element => {
       body: JSON.stringify(data)
     })
 
-    const result = await response.json()
-
-    if (response.status === 404) {
-      setErrorState(true)
-    }
-
-    if (result.message === 'success') {
-      await redirectToLoginPage()
+    if (response.ok) {
+      const result = await response.json()
+      if (result.message === 'success') {
+        await redirectToLoginPage()
+      }
+    } else {
+      await responseHandler(response)
     }
     setIsCreatingStatus(false)
   }
 
   const redirectToLoginPage = async (path = '/login'): Promise<void> => {
-    showToast()
+    _showToast()
     await new Promise((resolve) => setTimeout(resolve, 3000))
     await router.push({
       pathname: path,
       query: {
-        email: values.email
+        email: encodeURIComponent(values.email)
       }
     })
-  }
-
-  const showSignUpError = (): JSX.Element => {
-    if (!hasError) return (<></>)
-
-    return (
-      <Alert status='error'>
-        <AlertIcon />
-        <AlertTitle mr={2}>Error</AlertTitle>
-        <AlertDescription>Email already in use</AlertDescription>
-        <CloseButton
-          position='absolute'
-          right='8px'
-          top='8px'
-          onClick={() => setErrorState(!hasError)}
-        />
-      </Alert>
-    )
   }
 
   const setPropTouched = (prop: string): void => {
@@ -287,7 +265,6 @@ const SignUp = (): JSX.Element => {
                 Already have an account? Log in.
               </Link>
             </Box>
-            {showSignUpError()}
           </Box>
         </Box>
       </Flex>

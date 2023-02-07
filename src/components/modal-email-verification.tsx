@@ -155,7 +155,7 @@ export const EmailVerificationModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Email address verification</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton onClick={cancelTokenVerification} />
         <ModalBody>
           <Text>
             {isUpdate

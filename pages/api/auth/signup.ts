@@ -1,9 +1,19 @@
 import { hashPassword } from '@/util/auth'
 import { cleanEmail } from '@/src/models/mongodb'
 import sanitize from 'mongo-sanitize'
-import { invitedUserHandler } from '@/src/models/token'
+import { invitedUserHandler, createEmailVerificationToken } from '@/src/models/token'
 import { createUser, getUser } from '@/src/models/user'
-import { isEmailValid } from '@/util/validator'
+import { isEmailValid, isPasswordValid } from '@/util/validator'
+import { User } from '@/src/types/user'
+import { sendMail } from '@/util/mail'
+import { getVerifyEmailHtml } from '@/util/mail/templates'
+
+async function sendEmailVerifictionEmail (user: User): Promise<void> {
+  const tokenInstance = await createEmailVerificationToken(user.email, user?._id as string)
+  if (tokenInstance == null) return
+  const html = getVerifyEmailHtml(tokenInstance.token)
+  await sendMail(user.email, 'Email-verfication', html)
+}
 
 async function handler (req, res): Promise<any> {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
@@ -14,16 +24,19 @@ async function handler (req, res): Promise<any> {
   lastName = sanitize(lastName)
   token = token != null ? sanitize(token) : token
 
-  if (!isEmailValid(email) || password == null || password?.trim().length < 8) {
+  if (!isEmailValid(email)) {
+    return res.status(422).json({ message: 'The email you provided in not valid' })
+  }
+
+  if (!isPasswordValid(password)) {
     return res.status(422).json({
-      message:
-        'Invalid input - password should also be at least 8 characters long.'
+      message: 'The password should be at least 8 characters long and contain a special character'
     })
   }
 
   const existingUser = await getUser({ email })
   if (existingUser != null) {
-    return res.status(422).json({ message: 'User exists already!' })
+    return res.status(422).json({ message: 'Email is already used!' })
   }
 
   const hashedPassword = await hashPassword(password)
@@ -35,9 +48,10 @@ async function handler (req, res): Promise<any> {
   })
   if (user?._id != null) {
     if (token != null) await invitedUserHandler(token, email)
+    void sendEmailVerifictionEmail(user)
     return res.status(201).send({ message: 'success' })
   }
-  return res.status(400).send({ message: 'failed' })
+  return res.status(400).send({ message: 'Your account creation failed. Please try again later.' })
 }
 
 export default handler
