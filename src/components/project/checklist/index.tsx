@@ -17,7 +17,6 @@ const Checklist: FC<Props> = (props): JSX.Element => {
     <Box backgroundColor='white' padding='2rem' paddingTop='1rem' borderRadius='1rem'>
       <OverviewComponent />
       <RadarChart />
-      {/* <img src='/radar-chart.jpg' style={{ width: '100%', maxWidth: '800px', margin: 'auto' }} /> */}
       <ChecklistTopBar />
       <CategoryQuestions project={props.project} categories={props.categories} marginTop='1rem' />
     </Box>
