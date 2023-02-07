@@ -9,7 +9,7 @@ import EmailVerificationModal from '@/src/components/modal-email-verification'
  */
 export const EmailVerificationCheck = (): JSX.Element => {
   const { user, triggerReloadUser } = useContext(UserContext)
-  const [showedEmailVerificationModal, setShowedEmailVerificationModal] = useSessionStorage<number>('showedEmailVerificationModal', 0)
+  const [showedEmailVerificationModal, setShowedEmailVerificationModal] = useSessionStorage<number>(`showedEmailVerificationModal_${String(user?._id)}`, 0)
   const [showModal, setShowModal] = useState<boolean>(false)
 
   const openModalCheck = (): void => {

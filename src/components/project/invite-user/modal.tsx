@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState, BaseSyntheticEvent, useContext } from 'react'
+import React, { SyntheticEvent, useState, useContext } from 'react'
 import {
   Box,
   Modal,
@@ -13,6 +13,7 @@ import {
   Input
 } from '@chakra-ui/react'
 import { defaultFetchOptions } from '@/util/api'
+import { isEmailValid } from '@/util/validator'
 import ToastContext from '@/src/store/toast-context'
 
 const InviteModal = ({ project, callback }): JSX.Element => {
@@ -21,8 +22,6 @@ const InviteModal = ({ project, callback }): JSX.Element => {
   const [email, setEmail] = useState('')
   const [emailErr, setEmailErr] = useState(false)
   const [isMailSending, setMailSending] = useState(false)
-
-  const validEmail = /^[a-zA-Z0-9._:$!%-+]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/
 
   const handleClick = async (e: SyntheticEvent): Promise<void> => {
     if (e?.preventDefault != null) e.preventDefault()
@@ -38,11 +37,7 @@ const InviteModal = ({ project, callback }): JSX.Element => {
   }
 
   const validate = (): void => {
-    if (!validEmail.test(email)) {
-      setEmailErr(true)
-    } else {
-      setEmailErr(false)
-    }
+    setEmailErr(!isEmailValid(email))
   }
 
   const sendEmail = async (): Promise<void> => {
@@ -96,7 +91,7 @@ const InviteModal = ({ project, callback }): JSX.Element => {
           {emailErr && <p>{emailErr}</p>}
           <ModalFooter>
             <Button
-              disabled={!validEmail.test(email)}
+              disabled={!isEmailValid(email)}
               colorScheme='blue'
               mr={3}
               onClick={handleClick}

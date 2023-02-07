@@ -16,16 +16,18 @@ import { isEmpty } from '@/util/index'
 import ToastContext from '@/src/store/toast-context'
 
 const Login = (): JSX.Element => {
-  const router = useRouter()
   const { showToast } = useContext(ToastContext)
-  const { email: emailQuery, token, projectId } = router.query
+  const [disabled, setDisabled] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
+  const router = useRouter()
+  let { email: emailQuery, token, projectId } = router.query
+
+  emailQuery = isEmpty(emailQuery) ? undefined : decodeURIComponent(emailQuery as string)
+
   const [values, setValues] = useState({
     email: emailQuery ?? '',
     password: ''
   })
-  const [disabled, setDisabled] = useState(true)
-
-  const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
     setDisabled(isEmpty(values.email) || isEmpty(values.password))

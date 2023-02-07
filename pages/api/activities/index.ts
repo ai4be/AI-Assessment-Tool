@@ -16,7 +16,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       // const { where, sort, limit, page } = urlQueryToDBqueryParser(queryObj, 100, { _id: -1 }, ['_id', 'projectId', 'commentId', 'cardId', 'roleId'])
       // const result = await Activity.getActivitiesForUser(String(user?._id), where, limit, sort, page)
       const projects = await getUserProjects(user?._id)
-      if (projects == null || projects.length === 0) res.status(200).send([])
+      if (projects == null || projects.length === 0) return res.status(200).send([])
       const result = await Activity.find({ projectId: { $in: projects.map(p => p._id) } }, 100, ['_id', -1], page != null ? String(page) : undefined)
       if (result == null) return res.status(200).send([])
       const returnData = {
