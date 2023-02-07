@@ -4,6 +4,16 @@ import sanitize from 'mongo-sanitize'
 import { invitedUserHandler, createEmailVerificationToken } from '@/src/models/token'
 import { createUser, getUser } from '@/src/models/user'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
+import { User } from '@/src/types/user'
+import { sendMail } from '@/util/mail'
+import { getVerifyEmailHtml } from '@/util/mail/templates'
+
+async function sendEmailVerifictionEmail (user: User): Promise<void> {
+  const tokenInstance = await createEmailVerificationToken(user.email, user?._id as string)
+  if (tokenInstance == null) return
+  const html = getVerifyEmailHtml(tokenInstance.token)
+  await sendMail(user.email, 'Email-verfication', html)
+}
 
 async function handler (req, res): Promise<any> {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
@@ -38,7 +48,7 @@ async function handler (req, res): Promise<any> {
   })
   if (user?._id != null) {
     if (token != null) await invitedUserHandler(token, email)
-    void createEmailVerificationToken(email, user._id)
+    void sendEmailVerifictionEmail(user)
     return res.status(201).send({ message: 'success' })
   }
   return res.status(400).send({ message: 'Your account creation failed. Please try again later.' })

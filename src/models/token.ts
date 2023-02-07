@@ -1,10 +1,10 @@
-import { connectToDatabase, toObjectId, cleanEmail } from './mongodb'
+import { connectToDatabase, toObjectId, cleanEmail } from '@/src/models/mongodb'
 import sanitize from 'mongo-sanitize'
 import { ObjectId } from 'mongodb'
 import uniqid from 'uniqid'
 import { getUser, updateUser } from '@/src/models/user'
 import { isEmpty, randomIntFromInterval } from '@/util/index'
-import { addUser, getUserProjects } from './project'
+import { addUser, getUserProjects } from '@/src/models/project'
 
 const TABLE_NAME = 'tokens'
 export const RESET_PASSWORD_TOKEN_EXPIRATION = +(process.env.RESET_PASSWORD_TOKEN_EXPIRATION ?? 3600 * 2 * 1000) // 2 hours
