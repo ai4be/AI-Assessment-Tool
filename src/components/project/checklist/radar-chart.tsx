@@ -1,5 +1,5 @@
 
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   Box
 } from '@chakra-ui/react'
@@ -53,6 +53,21 @@ const defaultConfig = {
   }
 }
 
+const radarChartCtxObj: any = {
+  chart: null
+}
+
+const listenerFn = (e: any): void => {
+  if (radarChartCtxObj?.chart?.canvas != null) {
+    const size = e?.type === 'beforeprint' ? 512 : 700
+    radarChartCtxObj.chart.canvas.parentNode.style.width = `${size}px`
+    radarChartCtxObj.chart.canvas.parentNode.style.height = `${size}px`
+    radarChartCtxObj.chart.canvas.style.width = `${size}px`
+    radarChartCtxObj.chart.canvas.style.height = `${size}px`
+    radarChartCtxObj.chart.render()
+  }
+}
+
 const RadarChart = (props: any): JSX.Element => {
   const context = useContext(ProjectContext)
   const el = useRef<HTMLCanvasElement>(null)
@@ -88,12 +103,25 @@ const RadarChart = (props: any): JSX.Element => {
   useEffect(() => {
     if (el.current != null) {
       const chart = new Chart(el.current, config)
-      return () => chart.destroy()
+      radarChartCtxObj.chart = chart
+      return () => {
+        chart.destroy()
+        radarChartCtxObj.chart = null
+      }
     }
   }, [el])
 
+  useEffect(() => {
+    window.addEventListener('beforeprint', listenerFn)
+    window.addEventListener('afterprint', listenerFn)
+    return () => {
+      window.removeEventListener('beforeprint', listenerFn)
+      window.removeEventListener('afterprint', listenerFn)
+    }
+  }, [])
+
   return (
-    <Box position='relative' width='100%' maxWidth='700px' margin='auto'>
+    <Box position='relative' width='80vw' maxWidth='700px' margin='auto' className='print:max-w-lg'>
       <canvas ref={el} style={{ margin: 'auto', width: '100%' }} />
     </Box>
   )

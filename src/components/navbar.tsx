@@ -34,6 +34,7 @@ import { ActivityTimeline } from '@/src/components/activity'
 import NotificationIcon from '@/src/components/notification-icon'
 import { DisplayActivity } from '@/src/types/activity'
 import EmailVerificationCheck from '@/src/components/email-verification-check'
+import { navbar } from '@/src/components/navbar.module.css'
 
 interface Props {
   bg?: string
@@ -180,7 +181,7 @@ const NavaBarInner = ({ bg }: Props): JSX.Element => {
   const router = useRouter()
   const { user } = useContext(UserContext)
   return (
-    <Box bg={bg} boxShadow='md'>
+    <Box bg={bg} boxShadow='md' className='print:hidden'>
       <Flex>
         <Box href='/' onClick={async () => await router.push('/home')}>
           <AI4BelgiumIcon />

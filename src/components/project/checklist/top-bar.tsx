@@ -46,7 +46,7 @@ const ChecklistTopBar = (props: any): JSX.Element => {
     : null
 
   return (
-    <Box display='flex' mt='1rem'>
+    <Box display='flex' mt='1rem' className='print:hidden'>
       {content}
     </Box>
   )

@@ -1,4 +1,6 @@
 
 .overview > div {
   background-color: var(--main-blue);
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
