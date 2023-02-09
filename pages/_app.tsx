@@ -1,11 +1,12 @@
 import React from 'react'
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react'
 import '@/src/styles/default.css'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 import NextNprogress from 'nextjs-progressbar'
 import { SessionProvider } from 'next-auth/react'
 import { ToastContextProvider } from '@/src/store/toast-context'
+import AppLogo from '@/src/components/app-logo'
 
 import 'nprogress/nprogress.css'
 
@@ -40,7 +41,23 @@ const App = ({ Component, pageProps }): JSX.Element => {
       <ChakraProvider theme={theme}>
         <ToastContextProvider>
           <SessionProvider session={pageProps.session}>
-            <Component {...pageProps} />
+            <table className='hidden print:block'>
+              <thead>
+                <tr>
+                  <th><AppLogo /></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <Component {...pageProps} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <Box className='print:hidden'>
+              <Component {...pageProps} />
+            </Box>
           </SessionProvider>
         </ToastContextProvider>
       </ChakraProvider>

@@ -10,10 +10,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  // FormControl,
-  // FormLabel,
-  // Switch,
-  // Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -23,8 +19,6 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import Link from 'next/link'
-// import { GrLogout } from 'react-icons/gr'
-// import { BiUser } from 'react-icons/bi'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -34,7 +28,6 @@ import { ActivityTimeline } from '@/src/components/activity'
 import NotificationIcon from '@/src/components/notification-icon'
 import { DisplayActivity } from '@/src/types/activity'
 import EmailVerificationCheck from '@/src/components/email-verification-check'
-import { navbar } from '@/src/components/navbar.module.css'
 
 interface Props {
   bg?: string
