@@ -41,6 +41,7 @@ const App = ({ Component, pageProps }): JSX.Element => {
       <ChakraProvider theme={theme}>
         <ToastContextProvider>
           <SessionProvider session={pageProps.session}>
+            {/* Table for print mode so we have the header on every page */}
             <table className='hidden print:block'>
               <thead>
                 <tr>

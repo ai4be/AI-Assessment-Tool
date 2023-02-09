@@ -39,7 +39,7 @@ const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX
   const { card, setCardQuery, unSetCardQuery } = useQueryCardId(dataCards, () => onOpen(), () => onClose())
 
   useEffect(() => {
-    if (Array.isArray(categories) && categoryId != null) {
+    if (Array.isArray(categories)) {
       const localCategories = categoryId == null
         ? categories
         : categories.filter((category: Category) => category._id === categoryId)
