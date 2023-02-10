@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC, Fragment } from 'react'
+import React, { FC, Fragment } from 'react'
 import {
   Box,
   Divider,
@@ -8,72 +8,25 @@ import {
   GridItem,
   useDisclosure
 } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import useSWR from 'swr'
 import { Card, DisplayQuestion, Question } from '@/src/types/card'
 import { Category, Project } from '@/src/types/project'
-import { fetcher } from '@/util/api'
-import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 import { isEmpty } from '@/util/index'
-import { setQuestionCleanTitle } from '@/util/question'
 import { useQueryCardId } from '@/src/hooks/index'
 import CardDetailsModal from '@/src/components/project/modals/card-details-modal'
 
 type Props = {
   project: Project
   categories: Category[]
+  cards: Card[]
 } & BoxProps
 
-const PLACEHOLDER_SECTION_ID = 'placeholder-section-id'
-
-const CategoryQuestions: FC<Props> = ({ project, categories, ...boxProps }): JSX.Element => {
-  const router = useRouter()
-  const projectId = String(project?._id)
-  const {
-    [QueryFilterKeys.CATEGORY]: categoryId
-  } = router.query
-  const { data: dataCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
-  const [filteredCategories, setFilteredCategories] = useState<Category[]>(categories)
-  const [categoriesToShow, setCategoriesToShow] = useState<Category[]>(categories)
+const CategoryQuestions: FC<Props> = ({ project, categories, cards, ...boxProps }): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { card, setCardQuery, unSetCardQuery } = useQueryCardId(dataCards, () => onOpen(), () => onClose())
-
-  useEffect(() => {
-    if (Array.isArray(categories)) {
-      const localCategories = categoryId == null
-        ? categories
-        : categories.filter((category: Category) => category._id === categoryId)
-      setFilteredCategories(localCategories)
-    }
-  }, [categories, categoryId])
-
-  useEffect(() => {
-    if (Array.isArray(filteredCategories) && Array.isArray(dataCards)) {
-      dataCards.forEach(c => c.questions.map(q => setQuestionCleanTitle(q)))
-      const catToShow: Category[] = []
-      for (const cat of filteredCategories) {
-        if (isEmpty(cat.sections)) {
-          cat.sections = [{
-            _id: PLACEHOLDER_SECTION_ID,
-            id: PLACEHOLDER_SECTION_ID,
-            title: '',
-            cards: dataCards.filter((card: Card) => card.category === cat._id)
-          }]
-        } else {
-          for (const section of cat.sections) {
-            if (section._id === PLACEHOLDER_SECTION_ID) section.cards = dataCards.filter((card: Card) => card.category === cat._id)
-            else section.cards = dataCards.filter((card: Card) => card.category === cat._id && card.section === section.id)
-          }
-        }
-        catToShow.push(cat)
-      }
-      setCategoriesToShow(catToShow)
-    }
-  }, [filteredCategories, dataCards])
+  const { card, setCardQuery, unSetCardQuery } = useQueryCardId(cards, () => onOpen(), () => onClose())
 
   return (
     <Box backgroundColor='white' {...boxProps}>
-      {categoriesToShow.map(category =>
+      {Array.isArray(categories) && categories.map(category =>
         <Box key={category._id} className='break-after-page last:break-after-avoid'>
           <Text fontSize='xl' textTransform='uppercase' fontWeight='semibold' marginBottom='1rem'>{category?.name}</Text>
           <Box display='flex' flexDirection='column'>

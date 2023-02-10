@@ -42,11 +42,9 @@ const App = ({ Component, pageProps }): JSX.Element => {
         <ToastContextProvider>
           <SessionProvider session={pageProps.session}>
             {/* Table for print mode so we have the header on every page */}
-            <table className='hidden print:block'>
-              <thead>
-                <tr>
-                  <th><AppLogo /></th>
-                </tr>
+            <table width='100%'>
+              <thead className='hidden print:block'>
+                <tr><th><AppLogo /></th></tr>
               </thead>
               <tbody>
                 <tr>
@@ -56,9 +54,6 @@ const App = ({ Component, pageProps }): JSX.Element => {
                 </tr>
               </tbody>
             </table>
-            <Box className='print:hidden'>
-              <Component {...pageProps} />
-            </Box>
           </SessionProvider>
         </ToastContextProvider>
       </ChakraProvider>

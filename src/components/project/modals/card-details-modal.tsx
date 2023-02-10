@@ -151,7 +151,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
                     {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
                   </Accordion>}
 
-                <Accordion defaultIndex={0} allowToggle borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' marginTop='1rem'>
+                <Accordion defaultIndex={0} allowToggle borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' marginY='1rem'>
                   <AccordionItem
                     border='none'
                     isFocusable={false}
@@ -181,10 +181,11 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
-                <Box marginY='1rem' borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' paddingY='1rem'>
-                  {scoredQuestions.map((q: DisplayQuestion, index: number) =>
-                    <QuestionAndComments key={`${cardId}-${q.id}-${index}`} p={3} question={q} cardId={cardId} projectId={projectId} questionSaveCallback={recalculateEnableing} />)}
-                </Box>
+                {scoredQuestions?.length > 0 &&
+                  <Box marginBottom='1rem' borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' paddingY='1rem'>
+                    {scoredQuestions.map((q: DisplayQuestion, index: number) =>
+                      <QuestionAndComments key={`${cardId}-${q.id}-${index}`} p={3} question={q} cardId={cardId} projectId={projectId} questionSaveCallback={recalculateEnableing} />)}
+                  </Box>}
               </Box>
               <Sidebar card={card} />
             </Box>

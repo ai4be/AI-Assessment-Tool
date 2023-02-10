@@ -1,10 +1,11 @@
 
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import {
   Box
 } from '@chakra-ui/react'
 import ProjectContext from '@/src/store/project-context'
 import Chart from 'chart.js/auto'
+import { Category } from '@/src/types/project'
 
 const lineTension = 0.2
 
@@ -68,8 +69,7 @@ const listenerFn = (e: any): void => {
   }
 }
 
-const RadarChart = (props: any): JSX.Element => {
-  const context = useContext(ProjectContext)
+const RadarChart = ({ categories }: { categories: Category[] }): JSX.Element => {
   const el = useRef<HTMLCanvasElement>(null)
 
   const datasets: any[] = [{
@@ -87,10 +87,10 @@ const RadarChart = (props: any): JSX.Element => {
   }]
 
   let labels: any[] = []
-  if (Array.isArray(context?.categories)) {
-    labels = context.categories.map((cat) => cat.name.split(' '))
-    const data1 = context.categories.map(() => Math.round(Math.random() * 100))
-    const data2 = context.categories.map(() => Math.round(Math.random() * 100))
+  if (Array.isArray(categories)) {
+    labels = categories.map((cat) => cat.name.split(' '))
+    const data1 = categories.map(() => Math.round(Math.random() * 100))
+    const data2 = categories.map(() => Math.round(Math.random() * 100))
     datasets[0].data = data1
     datasets[1].data = data2
   }
