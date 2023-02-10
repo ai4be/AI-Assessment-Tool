@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme, Text } from '@chakra-ui/react'
 import '@/src/styles/default.css'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
@@ -41,17 +41,14 @@ const App = ({ Component, pageProps }): JSX.Element => {
       <ChakraProvider theme={theme}>
         <ToastContextProvider>
           <SessionProvider session={pageProps.session}>
-            {/* Table for print mode so we have the header on every page */}
+            {/* Table for media print mode so we have the header on every page. With this we could also add a footer on every page */}
             <table width='100%'>
-              <thead className='hidden print:block'>
-                <tr><th><AppLogo /></th></tr>
+              <thead>
+                <tr className='hidden print:block'><th><AppLogo /></th></tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <Component {...pageProps} />
-                  </td>
-                </tr>
+                <tr className='hidden print:block'><td><Text decoration='underline' fontSize='4xl'>AI Assessmentool</Text></td></tr>
+                <tr><td><Component {...pageProps} /></td></tr>
               </tbody>
             </table>
           </SessionProvider>
