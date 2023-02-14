@@ -5,6 +5,7 @@ import {
 } from '@chakra-ui/react'
 import ProjectContext from '@/src/store/project-context'
 import Chart from 'chart.js/auto'
+import { Category } from '@/src/types/project'
 
 const lineTension = 0.2
 
@@ -53,8 +54,22 @@ const defaultConfig = {
   }
 }
 
-const RadarChart = (props: any): JSX.Element => {
-  const context = useContext(ProjectContext)
+const radarChartCtxObj: any = {
+  chart: null
+}
+
+const listenerFn = (e: any): void => {
+  if (radarChartCtxObj?.chart?.canvas != null) {
+    const size = e?.type === 'beforeprint' ? 512 : 700
+    radarChartCtxObj.chart.canvas.parentNode.style.width = `${size}px`
+    radarChartCtxObj.chart.canvas.parentNode.style.height = `${size}px`
+    radarChartCtxObj.chart.canvas.style.width = `${size}px`
+    radarChartCtxObj.chart.canvas.style.height = `${size}px`
+    radarChartCtxObj.chart.render()
+  }
+}
+
+const RadarChart = ({ categories }: { categories: Category[] }): JSX.Element => {
   const el = useRef<HTMLCanvasElement>(null)
 
   const datasets: any[] = [{
@@ -72,10 +87,10 @@ const RadarChart = (props: any): JSX.Element => {
   }]
 
   let labels: any[] = []
-  if (Array.isArray(context?.categories)) {
-    labels = context.categories.map((cat) => cat.name.split(' '))
-    const data1 = context.categories.map(() => Math.round(Math.random() * 100))
-    const data2 = context.categories.map(() => Math.round(Math.random() * 100))
+  if (Array.isArray(categories)) {
+    labels = categories.map((cat) => cat.name.split(' '))
+    const data1 = categories.map(() => Math.round(Math.random() * 100))
+    const data2 = categories.map(() => Math.round(Math.random() * 100))
     datasets[0].data = data1
     datasets[1].data = data2
   }
@@ -88,12 +103,25 @@ const RadarChart = (props: any): JSX.Element => {
   useEffect(() => {
     if (el.current != null) {
       const chart = new Chart(el.current, config)
-      return () => chart.destroy()
+      radarChartCtxObj.chart = chart
+      return () => {
+        chart.destroy()
+        radarChartCtxObj.chart = null
+      }
     }
   }, [el])
 
+  useEffect(() => {
+    window.addEventListener('beforeprint', listenerFn)
+    window.addEventListener('afterprint', listenerFn)
+    return () => {
+      window.removeEventListener('beforeprint', listenerFn)
+      window.removeEventListener('afterprint', listenerFn)
+    }
+  }, [])
+
   return (
-    <Box position='relative' width='100%' maxWidth='700px' margin='auto'>
+    <Box position='relative' width='80vw' maxWidth='700px' margin='auto' className='print:max-w-lg'>
       <canvas ref={el} style={{ margin: 'auto', width: '100%' }} />
     </Box>
   )

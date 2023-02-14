@@ -6,14 +6,19 @@ import {
 import ProjectContext from '@/src/store/project-context'
 import { useRouter } from 'next/router'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
+import { Category } from '@/src/types/project'
 
-const ChecklistTopBar = (props: any): JSX.Element => {
+interface Props {
+  categories: Category[]
+}
+
+const ChecklistTopBar = (props: Props): JSX.Element => {
   const router = useRouter()
   const { [QueryFilterKeys.CATEGORY]: selectedCategoryId } = router.query ?? {}
   const context = useContext(ProjectContext)
 
-  const content = Array.isArray(context?.categories)
-    ? context.categories.map((cat, index) => (
+  const content = Array.isArray(props.categories)
+    ? props.categories.map(cat => (
       <Button
         display='flex'
         flexDirection='column'
@@ -46,7 +51,7 @@ const ChecklistTopBar = (props: any): JSX.Element => {
     : null
 
   return (
-    <Box display='flex' mt='1rem'>
+    <Box display='flex' mt='1rem' className='print:hidden'>
       {content}
     </Box>
   )

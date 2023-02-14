@@ -10,10 +10,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  // FormControl,
-  // FormLabel,
-  // Switch,
-  // Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -23,8 +19,6 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import Link from 'next/link'
-// import { GrLogout } from 'react-icons/gr'
-// import { BiUser } from 'react-icons/bi'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -180,7 +174,7 @@ const NavaBarInner = ({ bg }: Props): JSX.Element => {
   const router = useRouter()
   const { user } = useContext(UserContext)
   return (
-    <Box bg={bg} boxShadow='md'>
+    <Box bg={bg} boxShadow='md' className='print:hidden'>
       <Flex>
         <Box href='/' onClick={async () => await router.push('/home')}>
           <AI4BelgiumIcon />

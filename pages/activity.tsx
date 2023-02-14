@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { authOptions } from './api/auth/[...nextauth]'
 import { unstable_getServerSession } from 'next-auth/next'
-// import { ActivityTimeline } from '@/src/components/activity'
 
 export function Page (): JSX.Element {
   return (<></>)

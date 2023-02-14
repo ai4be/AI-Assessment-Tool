@@ -26,8 +26,8 @@ const ProjectComponent: FC<Props> = (props): JSX.Element => {
       {props.project != null &&
         <ProjectContextProvider {...props}>
           <NavBar bg='white' />
-          <Box display='flex' alignItems='center' flexDirection='column' ml='2rem' mr='2rem'>
-            <Box width='100%' my='1%'>
+          <Box display='flex' alignItems='center' flexDirection='column' ml='2rem' mr='2rem' className='print:m-0'>
+            <Box width='100%' my='1%' className='print:hidden'>
               <ProgressBar />
             </Box>
             {stage === SECTION_CHECKLIST.toUpperCase()

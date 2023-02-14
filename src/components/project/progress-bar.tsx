@@ -30,7 +30,7 @@ const ProgressBar: FC<any> = (): JSX.Element => {
   const SECTIONS_MAX_IDX = SECTIONS.length - 1
 
   return (
-    <Flex width='100%' justifyContent='center' alignItems='center' backgroundColor='white'>
+    <Flex width='100%' justifyContent='center' alignItems='center' backgroundColor='white' className='print:hidden'>
       {SECTIONS.map((s, idx) => (
         <Flex
           onClick={(): void => stageClickHandler(router, s === SECTION_ALL ? null : s.toUpperCase())}
