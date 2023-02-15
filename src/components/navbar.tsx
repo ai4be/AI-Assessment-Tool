@@ -20,9 +20,9 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { RiArrowDropDownLine } from 'react-icons/ri'
-import { signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import UserContext, { UserContextProvider } from '@/src/store/user-context'
+import UserContext from '@/src/store/user-context'
 import { User } from '@/src/types/user'
 import { ActivityTimeline } from '@/src/components/activity'
 import NotificationIcon from '@/src/components/notification-icon'
@@ -120,8 +120,9 @@ function ActivityDrawer (): JSX.Element {
 
 const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
   const router = useRouter()
+  const { data: session } = useSession()
 
-  if (user != null) {
+  if (session?.user != null) {
     const logout = async (): Promise<void> => {
       // const response =
       await signOut({ redirect: false })
@@ -188,10 +189,10 @@ const NavaBarInner = ({ bg }: Props): JSX.Element => {
 
 const NavBar: FC<Props> = (props) => {
   return (
-    <UserContextProvider>
+    <>
       <NavaBarInner {...props} />
       <EmailVerificationCheck />
-    </UserContextProvider>
+    </>
   )
 }
 

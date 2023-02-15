@@ -2,7 +2,6 @@ import { Context, createContext, useState } from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { Category, Project } from '@/src/types/project'
-import { UserContextProvider } from '@/src/store/user-context'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 import { fetcher } from '@/util/api'
 
@@ -43,11 +42,9 @@ export function ProjectContextProvider (props: any): JSX.Element {
   }
 
   return (
-    <UserContextProvider>
-      <ProjectContext.Provider value={context}>
-        {props.children}
-      </ProjectContext.Provider>
-    </UserContextProvider>
+    <ProjectContext.Provider value={context}>
+      {props.children}
+    </ProjectContext.Provider>
   )
 }
 
