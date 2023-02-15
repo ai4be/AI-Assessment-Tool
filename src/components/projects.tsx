@@ -144,6 +144,8 @@ export default function Projects (props: any): JSX.Element {
                 color='white'
                 fontSize='20px'
                 fontWeight='bold'
+                textOverflow='ellipsis'
+                noOfLines={3}
               >
                 {pr.name}
               </Text>

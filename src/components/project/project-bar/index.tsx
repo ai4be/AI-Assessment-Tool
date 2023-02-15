@@ -18,7 +18,7 @@ const ProjectBar = ({ project }: { project: any }): JSX.Element => {
         <SortMenu />
         <FilterMenu ml='1' />
       </Box>
-      <Text color='var(--main-blue)' as='b' textDecoration='underline'>
+      <Text color='var(--main-blue)' as='b' textDecoration='underline' maxWidth='200px;' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden'>
         {project.name}
       </Text>
       <Flex
