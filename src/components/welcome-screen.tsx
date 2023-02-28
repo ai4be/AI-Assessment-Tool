@@ -20,14 +20,14 @@ const WelcomeScreen = (): JSX.Element => {
             <Text
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
-            >
-              <p>
-              Is your AI system Trustworthy?
-              </p>
-              <p>
-              Collaborate with your team to assess if your AI implementation follows ethical guidelines.
-              </p>
+            >Is your AI system Trustworthy?
             </Text>
+            <Text
+              fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
+              width={['100%', '100%', '50%', '50%']}
+            >Collaborate with your team to assess if your AI implementation follows ethical guidelines.
+            </Text>
+
           </Box>
           <Box>
             <Image
