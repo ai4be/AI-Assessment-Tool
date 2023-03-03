@@ -4,5 +4,10 @@
   "last-name": "Enter last name NL",
   "password": "Enter password NL",
   "create-password": "Create password NL",
-  "confirm-password": "Confirm password NL"
+  "confirm-password": "Confirm password NL",
+  "new-password": "New password NL",
+
+  "project-name": "Project name",
+  "project-description": "Project description\nWhat is the purpose of the project and applications?",
+  "select-industry": "Select the industry"
 }

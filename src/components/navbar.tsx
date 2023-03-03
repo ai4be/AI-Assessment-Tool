@@ -89,7 +89,6 @@ function ActivityDrawer (): JSX.Element {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>
-            {/* Activity */}
             {t("navbar:activity")}
             {/* <FormControl display='flex' alignItems='center'>
               <Switch id='personal-activity' size='sm' mr='1' />
@@ -112,7 +111,6 @@ function ActivityDrawer (): JSX.Element {
 
           <DrawerFooter>
             <Button variant='outline' mr={3} onClick={onClose} size='sm' >
-              {/* Close */}
               {t("navbar:close")}
             </Button>
           </DrawerFooter>
