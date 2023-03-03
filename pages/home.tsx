@@ -4,6 +4,7 @@ import { authOptions } from './api/auth/[...nextauth]'
 import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 import { unstable_getServerSession } from 'next-auth/next'
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export default function Page ({ session }: { session: any, emailVerified: boolean }): JSX.Element {
   const { data, error, mutate } = useSWR('/api/projects', fetcher)
@@ -28,7 +29,8 @@ export async function getServerSideProps (ctx): Promise<any> {
   }
   return {
     props: {
-      session: JSON.parse(JSON.stringify(session))
+      session: JSON.parse(JSON.stringify(session)),
+      ...await serverSideTranslations(ctx.locale as string, ['buttons', 'navbar']),
     }
   }
 }

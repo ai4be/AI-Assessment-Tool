@@ -1,8 +1,10 @@
 import React from 'react'
 import NavBar from '@/src/components/navbar'
 import { Box, Image, Flex, Text } from '@chakra-ui/react'
+import { useTranslation } from 'next-i18next'
 
 const WelcomeScreen = (): JSX.Element => {
+  const { t } = useTranslation()
   return (
     <>
       <Box bgGradient='linear(darkblue, white)' height='100vh'>
@@ -20,12 +22,12 @@ const WelcomeScreen = (): JSX.Element => {
             <Text
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
-            >Is your AI system Trustworthy?
+            >{t("welcome:description-ai-assessment-tool-1")}
             </Text>
             <Text
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
-            >Collaborate with your team to assess if your AI implementation follows ethical guidelines.
+            >{t("welcome:description-ai-assessment-tool-2")}
             </Text>
 
           </Box>

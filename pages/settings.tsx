@@ -2,6 +2,7 @@ import Settings from '@/src/components/settings'
 import SideBar from '@/src/components/side-bar'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from './api/auth/[...nextauth]'
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const PAGE = 'settings'
 
@@ -26,7 +27,8 @@ export async function getServerSideProps (ctx): Promise<any> {
   }
   return {
     props: {
-      session: JSON.parse(JSON.stringify(session))
+      session: JSON.parse(JSON.stringify(session)),
+      ...await serverSideTranslations(ctx.locale as string, ['buttons', 'navbar'])
     }
   }
 }

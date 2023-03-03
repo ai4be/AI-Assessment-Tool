@@ -1,0 +1,9 @@
+{
+  "enter-valid-email-address": "Please enter a valid email address FR",
+  "check-email-and-password": "Please check your email and password FR",
+  "invalid-credentials": "Invalid credentials FR",
+  "invalid-email": "Invalid email FR",
+  "password-too-short": "Password is too short FR",
+  "include-special-character-and-number": "Include a special character and number FR",
+  "passwords-unmatch": "Passwords don't match FR"
+}

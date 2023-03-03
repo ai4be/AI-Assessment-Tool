@@ -1,0 +1,9 @@
+{
+  "email": "Enter email",
+  "first-name": "Enter first name",
+  "last-name": "Enter last name",
+  "password": "Enter password",
+  "create-password": "Create password",
+  "confirm-password": "Confirm password",
+  "new-password": "New password"
+}

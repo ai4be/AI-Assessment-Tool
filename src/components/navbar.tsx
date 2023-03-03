@@ -28,6 +28,7 @@ import { ActivityTimeline } from '@/src/components/activity'
 import NotificationIcon from '@/src/components/notification-icon'
 import { DisplayActivity } from '@/src/types/activity'
 import EmailVerificationCheck from '@/src/components/email-verification-check'
+import { useTranslation } from 'next-i18next'
 
 interface Props {
   bg?: string
@@ -40,6 +41,7 @@ export const AI4BelgiumIcon = (): JSX.Element => (
 )
 
 function ActivityDrawer (): JSX.Element {
+  const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { user } = useContext(UserContext)
   const userId = String(user?._id)
@@ -87,7 +89,8 @@ function ActivityDrawer (): JSX.Element {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>
-            Activity
+            {/* Activity */}
+            {t("navbar:activity")}
             {/* <FormControl display='flex' alignItems='center'>
               <Switch id='personal-activity' size='sm' mr='1' />
               <FormLabel htmlFor='personal-activity' mb='0' fontSize='xs'>
@@ -109,7 +112,8 @@ function ActivityDrawer (): JSX.Element {
 
           <DrawerFooter>
             <Button variant='outline' mr={3} onClick={onClose} size='sm' >
-              Close
+              {/* Close */}
+              {t("navbar:close")}
             </Button>
           </DrawerFooter>
         </DrawerContent>
@@ -119,6 +123,7 @@ function ActivityDrawer (): JSX.Element {
 }
 
 const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
+  const { t } = useTranslation()
   const router = useRouter()
   const { data: session } = useSession()
 
@@ -151,8 +156,8 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
             </Flex>
           </MenuButton>
           <MenuList backgroundColor='white'>
-            <MenuItem onClick={() => void router.push('/settings')} className='icon-blue-color' color='#0000E6'>Settings</MenuItem>
-            <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>Log out</MenuItem>
+            <MenuItem onClick={() => void router.push('/settings')} className='icon-blue-color' color='#0000E6'>{t("buttons:settings")}</MenuItem>
+            <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>{t("buttons:log-out")}</MenuItem>
           </MenuList>
         </Menu>
       </>
@@ -162,10 +167,10 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
   return (
     <>
       <Button fontSize='20' color='brand' variant='link' float='right' mr='2' pr='2'>
-        <Link href='/login'>Log in</Link>
+        <Link href='/login'>{t("buttons:log-in")}</Link>
       </Button>
       <Button fontSize='md' colorScheme='green' color='white' m='4'>
-        <Link href='/signup'>Sign up</Link>
+        <Link href='/signup'>{t("buttons:sign-up")}</Link>
       </Button>
     </>
   )

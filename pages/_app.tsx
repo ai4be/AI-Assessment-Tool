@@ -1,5 +1,6 @@
 import React from 'react'
 import { ChakraProvider, extendTheme, Text } from '@chakra-ui/react'
+import { appWithTranslation } from 'next-i18next'
 import '@/src/styles/default.css'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
@@ -65,4 +66,4 @@ App.propTypes = {
   pageProps: PropTypes.object
 }
 
-export default App
+export default appWithTranslation(App)

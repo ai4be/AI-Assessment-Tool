@@ -1,0 +1,9 @@
+{
+  "enter-valid-email-address": "Please enter a valid email address",
+  "check-email-and-password": "Please check your email and password",
+  "invalid-credentials": "Invalid credentials",
+  "invalid-email": "Invalid email",
+  "password-too-short": "Password is too short",
+  "include-special-character-and-number": "Include a special character and number",
+  "passwords-unmatch": "Passwords don't match"
+}

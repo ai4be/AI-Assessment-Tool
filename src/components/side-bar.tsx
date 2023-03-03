@@ -6,17 +6,19 @@ import {
 } from 'react-icons/ai'
 import Link from 'next/link'
 import NavBar from '@/src/components/navbar'
+import { useTranslation } from 'next-i18next'
 
 interface Props {
   page: string
 }
 
 const SideBar: FC<Props> = (props): JSX.Element => {
+  const { t } = useTranslation()
   const { page } = props
 
   const sidebarMenu = [
-    { path: '/home', buttonName: 'Home', page: 'home', icon: AiOutlineHome },
-    { path: '/settings', buttonName: 'Settings', page: 'settings', icon: AiOutlineSetting }
+    { path: '/home', buttonName: `${t("buttons:home")}`, page: 'home', icon: AiOutlineHome },
+    { path: '/settings', buttonName: `${t("buttons:settings")}`, page: 'settings', icon: AiOutlineSetting }
   ]
 
   return (
