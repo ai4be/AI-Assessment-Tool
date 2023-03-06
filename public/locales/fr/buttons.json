@@ -14,5 +14,8 @@
   "cancel": "Cancel FR",
   "confirm": "Confirm FR",
   "invite": "Invite FR",
-  "update": "Update FR"
+  "update": "Update FR",
+  "change": "Change FR",
+  "ask-new-code": "Ask for a new code FR",
+  "verify": "Verify FR"
 }

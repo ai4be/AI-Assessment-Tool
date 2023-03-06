@@ -12,5 +12,12 @@
   "last-name": "Last name NL",
   "company-affiliation-organization": "Company / Affiliation / Organization NL",
   "department-team": "Department / Team NL",
-  "role-title": "Role / Title NL"
+  "role-title": "Role / Title NL",
+
+  "change-email": "Change Email NL",
+  "email-updated-successfully": "Email updated successfully NL",
+  "email-verified-successfully": "Email verified successfully NL",
+  "email-address-verification": "Email address verification NL",
+  "update-new-email-message": "We have sent a verification code to your new email address. Please enter the code below to verify your new email address. NL",
+  "update-email-message": "We have sent a verification code to your email address. Please enter the code below to verify your email address. NL"
 }

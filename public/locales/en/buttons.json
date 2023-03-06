@@ -14,5 +14,8 @@
   "cancel": "Cancel",
   "confirm": "Confirm",
   "invite": "Invite",
-  "update": "Update"
+  "update": "Update",
+  "change": "Change",
+  "ask-new-code": "Ask for a new code",
+  "verify": "Verify"
 }

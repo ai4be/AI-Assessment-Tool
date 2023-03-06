@@ -8,7 +8,9 @@
   "new-password": "New password NL",
   "current-password": "Current password NL",
 
-  "project-name": "Project name",
-  "project-description": "Project description\nWhat is the purpose of the project and applications?",
-  "select-industry": "Select the industry"
+  "project-name": "Project name NL",
+  "project-description": "Project description\nWhat is the purpose of the project and applications? NL",
+  "select-industry": "Select the industry NL",
+  
+  "code": "Code NL"
 }
