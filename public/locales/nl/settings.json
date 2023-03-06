@@ -2,5 +2,15 @@
   "password-change-success-message": "Password changed successfully NL",
   "password-change-error-message": "Password change failed NL",
   "change-password": "Change Password NL",
-  "updating": "Updating NL"
+  "updating": "Updating NL",
+
+  "profile-updated-success-message": "Profile updated NL",
+  "profile-updated-error-message": "Profile change failed NL",
+  "profile": "Profile NL",
+
+  "first-name": "First name NL",
+  "last-name": "Last name NL",
+  "company-affiliation-organization": "Company / Affiliation / Organization NL",
+  "department-team": "Department / Team NL",
+  "role-title": "Role / Title NL"
 }

@@ -7,5 +7,8 @@
   "include-special-character-and-number": "Include a special character and number NL",
   "passwords-unmatch": "Passwords don't match NL",
   "password-length": "Password must be at least 8 characters long NL",
-  "password-must-contain-number-and-special": " Password must contain at least one number and one special character NL"
+  "password-must-contain-number-and-special": " Password must contain at least one number and one special character NL",
+  
+  "first-name-required": "First name is required NL",
+  "last-name-required": "Last name is required NL"
 }
