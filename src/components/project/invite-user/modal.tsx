@@ -12,11 +12,13 @@ import {
   useDisclosure,
   Input
 } from '@chakra-ui/react'
+import { useTranslation } from 'next-i18next'
 import { defaultFetchOptions } from '@/util/api'
 import { isEmailValid } from '@/util/validator'
 import ToastContext from '@/src/store/toast-context'
 
 const InviteModal = ({ project, callback }): JSX.Element => {
+  const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { showToast } = useContext(ToastContext)
   const [email, setEmail] = useState('')
@@ -54,10 +56,10 @@ const InviteModal = ({ project, callback }): JSX.Element => {
     } else {
       try {
         const error = await response.json()
-        if (error.message != null) showToast({ title: 'Something went wrong', description: error.message, status: 'error' })
-        else showToast({ title: 'Something went wrong', status: 'error' })
+        if (error.message != null) showToast({ title: t("exceptions:something-went-wrong"), description: error.message, status: 'error' })
+        else showToast({ title: t("exceptions:something-went-wrong"), status: 'error' })
       } catch (err) {
-        showToast({ title: 'Something went wrong', status: 'error' })
+        showToast({ title: t("exceptions:something-went-wrong"), status: 'error' })
       }
     }
   }
@@ -70,20 +72,20 @@ const InviteModal = ({ project, callback }): JSX.Element => {
           color='white'
           onClick={onOpen}
         >
-          Invite
+          {t("buttons:invite")}
         </Button>
       </Box>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Invite User</ModalHeader>
+          <ModalHeader>{t("project-settings:invite-user")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input
               type='email'
               value={email}
               onChange={handleChange}
-              placeholder='Enter the email'
+              placeholder={`${t("placeholders:email")}`} 
               onKeyUp={handleClick}
               ref={el => el?.focus()}
             />
@@ -96,9 +98,9 @@ const InviteModal = ({ project, callback }): JSX.Element => {
               mr={3}
               onClick={handleClick}
               isLoading={isMailSending}
-              loadingText='Sending'
+              loadingText={`${t("project-settings:sending")}`} 
             >
-              Invite
+              {t("buttons:invite")}
             </Button>
           </ModalFooter>
         </ModalContent>

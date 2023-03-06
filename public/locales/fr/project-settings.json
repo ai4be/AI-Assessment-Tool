@@ -1,0 +1,21 @@
+{
+  "project-settings": "Project Settings FR",
+  "general": "General FR",
+  "team": "Team FR",
+  "roles": "Roles FR",
+
+  "project-name": "Project name FR",
+  "can-change-anytime": "You can change this any time FR",
+  "project-description": "Project description FR",
+  "project-industry": "Project industry FR",
+  "success": "Success FR",
+  "success-save-message": "Successfully saved FR",
+
+  "danger-zone": "Danger zone FR",
+  "delete-project-caption": "To delete your project, Click on Delete button. FR",
+
+  "project-users": "Project Users FR",
+  "pending-invites": "Pending Invites FR",
+  "invite-user": "Invite User FR",
+  "sending": "Sending FR"
+}

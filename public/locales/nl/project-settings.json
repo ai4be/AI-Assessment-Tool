@@ -1,0 +1,21 @@
+{
+  "project-settings": "Project Settings NL",
+  "general": "General NL",
+  "team": "Team NL",
+  "roles": "Roles NL",
+
+  "project-name": "Project name NL",
+  "can-change-anytime": "You can change this any time NL",
+  "project-description": "Project description NL",
+  "project-industry": "Project industry NL",
+  "success": "Success NL",
+  "success-save-message": "Successfully saved NL",
+
+  "danger-zone": "Danger zone NL",
+  "delete-project-caption": "To delete your project, Click on Delete button. NL",
+
+  "project-users": "Project Users NL",
+  "pending-invites": "Pending Invites NL",
+  "invite-user": "Invite User NL",
+  "sending": "Sending NL"
+}

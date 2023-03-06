@@ -7,5 +7,11 @@
   "home": "Home NL",
   "create-project": "Create a project NL",
   "submit": "Submit NL",
-  "create": "Create NL"
+  "create": "Create NL",
+  "save": "Save NL",
+  "deleting": "Deleting NL",
+  "delete": "Delete NL",
+  "cancel": "Cancel NL",
+  "confirm": "Confirm NL",
+  "invite": "Invite NL"
 }

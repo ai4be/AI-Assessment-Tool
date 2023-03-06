@@ -7,5 +7,11 @@
   "home": "Home FR",
   "create-project": "Create a project FR",
   "submit": "Submit FR",
-  "create": "Create FR"
+  "create": "Create FR",
+  "save": "Save FR",
+  "deleting": "Deleting FR",
+  "delete": "Delete FR",
+  "cancel": "Cancel FR",
+  "confirm": "Confirm FR",
+  "invite": "Invite FR"
 }
