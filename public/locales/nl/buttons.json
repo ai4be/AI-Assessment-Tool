@@ -13,5 +13,6 @@
   "delete": "Delete NL",
   "cancel": "Cancel NL",
   "confirm": "Confirm NL",
-  "invite": "Invite NL"
+  "invite": "Invite NL",
+  "update": "Update NL"
 }

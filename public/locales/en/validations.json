@@ -5,5 +5,7 @@
   "invalid-email": "Invalid email",
   "password-too-short": "Password is too short",
   "include-special-character-and-number": "Include a special character and number",
-  "passwords-unmatch": "Passwords don't match"
+  "passwords-unmatch": "Passwords don't match",
+  "password-length": "Password must be at least 8 characters long",
+  "password-must-contain-number-and-special": " Password must contain at least one number and one special character"
 }
