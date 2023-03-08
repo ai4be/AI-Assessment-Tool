@@ -29,6 +29,7 @@ import NotificationIcon from '@/src/components/notification-icon'
 import { DisplayActivity } from '@/src/types/activity'
 import EmailVerificationCheck from '@/src/components/email-verification-check'
 import { useTranslation } from 'next-i18next'
+import LocaleSwitcher from './locale-switcher'
 
 interface Props {
   bg?: string
@@ -135,6 +136,12 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
     return (
       <>
         <Flex flexDirection='column' justifyContent='center'>
+          <LocaleSwitcher />
+        </Flex>
+        <Flex flexDirection='column' justifyContent='center' paddingX='2' position='relative'>
+          <Divider orientation='vertical' height='50%' color='#F0EEF9' position='absolute' />
+        </Flex>
+        <Flex flexDirection='column' justifyContent='center'>
           <ActivityDrawer />
         </Flex>
         <Flex flexDirection='column' justifyContent='center' paddingX='2' position='relative'>
@@ -184,6 +191,12 @@ const NavaBarInner = ({ bg }: Props): JSX.Element => {
           <AI4BelgiumIcon />
         </Box>
         <Spacer />
+        <Flex flexDirection='column' justifyContent='center'>
+          <LocaleSwitcher />
+        </Flex>
+        <Flex flexDirection='column' justifyContent='center' paddingX='2' position='relative'>
+          <Divider orientation='vertical' height='50%' color='#F0EEF9' position='absolute' />
+        </Flex>
         <RenderButtons user={user} />
       </Flex>
     </Box>

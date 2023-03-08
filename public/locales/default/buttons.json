@@ -1,0 +1,21 @@
+{
+  "log-in": "Log in",
+  "sign-in": "Sign in",
+  "sign-up": "Sign up",
+  "settings": "Settings",
+  "log-out": "Log out",
+  "home": "Home",
+  "create-project": "Create a project",
+  "submit": "Submit",
+  "create": "Create",
+  "save": "Save",
+  "deleting": "Deleting",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "invite": "Invite",
+  "update": "Update",
+  "change": "Change",
+  "ask-new-code": "Ask for a new code",
+  "verify": "Verify"
+}
