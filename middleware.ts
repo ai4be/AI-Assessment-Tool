@@ -12,10 +12,9 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.locale === 'default') {
-    const defaultLocale = 'en';
-
+    const locale = req.cookies.get('NEXT_LOCALE') || 'en'
     return NextResponse.redirect(
-      new URL(`/${defaultLocale}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url)
-    )
+      new URL(`/${locale}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url)
+    );
   }
 }
