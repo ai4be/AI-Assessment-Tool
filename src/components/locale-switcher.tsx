@@ -10,7 +10,13 @@ export default function LocaleSwitcher() {
   ]
 
   const handleOnChange = (locale) => {
+    // push new locale into a cookie so it can be overwritten and used on middleware
+    setCookie(locale)
     router.push(router.asPath, router.asPath, { locale: locale })
+  }
+
+  const setCookie = (lang) => {
+    document.cookie = `NEXT_LOCALE=${lang}; path=/;`
   }
 
   return (
