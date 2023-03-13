@@ -87,7 +87,7 @@ const EmailSettings = (): JSX.Element => {
           isLoading={isLoading}
           loadingText={`${t("settings:updating")}`}
         >
-          {t("buttons:change")}
+          {t("buttons:update")}
         </Button>
       </Box>
       {showModal && <EmailVerificationModal email={email} isUpdate onCloseCb={cloaseModalCb} getTokenAtInit />}

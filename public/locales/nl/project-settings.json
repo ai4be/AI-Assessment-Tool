@@ -1,21 +1,21 @@
 {
-  "project-settings": "Project Settings NL",
-  "general": "General NL",
-  "team": "Team NL",
-  "roles": "Roles NL",
+  "project-settings": "Projectinstellingen",
+  "general": "Algemeen",
+  "team": "Team",
+  "roles": "Rollen",
 
-  "project-name": "Project name NL",
-  "can-change-anytime": "You can change this any time NL",
-  "project-description": "Project description NL",
-  "project-industry": "Project industry NL",
-  "success": "Success NL",
-  "success-save-message": "Successfully saved NL",
+  "project-name": "Projectnaam",
+  "can-change-anytime": "U kunt dit op elk gewenst moment wijzigen",
+  "project-description": "Projectbeschrijving",
+  "project-industry": "Project industrie",
+  "success": "Succes",
+  "success-save-message": "Succesvol opgeslagen",
 
-  "danger-zone": "Danger zone NL",
-  "delete-project-caption": "To delete your project, Click on Delete button. NL",
+  "danger-zone": "Gevarenzone",
+  "delete-project-caption": "Om uw project te verwijderen, Klik op de knop verwijderen.",
 
-  "project-users": "Project Users NL",
-  "pending-invites": "Pending Invites NL",
-  "invite-user": "Invite User NL",
-  "sending": "Sending NL"
+  "project-users": "Projectgebruikers",
+  "pending-invites": "Wachtende uitnodiging",
+  "invite-user": "Gebruiker uitnodigen",
+  "sending": "Stuur"
 }

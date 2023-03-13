@@ -1,23 +1,23 @@
 {
-  "password-change-success-message": "Password changed successfully NL",
-  "password-change-error-message": "Password change failed NL",
-  "change-password": "Change Password NL",
-  "updating": "Updating NL",
+  "password-change-success-message": "Wachtwoord succesvol veranderd",
+  "password-change-error-message": "Wachtwoord wijzigen mislukt",
+  "change-password": "Wachtwoord wijzigen",
+  "updating": "Updaten",
 
-  "profile-updated-success-message": "Profile updated NL",
-  "profile-updated-error-message": "Profile change failed NL",
-  "profile": "Profile NL",
+  "profile-updated-success-message": "Profiel bijgewerkt",
+  "profile-updated-error-message": "Profielwijziging mislukt",
+  "profile": "Profiel",
 
-  "first-name": "First name NL",
-  "last-name": "Last name NL",
-  "company-affiliation-organization": "Company / Affiliation / Organization NL",
-  "department-team": "Department / Team NL",
-  "role-title": "Role / Title NL",
+  "first-name": "Voornaam",
+  "last-name": "Achternaam",
+  "company-affiliation-organization": "Bedrijf / Affiliatie / Organisatie",
+  "department-team": "Afdeling / Team",
+  "role-title": "Rol / Titel",
 
-  "change-email": "Change Email NL",
-  "email-updated-successfully": "Email updated successfully NL",
-  "email-verified-successfully": "Email verified successfully NL",
-  "email-address-verification": "Email address verification NL",
-  "update-new-email-message": "We have sent a verification code to your new email address. Please enter the code below to verify your new email address. NL",
-  "update-email-message": "We have sent a verification code to your email address. Please enter the code below to verify your email address. NL"
+  "change-email": "E-mail wijzigen",
+  "email-updated-successfully": "E-mail is bijgewerkt",
+  "email-verified-successfully": "Emailadres is succesvol gevalideerd",
+  "email-address-verification": "E-mailadres verificatie",
+  "update-new-email-message": "We hebben een verificatiecode naar je nieuwe e-mailadres gestuurd. Voer de onderstaande code in om uw nieuwe e-mailadres te verifiëren.",
+  "update-email-message": "We hebben een verificatiecode naar uw e-mailadres gestuurd. Voer de onderstaande code in om uw e-mailadres te verifiëren."
 }

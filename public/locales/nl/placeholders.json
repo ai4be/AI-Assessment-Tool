@@ -1,16 +1,16 @@
 {
-  "email": "Enter email NL",
-  "first-name": "Enter first name NL",
-  "last-name": "Enter last name NL",
-  "password": "Enter password NL",
-  "create-password": "Create password NL",
-  "confirm-password": "Confirm password NL",
-  "new-password": "New password NL",
-  "current-password": "Current password NL",
+  "email": "Voer email in",
+  "first-name": "Voer de voornaam in",
+  "last-name": "Voer achternaam in",
+  "password": "Voer wachtwoord in",
+  "create-password": "Maak een wachtwoord",
+  "confirm-password": "Bevestig wachtwoord",
+  "new-password": "Nieuw wachtwoord",
+  "current-password": "Huidige wachtwoord",
 
-  "project-name": "Project name NL",
-  "project-description": "Project description\nWhat is the purpose of the project and applications? NL",
-  "select-industry": "Select the industry NL",
+  "project-name": "Projectnaam",
+  "project-description": "Projectbeschrijving\nWat is het doel van het project en de toepassingen?",
+  "select-industry": "Selecteer de branche",
   
-  "code": "Code NL"
+  "code": "Code"
 }
