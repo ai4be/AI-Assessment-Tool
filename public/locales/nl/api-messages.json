@@ -1,0 +1,36 @@
+{
+  "reset-password": {
+    "_file-path": "pages > api > auth > reset-password.ts - components > reset-password.tsx",
+    "1001": "Methode niet toegestaan",
+    "1002": "Ongeldige token",
+    "1003": "Token is verlopen. Vraag dan om een nieuwe",
+    "1004": "Wachtwoord is niet geldig",
+    "1005": "Wachtwoord is succesvol gereset",
+    "1006": "Er is iets fout gegaan",
+    "1007": "Er is geen account voor dit e-mailadres",
+    "1008": "Te veel opeenvolgende verzoeken. Wacht minimaal twee minuten voordat u om een nieuwe wachtwoordreset vraagt.",
+    "1009": "Er is een e-mail naar uw adres verzonden. Volg de instructies in de e-mail om uw wachtwoord opnieuw in te stellen. Controleer je spamfolder als je de e-mail niet ontvangt."
+  },
+  "signup": {
+    "_file-path": "pages > api > auth > signup.ts - components > signup.tsx",
+    "1001": "Methode niet toegestaan",
+    "1002": "Het door u opgegeven e-mailadres is niet geldig",
+    "1003": "The password should be at least 8 characters long and contain a special character",
+    "1004": "Email is al in gebruik!",
+    "1005": "success",
+    "1006": "Het aanmaken van uw account is mislukt. Probeer het later opnieuw."
+  },
+  "activity-id-seen": {
+    "_file-path": "pages > api > activities > [activityId] > seen > index.ts",
+    "_description": "This is only used internally, no feedback messages to user, therefore translations aren't needed"
+  },
+  "email": {
+    "_file-path": "pages > api > users > [userId] > email > index.tsx",
+    "1001": "ongeldig e-mail",
+    "1002": "email is al gebruikt",
+    "1003": "fout bij het maken van een token",
+    "1004": "fout tijdens het verzenden van e-mail",
+    "1005": "Er is een code naar je e-mailadres gestuurd. Gebruik de code om je e-mailadres te verifiëren.",
+    "1006": "Ongeldig verzoek"
+  }
+}

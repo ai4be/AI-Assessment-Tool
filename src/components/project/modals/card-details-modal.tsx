@@ -30,6 +30,7 @@ import ToastContext from '@/src/store/toast-context'
 import QuestionAndComments from '@/src/components/project/modals/question-and-comments'
 import { Comment } from '@/src/types/comment'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 const AccordionItemStyled = ({ title, desc }): JSX.Element => {
   return (
@@ -68,6 +69,7 @@ interface Props {
 }
 
 const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
+  const { t } = useTranslation()
   const router = useRouter()
   card.userIds = card?.userIds ?? []
   const cardId = String(card._id)
@@ -146,8 +148,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
                 </Box>
                 {card.example != null &&
                   <Accordion allowToggle allowMultiple>
-                    {Array.isArray(card.example) && <AccordionItemStyled title='Example' desc={card.example.map((txt, idx) => <p key={idx}>{txt}</p>)} />}
-                    {typeof card.example === 'string' && <AccordionItemStyled title='Example' desc={card.example} />}
+                    {Array.isArray(card.example) && <AccordionItemStyled title={`${t("titles:example")}`} desc={card.example.map((txt, idx) => <p key={idx}>{txt}</p>)} />}
+                    {typeof card.example === 'string' && <AccordionItemStyled title={`${t("titles:example")}`} desc={card.example} />}
                     {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
                   </Accordion>}
 

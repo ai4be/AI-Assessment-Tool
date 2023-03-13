@@ -13,7 +13,7 @@ import {
   ModalFooter
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
-import { defaultFetchOptions, getResponseHandler, HTTP_METHODS } from '@/util/api'
+import { defaultFetchOptions, getResponseHandlerCustomMessage, HTTP_METHODS } from '@/util/api'
 import UserContext from '@/src/store/user-context'
 import ToastContext from '@/src/store/toast-context'
 import { isEmpty } from '@/util/index'
@@ -39,7 +39,7 @@ export const EmailVerificationModal = ({
   const [isLoading, setIsLoading] = useState(false)
   const { onClose } = useDisclosure()
 
-  const responseHandler = getResponseHandler(showToast)
+  const responseHandler = getResponseHandlerCustomMessage(showToast)
 
   useEffect(() => {
     if (getTokenAtInit) {
@@ -140,7 +140,9 @@ export const EmailVerificationModal = ({
       method: HTTP_METHODS.POST,
       body: JSON.stringify(data)
     })
-    await responseHandler(response)
+    const resultCall = await response.json()
+    const msg = t([`api-messages:email.${resultCall.code}`, 'email.code']);
+    await responseHandler(response, msg)
     setIsLoading(false)
   }
 

@@ -16,5 +16,6 @@
   "invite": "Inviter",
   "update": "Modifier",
   "ask-new-code": "Demander un nouveau code",
-  "verify": "Vérifier"
+  "verify": "Vérifier",
+  "export": "Exporter"
 }

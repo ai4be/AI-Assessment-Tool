@@ -11,14 +11,14 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from '@/src/components/navbar'
-import { defaultFetchOptions, getResponseHandler } from '@/util/api'
+import { defaultFetchOptions, getResponseHandlerCustomMessage } from '@/util/api'
 import { isEmpty, debounce } from '@/util/index'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 import ToastContext from '@/src/store/toast-context'
 import { useTranslation } from 'next-i18next'
 
 const SignUp = (): JSX.Element => {
-  const { t } = useTranslation() 
+  const { t } = useTranslation()
   const router = useRouter()
   const { showToast } = useContext(ToastContext)
   let email: string | null = router.query.email as string
@@ -45,8 +45,7 @@ const SignUp = (): JSX.Element => {
   const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
   const [isButtonDisabled, setButtonState] = useState(true)
 
-  const responseHandler = getResponseHandler(showToast)
-
+  const responseHandler = getResponseHandlerCustomMessage(showToast)
   useEffect(() => {
     if (!touched.email) return
     setEmailErr(!isEmailValid(values.email))
@@ -109,11 +108,13 @@ const SignUp = (): JSX.Element => {
 
     if (response.ok) {
       const result = await response.json()
-      if (result.message === 'success') {
+      if (result.code === 1005) {
         await redirectToLoginPage()
       }
     } else {
-      await responseHandler(response)
+      const resultCall = await response.json()
+      const msg = t([`api-messages:signup.${resultCall.code}`, 'signup.code']);
+      await responseHandler(response, msg)
     }
     setIsCreatingStatus(false)
   }

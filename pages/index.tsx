@@ -19,7 +19,7 @@ export async function getServerSideProps (context: any): Promise<any> {
   return {
     props: {
       session,
-      ...await serverSideTranslations(context.locale as string, ['welcome', 'buttons', 'navbar'])
+      ...await serverSideTranslations(context.locale as string, ['welcome', 'buttons', 'navbar', 'api-messages'])
     }
   }
 }

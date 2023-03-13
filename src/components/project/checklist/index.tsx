@@ -12,6 +12,7 @@ import { setQuestionCleanTitle } from '@/util/question'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { Card } from '@/src/types/card'
+import { useTranslation } from 'next-i18next'
 
 interface Props {
   project: Project
@@ -28,6 +29,7 @@ const isSectionCard = (card: Card, cat: Category, sec?: Section): boolean => {
 const PLACEHOLDER_SECTION_ID = 'placeholder-section-id'
 
 const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element => {
+  const { t } = useTranslation()
   const router = useRouter()
   const projectId = String(project?._id)
   const {
@@ -79,7 +81,7 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
   return (
     <Box backgroundColor='white' padding='2rem' paddingTop='1rem' borderRadius='1rem' className='print:p-0'>
       <Flex justifyContent='flex-end' className='print:hidden'>
-        <Button backgroundColor='#2811ED' color='white' onClick={() => window?.print()}>Export</Button>
+        <Button backgroundColor='#2811ED' color='white' onClick={() => window?.print()}>{t("buttons:export")}</Button>
       </Flex>
       <Text color='#1C1E20' fontSize='18px' className='hidden print:block'>1. Overview</Text>
       <OverviewComponent categories={categoriesToShow} />

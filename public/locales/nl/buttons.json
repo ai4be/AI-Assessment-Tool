@@ -4,11 +4,11 @@
   "sign-up": "Aanmelden",
   "settings": "Instellingen",
   "log-out": "Uitloggen",
-  "home": "Home",
+  "home": "Startpagina",
   "create-project": "Maak een project",
-  "submit": "Indienen",
+  "submit": "Verzenden",
   "create": "Creëren",
-  "save": "Bewaar",
+  "save": "Opslaan",
   "deleting": "Verwijderen",
   "delete": "Verwijderen",
   "cancel": "Annuleren",
@@ -16,5 +16,6 @@
   "invite": "Uitnodigen",
   "update": "Bijwerken",
   "ask-new-code": "Vraag een nieuwe code",
-  "verify": "Controleren"
+  "verify": "Controleren",
+  "export": "Exporteren"
 }

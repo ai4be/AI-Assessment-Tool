@@ -1,0 +1,36 @@
+{
+  "reset-password": {
+    "_file-path": "pages > api > auth > reset-password.ts - components > reset-password.tsx",
+    "1001": "Method not allowed",
+    "1002": "Invalid token",
+    "1003": "Token expired. Please ask for a new one",
+    "1004": "Password is not valid",
+    "1005": "Password was successfully reset",
+    "1006": "Something went wrong",
+    "1007": "There is no account for this email address",
+    "1008": "Too many consecutive requests. Wait at least two minutes before asking for a new password reset.",
+    "1009": "An email was sent to your address. Follow the instructions in the email to reset your password. Check you spam folder if you do not get the email."
+  },
+  "signup": {
+  "_file-path": "pages > api > auth > signup.ts - components > signup.tsx",
+    "1001": "Method not allowed",
+    "1002": "The email you provided in not valid",
+    "1003": "The password should be at least 8 characters long and contain a special character",
+    "1004": "Email is already used!",
+    "1005": "success",
+    "1006": "Your account creation failed. Please try again later."
+  },
+  "activity-id-seen": {
+    "_file-path": "pages > api > activities > [activityId] > seen > index.ts",
+    "_description": "This is only used internally, no feedback messages to user, therefore translations aren't needed"
+  },
+  "email": {
+    "_file-path": "pages > api > users > [userId] > email > index.tsx - components - modal-email-verification.tsx",
+    "1001": "invalid email",
+    "1002": "email already used",
+    "1003": "error while creating token",
+    "1004": "error while sending email",
+    "1005": "A code has been sent to your email. Use the code to verify you email",
+    "1006": "Invalid request"
+  }
+}

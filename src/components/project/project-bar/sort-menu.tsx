@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react'
 import { BiSortUp, BiSortDown } from 'react-icons/bi'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 interface SortMenuProps {
   [key: string]: any
@@ -23,17 +24,18 @@ export enum Order {
   DESC = 'desc'
 }
 
-export const SortLabelMapping = {
-  [Sort.DUE_DATA]: 'Due Date',
-  [Sort.NUMBER]: 'Number'
-}
-
 export const SortMenu = (props: SortMenuProps): JSX.Element => {
+  const { t } = useTranslation()
   const router = useRouter()
   const { sort = Sort.NUMBER, ord = Order.ASC } = router.query
   const [sortIcon, setSortIcon] = useState<JSX.Element>(<BiSortDown />)
   const [oppositeSortIcon, setOpositeSortIcon] = useState<JSX.Element>(<BiSortUp />)
   const [selectedSort, setSelectedSort] = useState<Sort>(Sort.NUMBER)
+
+  const SortLabelMapping = {
+    [Sort.DUE_DATA]: `${t("filter-sort:sort.due-date")}`,
+    [Sort.NUMBER]: `${t("filter-sort:sort.number")}`
+  }
 
   useEffect(() => {
     setSortIcon(ord === Order.ASC ? <BiSortDown /> : <BiSortUp />)

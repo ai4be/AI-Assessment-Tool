@@ -110,8 +110,9 @@ const ResetPassword = (props: any): JSX.Element => {
 
     if (response.ok) {
       const result = await response.json()
+      const msg = t([`api-messages:reset-password.${result.code}`, 'reset-password.code']);
       showToast({
-        title: result.message,
+        title: msg,
         status: 'success',
         duration: 5000,
         onCloseComplete: async () => await router.push('/login')
@@ -119,8 +120,9 @@ const ResetPassword = (props: any): JSX.Element => {
     } else {
       try {
         const result = await response.json()
+        const msg = t([`api-messages:reset-password.${result.code}`, 'reset-password.code']);
         showToast({
-          title: result.message,
+          title: msg,
           status: 'error',
           duration: null
         })

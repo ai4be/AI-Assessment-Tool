@@ -12,5 +12,8 @@
   "project-description": "Description de projet\nQuel est le but du projet et des applications ?",
   "select-industry": "Sélectionnez l'industrie",
   
-  "code": "Code"
+  "code": "Code",
+
+  "motivate-answer": "Motivez votre réponse",
+  "write-comment": "Écrire un commentaire"
 }

@@ -30,6 +30,7 @@ import ProjectContext from '@/src/store/project-context'
 import ConfirmDialog from '@/src/components/confirm-dialog'
 import { User } from '@/src/types/user'
 import { Comment } from '@/src/types/comment'
+import { useTranslation } from 'next-i18next'
 
 const style = {
   control: {
@@ -51,6 +52,7 @@ type CommentProps = {
 const maxLength = 1000
 
 const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentParent, ...rest }: CommentProps): JSX.Element => {
+  const { t } = useTranslation()
   const router = useRouter()
   const { comment: commentId } = router.query
   const commentElement = useRef<HTMLDivElement>(null) // to be able to access the current one
@@ -167,7 +169,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
                   }
                 }}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder='Write a comment'
+                placeholder={`${t("placeholders:write-comment")}`}
                 className='mentions'
                 a11ySuggestionsListLabel='Suggested mentions'
               >
@@ -246,6 +248,7 @@ interface EditOptionsProps {
 }
 
 const EditOptions = ({ comment, value, parent, saveHandler, cancelHandler, onOpen }: EditOptionsProps): JSX.Element => {
+  const { t } = useTranslation()
   const [disabled, setDisabled] = useState(false)
   useEffect(() => {
     if (isEmpty(value)) setDisabled(true)
@@ -256,7 +259,7 @@ const EditOptions = ({ comment, value, parent, saveHandler, cancelHandler, onOpe
   return (
     <Flex alignItems='center' justifyContent='space-between' mt='1'>
       <Flex alignItems='center'>
-        <Button size='sm' colorScheme='blue' disabled={disabled} onClick={saveHandler}>Save</Button>
+        <Button size='sm' colorScheme='blue' disabled={disabled} onClick={saveHandler}>{t("buttons:save")}</Button>
         <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
       </Flex>
       {comment._id != null && <RiDeleteBin6Line cursor='pointer' color='#286cc3' onClick={onOpen} />}

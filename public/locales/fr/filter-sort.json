@@ -1,0 +1,15 @@
+{
+  "filter": {
+    "unassigned": "Non attribué",
+    "assigned": "Attribué",
+    "assigned-to": "Assigné à",
+    "filter": "Filtre",
+    "clear-all-filters": "Effacer tous les filtres",
+    "set": "Définir",
+    "not-set": "Ne pas définir"
+  },
+  "sort": {
+    "due-date": "Date d'échéance",
+    "number": "Numéro"
+  }
+}
