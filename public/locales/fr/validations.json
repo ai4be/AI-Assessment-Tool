@@ -1,14 +1,14 @@
 {
-  "enter-valid-email-address": "Please enter a valid email address FR",
-  "check-email-and-password": "Please check your email and password FR",
-  "invalid-credentials": "Invalid credentials FR",
-  "invalid-email": "Invalid email FR",
-  "password-too-short": "Password is too short FR",
-  "include-special-character-and-number": "Include a special character and number FR",
-  "passwords-unmatch": "Passwords don't match FR",
-  "password-length": "Password must be at least 8 characters long FR",
-  "password-must-contain-number-and-special": " Password must contain at least one number and one special character FR",
+  "enter-valid-email-address": "Veuillez entrer une adresse e-mail valide",
+  "check-email-and-password": "Veuillez vérifier votre adresse e-mail et votre mot de passe",
+  "invalid-credentials": "Identifiants invalides",
+  "invalid-email": "Adresse e-mail invalide",
+  "password-too-short": "Mot de passe trop court",
+  "include-special-character-and-number": "Inclure un caractère spécial et un chiffre",
+  "passwords-unmatch": "Mots de passe ne correspondent pas",
+  "password-length": "Mot de passe doit contenir au moins 8 caractères",
+  "password-must-contain-number-and-special": " Le mot de passe doit contenir au moins un chiffre et un caractère spécial",
   
-  "first-name-required": "First name is required FR",
-  "last-name-required": "Last name is required FR"
+  "first-name-required": "Prénom requis",
+  "last-name-required": "Nom requis"
 }

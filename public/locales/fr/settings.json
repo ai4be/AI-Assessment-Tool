@@ -1,23 +1,23 @@
 {
-  "password-change-success-message": "Password changed successfully FR",
-  "password-change-error-message": "Password change failed FR",
-  "change-password": "Change Password FR",
-  "updating": "Updating FR",
+  "password-change-success-message": "Mot de passe modifié avec succès",
+  "password-change-error-message": "Échec du changement de mot de passe",
+  "change-password": "Changer le mot de passe",
+  "updating": "Mise à jour",
 
-  "profile-updated-success-message": "Profile updated FR",
-  "profile-updated-error-message": "Profile change failed FR",
-  "profile": "Profile FR",
+  "profile-updated-success-message": "Profil mis à jour",
+  "profile-updated-error-message": "Le changement de profil a échoué",
+  "profile": "Profil",
 
-  "first-name": "First name FR",
-  "last-name": "Last name FR",
-  "company-affiliation-organization": "Company / Affiliation / Organization FR",
-  "department-team": "Department / Team FR",
-  "role-title": "Role / Title FR",
+  "first-name": "Prénom",
+  "last-name": "Nom",
+  "company-affiliation-organization": "Entreprise / Affiliation / Organisation",
+  "department-team": "Département / Équipe",
+  "role-title": "Rôle / Titre",
 
-  "change-email": "Change Email FR",
-  "email-updated-successfully": "Email updated successfully FR",
-  "email-verified-successfully": "Email verified successfully FR",
-  "email-address-verification": "Email address verification FR",
-  "update-new-email-message": "We have sent a verification code to your new email address. Please enter the code below to verify your new email address. FR",
-  "update-email-message": "We have sent a verification code to your email address. Please enter the code below to verify your email address. FR"
+  "change-email": "Changer l'e-mail",
+  "email-updated-successfully": "Address e-mail mis à jour avec succès",
+  "email-verified-successfully": "Address e-mail vérifié avec succès",
+  "email-address-verification": "Vérification de l'adresse e-mail",
+  "update-new-email-message": "Nous avons envoyé un code de vérification à votre nouvelle adresse e-mail. Veuillez entrer le code ci-dessous pour vérifier votre nouvelle adresse e-mail.",
+  "update-email-message": "Nous avons envoyé un code de vérification à votre adresse e-mail. Veuillez entrer le code ci-dessous pour vérifier votre adresse e-mail."
 }

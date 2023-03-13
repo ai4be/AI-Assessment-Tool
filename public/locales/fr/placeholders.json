@@ -1,16 +1,16 @@
 {
-  "email": "Enter email FR",
-  "first-name": "Enter first name FR",
-  "last-name": "Enter last name FR",
-  "password": "Enter password FR",
-  "create-password": "Create password FR",
-  "confirm-password": "Confirm password FR",
-  "new-password": "New password FR",
-  "current-password": "Current password FR",
+  "email": "Saisissez votre email",
+  "first-name": "Saisissez votre prénom",
+  "last-name": "Saisissez votre nom",
+  "password": "Saisissez votre mot de passe",
+  "create-password": "Créer mot de passe",
+  "confirm-password": "Confirmer mot de passe",
+  "new-password": "Nouveau mot de passe",
+  "current-password": "Mot de passe actuel",
 
-  "project-name": "Project name FR",
-  "project-description": "Project description\nWhat is the purpose of the project and applications? FR",
-  "select-industry": "Select the industry FR",
+  "project-name": "Nom de projet",
+  "project-description": "Description de projet\nQuel est le but du projet et des applications ?",
+  "select-industry": "Sélectionnez l'industrie",
   
-  "code": "Code FR"
+  "code": "Code"
 }
