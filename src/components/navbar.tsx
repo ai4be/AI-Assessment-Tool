@@ -3,6 +3,7 @@ import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 import {
   Button, Flex, Box, Spacer,
+  IconButton,
   Drawer,
   DrawerBody,
   DrawerFooter,
@@ -18,6 +19,7 @@ import {
   Divider,
   useDisclosure
 } from '@chakra-ui/react'
+import { ChevronRightIcon } from '@chakra-ui/icons'
 import Link from 'next/link'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { useSession, signOut } from 'next-auth/react'
@@ -30,12 +32,16 @@ import { DisplayActivity } from '@/src/types/activity'
 import EmailVerificationCheck from '@/src/components/email-verification-check'
 
 interface Props {
-  bg?: string
+  bg?: string,
+  onShowSidebar?: Function
+  showSidebarButton?: boolean
 }
 
 export const AI4BelgiumIcon = (): JSX.Element => (
-  <div className='px-3 py-5 flex flex-col justify-center icon-grey-color font-semibold text-lg cursor-pointer'>
-    <span>AI<sub className='icon-blue-color text-lg'>4</sub>Belgium</span>
+  <div className="px-3 py-5 flex flex-col justify-center icon-grey-color font-semibold text-lg cursor-pointer">
+    <span>
+      AI<sub className="icon-blue-color text-lg">4</sub>Belgium
+    </span>
   </div>
 )
 
@@ -171,12 +177,22 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
   )
 }
 
-const NavaBarInner = ({ bg }: Props): JSX.Element => {
+const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): JSX.Element => {
   const router = useRouter()
   const { user } = useContext(UserContext)
   return (
     <Box bg={bg} boxShadow='md' className='print:hidden'>
       <Flex>
+        {showSidebarButton && (
+          <Box p={4} pr={2}>
+            <IconButton
+              icon={<ChevronRightIcon w={8} h={8} />}
+              colorScheme="blackAlpha"
+              variant="outline"
+              onClick={onShowSidebar}
+            />
+          </Box>
+        )}
         <Box href='/' onClick={async () => await router.push('/home')}>
           <AI4BelgiumIcon />
         </Box>

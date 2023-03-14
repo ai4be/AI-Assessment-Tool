@@ -75,7 +75,7 @@ const InviteModal = ({ project, callback }): JSX.Element => {
       </Box>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mr='2' ml='2'>
           <ModalHeader>Invite User</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

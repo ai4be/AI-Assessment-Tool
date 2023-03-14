@@ -198,7 +198,7 @@ const ProjectSettings = ({ project }): JSX.Element => {
       </Button>
       <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered scrollBehavior='inside' closeOnOverlayClick={!isBusy} closeOnEsc={!isBusy}>
         <ModalOverlay />
-        <ModalContent height={['100vh', '60vh']} minWidth='370px'>
+        <ModalContent height={['100vh', '60vh']} minWidth='370px' mr='2' ml='2'>
           <ModalHeader>Project Settings</ModalHeader>
           <ModalCloseButton disabled={isBusy} />
           <ModalBody overflowY='scroll'>

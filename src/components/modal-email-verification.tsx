@@ -153,7 +153,7 @@ export const EmailVerificationModal = ({
   return (
     <Modal onClose={closeFn} isOpen isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mr='2' ml='2'>
         <ModalHeader>Email address verification</ModalHeader>
         <ModalCloseButton onClick={cancelTokenVerification} />
         <ModalBody>

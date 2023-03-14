@@ -76,7 +76,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
       </Button>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mr='2' ml='2'>
           <ModalHeader>Create project</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
