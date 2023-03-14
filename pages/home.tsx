@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 import { unstable_getServerSession } from 'next-auth/next'
 import { useState } from 'react'
-import { Box, useBreakpointValue } from '@chakra-ui/react'
+import { useBreakpointValue } from '@chakra-ui/react'
 
 const smVariant = { navigation: 'drawer', navigationButton: true }
 const mdVariant = { navigation: 'sidebar', navigationButton: false }
@@ -26,9 +26,7 @@ export default function Page ({ session }: { session: any, emailVerified: boolea
           showSidebarButton={variants?.navigationButton}
           onShowSidebar={toggleSidebar}
         >
-        <Box>
           <Projects projects={data || []} session={session} fetchProjects={mutate} />
-        </Box>
       </SideBar>
    )
 }
