@@ -190,7 +190,7 @@ const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): J
               colorScheme="blackAlpha"
               aria-label='Show menu'
               variant="outline"
-              onclick={onShowSidebar}
+              onClick={onShowSidebar}
             />
           </Box>
         )}
