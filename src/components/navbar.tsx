@@ -188,8 +188,9 @@ const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): J
             <IconButton
               icon={<ChevronRightIcon w={8} h={8} />}
               colorScheme="blackAlpha"
+              aria-label='Show menu'
               variant="outline"
-              onClick={onShowSidebar}
+              onclick={onShowSidebar}
             />
           </Box>
         )}
