@@ -99,7 +99,7 @@ const PasswordSettings = (): JSX.Element => {
   }
 
   return (
-    <Box shadow='md' p='2' height='fit-content' maxW={300}>
+    <Box shadow='md' p='2' height='fit-content' minW={300}>
       <Heading size='md'>Change Password</Heading>
       <FormControl my='4' isRequired>
         <Input

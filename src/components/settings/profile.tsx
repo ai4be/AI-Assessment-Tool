@@ -118,7 +118,7 @@ const Profile = (): JSX.Element => {
   }
 
   return (
-    <Box shadow='md' p='2' height='fit-content' maxW={300}>
+    <Box shadow='md' p='2' height='fit-content' minW={300}>
       <Heading size='md'>Profile</Heading>
       <FormControl my='4' isRequired isInvalid={firstNameErr}>
         <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>First name</FormLabel>

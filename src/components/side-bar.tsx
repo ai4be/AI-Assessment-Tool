@@ -54,11 +54,15 @@ const SideBar = (props: Props) => {
   return props.variant === 'sidebar' ? (
     <>
       <NavBar {...props} bg='white' />
-      <Box display='flex' mt='2%'>
-        <Box height='80vh' width='20vw' boxShadow='base' rounded='lg' p='1em' ml='20px'>
-          <SidebarContent {...props} />
+        <Box display='flex' mt='2%'>
+        <Box display='flex' flexDirection='column'>
+          <Box height='80vh' width='20vw' boxShadow='base' rounded='lg' p='1em' ml='20px'>
+            <SidebarContent {...props} />
+          </Box>
         </Box>
-        {props.children}
+        <Box w='100%' m='2'>
+          {props.children}
+        </Box>
       </Box>
     </>
   ) : (
