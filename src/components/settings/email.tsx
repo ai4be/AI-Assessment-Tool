@@ -59,7 +59,7 @@ const EmailSettings = (): JSX.Element => {
 
   return (
     <>
-      <Box shadow='md' p='2' height='fit-content' minW={300}>
+      <Box p='2' height='fit-content' minW={300}>
         <Heading size='md'>Change Email</Heading>
         <FormControl my='4' isRequired>
           <Input

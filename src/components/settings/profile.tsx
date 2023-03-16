@@ -118,7 +118,7 @@ const Profile = (): JSX.Element => {
   }
 
   return (
-    <Box shadow='md' p='2' height='fit-content' minW={300}>
+    <Box p='2' height='fit-content' minW={300}>
       <Heading size='md'>Change Profile</Heading>
       <FormControl my='4' isRequired isInvalid={firstNameErr}>
         <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>First name</FormLabel>
@@ -178,11 +178,14 @@ const Profile = (): JSX.Element => {
           onChange={handleChange}
         />
       </FormControl>
-      <ImgInput
-        data={values.avatar}
-        onChange={(base64Data) => setValues({ ...values, avatar: base64Data })}
-        placeholder={`${user?.firstName} ${user?.lastName}`}
-      />
+      <FormControl my='4'>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>Avatar</FormLabel>
+        <ImgInput
+          data={values.avatar}
+          onChange={(base64Data) => setValues({ ...values, avatar: base64Data })}
+          placeholder={`${user?.firstName} ${user?.lastName}`}
+        />
+      </FormControl>
       <Button
         fontWeight='semibold'
         width='full'
