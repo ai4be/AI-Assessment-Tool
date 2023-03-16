@@ -3,6 +3,7 @@ import { Box } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import ProjectColumns from '@/src/components/project/columns'
 import { ProjectContextProvider } from '@/src/store/project-context'
+import SideBar from '@/src/components/project/side-bar'
 import NavBar from '@/src/components/navbar'
 import ProgressBar, { SECTION_CHECKLIST } from '@/src/components/project/progress-bar'
 import { Category, Project, Section } from '@/src/types/project'
@@ -33,6 +34,7 @@ const ProjectComponent: FC<Props> = (props): JSX.Element => {
               ? <Checklist project={props.project} categories={props.categories} sections={props.sections} />
               : <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
                 <Box display='flex' position='relative'>
+                  <SideBar />
                   <ProjectColumns project={props.project} />
                 </Box>
               </Box>}
