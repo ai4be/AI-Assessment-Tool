@@ -94,3 +94,13 @@ mentions {
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
+
+.chakra-modal__content-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chakra-modal__overlay {
+  width: 100% !important;
+  height: 100% !important;
+}
