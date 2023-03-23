@@ -2,14 +2,10 @@ import sanitize from 'mongo-sanitize'
 import { Db, MongoClient, ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
 
-const { MONGODB_URI, MONGODB_DB, LOCAL_MONGODB } = process.env
+const { MONGODB_URI, MONGODB_DB } = process.env
 
 if (MONGODB_URI == null || MONGODB_URI === '') {
   throw new Error('Please define the MONGODB_URI environment variable inside the .env files')
-}
-
-if (MONGODB_DB == null || MONGODB_DB === '') {
-  throw new Error('Please define the MONGODB_DB environment variable inside the .env files')
 }
 
 const globalAny: any = global
@@ -36,14 +32,13 @@ export async function connectToDatabase (): Promise<{ client: MongoClient, db: D
       useUnifiedTopology: true
     }
 
-    const mongoURL: string = String(
-      process.env.NODE_ENV === 'development' ? LOCAL_MONGODB : MONGODB_URI
-    )
+    const mongoURL: string = String(MONGODB_URI)
 
-    cached.promise = MongoClient.connect(mongoURL, opts).then((client) => {
+    cached.promise = MongoClient.connect(mongoURL, opts).then(client => {
+      const db = typeof MONGODB_DB === 'string' && MONGODB_DB.length > 0 ? client.db(MONGODB_DB) : client.db()
       return {
         client,
-        db: client.db(MONGODB_DB)
+        db
       }
     })
   }

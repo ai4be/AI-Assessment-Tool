@@ -1,7 +1,5 @@
 # AI Assessment Tool
 
-<!-- ![Trello clone](https://github.com/knowankit/trello-clone/blob/develop/demo.gif) -->
-
 - [AI Assessment Tool](#ai-assessment-tool)
   - [Overview](#overview)
     - [Demo](#demo)
@@ -16,7 +14,7 @@
 
 ## Overview
 
-This is a clone application for trello. This has been built for learning purpose. My plan is to improve this project and add more features in every release.
+This application is an improvement on the [ALTAI tool](https://futurium.ec.europa.eu/en/european-ai-alliance/pages/welcome-altai-portal) with some additional features.
 
 ### [Demo](https://ai-assessment-tool-ai4belgium.vercel.app/)
 
@@ -44,8 +42,6 @@ First install the MongoDB Compass for better visualization of data with MongoDB 
     Add `JWT_SECRET_KEY=randomstrings`
 3. Run `yarn install`
 4. Run `yarn dev`
-
-`For unsplash gallery, api key is needed which can be generated from unsplash website`
 
 ### If you want to run the project using docker
 
