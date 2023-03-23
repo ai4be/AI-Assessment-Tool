@@ -16,9 +16,6 @@ interface Props {
 }
 
 const SideBar = (props: Props): JSX.Element => {
-
-  console.log("variant: ", props.variant);
-  
   const router = useRouter()
   const { [QueryFilterKeys.CATEGORY]: selectedCategoryId } = router.query ?? {}
   const context = useContext(ProjectContext)
