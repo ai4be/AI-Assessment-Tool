@@ -275,7 +275,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
 
   return (
     <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='0'>
-      <Box position="sticky" top="0">
+      <Box position='sticky' top='0'>
         <Flex flexDirection='column'>
           <Flex justifyContent='flex-end'>
             <ModalCloseButton position='relative' />
