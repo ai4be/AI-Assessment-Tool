@@ -14,6 +14,7 @@ import { Assignment, DueDate, QueryFilterKeys } from '../project-bar/filter-menu
 import { Column } from '@/src/types/column'
 import { useQueryCardId } from '@/src/hooks/index'
 import { Project } from '@/src/types/project'
+import { useTranslation } from 'next-i18next'
 
 interface IProps {
   project: Project
@@ -21,13 +22,14 @@ interface IProps {
 
 // defined to avoid style issues while columns are loading
 const dummyData = { projectId: '', createdAt: new Date(), createdBy: '' }
-const defaultColumns: Column[] = [
-  { _id: '1', name: 'TO DO', ...dummyData },
-  { _id: '2', name: 'BUSY', ...dummyData },
-  { _id: '3', name: 'DONE', ...dummyData }
-]
 
 const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
+  const { t } = useTranslation()
+  const defaultColumns: Column[] = [
+    { _id: '1', name: `${t('column-dashboard:todo')}`, ...dummyData },
+    { _id: '2', name: `${t('column-dashboard:busy')}`, ...dummyData },
+    { _id: '3', name: `${t('column-dashboard:done')}`, ...dummyData }
+  ]
   const router = useRouter()
   const projectId = String(project?._id)
   const {
