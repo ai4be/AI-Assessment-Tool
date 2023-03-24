@@ -16,7 +16,7 @@ import { useTranslation } from 'next-i18next'
 interface Props {
   page: string
   children: string | JSX.Element | JSX.Element[]
-  onClose: Function
+  onClose: () => void
   isOpen: boolean
   variant: 'drawer' | 'sidebar' | undefined | string
   showSidebarButton?: boolean
@@ -54,9 +54,6 @@ const SidebarContent = (props): JSX.Element => {
 }
 
 const SideBar = (props: Props): JSX.Element => {
-  const { t } = useTranslation()
-  const { page } = props
-
   return props.variant === 'sidebar'
     ? (
       <>
