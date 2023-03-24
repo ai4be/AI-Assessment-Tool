@@ -133,9 +133,9 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
 
   return (
     <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
-      <ModalOverlay maxHeight='100vh' />
+      <ModalOverlay maxHeight='100%' />
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
-      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative'>
+      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative' mr='2' ml='2'>
         <ModalBody p='0' height='100%' display='flex' width='100%' overflowY='scroll' position='relative'>
           <Flex flexDirection='column' height='100%' width='100%' justifyContent='space-between'>
             <Box display='flex'>
@@ -277,40 +277,42 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
   }, [card.userIds, renderTrigger])
 
   return (
-    <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='2'>
-      <Flex flexDirection='column'>
-        <Flex justifyContent='flex-end'>
-          <ModalCloseButton position='relative' />
-        </Flex>
-        <Flex justifyContent='space-between' alignItems='center'>
-          <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:due-date')}</Text>
-        </Flex>
-        <SingleDatepicker name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
-          <Flex justifyContent='space-between' alignItems='center'>
-            <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
-              {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : `${t('sidebar:define')}`}
-            </Text>
-            {card.dueDate != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
+    <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='0'>
+      <Box position='sticky' top='0'>
+        <Flex flexDirection='column'>
+          <Flex justifyContent='flex-end'>
+            <ModalCloseButton position='relative' />
           </Flex>
-        </SingleDatepicker>
-        <Flex justifyContent='space-between' alignItems='center'>
-          <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>{t('sidebar:assigned-to')}</Text>
-          <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
-            <FiEdit2 color='#C9C9C9' cursor='pointer' />
-          </UserMenu>
+          <Flex justifyContent='space-between' alignItems='center'>
+            <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:due-date')}</Text>
+          </Flex>
+          <SingleDatepicker name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
+            <Flex justifyContent='space-between' alignItems='center'>
+              <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
+                {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : `${t('sidebar:define')}`}
+              </Text>
+              {card.dueDate != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
+            </Flex>
+          </SingleDatepicker>
+          <Flex justifyContent='space-between' alignItems='center'>
+            <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>{t('sidebar:assigned-to')}</Text>
+            <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
+              <FiEdit2 color='#C9C9C9' cursor='pointer' />
+            </UserMenu>
+          </Flex>
+          {assignedUsers.map(user => (
+            <Flex key={user._id} paddingY='1'>
+              <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} />
+              <Text fontSize='sm' fontWeight='600' ml='2'>{getUserDisplayName(user)}</Text>
+            </Flex>))}
+          <label>
+            <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:stage')}</Text>
+            <Select size='xs' value={card.stage ?? CardStage.DEVELOPMENT} onChange={(e) => setStage((e?.target?.value ?? card.stage) as CardStage)}>
+              {STAGE_VALUES.map(stage => <option key={stage} value={stage} style={{ textTransform: 'capitalize' }}>{stage.toLowerCase()}</option>)}
+            </Select>
+          </label>
         </Flex>
-        {assignedUsers.map(user => (
-          <Flex key={user._id} paddingY='1'>
-            <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} />
-            <Text fontSize='sm' fontWeight='600' ml='2'>{getUserDisplayName(user)}</Text>
-          </Flex>))}
-        <label>
-          <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:stage')}</Text>
-          <Select size='xs' value={card.stage ?? CardStage.DEVELOPMENT} onChange={(e) => setStage((e?.target?.value ?? card.stage) as CardStage)}>
-            {STAGE_VALUES.map(stage => <option key={stage} value={stage} style={{ textTransform: 'capitalize' }}>{stage.toLowerCase()}</option>)}
-          </Select>
-        </label>
-      </Flex>
+      </Box>
     </Flex>
   )
 }

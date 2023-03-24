@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import {
-  AspectRatio,
   Box,
-  Container,
   Heading,
   Input,
   Stack,
   Text,
-  Avatar
+  Avatar,
+  Flex
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import { RiDeleteBin6Line } from 'react-icons/ri'
@@ -52,66 +51,58 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
   }
 
   return (
-    <Container my='12'>
-      <AspectRatio maxW={300} ratio={1}>
-        <Box>
-          <Box position='relative' height='100%' width='100%' overflow='hidden'>
-            <Box
-              position='absolute'
-              top='0'
-              left='0'
-              height='100%'
-              width='100%'
-              display='flex'
-              flexDirection='column'
-              cursor='pointer'
-              borderColor='gray.300'
-              borderStyle='dashed'
-              borderWidth='2px'
-              borderRadius='full'
-              shadow='sm'
-              role='group'
-              transition='all 150ms ease-in-out'
-              _hover={{
-                shadow: 'md'
-              }}
-              initial='rest'
-              animate='rest'
-              // whileHover='hover'
-              overflow='hidden'
-            >
-              <Stack p='8' textAlign='center' spacing='1' alignItems='center' height='100%' width='100%'>
-                <Heading fontSize='lg' color='gray.700' fontWeight='bold'>
-                  {t('img-input:drop-images-caption')}
-                </Heading>
-                <Text fontWeight='light'>{t('img-input:drop-images-caption2')}</Text>
-              </Stack>
-            </Box>
-            <Avatar src={dataBase64} name={placeholder} position='absolute' bottom='0' left='0' height='100%' width='100%' opacity={opacityImg} />
-            <Input
-              type='file'
-              height='100%'
-              width='100%'
-              position='absolute'
-              p='0'
-              top='0'
-              left='0'
-              opacity='0'
-              aria-hidden='true'
-              accept='image/*'
-              cursor='pointer'
-              overflow='hidden'
-              onPointerEnter={() => setOpacityImg(0.2)}
-              onPointerLeave={() => setOpacityImg(1)}
-              onChange={handleFile}
-              borderRadius='full'
-            />
-          </Box>
-          <Box position='absolute' right='0' bottom='0'>
-            <RiDeleteBin6Line color='var(--main-blue)' opacity={disabled ? 0.2 : 1} cursor={!disabled ? 'pointer' : ''} onClick={deleteAvatar} />
-          </Box>
+    <Flex display='flex' justifyContent='center'>
+      <Box position='relative' height='100px' width='100px' overflow='hidden'>
+        <Box
+          display='flex'
+          flexDirection='column'
+          cursor='pointer'
+          borderColor='gray.300'
+          borderStyle='dashed'
+          borderWidth='2px'
+          borderRadius='50%'
+          height='100%'
+          width='100%'
+          shadow='sm'
+          role='group'
+          transition='all 150ms ease-in-out'
+          _hover={{
+            shadow: 'md'
+          }}
+          initial='rest'
+          animate='rest'
+          overflow='hidden'
+        >
+          <Stack p='1' textAlign='center' spacing='1' alignItems='center' overflow='hidden' height='100%' width='100%'>
+            <Heading fontSize='15' color='gray.700' fontWeight='bold'>
+              {t('img-input:drop-images-caption')}
+            </Heading>
+            <Text fontWeight='light' fontSize='10'>{t('img-input:drop-images-caption2')}</Text>
+          </Stack>
         </Box>
-      </AspectRatio>
-    </Container>
+        <Avatar src={dataBase64} name={placeholder} position='absolute' bottom='0' left='0' height='100%' width='100%' opacity={opacityImg} />
+        <Input
+          type='file'
+          height='100%'
+          width='100%'
+          position='absolute'
+          p='0'
+          top='0'
+          left='0'
+          opacity='0'
+          aria-hidden='true'
+          accept='image/*'
+          cursor='pointer'
+          overflow='hidden'
+          onPointerEnter={() => setOpacityImg(0.2)}
+          onPointerLeave={() => setOpacityImg(1)}
+          onChange={handleFile}
+          borderRadius='full'
+        />
+      </Box>
+      <Box alignSelf='flex-end'>
+        <RiDeleteBin6Line color='var(--main-blue)' opacity={disabled ? 0.2 : 1} cursor={!disabled ? 'pointer' : ''} onClick={deleteAvatar}/>
+      </Box>
+    </Flex>
   )
 }

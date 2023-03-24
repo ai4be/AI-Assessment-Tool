@@ -5,12 +5,29 @@ import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 import { unstable_getServerSession } from 'next-auth/next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useState } from 'react'
+import { useBreakpointValue } from '@chakra-ui/react'
+
+const smVariant = { navigation: 'drawer', navigationButton: true }
+const mdVariant = { navigation: 'sidebar', navigationButton: false }
 
 export default function Page ({ session }: { session: any, emailVerified: boolean }): JSX.Element {
   const { data, error, mutate } = useSWR('/api/projects', fetcher)
   const { data: industries, error: errorIndustries } = useSWR('/api/industries', fetcher)
+  const [isSidebarOpen, setSidebarOpen] = useState(false)
+  const variants = useBreakpointValue({ base: smVariant, md: mdVariant })
+
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
+
   return (
-    <SideBar page='projects'>
+    <SideBar
+      page='projects'
+      variant={variants?.navigation}
+      isOpen={isSidebarOpen}
+      onClose={toggleSidebar}
+      showSidebarButton={variants?.navigationButton}
+      onShowSidebar={toggleSidebar}
+    >
       <Projects projects={data || []} session={session} fetchProjects={mutate} />
     </SideBar>
   )

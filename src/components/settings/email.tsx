@@ -61,7 +61,7 @@ const EmailSettings = (): JSX.Element => {
 
   return (
     <>
-      <Box shadow='md' p='2' height='fit-content' maxW={300}>
+      <Box p='2' height='fit-content' minW={300}>
         <Heading size='md'>{t('settings:change-email')}</Heading>
         <FormControl my='4' isRequired>
           <Input
