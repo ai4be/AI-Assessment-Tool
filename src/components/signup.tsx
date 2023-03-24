@@ -77,8 +77,8 @@ const SignUp = (): JSX.Element => {
   const _showToast = (): void => {
     showToast({
       position: 'top',
-      title: t("signup:account-created-title"),
-      description: t("signup:account-created-description"),
+      title: t('signup:account-created-title'),
+      description: t('signup:account-created-description'),
       status: 'success',
       duration: 2500,
       isClosable: true
@@ -113,7 +113,7 @@ const SignUp = (): JSX.Element => {
       }
     } else {
       const resultCall = await response.json()
-      const msg = t([`api-messages:signup.${resultCall.code}`, 'signup.code']);
+      const msg = t([`api-messages:signup.${resultCall.code}`, 'signup.code'])
       await responseHandler(response, msg)
     }
     setIsCreatingStatus(false)
@@ -190,7 +190,7 @@ const SignUp = (): JSX.Element => {
             fontWeight='semibold'
             lineHeight='normal'
           >
-            <h1>{t("buttons:sign-up")}</h1>
+            <h1>{t('buttons:sign-up')}</h1>
           </Box>
           <Box my={4} textAlign='left'>
             <FormControl isRequired isInvalid={emailErr}>
@@ -198,19 +198,19 @@ const SignUp = (): JSX.Element => {
                 type='email'
                 name='email'
                 value={values.email}
-                placeholder={`${t("placeholders:email")}`}
+                placeholder={`${t('placeholders:email')}`}
                 onChange={handleChange}
                 onBlur={() => setTouched({ ...touched, email: true })}
                 autoComplete='off'
               />
-              {emailErr && <Text size='xs' color='red'>{t("validations:invalid-email")}</Text>}
+              {emailErr && <Text size='xs' color='red'>{t('validations:invalid-email')}</Text>}
             </FormControl>
             <FormControl my='4' isRequired>
               <Input
                 type='text'
                 name='firstName'
                 value={values.firstName}
-                placeholder={`${t("placeholders:first-name")}`}
+                placeholder={`${t('placeholders:first-name')}`}
                 onChange={handleChange}
                 onBlur={() => setTouched({ ...touched, firstName: true })}
                 autoComplete='off'
@@ -221,7 +221,7 @@ const SignUp = (): JSX.Element => {
                 type='text'
                 name='lastName'
                 value={values.lastName}
-                placeholder={`${t("placeholders:last-name")}`}
+                placeholder={`${t('placeholders:last-name')}`}
                 onChange={handleChange}
                 onBlur={() => setTouched({ ...touched, lastName: true })}
                 autoComplete='off'
@@ -232,23 +232,23 @@ const SignUp = (): JSX.Element => {
                 type='password'
                 name='password'
                 value={values.password}
-                placeholder={`${t("placeholders:create-password")}`}
+                placeholder={`${t('placeholders:create-password')}`}
                 onBlur={() => setTouched({ ...touched, password: true })}
                 onChange={handleChange}
               />
-              {passwordLengthErr && <Text size='xs' color='red'>{t("validations:password-too-short")}</Text>}
-              {passwordCharErr && <Text size='xs' color='red'>{t("validations:include-special-character-and-number")}</Text>}
+              {passwordLengthErr && <Text size='xs' color='red'>{t('validations:password-too-short')}</Text>}
+              {passwordCharErr && <Text size='xs' color='red'>{t('validations:include-special-character-and-number')}</Text>}
             </FormControl>
             <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
               <Input
                 type='password'
                 name='confirmPassword'
                 value={values.confirmPassword}
-                placeholder={`${t("placeholders:confirm-password")}`}
+                placeholder={`${t('placeholders:confirm-password')}`}
                 onChange={handleChange}
                 onBlur={() => setTouched({ ...touched, confirmPassword: true })}
               />
-              {confirmPasswordErr && <Text size='xs' color='red'>{t("validations:passwords-unmatch")}</Text>}
+              {confirmPasswordErr && <Text size='xs' color='red'>{t('validations:passwords-unmatch')}</Text>}
             </FormControl>
             <Button
               fontWeight='semibold'
@@ -259,13 +259,13 @@ const SignUp = (): JSX.Element => {
               color='white'
               onClick={registerUser}
               isLoading={isCreating}
-              loadingText={`${t("signup:registering")}`}
+              loadingText={`${t('signup:registering')}`}
             >
-              {t("buttons:sign-up")}
+              {t('buttons:sign-up')}
             </Button>
             <Box m='5' textAlign='center'>
               <Link href='/login' color='brand' p='2'>
-                {t("links:already-have-account-log-in")}
+                {t('links:already-have-account-log-in')}
               </Link>
             </Box>
           </Box>

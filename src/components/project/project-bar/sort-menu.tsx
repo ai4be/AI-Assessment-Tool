@@ -33,8 +33,8 @@ export const SortMenu = (props: SortMenuProps): JSX.Element => {
   const [selectedSort, setSelectedSort] = useState<Sort>(Sort.NUMBER)
 
   const SortLabelMapping = {
-    [Sort.DUE_DATA]: `${t("filter-sort:sort.due-date")}`,
-    [Sort.NUMBER]: `${t("filter-sort:sort.number")}`
+    [Sort.DUE_DATA]: `${t('filter-sort:sort.due-date')}`,
+    [Sort.NUMBER]: `${t('filter-sort:sort.number')}`
   }
 
   useEffect(() => {

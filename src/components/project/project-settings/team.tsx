@@ -73,7 +73,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
   return (
     <>
       <Flex flexDirection='column' className='mb-2'>
-        <Box className='text-grey mt-2'>{t("project-settings:project-users")}</Box>
+        <Box className='text-grey mt-2'>{t('project-settings:project-users')}</Box>
         <hr className='my-2' />
         {context.users != null && context.users?.length > 0 && context.users.map((user) => (
           <Flex key={user._id} justifyContent='space-between' alignItems='center' paddingY='1'>
@@ -88,7 +88,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
         ))}
         {Array.isArray(data) &&
           <>
-            <Box className='text-grey mt-3'>{t("project-settings:pending-invites")}</Box>
+            <Box className='text-grey mt-3'>{t('project-settings:pending-invites')}</Box>
             <hr className='my-2' />
             {data.map((token) => (
               <Flex key={token._id} justifyContent='space-between' alignItems='center' paddingY='1'>

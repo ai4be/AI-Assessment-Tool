@@ -62,18 +62,18 @@ const EmailSettings = (): JSX.Element => {
   return (
     <>
       <Box shadow='md' p='2' height='fit-content' maxW={300}>
-        <Heading size='md'>{t("settings:change-email")}</Heading>
+        <Heading size='md'>{t('settings:change-email')}</Heading>
         <FormControl my='4' isRequired>
           <Input
             type='text'
             name='email'
             value={email}
-            placeholder={`${t("placeholders:email")}`}
+            placeholder={`${t('placeholders:email')}`}
             onBlur={handleTouch}
             onChange={handleChange}
           />
           <Text noOfLines={3} fontSize='xs' color='red.500'>
-            {emailErr && `${t("validations:invalid-email")}`}
+            {emailErr && `${t('validations:invalid-email')}`}
           </Text>
         </FormControl>
         <Button
@@ -85,9 +85,9 @@ const EmailSettings = (): JSX.Element => {
           color='white'
           onClick={() => setShowModal(true)}
           isLoading={isLoading}
-          loadingText={`${t("settings:updating")}`}
+          loadingText={`${t('settings:updating')}`}
         >
-          {t("buttons:update")}
+          {t('buttons:update')}
         </Button>
       </Box>
       {showModal && <EmailVerificationModal email={email} isUpdate onCloseCb={cloaseModalCb} getTokenAtInit />}

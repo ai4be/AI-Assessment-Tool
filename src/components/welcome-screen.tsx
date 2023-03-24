@@ -22,12 +22,12 @@ const WelcomeScreen = (): JSX.Element => {
             <Text
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
-            >{t("welcome:description-ai-assessment-tool-1")}
+            >{t('welcome:description-ai-assessment-tool-1')}
             </Text>
             <Text
               fontSize={['1rem', '1rem', '1.5rem', '1.5rem']}
               width={['100%', '100%', '50%', '50%']}
-            >{t("welcome:description-ai-assessment-tool-2")}
+            >{t('welcome:description-ai-assessment-tool-2')}
             </Text>
 
           </Box>

@@ -106,13 +106,13 @@ const Profile = (): JSX.Element => {
 
     if (response.ok) {
       showToast({
-        title: t("settings:profile-updated-success-message"),
+        title: t('settings:profile-updated-success-message'),
         status: 'success'
       })
       triggerReloadUser()
     } else {
       showToast({
-        title: t("settings:profile-updated-error-message"),
+        title: t('settings:profile-updated-error-message'),
         status: 'error'
       })
     }
@@ -121,37 +121,37 @@ const Profile = (): JSX.Element => {
 
   return (
     <Box shadow='md' p='2' height='fit-content' maxW={300}>
-      <Heading size='md'>{t("settings:profile")}</Heading>
+      <Heading size='md'>{t('settings:profile')}</Heading>
       <FormControl my='4' isRequired isInvalid={firstNameErr}>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t("settings:first-name")}</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:first-name')}</FormLabel>
         <Input
           type='text'
           name='firstName'
           value={values.firstName}
-          placeholder={`${t("placeholders:first-name")}`}
+          placeholder={`${t('placeholders:first-name')}`}
           onBlur={handleTouch}
           onChange={handleChange}
         />
         <Text noOfLines={1} fontSize='xs' color='red.500'>
-          {firstNameErr && `${t("validations:first-name-required")}`}
+          {firstNameErr && `${t('validations:first-name-required')}`}
         </Text>
       </FormControl>
       <FormControl my='4' isInvalid={lastNameErr} isRequired>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t("settings:last-name")}</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:last-name')}</FormLabel>
         <Input
           type='text'
           name='lastName'
           value={values.lastName}
-          placeholder={`${t("placeholders:last-name")}`}
+          placeholder={`${t('placeholders:last-name')}`}
           onBlur={handleTouch}
           onChange={handleChange}
         />
         <Text noOfLines={1} fontSize='xs' color='red.500'>
-          {lastNameErr && `${t("validations:last-name-required")}`}
+          {lastNameErr && `${t('validations:last-name-required')}`}
         </Text>
       </FormControl>
       <FormControl my='4'>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t("settings:company-affiliation-organization")}</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:company-affiliation-organization')}</FormLabel>
         <Input
           type='text'
           name='organization'
@@ -161,7 +161,7 @@ const Profile = (): JSX.Element => {
         />
       </FormControl>
       <FormControl my='4'>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t("settings:department-team")}</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:department-team')}</FormLabel>
         <Input
           type='text'
           name='department'
@@ -171,7 +171,7 @@ const Profile = (): JSX.Element => {
         />
       </FormControl>
       <FormControl my='4' size='xs'>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t("settings:role-title")}</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:role-title')}</FormLabel>
         <Input
           type='text'
           name='role'
@@ -194,9 +194,9 @@ const Profile = (): JSX.Element => {
         color='white'
         onClick={updateProfile}
         isLoading={isLoading}
-        loadingText={`${t("settings:updating")}`}
+        loadingText={`${t('settings:updating')}`}
       >
-        {t("buttons:update")}
+        {t('buttons:update')}
       </Button>
     </Box>
   )

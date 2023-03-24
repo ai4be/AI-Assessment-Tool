@@ -2,7 +2,7 @@ import ResetPassword from '@/src/components/reset-password'
 import { TokenType, getToken, isTokenExpired } from '@/src/models/token'
 import { getSession } from 'next-auth/react'
 import { setup } from '@/util/csrf'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export default function Page (props: any): JSX.Element {
   return (<ResetPassword {...props} />)

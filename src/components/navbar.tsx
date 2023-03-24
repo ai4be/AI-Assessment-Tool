@@ -90,7 +90,7 @@ function ActivityDrawer (): JSX.Element {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>
-            {t("navbar:activity")}
+            {t('navbar:activity')}
             {/* <FormControl display='flex' alignItems='center'>
               <Switch id='personal-activity' size='sm' mr='1' />
               <FormLabel htmlFor='personal-activity' mb='0' fontSize='xs'>
@@ -111,8 +111,8 @@ function ActivityDrawer (): JSX.Element {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClose} size='sm' >
-              {t("navbar:close")}
+            <Button variant='outline' mr={3} onClick={onClose} size='sm'>
+              {t('navbar:close')}
             </Button>
           </DrawerFooter>
         </DrawerContent>
@@ -155,8 +155,8 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
             </Flex>
           </MenuButton>
           <MenuList backgroundColor='white'>
-            <MenuItem onClick={() => void router.push('/settings')} className='icon-blue-color' color='#0000E6'>{t("buttons:settings")}</MenuItem>
-            <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>{t("buttons:log-out")}</MenuItem>
+            <MenuItem onClick={() => void router.push('/settings')} className='icon-blue-color' color='#0000E6'>{t('buttons:settings')}</MenuItem>
+            <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>{t('buttons:log-out')}</MenuItem>
           </MenuList>
         </Menu>
       </>
@@ -166,10 +166,10 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
   return (
     <>
       <Button fontSize='20' color='brand' variant='link' float='right' mr='2' pr='2'>
-        <Link href='/login'>{t("buttons:log-in")}</Link>
+        <Link href='/login'>{t('buttons:log-in')}</Link>
       </Button>
       <Button fontSize='md' colorScheme='green' color='white' m='4'>
-        <Link href='/signup'>{t("buttons:sign-up")}</Link>
+        <Link href='/signup'>{t('buttons:sign-up')}</Link>
       </Button>
     </>
   )

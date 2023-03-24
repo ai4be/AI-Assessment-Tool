@@ -16,8 +16,8 @@ const ConfirmDialog = (props: any): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false)
   const {
     isOpen,
-    title = t("dialogs:confirm-please-confirm"),
-    content = t("dialogs:confirm-confirmation-undo"),
+    title = t('dialogs:confirm-please-confirm'),
+    content = t('dialogs:confirm-confirmation-undo'),
     onClose,
     confirmHandler
   } = props
@@ -49,10 +49,10 @@ const ConfirmDialog = (props: any): JSX.Element => {
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={handleCancel} isLoading={isLoading}>
-              {t("buttons:cancel")}
+              {t('buttons:cancel')}
             </Button>
             <Button colorScheme='red' onClick={handleConfirm} ml={3} isLoading={isLoading}>
-              {t("buttons:confirm")}
+              {t('buttons:confirm')}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

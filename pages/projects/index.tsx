@@ -4,7 +4,7 @@ import { authOptions } from '../api/auth/[...nextauth]'
 import SideBar from '@/src/components/side-bar'
 import useSWR from 'swr'
 import { fetcher } from '@/util/api'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export default function Page ({ session }): JSX.Element {
   const { data, error, mutate } = useSWR('/api/projects', fetcher)

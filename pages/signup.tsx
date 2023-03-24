@@ -1,6 +1,6 @@
 import SignUp from '@/src/components/signup'
 import { unstable_getServerSession } from 'next-auth/next'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { authOptions } from './api/auth/[...nextauth]'
 import sanitize from 'mongo-sanitize'
 import { getUser } from '@/src/models/user'
@@ -50,7 +50,7 @@ export async function getServerSideProps (ctx): Promise<any> {
       }
     }
   }
-  
+
   return {
     props: {
       session,

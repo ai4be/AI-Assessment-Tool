@@ -145,27 +145,27 @@ export const FilterMenu = (props: any): JSX.Element => {
   }
 
   const ASSIGNMENT_LABELS = {
-    [Assignment.UNASSIGNED]: `${t("filter-sort:filter.unassigned")}`,
-    [Assignment.ASSIGNED]: `${t("filter-sort:filter.assigned")}`,
-    [Assignment.ASSIGNED_TO]: `${t("filter-sort:filter.assigned-to")}`,
+    [Assignment.UNASSIGNED]: `${t('filter-sort:filter.unassigned')}`,
+    [Assignment.ASSIGNED]: `${t('filter-sort:filter.assigned')}`,
+    [Assignment.ASSIGNED_TO]: `${t('filter-sort:filter.assigned-to')}`
   }
 
   const DUE_DATE_LABELS = {
-    [DueDate.SET]: `${t("filter-sort:filter.set")}`,
-    [DueDate.NOT_SET]: `${t("filter-sort:filter.not-set")}`,
+    [DueDate.SET]: `${t('filter-sort:filter.set')}`,
+    [DueDate.NOT_SET]: `${t('filter-sort:filter.not-set')}`
   }
 
   return (
     <Menu key='filter-menu' closeOnSelect={false}>
       <MenuButton {...props} as={Button} rightIcon={<FiFilter />} variant='outline' color='var(--main-blue)' size='sm'>
-        {t("filter-sort:filter.filter")}
+        {t('filter-sort:filter.filter')}
         {filterCounter > 0 &&
           <Badge ml='1' size='sm' variant='solid' colorScheme='green' borderRadius='full'>
             {filterCounter}
           </Badge>}
       </MenuButton>
       <MenuList>
-        <MenuOptionGroup title={`${t("titles:assignment")}`} type='radio' value={assignment as string} onChange={(val: string) => setAssigment(val)}>
+        <MenuOptionGroup title={`${t('titles:assignment')}`} type='radio' value={assignment as string} onChange={(val: string) => setAssigment(val)}>
           <MenuItemOption value={Assignment.UNASSIGNED} onClick={(e) => cleartHandler(e, Assignment.UNASSIGNED, assignment, setAssigment)}>
             {ASSIGNMENT_LABELS[Assignment.UNASSIGNED]}
           </MenuItemOption>
@@ -187,7 +187,7 @@ export const FilterMenu = (props: any): JSX.Element => {
           </MenuOptionGroup>
         </MenuOptionGroup>
         <MenuDivider />
-        <MenuOptionGroup title={`${t("titles:due-date")}`} type='radio' value={dueDate as string} onChange={(val: string) => setDueDate(val)}>
+        <MenuOptionGroup title={`${t('titles:due-date')}`} type='radio' value={dueDate as string} onChange={(val: string) => setDueDate(val)}>
           <MenuItemOption value={DueDate.SET} onClick={(e) => cleartHandler(e, DueDate.SET, dueDate, setDueDate)}>
             {DUE_DATE_LABELS[DueDate.SET]}
           </MenuItemOption>
@@ -197,7 +197,7 @@ export const FilterMenu = (props: any): JSX.Element => {
         </MenuOptionGroup>
         <MenuDivider />
         <MenuItem icon={<CloseIcon />} onClick={clearAllFilters} isDisabled={isEmpty(dueDate) && isEmpty(assignment)}>
-          {t("filter-sort:filter.clear-all-filters")}
+          {t('filter-sort:filter.clear-all-filters')}
         </MenuItem>
       </MenuList>
     </Menu>

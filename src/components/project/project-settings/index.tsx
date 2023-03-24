@@ -68,9 +68,9 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
         project.name = projectName
         project.description = description
         project.industry = industry
-        showToast({ title: t("project-settings:success"), description: t("project-settings:success-save-message") })
+        showToast({ title: t('project-settings:success'), description: t('project-settings:success-save-message') })
       } else {
-        showToast({ title: t("exceptions:error"), description: t("exceptions:something-went-wrong"), status: 'error' })
+        showToast({ title: t('exceptions:error'), description: t('exceptions:something-went-wrong'), status: 'error' })
       }
     }
     setIsLoading(false)
@@ -79,23 +79,23 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
   return (
     <>
       <FormControl id='name'>
-        <FormLabel>{t("project-settings:project-name")}</FormLabel>
+        <FormLabel>{t('project-settings:project-name')}</FormLabel>
         <Input
           value={projectName}
           onChange={(e) => (setProjectName(e.target.value))}
         />
-        <FormHelperText>{t("project-settings:can-change-anytime")}</FormHelperText>
+        <FormHelperText>{t('project-settings:can-change-anytime')}</FormHelperText>
       </FormControl>
       <FormControl id='description' mt='1.5'>
-        <FormLabel>{t("project-settings:project-description")}</FormLabel>
+        <FormLabel>{t('project-settings:project-description')}</FormLabel>
         <Textarea
           value={description}
           onChange={(e) => (setDescription(e.target.value))}
         />
       </FormControl>
       <FormControl id='description' my='1.5'>
-        <FormLabel>{t("project-settings:project-industry")}</FormLabel>
-        <Select size='xs' placeholder={`${t("placeholders:select-industry")}`} onChange={e => setIndustry(e.target.value)} value={String(industry)}>
+        <FormLabel>{t('project-settings:project-industry')}</FormLabel>
+        <Select size='xs' placeholder={`${t('placeholders:select-industry')}`} onChange={e => setIndustry(e.target.value)} value={String(industry)}>
           {industries?.map((industry, idx) => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
         </Select>
       </FormControl>
@@ -107,7 +107,7 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
           disabled={isLoading || projectName == null || projectName === '' || isBusy}
           isLoading={isLoading}
         >
-          <AiOutlineCheck /> &nbsp; {t("buttons:save")}
+          <AiOutlineCheck /> &nbsp; {t('buttons:save')}
         </Button>
       </Box>
     </>
@@ -139,9 +139,9 @@ const DeleteProject = ({ project }): JSX.Element => {
   }
   return (
     <>
-      <Text as='b'>{t("project-settings:danger-zone")}</Text>
+      <Text as='b'>{t('project-settings:danger-zone')}</Text>
       <Flex justifyContent='space-between' alignItems='center'>
-        <p>{t("project-settings:delete-project-caption")}</p>
+        <p>{t('project-settings:delete-project-caption')}</p>
         <Box align='right'>
           <Button
             bg='red.500'
@@ -152,9 +152,9 @@ const DeleteProject = ({ project }): JSX.Element => {
             }}
             isLoading={isLoading}
             isDisabled={isLoading || isBusy}
-            loadingText={`${t("buttons:deleting")}`}
+            loadingText={`${t('buttons:deleting')}`}
           >
-            <AiOutlineDelete /> &nbsp;{t("buttons:delete")}
+            <AiOutlineDelete /> &nbsp;{t('buttons:delete')}
           </Button>
         </Box>
         <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={handleDelete} />
@@ -203,14 +203,14 @@ const ProjectSettings = ({ project }): JSX.Element => {
       <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered scrollBehavior='inside' closeOnOverlayClick={!isBusy} closeOnEsc={!isBusy}>
         <ModalOverlay />
         <ModalContent height={['100vh', '60vh']} minWidth='370px'>
-          <ModalHeader>{t("project-settings:project-settings")}</ModalHeader>
+          <ModalHeader>{t('project-settings:project-settings')}</ModalHeader>
           <ModalCloseButton disabled={isBusy} />
           <ModalBody overflowY='scroll'>
             <Tabs isFitted variant='enclosed' defaultIndex={0}>
               <TabList mb='2rem'>
-                <Tab _focus={{ boxShadow: 'none' }}>{t("project-settings:general")}</Tab>
-                <Tab _focus={{ boxShadow: 'none' }}>{t("project-settings:team")}</Tab>
-                <Tab _focus={{ boxShadow: 'none' }}>{t("project-settings:roles")}</Tab>
+                <Tab _focus={{ boxShadow: 'none' }}>{t('project-settings:general')}</Tab>
+                <Tab _focus={{ boxShadow: 'none' }}>{t('project-settings:team')}</Tab>
+                <Tab _focus={{ boxShadow: 'none' }}>{t('project-settings:roles')}</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>

@@ -17,8 +17,8 @@ const SideBar: FC<Props> = (props): JSX.Element => {
   const { page } = props
 
   const sidebarMenu = [
-    { path: '/home', buttonName: `${t("buttons:home")}`, page: 'home', icon: AiOutlineHome },
-    { path: '/settings', buttonName: `${t("buttons:settings")}`, page: 'settings', icon: AiOutlineSetting }
+    { path: '/home', buttonName: `${t('buttons:home')}`, page: 'home', icon: AiOutlineHome },
+    { path: '/settings', buttonName: `${t('buttons:settings')}`, page: 'settings', icon: AiOutlineSetting }
   ]
 
   return (

@@ -6,7 +6,7 @@ import Project from '@/src/components/project'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { categories } from 'pages/api/categories'
 import { sections } from 'pages/api/sections'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 function Page ({ session }): JSX.Element {
   const router = useRouter()
@@ -33,7 +33,7 @@ export async function getServerSideProps (ctx): Promise<any> {
   return {
     props: {
       session: JSON.parse(JSON.stringify(session)),
-      ...await serverSideTranslations(ctx.locale as string, ['buttons', 'navbar', 'projects', 'placeholders', 'project-settings', 'exceptions', 'dialogs', 'api-messages', 'titles', 'filter-sort'])
+      ...await serverSideTranslations(ctx.locale as string, ['buttons', 'navbar', 'projects', 'placeholders', 'project-settings', 'exceptions', 'dialogs', 'api-messages', 'titles', 'filter-sort', 'sidebar', 'settings', 'column-dashboard'])
     }
   }
 }

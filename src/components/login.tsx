@@ -39,8 +39,8 @@ const Login = (): JSX.Element => {
     e.preventDefault()
     if (!isEmailValid(values.email)) {
       showToast({
-        title: t("validations:invalid-email"),
-        description: t("validations:enter-valid-email-address"),
+        title: t('validations:invalid-email'),
+        description: t('validations:enter-valid-email-address'),
         status: 'error'
       })
       return
@@ -62,14 +62,14 @@ const Login = (): JSX.Element => {
     }
     if (result?.status === 404 || result?.status === 401) {
       showToast({
-        title: t("validations:invalid-credentials"),
-        description: t("validations:check-email-and-password"),
+        title: t('validations:invalid-credentials'),
+        description: t('validations:check-email-and-password'),
         status: 'error'
       })
     } else {
       showToast({
-        title: t("exceptions:something-went-wrong"),
-        description: t("exceptions:try-again-later"),
+        title: t('exceptions:something-went-wrong'),
+        description: t('exceptions:try-again-later'),
         status: 'error'
       })
     }
@@ -127,7 +127,7 @@ const Login = (): JSX.Element => {
             fontWeight='semibold'
             lineHeight='normal'
           >
-            <h1>{t("buttons:log-in")}</h1>
+            <h1>{t('buttons:log-in')}</h1>
           </Box>
           <Box my={4} textAlign='left'>
             <form>
@@ -136,7 +136,7 @@ const Login = (): JSX.Element => {
                   type='email'
                   name='email'
                   value={values.email}
-                  placeholder={`${t("placeholders:email")}`}
+                  placeholder={`${t('placeholders:email')}`}
                   onChange={handleChange}
                   autoComplete='off'
                 />
@@ -146,7 +146,7 @@ const Login = (): JSX.Element => {
                   type='password'
                   name='password'
                   value={values.password}
-                  placeholder={`${t("placeholders:password")}`}
+                  placeholder={`${t('placeholders:password')}`}
                   autoComplete='off'
                   onChange={handleChange}
                 />
@@ -158,17 +158,17 @@ const Login = (): JSX.Element => {
                 color='white'
                 onClick={loginUser}
                 isLoading={isFetching}
-                loadingText={`${t("login:logging")}`}
+                loadingText={`${t('login:logging')}`}
                 disabled={disabled}
               >
-                {t("buttons:sign-in")}
+                {t('buttons:sign-in')}
               </Button>
               <Box m='5' textAlign='center'>
                 <Link href='/signup' color='brand' p='2' display='block'>
-                  {t("links:sign-up-caption")}
+                  {t('links:sign-up-caption')}
                 </Link>
                 <Link href='/reset-password' color='brand' p='2'>
-                  {t("links:forget-password")}
+                  {t('links:forget-password')}
                 </Link>
               </Box>
             </form>

@@ -2,7 +2,7 @@ import Settings from '@/src/components/settings'
 import SideBar from '@/src/components/side-bar'
 import { unstable_getServerSession } from 'next-auth/next'
 import { authOptions } from './api/auth/[...nextauth]'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const PAGE = 'settings'
 

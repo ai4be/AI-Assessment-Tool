@@ -56,10 +56,10 @@ const InviteModal = ({ project, callback }): JSX.Element => {
     } else {
       try {
         const error = await response.json()
-        if (error.message != null) showToast({ title: t("exceptions:something-went-wrong"), description: error.message, status: 'error' })
-        else showToast({ title: t("exceptions:something-went-wrong"), status: 'error' })
+        if (error.message != null) showToast({ title: t('exceptions:something-went-wrong'), description: error.message, status: 'error' })
+        else showToast({ title: t('exceptions:something-went-wrong'), status: 'error' })
       } catch (err) {
-        showToast({ title: t("exceptions:something-went-wrong"), status: 'error' })
+        showToast({ title: t('exceptions:something-went-wrong'), status: 'error' })
       }
     }
   }
@@ -72,20 +72,20 @@ const InviteModal = ({ project, callback }): JSX.Element => {
           color='white'
           onClick={onOpen}
         >
-          {t("buttons:invite")}
+          {t('buttons:invite')}
         </Button>
       </Box>
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{t("project-settings:invite-user")}</ModalHeader>
+          <ModalHeader>{t('project-settings:invite-user')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input
               type='email'
               value={email}
               onChange={handleChange}
-              placeholder={`${t("placeholders:email")}`} 
+              placeholder={`${t('placeholders:email')}`}
               onKeyUp={handleClick}
               ref={el => el?.focus()}
             />
@@ -98,9 +98,9 @@ const InviteModal = ({ project, callback }): JSX.Element => {
               mr={3}
               onClick={handleClick}
               isLoading={isMailSending}
-              loadingText={`${t("project-settings:sending")}`} 
+              loadingText={`${t('project-settings:sending')}`}
             >
-              {t("buttons:invite")}
+              {t('buttons:invite')}
             </Button>
           </ModalFooter>
         </ModalContent>

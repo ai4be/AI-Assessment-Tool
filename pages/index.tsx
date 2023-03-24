@@ -1,6 +1,6 @@
 import WelcomeScreen from '@/src/components/welcome-screen'
 import { getSession } from 'next-auth/react'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export default WelcomeScreen
 

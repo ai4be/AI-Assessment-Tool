@@ -116,7 +116,7 @@ export const EmailVerificationModal = ({
       method: HTTP_METHODS.POST,
       body: JSON.stringify(data)
     })
-    await responseHandler(response, isUpdate ? `${t("settings:email-updated-successfully")}` : `${t("settings:email-verified-successfully")}`)
+    await responseHandler(response, isUpdate ? `${t('settings:email-updated-successfully')}` : `${t('settings:email-verified-successfully')}`)
     if (response.ok) {
       await triggerReloadUser()
       closeFn()
@@ -141,7 +141,7 @@ export const EmailVerificationModal = ({
       body: JSON.stringify(data)
     })
     const resultCall = await response.json()
-    const msg = t([`api-messages:email.${resultCall.code}`, 'email.code']);
+    const msg = t([`api-messages:email.${resultCall.code}`, 'email.code'])
     await responseHandler(response, msg)
     setIsLoading(false)
   }
@@ -158,27 +158,27 @@ export const EmailVerificationModal = ({
     <Modal onClose={closeFn} isOpen isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{t("settings:email-address-verification")}</ModalHeader>
+        <ModalHeader>{t('settings:email-address-verification')}</ModalHeader>
         <ModalCloseButton onClick={cancelTokenVerification} />
         <ModalBody>
           <Text>
             {isUpdate
-              ? `${t("settings:update-new-email-message")}`
-              : `${t("settings:update-email-message")}`}
+              ? `${t('settings:update-new-email-message')}`
+              : `${t('settings:update-email-message')}`}
           </Text>
-          <Input placeholder={`${t("placeholders:code")}`} name='token' onChange={handleChange} />
+          <Input placeholder={`${t('placeholders:code')}`} name='token' onChange={handleChange} />
           {canAskForNewToken && (
             <Button onClick={askForNewToken} isLoading={isLoading} isDisabled={isLoading} mt='1.5' variant='link'>
-              {t("buttons:ask-new-code")}
+              {t('buttons:ask-new-code')}
             </Button>
           )}
         </ModalBody>
         <ModalFooter>
           <Button onClick={finializeVerification} colorScheme='blue' isLoading={isLoading} isDisabled={isLoading || isEmpty(values.token)} mr='1.5'>
-            {t("buttons:verify")}
+            {t('buttons:verify')}
           </Button>
           <Button onClick={cancelTokenVerification} isLoading={isLoading} isDisabled={isLoading}>
-            {t("buttons:cancel")}
+            {t('buttons:cancel')}
           </Button>
         </ModalFooter>
       </ModalContent>

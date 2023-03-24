@@ -1,6 +1,6 @@
 import Login from '@/src/components/login'
 import { getSession } from 'next-auth/react'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export default function LoginPage ({ session }): JSX.Element {
   return (<Login />)

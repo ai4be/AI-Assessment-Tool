@@ -23,7 +23,7 @@ import useSWR from 'swr'
 import { useTranslation } from 'next-i18next'
 
 const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
-  const { t } = useTranslation('projects') 
+  const { t } = useTranslation('projects')
   const { data: industries, error } = useSWR('/api/industries', fetcher)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -74,30 +74,30 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
         size='lg'
         mt='1rem'
       >
-        {t("buttons:create-project")}
+        {t('buttons:create-project')}
       </Button>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{t("projects:create-project")}</ModalHeader>
+          <ModalHeader>{t('projects:create-project')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input
               ref={el => { inputRef.current = el }}
-              placeholder={`${t("placeholders:project-name")}`}
+              placeholder={`${t('placeholders:project-name')}`}
               onKeyUp={handleSubmit}
             />
             <Textarea
-              placeholder={`${t("placeholders:project-description")}`}
+              placeholder={`${t('placeholders:project-description')}`}
               mt='2' onChange={(e) => setDescription(e.target.value)}
             />
-            <Select size='xs' placeholder={`${t("placeholders:select-industry")}`} onChange={e => setIndustry(e.target.value)}>
+            <Select size='xs' placeholder={`${t('placeholders:select-industry')}`} onChange={e => setIndustry(e.target.value)}>
               {industries?.map(industry => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
             </Select>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText={`${t("projects:creating-project")}`}>
-              {t("buttons:create")}
+            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText={`${t('projects:creating-project')}`}>
+              {t('buttons:create')}
             </Button>
           </ModalFooter>
         </ModalContent>

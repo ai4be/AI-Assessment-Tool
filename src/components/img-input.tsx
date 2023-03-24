@@ -82,9 +82,9 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
             >
               <Stack p='8' textAlign='center' spacing='1' alignItems='center' height='100%' width='100%'>
                 <Heading fontSize='lg' color='gray.700' fontWeight='bold'>
-                  {t("img-input:drop-images-caption")}
+                  {t('img-input:drop-images-caption')}
                 </Heading>
-                <Text fontWeight='light'>{t("img-input:drop-images-caption2")}</Text>
+                <Text fontWeight='light'>{t('img-input:drop-images-caption2')}</Text>
               </Stack>
             </Box>
             <Avatar src={dataBase64} name={placeholder} position='absolute' bottom='0' left='0' height='100%' width='100%' opacity={opacityImg} />

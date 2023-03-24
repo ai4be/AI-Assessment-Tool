@@ -86,14 +86,14 @@ const PasswordSettings = (): JSX.Element => {
     if (response.ok) {
       toast({
         ...toastDefaultOptions,
-        title: t("settings:password-change-success-message"),
+        title: t('settings:password-change-success-message'),
         status: 'success'
       })
       setValues({} as any)
     } else {
       toast({
         ...toastDefaultOptions,
-        title: t("settings:password-change-error-message"),
+        title: t('settings:password-change-error-message'),
         status: 'error'
       })
     }
@@ -102,13 +102,13 @@ const PasswordSettings = (): JSX.Element => {
 
   return (
     <Box shadow='md' p='2' height='fit-content' maxW={300}>
-      <Heading size='md'>{t("settings:change-password")}</Heading>
+      <Heading size='md'>{t('settings:change-password')}</Heading>
       <FormControl my='4' isRequired>
         <Input
           type='password'
           name='currentPassword'
           value={values.currentPassword}
-          placeholder={`${t("placeholders:current-password")}`}
+          placeholder={`${t('placeholders:current-password')}`}
           onBlur={() => setTouched({ ...touched, currentPassword: true })}
           onChange={handleChange}
         />
@@ -118,13 +118,13 @@ const PasswordSettings = (): JSX.Element => {
           type='password'
           name='newPassword'
           value={values.newPassword}
-          placeholder={`${t("placeholders:new-password")}`}
+          placeholder={`${t('placeholders:new-password')}`}
           onBlur={() => setTouched({ ...touched, newPassword: true })}
           onChange={handleChange}
         />
         <Text noOfLines={3} fontSize='xs' color='red.500'>
-          {passwordLengthErr && `${t("validations:password-length")}`}
-          {passwordCharErr && `${t("validations:password-must-contain-number-and-special")}`}
+          {passwordLengthErr && `${t('validations:password-length')}`}
+          {passwordCharErr && `${t('validations:password-must-contain-number-and-special')}`}
         </Text>
       </FormControl>
       <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
@@ -132,12 +132,12 @@ const PasswordSettings = (): JSX.Element => {
           type='password'
           name='confirmPassword'
           value={values.confirmPassword}
-          placeholder={`${t("placeholders:confirm-password")}`}
+          placeholder={`${t('placeholders:confirm-password')}`}
           onChange={handleChange}
           onBlur={() => setTouchedWrapper('confirmPassword', 0)}
         />
         <Text noOfLines={1} fontSize='xs' color='red.500'>
-          {confirmPasswordErr && <p color='red'>{t("validations:passwords-unmatch")}</p>}
+          {confirmPasswordErr && <p color='red'>{t('validations:passwords-unmatch')}</p>}
         </Text>
       </FormControl>
       <Button
@@ -149,9 +149,9 @@ const PasswordSettings = (): JSX.Element => {
         color='white'
         onClick={changePassword}
         isLoading={isLoading}
-        loadingText={`${t("settings:updating")}`}
+        loadingText={`${t('settings:updating')}`}
       >
-        {t("buttons:update")}
+        {t('buttons:update')}
       </Button>
     </Box>
   )

@@ -152,7 +152,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
         </Text>
         <Textarea
           disabled={!question.enabled}
-          placeholder={`${t("placeholders:motivate-answer")}`}
+          placeholder={`${t('placeholders:motivate-answer')}`}
           size='sm'
           style={{ resize: 'none' }}
           value={conclusion}
@@ -163,7 +163,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
         {showEditOptions &&
           <Flex alignItems='center' justifyContent='space-between' mt='1'>
             <Flex alignItems='center'>
-              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={saveHandler}>{t("buttons:save")}</Button>
+              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={saveHandler}>{t('buttons:save')}</Button>
               <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
             </Flex>
           </Flex>}

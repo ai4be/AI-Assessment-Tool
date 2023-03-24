@@ -169,7 +169,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
                   }
                 }}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder={`${t("placeholders:write-comment")}`}
+                placeholder={`${t('placeholders:write-comment')}`}
                 className='mentions'
                 a11ySuggestionsListLabel='Suggested mentions'
               >
@@ -240,7 +240,7 @@ const ParentComment = ({ comment, ...rest }: CommentProps): JSX.Element => {
 
 interface EditOptionsProps {
   comment: Partial<Comment>
-  parent: Comment | undefined,
+  parent: Comment | undefined
   value: string
   saveHandler: (e: any) => void
   cancelHandler: (e: any) => void
@@ -259,7 +259,7 @@ const EditOptions = ({ comment, value, parent, saveHandler, cancelHandler, onOpe
   return (
     <Flex alignItems='center' justifyContent='space-between' mt='1'>
       <Flex alignItems='center'>
-        <Button size='sm' colorScheme='blue' disabled={disabled} onClick={saveHandler}>{t("buttons:save")}</Button>
+        <Button size='sm' colorScheme='blue' disabled={disabled} onClick={saveHandler}>{t('buttons:save')}</Button>
         <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
       </Flex>
       {comment._id != null && <RiDeleteBin6Line cursor='pointer' color='#286cc3' onClick={onOpen} />}
