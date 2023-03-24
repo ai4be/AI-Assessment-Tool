@@ -5,8 +5,8 @@
     "assigned-to": "Toegewezen aan",
     "filter": "Filter",
     "clear-all-filters": "Verwijder alle filters",
-    "set": "Definiëren",
-    "not-set": "Niet definiëren"
+    "set": "Gedefiniëerd",
+    "not-set": "Niet gedefiniëerd"
   },
   "sort": {
     "due-date": "Vervaldatum",

@@ -5,8 +5,8 @@
     "assigned-to": "Assigné à",
     "filter": "Filtre",
     "clear-all-filters": "Effacer tous les filtres",
-    "set": "Définir",
-    "not-set": "Ne pas définir"
+    "set": "Défini",
+    "not-set": "Pas défini"
   },
   "sort": {
     "due-date": "Date d'échéance",
