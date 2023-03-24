@@ -14,19 +14,19 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
   switch (req.method) {
     case 'POST': {
       let { email } = req.body
-      if (!isEmailValid(email)) return res.status(400).send({ code: 1001 })
+      if (!isEmailValid(email)) return res.status(400).send({ code: 12001 })
       email = cleanEmail(email)
       const user = await getUser({ email })
-      if (user != null && String(user._id) !== userId) return res.status(400).send({ code: 1002 })
+      if (user != null && String(user._id) !== userId) return res.status(400).send({ code: 12002 })
       const tokenInstance = await createEmailVerificationToken(email, userId)
-      if (tokenInstance == null) return res.status(400).send({ code: 1003 })
+      if (tokenInstance == null) return res.status(400).send({ code: 12003 })
       const html = getVerifyEmailHtml(tokenInstance.token)
       try {
         await sendMail(email, 'Email-verfication', html)
       } catch (error) {
-        return res.status(400).send({ code: 1004 })
+        return res.status(400).send({ code: 12004 })
       }
-      return res.status(200).send({ code: 1005 })
+      return res.status(200).send({ code: 12005 })
     }
     case 'DELETE': {
       let { email } = req.body
@@ -36,7 +36,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(204).end()
     }
     default:
-      return res.status(400).send({ code: 1006 })
+      return res.status(400).send({ code: 12006 })
   }
 }
 

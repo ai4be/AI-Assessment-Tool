@@ -18,13 +18,11 @@
   "11005": "success",
   "11006": "Your account creation failed. Please try again later.",
 
-  "email": {
-    "_file-path": "pages > api > users > [userId] > email > index.tsx - components - modal-email-verification.tsx",
-    "1001": "invalid email",
-    "1002": "email already used",
-    "1003": "error while creating token",
-    "1004": "error while sending email",
-    "1005": "A code has been sent to your email. Use the code to verify you email",
-    "1006": "Invalid request"
-  }
+  "_range_email": "Codes starting from 12001 are used on Email verification feature at the following files: pages > api > users > [userId] > email > index.tsx",
+  "12001": "invalid email",
+  "12002": "email already used",
+  "12003": "error while creating token",
+  "12004": "error while sending email",
+  "12005": "A code has been sent to your email. Use the code to verify you email",
+  "12006": "Invalid request"
 }

@@ -141,7 +141,7 @@ export const EmailVerificationModal = ({
       body: JSON.stringify(data)
     })
     const resultCall = await response.json()
-    const msg = t([`api-messages:email.${resultCall.code}`, 'email.code'])
+    const msg = t([`api-messages:${resultCall.code}`, 'code'])
     await responseHandler(response, msg)
     setIsLoading(false)
   }
