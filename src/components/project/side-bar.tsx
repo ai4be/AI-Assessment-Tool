@@ -1,36 +1,25 @@
 import React, { useContext } from 'react'
 import {
-  Box, Button
-  // ,
-  // Drawer,
-  // DrawerOverlay,
-  // DrawerCloseButton,
-  // DrawerHeader,
-  // DrawerBody,
-  // DrawerContent,
-  // useBreakpointValue,
-  // useDisclosure,
-  // IconButton
+  Box, Button, Slide, IconButton, Collapse, useDisclosure
 } from '@chakra-ui/react'
-//  import { ChevronRightIcon } from '@chakra-ui/icons'
 import ProjectContext from '@/src/store/project-context'
 import { useRouter } from 'next/router'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
-// (<IconButton
-//   icon={<ChevronRightIcon w={8} h={8} />}
-//   colorScheme="blackAlpha"
-//   variant="outline"
-//   onClick={onShowSidebar}
-// />)
+interface Props {
+  page: string,
+  children: string | JSX.Element | JSX.Element[],
+  isOpen: boolean
+  variant: 'menu' | 'sidebar' | undefined | string,
+  showSidebarButton?: boolean,
+}
 
-const SideBar = (props: any): JSX.Element => {
+const SideBar = (props: Props): JSX.Element => {
   const router = useRouter()
   const { [QueryFilterKeys.CATEGORY]: selectedCategoryId } = router.query ?? {}
   const context = useContext(ProjectContext)
-  // const { isOpen, onClose, onOpen } = useDisclosure()
-  // const variants = useBreakpointValue({ base: 'base', md: 'md' })
-  // const ref = React.useRef()
+  const { isOpen, onToggle } = useDisclosure()
 
   const content = Array.isArray(context?.categories)
     ? context.categories.map((cat, index) => (
@@ -60,36 +49,41 @@ const SideBar = (props: any): JSX.Element => {
       </Button>
     ))
     : null
-
-  // if (true) {
-  //   return (
-  //     <>
-  //       <Box bgColor='black' width='20px' heigth='100%' ref={ref} position='relative'>
-  //         <IconButton
-  //           icon={<ChevronRightIcon w={8} h={8} />}
-  //           colorScheme="blackAlpha"
-  //           variant="outline"
-  //           onClick={onOpen}
-  //         />
-  //       </Box>
-  //       <Drawer isOpen={isOpen} placement='left' onClose={onClose} portalProps={{ containerRef: ref }}>
-  //         {/* <DrawerOverlay> */}
-  //         <DrawerContent position='relative'>
-  //           <DrawerCloseButton />
-  //           <DrawerHeader>Chakra-UI</DrawerHeader>
-  //           <DrawerBody position='relative'>
-  //             {content}
-  //           </DrawerBody>
-  //         </DrawerContent>
-  //         {/* </DrawerOverlay> */}
-  //       </Drawer>
-  //     </>
-  //   )
-  // }
-  return (
+  return props.variant === 'sidebar' ? (
     <Box display='flex' flexDirection='column' mt='5rem'>
       {content}
     </Box>
+  ) : (
+    <>
+      <Box display='flex' flexDirection='column'>
+        {props.showSidebarButton && (
+            <Box ml={-4} mr={4}>
+              <IconButton
+                isRound
+                icon={isOpen ? <ChevronLeftIcon w={8} h={8} /> : <ChevronRightIcon w={8} h={8} />}
+                colorScheme="blackAlpha"
+                aria-label='Display project menu'
+                variant="outline"
+                bg="white"
+                onClick={onToggle}
+              />
+              <Collapse in={isOpen} animateOpacity>
+                <Box pl={4} mt={8}>
+                  {content}
+                </Box>
+              </Collapse>
+            </Box>
+        )}
+        <Box display='flex' flexDirection='column'>
+        {props.isOpen && (
+          <Box display='flex' flexDirection='column' mt='2.5rem'>
+            {content}
+          </Box>
+        )}
+        </Box>
+      </Box>
+      {props.children}
+    </>
   )
 }
 

@@ -133,7 +133,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
     <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay maxHeight='100vh' />
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
-      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative'>
+      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative' mr='2' ml='2'>
         <ModalBody p='0' height='100%' display='flex' width='100%' overflowY='scroll' position='relative'>
           <Flex flexDirection='column' height='100%' width='100%' justifyContent='space-between'>
             <Box display='flex'>
