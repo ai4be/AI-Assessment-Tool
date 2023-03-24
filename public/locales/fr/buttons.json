@@ -1,0 +1,21 @@
+{
+  "log-in": "Se connecter",
+  "sign-in": "S'inscrire",
+  "sign-up": "S'enregistrer",
+  "settings": "Paramètres",
+  "log-out": "Se déconnecter",
+  "home": "Accueil",
+  "create-project": "Créer un projet",
+  "submit": "Soumettre",
+  "create": "Créer",
+  "save": "Enregistrer",
+  "deleting": "Suppression",
+  "delete": "Supprimer",
+  "cancel": "Annuler",
+  "confirm": "Confirmer",
+  "invite": "Inviter",
+  "update": "Modifier",
+  "ask-new-code": "Demander un nouveau code",
+  "verify": "Vérifier",
+  "export": "Exporter"
+}

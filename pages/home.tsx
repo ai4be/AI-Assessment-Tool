@@ -4,6 +4,7 @@ import { authOptions } from './api/auth/[...nextauth]'
 import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 import { unstable_getServerSession } from 'next-auth/next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useState } from 'react'
 import { useBreakpointValue } from '@chakra-ui/react'
 
@@ -18,17 +19,18 @@ export default function Page ({ session }: { session: any, emailVerified: boolea
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen)
 
-   return (
-      <SideBar page='projects'
-          variant={variants?.navigation}
-          isOpen={isSidebarOpen}
-          onClose={toggleSidebar}
-          showSidebarButton={variants?.navigationButton}
-          onShowSidebar={toggleSidebar}
-        >
-          <Projects projects={data || []} session={session} fetchProjects={mutate} />
-      </SideBar>
-   )
+  return (
+    <SideBar
+      page='projects'
+      variant={variants?.navigation}
+      isOpen={isSidebarOpen}
+      onClose={toggleSidebar}
+      showSidebarButton={variants?.navigationButton}
+      onShowSidebar={toggleSidebar}
+    >
+      <Projects projects={data || []} session={session} fetchProjects={mutate} />
+    </SideBar>
+  )
 }
 
 export async function getServerSideProps (ctx): Promise<any> {
@@ -44,7 +46,8 @@ export async function getServerSideProps (ctx): Promise<any> {
   }
   return {
     props: {
-      session: JSON.parse(JSON.stringify(session))
+      session: JSON.parse(JSON.stringify(session)),
+      ...await serverSideTranslations(ctx.locale as string, ['buttons', 'navbar', 'placeholders', 'projects', 'settings', 'api-messages'])
     }
   }
 }

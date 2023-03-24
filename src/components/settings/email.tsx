@@ -4,11 +4,13 @@ import {
   Input,
   Text
 } from '@chakra-ui/react'
+import { useTranslation } from 'next-i18next'
 import { isEmailValid } from '@/util/validator'
 import UserContext from '@/src/store/user-context'
 import EmailVerificationModal from '@/src/components/modal-email-verification'
 
 const EmailSettings = (): JSX.Element => {
+  const { t } = useTranslation()
   const { user } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false)
   const [isDisabled, setIsDisabled] = useState(false)
@@ -60,18 +62,18 @@ const EmailSettings = (): JSX.Element => {
   return (
     <>
       <Box p='2' height='fit-content' minW={300}>
-        <Heading size='md'>Change Email</Heading>
+        <Heading size='md'>{t('settings:change-email')}</Heading>
         <FormControl my='4' isRequired>
           <Input
             type='text'
             name='email'
             value={email}
-            placeholder='email'
+            placeholder={`${t('placeholders:email')}`}
             onBlur={handleTouch}
             onChange={handleChange}
           />
           <Text noOfLines={3} fontSize='xs' color='red.500'>
-            {emailErr && 'Email is invalid'}
+            {emailErr && `${t('validations:invalid-email')}`}
           </Text>
         </FormControl>
         <Button
@@ -83,9 +85,9 @@ const EmailSettings = (): JSX.Element => {
           color='white'
           onClick={() => setShowModal(true)}
           isLoading={isLoading}
-          loadingText='Updating'
+          loadingText={`${t('settings:updating')}`}
         >
-          Change
+          {t('buttons:update')}
         </Button>
       </Box>
       {showModal && <EmailVerificationModal email={email} isUpdate onCloseCb={cloaseModalCb} getTokenAtInit />}

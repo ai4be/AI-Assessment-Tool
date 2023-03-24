@@ -42,3 +42,18 @@ export const getResponseHandler = (showToast: Function): (response: Response, de
     })
   }
 }
+
+export const getResponseHandlerCustomMessage = (showToast: Function): (response: Response, customMsg: String, defaultSuccesMsg?: string, defaultErrMsg?: string) => Promise<void> => {
+  return async (response: Response,  customMsg: String, defaultSuccesMsg = '', defaultErrMsg: string = 'Something went wrong'): Promise<void> => {
+    let msg = defaultSuccesMsg
+    let status: Status = 'success'
+    if (!response.ok) {
+      msg = defaultErrMsg
+      status = 'error'
+    }    
+    showToast({
+      title: customMsg,
+      status
+    })
+  }
+}

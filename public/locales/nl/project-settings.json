@@ -1,0 +1,21 @@
+{
+  "project-settings": "Projectinstellingen",
+  "general": "Algemeen",
+  "team": "Team",
+  "roles": "Rollen",
+
+  "project-name": "Projectnaam",
+  "can-change-anytime": "U kunt dit op elk gewenst moment wijzigen",
+  "project-description": "Projectbeschrijving",
+  "project-industry": "Project industrie",
+  "success": "Succes",
+  "success-save-message": "Succesvol opgeslagen",
+
+  "danger-zone": "Gevarenzone",
+  "delete-project-caption": "Om uw project te verwijderen, Klik op de knop verwijderen.",
+
+  "project-users": "Projectgebruikers",
+  "pending-invites": "Wachtende uitnodiging",
+  "invite-user": "Gebruiker uitnodigen",
+  "sending": "Stuur"
+}

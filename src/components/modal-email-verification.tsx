@@ -12,7 +12,8 @@ import {
   useDisclosure,
   ModalFooter
 } from '@chakra-ui/react'
-import { defaultFetchOptions, getResponseHandler, HTTP_METHODS } from '@/util/api'
+import { useTranslation } from 'next-i18next'
+import { defaultFetchOptions, getResponseHandlerCustomMessage, HTTP_METHODS } from '@/util/api'
 import UserContext from '@/src/store/user-context'
 import ToastContext from '@/src/store/toast-context'
 import { isEmpty } from '@/util/index'
@@ -32,12 +33,13 @@ interface EmailVerificationModalProps {
 export const EmailVerificationModal = ({
   email, isUpdate = false, getTokenAtInit = false, successCb, cancelCb, failCb, onCloseCb, canAskForNewToken = false
 }: EmailVerificationModalProps): JSX.Element => {
+  const { t } = useTranslation()
   const { user, triggerReloadUser } = useContext(UserContext)
   const { showToast } = useContext(ToastContext)
   const [isLoading, setIsLoading] = useState(false)
   const { onClose } = useDisclosure()
 
-  const responseHandler = getResponseHandler(showToast)
+  const responseHandler = getResponseHandlerCustomMessage(showToast)
 
   useEffect(() => {
     if (getTokenAtInit) {
@@ -114,7 +116,7 @@ export const EmailVerificationModal = ({
       method: HTTP_METHODS.POST,
       body: JSON.stringify(data)
     })
-    await responseHandler(response, isUpdate ? 'Email updated successfully' : 'Email verified successfully')
+    await responseHandler(response, isUpdate ? `${t('settings:email-updated-successfully')}` : `${t('settings:email-verified-successfully')}`)
     if (response.ok) {
       await triggerReloadUser()
       closeFn()
@@ -138,7 +140,9 @@ export const EmailVerificationModal = ({
       method: HTTP_METHODS.POST,
       body: JSON.stringify(data)
     })
-    await responseHandler(response)
+    const resultCall = await response.json()
+    const msg = t([`api-messages:${resultCall.code}`, 'code'])
+    await responseHandler(response, msg)
     setIsLoading(false)
   }
 
@@ -154,27 +158,27 @@ export const EmailVerificationModal = ({
     <Modal onClose={closeFn} isOpen isCentered>
       <ModalOverlay />
       <ModalContent mr='2' ml='2'>
-        <ModalHeader>Email address verification</ModalHeader>
+        <ModalHeader>{t('settings:email-address-verification')}</ModalHeader>
         <ModalCloseButton onClick={cancelTokenVerification} />
         <ModalBody>
           <Text>
             {isUpdate
-              ? 'We have sent a verification code to your new email address. Please enter the code below to verify your new email address.'
-              : 'We have sent a verification code to your email address. Please enter the code below to verify your email address.'}
+              ? `${t('settings:update-new-email-message')}`
+              : `${t('settings:update-email-message')}`}
           </Text>
-          <Input placeholder='Code' name='token' onChange={handleChange} />
+          <Input placeholder={`${t('placeholders:code')}`} name='token' onChange={handleChange} />
           {canAskForNewToken && (
             <Button onClick={askForNewToken} isLoading={isLoading} isDisabled={isLoading} mt='1.5' variant='link'>
-              Ask for a new code
+              {t('buttons:ask-new-code')}
             </Button>
           )}
         </ModalBody>
         <ModalFooter>
           <Button onClick={finializeVerification} colorScheme='blue' isLoading={isLoading} isDisabled={isLoading || isEmpty(values.token)} mr='1.5'>
-            Verify
+            {t('buttons:verify')}
           </Button>
           <Button onClick={cancelTokenVerification} isLoading={isLoading} isDisabled={isLoading}>
-            Cancel
+            {t('buttons:cancel')}
           </Button>
         </ModalFooter>
       </ModalContent>

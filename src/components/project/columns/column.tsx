@@ -14,6 +14,7 @@ import { Sort, Order } from '@/src/components/project/project-bar/sort-menu'
 import {
   updateColumn
 } from '@/util/columns'
+import { useTranslation } from 'next-i18next'
 
 enum SortKeys {
   NUMBER = 'number',
@@ -53,6 +54,7 @@ function sortCards (cards: any[], sort: Sort, order: Order): any[] {
 }
 
 const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }): JSX.Element => {
+  const { t } = useTranslation()
   const { data } = useSession()
   const router = useRouter()
   const {
@@ -88,7 +90,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
 
     return (
       <Heading as='h6' size='sm' ml='10px' mt='5px' textAlign='center' className='text-grey uppercase'>
-        {columnName}
+        {t(`column-dashboard:${columnName.replaceAll(' ', '')}`)}
       </Heading>
     )
   }

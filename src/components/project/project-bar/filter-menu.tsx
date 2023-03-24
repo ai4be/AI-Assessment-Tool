@@ -19,6 +19,7 @@ import ProjectContext from '@/src/store/project-context'
 import { isEmpty } from '@/util/index'
 import { getUserDisplayName } from '@/util/users'
 import { CloseIcon } from '@chakra-ui/icons'
+import { useTranslation } from 'next-i18next'
 
 export enum Assignment {
   UNASSIGNED = 'unassigned',
@@ -28,23 +29,12 @@ export enum Assignment {
 
 const ASSINGMENT_VALUES = Object.values(Assignment)
 
-export const ASSIGNMENT_LABELS = {
-  [Assignment.UNASSIGNED]: 'Unassigned',
-  [Assignment.ASSIGNED]: 'Assigned',
-  [Assignment.ASSIGNED_TO]: 'Assigned to'
-}
-
 export enum DueDate {
   SET = '1',
   NOT_SET = '0'
 }
 
 const DUE_DATE_VALUES = Object.values(DueDate)
-
-export const DUE_DATE_LABELS = {
-  [DueDate.SET]: 'Set',
-  [DueDate.NOT_SET]: 'Not set'
-}
 
 export enum QueryFilterKeys {
   ASSIGNED_TO = 'assigned_to',
@@ -57,6 +47,7 @@ export enum QueryFilterKeys {
 let timeoutId: any
 
 export const FilterMenu = (props: any): JSX.Element => {
+  const { t } = useTranslation()
   const router = useRouter()
   const { users = [] } = useContext(ProjectContext)
   const [includedUserIds, setIncludedUserIds] = useState<string[]>([])
@@ -153,17 +144,28 @@ export const FilterMenu = (props: any): JSX.Element => {
     setIncludedUserIds([])
   }
 
+  const ASSIGNMENT_LABELS = {
+    [Assignment.UNASSIGNED]: `${t('filter-sort:filter.unassigned')}`,
+    [Assignment.ASSIGNED]: `${t('filter-sort:filter.assigned')}`,
+    [Assignment.ASSIGNED_TO]: `${t('filter-sort:filter.assigned-to')}`
+  }
+
+  const DUE_DATE_LABELS = {
+    [DueDate.SET]: `${t('filter-sort:filter.set')}`,
+    [DueDate.NOT_SET]: `${t('filter-sort:filter.not-set')}`
+  }
+
   return (
     <Menu key='filter-menu' closeOnSelect={false}>
       <MenuButton {...props} as={Button} rightIcon={<FiFilter />} variant='outline' color='var(--main-blue)' size='sm'>
-        Filter
+        {t('filter-sort:filter.filter')}
         {filterCounter > 0 &&
           <Badge ml='1' size='sm' variant='solid' colorScheme='green' borderRadius='full'>
             {filterCounter}
           </Badge>}
       </MenuButton>
       <MenuList>
-        <MenuOptionGroup title='Assignment' type='radio' value={assignment as string} onChange={(val: string) => setAssigment(val)}>
+        <MenuOptionGroup title={`${t('titles:assignment')}`} type='radio' value={assignment as string} onChange={(val: string) => setAssigment(val)}>
           <MenuItemOption value={Assignment.UNASSIGNED} onClick={(e) => cleartHandler(e, Assignment.UNASSIGNED, assignment, setAssigment)}>
             {ASSIGNMENT_LABELS[Assignment.UNASSIGNED]}
           </MenuItemOption>
@@ -185,7 +187,7 @@ export const FilterMenu = (props: any): JSX.Element => {
           </MenuOptionGroup>
         </MenuOptionGroup>
         <MenuDivider />
-        <MenuOptionGroup title='Due Date' type='radio' value={dueDate as string} onChange={(val: string) => setDueDate(val)}>
+        <MenuOptionGroup title={`${t('titles:due-date')}`} type='radio' value={dueDate as string} onChange={(val: string) => setDueDate(val)}>
           <MenuItemOption value={DueDate.SET} onClick={(e) => cleartHandler(e, DueDate.SET, dueDate, setDueDate)}>
             {DUE_DATE_LABELS[DueDate.SET]}
           </MenuItemOption>
@@ -195,7 +197,7 @@ export const FilterMenu = (props: any): JSX.Element => {
         </MenuOptionGroup>
         <MenuDivider />
         <MenuItem icon={<CloseIcon />} onClick={clearAllFilters} isDisabled={isEmpty(dueDate) && isEmpty(assignment)}>
-          Clear All Filters
+          {t('filter-sort:filter.clear-all-filters')}
         </MenuItem>
       </MenuList>
     </Menu>

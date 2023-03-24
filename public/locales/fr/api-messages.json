@@ -1,0 +1,28 @@
+{
+  "_range_reset-password": "Codes starting from 10001 are used on Reset Password feature at the following files: pages > api > auth > reset-password.ts - components > reset-password.tsx",
+  "10001": "Méthode non autorisée",
+  "10002": "Jeton non valide",
+  "10003": "Jeton expiré. Veuillez en demander un nouveau",
+  "10004": "Mot de passe non valide ",
+  "10005": "Le mot de passe a été réinitialisé avec succès.",
+  "10006": "Quelque chose ne va pas",
+  "10007": "Il n'y a pas de compte pour cette adresse e-mail",
+  "10008": "Trop de demandes consécutives. Attendez au moins deux minutes avant de demander une nouvelle réinitialisation du mot de passe.",
+  "10009": "Un email a été envoyé à votre adresse. Suivez les instructions de l'e-mail pour réinitialiser votre mot de passe. Vérifiez votre dossier spam si vous ne recevez pas l'e-mail.",
+
+  "_range_signup": "Codes starting from 11001 are used on Sign up feature at the following files: pages > api > auth > signup.ts - components > signup.tsx",
+  "11001": "Méthode non autorisée",
+  "11002": "L'e-mail que vous avez fourni n'est pas valide",
+  "11003": "Le mot de passe doit comporter au moins 8 caractères et contenir un caractère spécial",
+  "11004": "Cet adresse mail est déjà utilisée !",
+  "11005": "success",
+  "11006": "La création de votre compte a échoué. Veuillez réessayer plus tard.",
+
+  "_range_email": "Codes starting from 12001 are used on Email verification feature at the following files: pages > api > users > [userId] > email > index.tsx",
+  "12001": "email invalide",
+  "12002": "adresse e-mail déjà utilisée",
+  "12003": "erreur lors de la création du jeton",
+  "12004": "erreur lors de l'envoi d'un e-mail",
+  "12005": "Un code a été envoyé à votre email. Utilisez le code pour vérifier votre adresse e-mail",
+  "12006": "Request invalide" 
+}

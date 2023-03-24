@@ -7,6 +7,7 @@ import { isEmailValid, isPasswordValid } from '@/util/validator'
 import { User } from '@/src/types/user'
 import { sendMail } from '@/util/mail'
 import { getVerifyEmailHtml } from '@/util/mail/templates'
+import SignUp from '@/src/components/signup'
 
 async function sendEmailVerifictionEmail (user: User): Promise<void> {
   const tokenInstance = await createEmailVerificationToken(user.email, user?._id as string)
@@ -16,7 +17,7 @@ async function sendEmailVerifictionEmail (user: User): Promise<void> {
 }
 
 async function handler (req, res): Promise<any> {
-  if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' })
+  if (req.method !== 'POST') return res.status(405).json({ code: 11001 })
 
   let { email, password, firstName, lastName, token } = req.body
   email = cleanEmail(email)
@@ -25,18 +26,18 @@ async function handler (req, res): Promise<any> {
   token = token != null ? sanitize(token) : token
 
   if (!isEmailValid(email)) {
-    return res.status(422).json({ message: 'The email you provided in not valid' })
+    return res.status(422).json({ code: 11002 })
   }
 
   if (!isPasswordValid(password)) {
     return res.status(422).json({
-      message: 'The password should be at least 8 characters long and contain a special character'
+      code: 11003
     })
   }
 
   const existingUser = await getUser({ email })
   if (existingUser != null) {
-    return res.status(422).json({ message: 'Email is already used!' })
+    return res.status(422).json({ code: 11004 })
   }
 
   const hashedPassword = await hashPassword(password)
@@ -49,9 +50,9 @@ async function handler (req, res): Promise<any> {
   if (user?._id != null) {
     if (token != null) await invitedUserHandler(token, email)
     void sendEmailVerifictionEmail(user)
-    return res.status(201).send({ message: 'success' })
+    return res.status(201).send({ code: 11005 })
   }
-  return res.status(400).send({ message: 'Your account creation failed. Please try again later.' })
+  return res.status(400).send({ code: 11006 })
 }
 
 export default handler

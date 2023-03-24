@@ -8,6 +8,7 @@ import {
   Avatar
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import { useTranslation } from 'next-i18next'
 import ProjectContext from '@/src/store/project-context'
 import { defaultFetchOptions, fetcher, HTTP_METHODS } from '@/util/api'
 import ConfirmDialog from '../../confirm-dialog'
@@ -22,6 +23,7 @@ const ConfirmDialogMemo = React.memo(ConfirmDialog)
 function emptyFn (): void {}
 
 const Team = ({ project }: { project: Project }): JSX.Element => {
+  const { t } = useTranslation()
   const context = useContext(ProjectContext)
   const { data, mutate } = useSWR(`/api/projects/${String(project._id)}/tokens/pending`, fetcher)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -71,7 +73,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
   return (
     <>
       <Flex flexDirection='column' className='mb-2'>
-        <Box className='text-grey mt-2'>Project Users</Box>
+        <Box className='text-grey mt-2'>{t('project-settings:project-users')}</Box>
         <hr className='my-2' />
         {context.users != null && context.users?.length > 0 && context.users.map((user) => (
           <Flex key={user._id} justifyContent='space-between' alignItems='center' paddingY='1'>
@@ -86,7 +88,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
         ))}
         {Array.isArray(data) &&
           <>
-            <Box className='text-grey mt-3'>Pending Invites</Box>
+            <Box className='text-grey mt-3'>{t('project-settings:pending-invites')}</Box>
             <hr className='my-2' />
             {data.map((token) => (
               <Flex key={token._id} justifyContent='space-between' alignItems='center' paddingY='1'>

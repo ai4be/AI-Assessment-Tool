@@ -5,6 +5,7 @@ import {
   Input,
   Text
 } from '@chakra-ui/react'
+import { useTranslation } from 'next-i18next'
 import { defaultFetchOptions } from '@/util/api'
 import { isEmpty } from '@/util/index'
 import UserContext from '../../store/user-context'
@@ -13,6 +14,7 @@ import { resizeImg } from '@/util/img'
 import ToastContext from '@/src/store/toast-context'
 
 const Profile = (): JSX.Element => {
+  const { t } = useTranslation()
   const { showToast } = useContext(ToastContext)
   const { user, triggerReloadUser } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false)
@@ -104,13 +106,13 @@ const Profile = (): JSX.Element => {
 
     if (response.ok) {
       showToast({
-        title: 'Profile updated',
+        title: t('settings:profile-updated-success-message'),
         status: 'success'
       })
       triggerReloadUser()
     } else {
       showToast({
-        title: 'Profile change failed',
+        title: t('settings:profile-updated-error-message'),
         status: 'error'
       })
     }
@@ -119,37 +121,37 @@ const Profile = (): JSX.Element => {
 
   return (
     <Box p='2' height='fit-content' minW={300}>
-      <Heading size='md'>Change Profile</Heading>
+      <Heading size='md'>{t('settings:profile')}</Heading>
       <FormControl my='4' isRequired isInvalid={firstNameErr}>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>First name</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:first-name')}</FormLabel>
         <Input
           type='text'
           name='firstName'
           value={values.firstName}
-          placeholder='First name'
+          placeholder={`${t('placeholders:first-name')}`}
           onBlur={handleTouch}
           onChange={handleChange}
         />
         <Text noOfLines={1} fontSize='xs' color='red.500'>
-          {firstNameErr && 'First name is required'}
+          {firstNameErr && `${t('validations:first-name-required')}`}
         </Text>
       </FormControl>
       <FormControl my='4' isInvalid={lastNameErr} isRequired>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>Last name</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:last-name')}</FormLabel>
         <Input
           type='text'
           name='lastName'
           value={values.lastName}
-          placeholder='Last name'
+          placeholder={`${t('placeholders:last-name')}`}
           onBlur={handleTouch}
           onChange={handleChange}
         />
         <Text noOfLines={1} fontSize='xs' color='red.500'>
-          {lastNameErr && 'Last name is required'}
+          {lastNameErr && `${t('validations:last-name-required')}`}
         </Text>
       </FormControl>
       <FormControl my='4'>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>Company / Affiliation / Organization</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:company-affiliation-organization')}</FormLabel>
         <Input
           type='text'
           name='organization'
@@ -159,7 +161,7 @@ const Profile = (): JSX.Element => {
         />
       </FormControl>
       <FormControl my='4'>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>Department / Team</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:department-team')}</FormLabel>
         <Input
           type='text'
           name='department'
@@ -169,7 +171,7 @@ const Profile = (): JSX.Element => {
         />
       </FormControl>
       <FormControl my='4' size='xs'>
-        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>Role / Title</FormLabel>
+        <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>{t('settings:role-title')}</FormLabel>
         <Input
           type='text'
           name='role'
@@ -195,9 +197,9 @@ const Profile = (): JSX.Element => {
         color='white'
         onClick={updateProfile}
         isLoading={isLoading}
-        loadingText='Updating'
+        loadingText={`${t('settings:updating')}`}
       >
-        Update
+        {t('buttons:update')}
       </Button>
     </Box>
   )

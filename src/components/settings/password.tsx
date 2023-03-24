@@ -5,12 +5,14 @@ import {
   Text,
   useToast
 } from '@chakra-ui/react'
+import { useTranslation } from 'next-i18next'
 import { defaultFetchOptions } from '@/util/api'
 import { isEmpty } from '@/util/index'
 import { isPasswordValid } from '@/util/validator'
 import UserContext from '../../store/user-context'
 
 const PasswordSettings = (): JSX.Element => {
+  const { t } = useTranslation()
   const toast = useToast()
   const { user } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false)
@@ -84,14 +86,14 @@ const PasswordSettings = (): JSX.Element => {
     if (response.ok) {
       toast({
         ...toastDefaultOptions,
-        title: 'Password changed successfully',
+        title: t('settings:password-change-success-message'),
         status: 'success'
       })
       setValues({} as any)
     } else {
       toast({
         ...toastDefaultOptions,
-        title: 'Password change failed',
+        title: t('settings:password-change-error-message'),
         status: 'error'
       })
     }
@@ -100,13 +102,13 @@ const PasswordSettings = (): JSX.Element => {
 
   return (
     <Box p='2' height='fit-content' minW={300}>
-      <Heading size='md'>Change Password</Heading>
+      <Heading size='md'>{t('settings:change-password')}</Heading>
       <FormControl my='4' isRequired>
         <Input
           type='password'
           name='currentPassword'
           value={values.currentPassword}
-          placeholder='Current password'
+          placeholder={`${t('placeholders:current-password')}`}
           onBlur={() => setTouched({ ...touched, currentPassword: true })}
           onChange={handleChange}
         />
@@ -116,13 +118,13 @@ const PasswordSettings = (): JSX.Element => {
           type='password'
           name='newPassword'
           value={values.newPassword}
-          placeholder='New password'
+          placeholder={`${t('placeholders:new-password')}`}
           onBlur={() => setTouched({ ...touched, newPassword: true })}
           onChange={handleChange}
         />
         <Text noOfLines={3} fontSize='xs' color='red.500'>
-          {passwordLengthErr && 'Password must be at least 8 characters long'}
-          {passwordCharErr && ' Password must contain at least one number and one special character'}
+          {passwordLengthErr && `${t('validations:password-length')}`}
+          {passwordCharErr && `${t('validations:password-must-contain-number-and-special')}`}
         </Text>
       </FormControl>
       <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
@@ -130,12 +132,12 @@ const PasswordSettings = (): JSX.Element => {
           type='password'
           name='confirmPassword'
           value={values.confirmPassword}
-          placeholder='Confirm password'
+          placeholder={`${t('placeholders:confirm-password')}`}
           onChange={handleChange}
           onBlur={() => setTouchedWrapper('confirmPassword', 0)}
         />
         <Text noOfLines={1} fontSize='xs' color='red.500'>
-          {confirmPasswordErr && <p color='red'>Passwords don't match</p>}
+          {confirmPasswordErr && <p color='red'>{t('validations:passwords-unmatch')}</p>}
         </Text>
       </FormControl>
       <Button
@@ -147,9 +149,9 @@ const PasswordSettings = (): JSX.Element => {
         color='white'
         onClick={changePassword}
         isLoading={isLoading}
-        loadingText='Updating'
+        loadingText={`${t('settings:updating')}`}
       >
-        Update
+        {t('buttons:update')}
       </Button>
     </Box>
   )

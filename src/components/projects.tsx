@@ -20,8 +20,10 @@ import Link from 'next/link'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { defaultFetchOptions, fetcher } from '@/util/api'
 import useSWR from 'swr'
+import { useTranslation } from 'next-i18next'
 
 const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
+  const { t } = useTranslation('projects')
   const { data: industries, error } = useSWR('/api/industries', fetcher)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -72,31 +74,30 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
         size='lg'
         mt='1rem'
       >
-        Create a project
+        {t('buttons:create-project')}
       </Button>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent mr='2' ml='2'>
-          <ModalHeader>Create project</ModalHeader>
+          <ModalHeader>{t('projects:create-project')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input
               ref={el => { inputRef.current = el }}
-              placeholder='Project name'
+              placeholder={`${t('placeholders:project-name')}`}
               onKeyUp={handleSubmit}
             />
             <Textarea
-              placeholder={`Project description
-What is the purpose of the project and applications?`}
+              placeholder={`${t('placeholders:project-description')}`}
               mt='2' onChange={(e) => setDescription(e.target.value)}
             />
-            <Select size='xs' placeholder='Select the industry' onChange={e => setIndustry(e.target.value)}>
+            <Select size='xs' placeholder={`${t('placeholders:select-industry')}`} onChange={e => setIndustry(e.target.value)}>
               {industries?.map(industry => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
             </Select>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText='Creating Project'>
-              Create
+            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText={`${t('projects:creating-project')}`}>
+              {t('buttons:create')}
             </Button>
           </ModalFooter>
         </ModalContent>

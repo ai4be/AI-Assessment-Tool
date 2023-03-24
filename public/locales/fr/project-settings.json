@@ -1,0 +1,21 @@
+{
+  "project-settings": "Paramètres du Projet",
+  "general": "Général",
+  "team": "Équipe",
+  "roles": "Rôles",
+
+  "project-name": "Nom du projet",
+  "can-change-anytime": "Vous pouvez le modifier à tout moment",
+  "project-description": "Description du projet",
+  "project-industry": "Industrie du projet",
+  "success": "Succès",
+  "success-save-message": "Enregistré avec succès",
+
+  "danger-zone": "Zone dangereuse",
+  "delete-project-caption": "Pour supprimer votre projet, cliquez sur le bouton Supprimer.",
+
+  "project-users": "Utilisateurs du projet",
+  "pending-invites": "Invitations en attente",
+  "invite-user": "Inviter un utilisateur",
+  "sending": "Envoi en cours"
+}

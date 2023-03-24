@@ -1,0 +1,15 @@
+{
+  "filter": {
+    "unassigned": "Unassigned",
+    "assigned": "Assigned",
+    "assigned-to": "Assigned to",
+    "filter": "Filter",
+    "clear-all-filters": "Clear All Filters",
+    "set": "Set",
+    "not-set": "Not set"
+  },
+  "sort": {
+    "due-date": "Due Date",
+    "number": "Number"
+  }
+}

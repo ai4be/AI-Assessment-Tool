@@ -14,8 +14,10 @@ import { AI4BelgiumIcon } from './navbar'
 import { isEmailValid } from '@/util/validator'
 import { isEmpty } from '@/util/index'
 import ToastContext from '@/src/store/toast-context'
+import { useTranslation } from 'next-i18next'
 
 const Login = (): JSX.Element => {
+  const { t } = useTranslation()
   const { showToast } = useContext(ToastContext)
   const [disabled, setDisabled] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
@@ -37,8 +39,8 @@ const Login = (): JSX.Element => {
     e.preventDefault()
     if (!isEmailValid(values.email)) {
       showToast({
-        title: 'Invalid email',
-        description: 'Please enter a valid email address',
+        title: t('validations:invalid-email'),
+        description: t('validations:enter-valid-email-address'),
         status: 'error'
       })
       return
@@ -60,14 +62,14 @@ const Login = (): JSX.Element => {
     }
     if (result?.status === 404 || result?.status === 401) {
       showToast({
-        title: 'Invalid credentials',
-        description: 'Please check your email and password',
+        title: t('validations:invalid-credentials'),
+        description: t('validations:check-email-and-password'),
         status: 'error'
       })
     } else {
       showToast({
-        title: 'Something went wrong',
-        description: 'Please try again later',
+        title: t('exceptions:something-went-wrong'),
+        description: t('exceptions:try-again-later'),
         status: 'error'
       })
     }
@@ -125,7 +127,7 @@ const Login = (): JSX.Element => {
             fontWeight='semibold'
             lineHeight='normal'
           >
-            <h1>Log in</h1>
+            <h1>{t('buttons:log-in')}</h1>
           </Box>
           <Box my={4} textAlign='left'>
             <form>
@@ -134,7 +136,7 @@ const Login = (): JSX.Element => {
                   type='email'
                   name='email'
                   value={values.email}
-                  placeholder='Enter Email '
+                  placeholder={`${t('placeholders:email')}`}
                   onChange={handleChange}
                   autoComplete='off'
                 />
@@ -144,7 +146,7 @@ const Login = (): JSX.Element => {
                   type='password'
                   name='password'
                   value={values.password}
-                  placeholder='Enter Password'
+                  placeholder={`${t('placeholders:password')}`}
                   autoComplete='off'
                   onChange={handleChange}
                 />
@@ -156,17 +158,17 @@ const Login = (): JSX.Element => {
                 color='white'
                 onClick={loginUser}
                 isLoading={isFetching}
-                loadingText='Logging'
+                loadingText={`${t('login:logging')}`}
                 disabled={disabled}
               >
-                Sign In
+                {t('buttons:sign-in')}
               </Button>
               <Box m='5' textAlign='center'>
                 <Link href='/signup' color='brand' p='2' display='block'>
-                  Sign up for an account
+                  {t('links:sign-up-caption')}
                 </Link>
                 <Link href='/reset-password' color='brand' p='2'>
-                  Forgot you password? Reset it here.
+                  {t('links:forget-password')}
                 </Link>
               </Box>
             </form>

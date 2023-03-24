@@ -26,6 +26,7 @@ import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { Question, DisplayQuestion, QuestionType } from '@/src/types/card'
 import { useRouter } from 'next/router'
 import { StringOrNumber } from '@chakra-ui/utils'
+import { useTranslation } from 'next-i18next'
 
 export const QuestionHelp = ({ question }: { question: Question }): JSX.Element => {
   const [help, setHelp] = useState('')
@@ -112,6 +113,7 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
 }
 
 export const QuestionComp = ({ question, onChange, ...rest }: { question: DisplayQuestion, onChange: Function, [key: string]: any }): JSX.Element => {
+  const { t } = useTranslation()
   const router = useRouter()
   const { question: questionId } = router.query
   const element = useRef<HTMLDivElement>(null)
@@ -150,7 +152,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
         </Text>
         <Textarea
           disabled={!question.enabled}
-          placeholder='Motivate your answer'
+          placeholder={`${t('placeholders:motivate-answer')}`}
           size='sm'
           style={{ resize: 'none' }}
           value={conclusion}
@@ -161,7 +163,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
         {showEditOptions &&
           <Flex alignItems='center' justifyContent='space-between' mt='1'>
             <Flex alignItems='center'>
-              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={saveHandler}>Save</Button>
+              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={saveHandler}>{t('buttons:save')}</Button>
               <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
             </Flex>
           </Flex>}

@@ -16,8 +16,10 @@ import { debounce, isEmpty } from '@/util/index'
 import { isPasswordValid, isEmailValid } from '@/util/validator'
 import { signOut, useSession } from 'next-auth/react'
 import ToastContext from '../store/toast-context'
+import { useTranslation } from 'next-i18next'
 
 const ResetPassword = (props: any): JSX.Element => {
+  const { t } = useTranslation()
   const { showToast } = useContext(ToastContext)
   const router = useRouter()
   const session = useSession()
@@ -108,8 +110,9 @@ const ResetPassword = (props: any): JSX.Element => {
 
     if (response.ok) {
       const result = await response.json()
+      const msg = t([`api-messages:${result.code}`, 'code'])
       showToast({
-        title: result.message,
+        title: msg,
         status: 'success',
         duration: 5000,
         onCloseComplete: async () => await router.push('/login')
@@ -117,14 +120,15 @@ const ResetPassword = (props: any): JSX.Element => {
     } else {
       try {
         const result = await response.json()
+        const msg = t([`api-messages:${result.code}`, 'code'])
         showToast({
-          title: result.message,
+          title: msg,
           status: 'error',
           duration: null
         })
       } catch (e) {
         showToast({
-          title: 'Something went wrong',
+          title: t('exceptions:something-went-wrong'),
           status: 'error',
           duration: null
         })
@@ -157,11 +161,11 @@ const ResetPassword = (props: any): JSX.Element => {
           type='text'
           name='email'
           value={values.email}
-          placeholder='email'
+          placeholder={`${t('placeholders:email')}`}
           onBlur={() => setTouched({ ...touched, password: true })}
           onChange={handleChange}
         />
-        {emailErr && <Text size='xs' color='red'>Invalid email.</Text>}
+        {emailErr && <Text size='xs' color='red'>{t('validations:invalid-email')}</Text>}
       </FormControl>
       <Button
         fontWeight='semibold'
@@ -172,9 +176,9 @@ const ResetPassword = (props: any): JSX.Element => {
         color='white'
         onClick={resetPassword}
         isLoading={isCreating}
-        loadingText='Submitting'
+        loadingText={`${t('reset-password:submitting')}`}
       >
-        Submit
+        {t('buttons:submit')}
       </Button>
     </Box>
   )
@@ -186,23 +190,23 @@ const ResetPassword = (props: any): JSX.Element => {
           type='password'
           name='password'
           value={values.password}
-          placeholder='New password'
+          placeholder={`${t('placeholders:new-password')}`}
           onBlur={() => setTouched({ ...touched, password: true })}
           onChange={handleChange}
         />
-        {passwordLengthErr && <Text size='xs' color='red'>Password is too short</Text>}
-        {passwordCharErr && <Text size='xs' color='red'>Include a special character and number</Text>}
+        {passwordLengthErr && <Text size='xs' color='red'>{t('validations:password-too-short')}</Text>}
+        {passwordCharErr && <Text size='xs' color='red'>{t('validations:include-special-character-and-number')}</Text>}
       </FormControl>
       <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
         <Input
           type='password'
           name='confirmPassword'
           value={values.confirmPassword}
-          placeholder='Confirm password'
+          placeholder={`${t('placeholders:confirm-password')}`}
           onChange={handleChange}
           onBlur={() => setTouched({ ...touched, confirmPassword: true })}
         />
-        {confirmPasswordErr && <Text size='xs' color='red'>Passwords don't match</Text>}
+        {confirmPasswordErr && <Text size='xs' color='red'>{t('validations:passwords-unmatch')}</Text>}
       </FormControl>
       <Button
         fontWeight='semibold'
@@ -213,9 +217,9 @@ const ResetPassword = (props: any): JSX.Element => {
         color='white'
         onClick={resetPassword}
         isLoading={isCreating}
-        loadingText='Resetting password'
+        loadingText={`${t('reset-password:resetting')}`}
       >
-        Reset Password
+        {t('reset-password:reset-password')}
       </Button>
     </Box>
   )
@@ -263,7 +267,7 @@ const ResetPassword = (props: any): JSX.Element => {
             fontWeight='semibold'
             lineHeight='normal'
           >
-            <h1>Reset Password</h1>
+            <h1>{t('reset-password:reset-password')}</h1>
           </Box>
           {props.token == null ? startResetPasswordContent : resetPasswordContent}
         </Box>

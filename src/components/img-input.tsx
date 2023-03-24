@@ -8,10 +8,12 @@ import {
   Avatar,
   Flex
 } from '@chakra-ui/react'
+import { useTranslation } from 'next-i18next'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { resizeImg } from '@/util/img'
 
 export default function ImgInput ({ onChange, data, placeholder }: { onChange?: Function, data?: string, placeholder: string }): JSX.Element {
+  const { t } = useTranslation()
   const [opacityImg, setOpacityImg] = useState<number>(1)
   const [dataBase64, setDataBase64] = useState<string>(data ?? '')
   const [disabled, setDisabled] = useState<boolean>(false)
@@ -73,9 +75,9 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
         >
           <Stack p='1' textAlign='center' spacing='1' alignItems='center' overflow='hidden' height='100%' width='100%'>
             <Heading fontSize='15' color='gray.700' fontWeight='bold'>
-              Drop images here
+              {t('img-input:drop-images-caption')}
             </Heading>
-            <Text fontWeight='light' fontSize='10'>or click to upload</Text>
+            <Text fontWeight='light' fontSize='10'>{t('img-input:drop-images-caption2')}</Text>
           </Stack>
         </Box>
         <Avatar src={dataBase64} name={placeholder} position='absolute' bottom='0' left='0' height='100%' width='100%' opacity={opacityImg} />

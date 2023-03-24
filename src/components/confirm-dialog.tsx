@@ -8,14 +8,16 @@ import {
   Button
 } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
+import { useTranslation } from 'next-i18next'
 
 const ConfirmDialog = (props: any): JSX.Element => {
+  const { t } = useTranslation()
   const cancelRef = useRef<HTMLButtonElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const {
     isOpen,
-    title = 'Please confirm',
-    content = 'Are you sure? You can\'t undo this action afterwards.',
+    title = t('dialogs:confirm-please-confirm'),
+    content = t('dialogs:confirm-confirmation-undo'),
     onClose,
     confirmHandler
   } = props
@@ -47,10 +49,10 @@ const ConfirmDialog = (props: any): JSX.Element => {
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={handleCancel} isLoading={isLoading}>
-              Cancel
+              {t('buttons:cancel')}
             </Button>
             <Button colorScheme='red' onClick={handleConfirm} ml={3} isLoading={isLoading}>
-              Confirm
+              {t('buttons:confirm')}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

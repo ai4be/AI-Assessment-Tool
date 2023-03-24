@@ -1,0 +1,14 @@
+{
+  "enter-valid-email-address": "Veuillez entrer une adresse e-mail valide",
+  "check-email-and-password": "Veuillez vérifier votre adresse e-mail et votre mot de passe",
+  "invalid-credentials": "Identifiants invalides",
+  "invalid-email": "Adresse e-mail invalide",
+  "password-too-short": "Mot de passe trop court",
+  "include-special-character-and-number": "Inclure un caractère spécial et un chiffre",
+  "passwords-unmatch": "Mots de passe ne correspondent pas",
+  "password-length": "Mot de passe doit contenir au moins 8 caractères",
+  "password-must-contain-number-and-special": " Le mot de passe doit contenir au moins un chiffre et un caractère spécial",
+  
+  "first-name-required": "Prénom requis",
+  "last-name-required": "Nom requis"
+}

@@ -1,0 +1,19 @@
+{
+  "email": "Voer email in",
+  "first-name": "Voer de voornaam in",
+  "last-name": "Voer achternaam in",
+  "password": "Voer wachtwoord in",
+  "create-password": "Maak een wachtwoord",
+  "confirm-password": "Bevestig wachtwoord",
+  "new-password": "Nieuw wachtwoord",
+  "current-password": "Huidige wachtwoord",
+
+  "project-name": "Projectnaam",
+  "project-description": "Projectbeschrijving\nWat is het doel van het project en de toepassingen?",
+  "select-industry": "Selecteer de branche",
+  
+  "code": "Code",
+
+  "motivate-answer": "Motiveer je antwoord",
+  "write-comment": "Schrijf een reactie"
+}

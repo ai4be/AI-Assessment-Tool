@@ -1,0 +1,19 @@
+{
+  "email": "Saisissez votre email",
+  "first-name": "Saisissez votre prénom",
+  "last-name": "Saisissez votre nom",
+  "password": "Saisissez votre mot de passe",
+  "create-password": "Créer mot de passe",
+  "confirm-password": "Confirmer mot de passe",
+  "new-password": "Nouveau mot de passe",
+  "current-password": "Mot de passe actuel",
+
+  "project-name": "Nom de projet",
+  "project-description": "Description de projet\nQuel est le but du projet et des applications ?",
+  "select-industry": "Sélectionnez l'industrie",
+  
+  "code": "Code",
+
+  "motivate-answer": "Motivez votre réponse",
+  "write-comment": "Écrire un commentaire"
+}

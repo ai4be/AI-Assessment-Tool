@@ -1,0 +1,23 @@
+{
+  "password-change-success-message": "Wachtwoord succesvol veranderd",
+  "password-change-error-message": "Wachtwoord wijzigen mislukt",
+  "change-password": "Wachtwoord wijzigen",
+  "updating": "Updaten",
+
+  "profile-updated-success-message": "Profiel bijgewerkt",
+  "profile-updated-error-message": "Profielwijziging mislukt",
+  "profile": "Profiel",
+
+  "first-name": "Voornaam",
+  "last-name": "Achternaam",
+  "company-affiliation-organization": "Bedrijf / Affiliatie / Organisatie",
+  "department-team": "Afdeling / Team",
+  "role-title": "Rol / Titel",
+
+  "change-email": "E-mail wijzigen",
+  "email-updated-successfully": "E-mail is bijgewerkt",
+  "email-verified-successfully": "Emailadres is succesvol gevalideerd",
+  "email-address-verification": "E-mailadres verificatie",
+  "update-new-email-message": "We hebben een verificatiecode naar je nieuwe e-mailadres gestuurd. Voer de onderstaande code in om uw nieuwe e-mailadres te verifiëren.",
+  "update-email-message": "We hebben een verificatiecode naar uw e-mailadres gestuurd. Voer de onderstaande code in om uw e-mailadres te verifiëren."
+}

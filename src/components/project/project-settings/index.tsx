@@ -27,6 +27,7 @@ import {
 import { AiFillSetting, AiOutlineDelete, AiOutlineCheck } from 'react-icons/ai'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
+import { useTranslation } from 'next-i18next'
 import Roles from './roles'
 import Team from './team'
 import { defaultFetchOptions, fetcher, HTTP_METHODS } from '@/util/api'
@@ -36,6 +37,7 @@ import ToastContext from '@/src/store/toast-context'
 import { Project } from '@/src/types/project'
 
 const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element => {
+  const { t } = useTranslation()
   const { data: industries, error } = useSWR('/api/industries', fetcher)
   const { isBusy, setIsBusy } = useContext(ProjectSettingsContext)
   const { showToast } = useContext(ToastContext)
@@ -66,9 +68,9 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
         project.name = projectName
         project.description = description
         project.industry = industry
-        showToast({ title: 'Success', description: 'Successfully saved' })
+        showToast({ title: t('project-settings:success'), description: t('project-settings:success-save-message') })
       } else {
-        showToast({ title: 'Error', description: 'Something went wrong', status: 'error' })
+        showToast({ title: t('exceptions:error'), description: t('exceptions:something-went-wrong'), status: 'error' })
       }
     }
     setIsLoading(false)
@@ -77,23 +79,23 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
   return (
     <>
       <FormControl id='name'>
-        <FormLabel>Project name</FormLabel>
+        <FormLabel>{t('project-settings:project-name')}</FormLabel>
         <Input
           value={projectName}
           onChange={(e) => (setProjectName(e.target.value))}
         />
-        <FormHelperText>You can change this any time</FormHelperText>
+        <FormHelperText>{t('project-settings:can-change-anytime')}</FormHelperText>
       </FormControl>
       <FormControl id='description' mt='1.5'>
-        <FormLabel>Project description</FormLabel>
+        <FormLabel>{t('project-settings:project-description')}</FormLabel>
         <Textarea
           value={description}
           onChange={(e) => (setDescription(e.target.value))}
         />
       </FormControl>
       <FormControl id='description' my='1.5'>
-        <FormLabel>Project industry</FormLabel>
-        <Select size='xs' placeholder='Select the industry' onChange={e => setIndustry(e.target.value)} value={String(industry)}>
+        <FormLabel>{t('project-settings:project-industry')}</FormLabel>
+        <Select size='xs' placeholder={`${t('placeholders:select-industry')}`} onChange={e => setIndustry(e.target.value)} value={String(industry)}>
           {industries?.map((industry, idx) => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
         </Select>
       </FormControl>
@@ -105,7 +107,7 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
           disabled={isLoading || projectName == null || projectName === '' || isBusy}
           isLoading={isLoading}
         >
-          <AiOutlineCheck /> &nbsp; Save
+          <AiOutlineCheck /> &nbsp; {t('buttons:save')}
         </Button>
       </Box>
     </>
@@ -113,6 +115,7 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
 }
 
 const DeleteProject = ({ project }): JSX.Element => {
+  const { t } = useTranslation()
   const { isBusy, setIsBusy } = useContext(ProjectSettingsContext)
   const [isLoading, setIsLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -136,9 +139,9 @@ const DeleteProject = ({ project }): JSX.Element => {
   }
   return (
     <>
-      <Text as='b'>Danger zone</Text>
+      <Text as='b'>{t('project-settings:danger-zone')}</Text>
       <Flex justifyContent='space-between' alignItems='center'>
-        <p>To delete your project, Click on Delete button.</p>
+        <p>{t('project-settings:delete-project-caption')}</p>
         <Box align='right'>
           <Button
             bg='red.500'
@@ -149,9 +152,9 @@ const DeleteProject = ({ project }): JSX.Element => {
             }}
             isLoading={isLoading}
             isDisabled={isLoading || isBusy}
-            loadingText='Deleting'
+            loadingText={`${t('buttons:deleting')}`}
           >
-            <AiOutlineDelete /> &nbsp;Delete
+            <AiOutlineDelete /> &nbsp;{t('buttons:delete')}
           </Button>
         </Box>
         <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={handleDelete} />
@@ -186,6 +189,7 @@ export function ProjectSettingsContextProvider (props: any): JSX.Element {
 }
 
 const ProjectSettings = ({ project }): JSX.Element => {
+  const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isBusy } = useContext(ProjectSettingsContext)
 
@@ -199,14 +203,14 @@ const ProjectSettings = ({ project }): JSX.Element => {
       <Modal onClose={onClose} isOpen={isOpen} size='xl' isCentered scrollBehavior='inside' closeOnOverlayClick={!isBusy} closeOnEsc={!isBusy}>
         <ModalOverlay />
         <ModalContent height={['100vh', '60vh']} minWidth='370px' mr='2' ml='2'>
-          <ModalHeader>Project Settings</ModalHeader>
+          <ModalHeader>{t('project-settings:project-settings')}</ModalHeader>
           <ModalCloseButton disabled={isBusy} />
           <ModalBody overflowY='scroll'>
             <Tabs isFitted variant='enclosed' defaultIndex={0}>
               <TabList mb='2rem'>
-                <Tab _focus={{ boxShadow: 'none' }}>General</Tab>
-                <Tab _focus={{ boxShadow: 'none' }}>Team</Tab>
-                <Tab _focus={{ boxShadow: 'none' }}>Roles</Tab>
+                <Tab _focus={{ boxShadow: 'none' }}>{t('project-settings:general')}</Tab>
+                <Tab _focus={{ boxShadow: 'none' }}>{t('project-settings:team')}</Tab>
+                <Tab _focus={{ boxShadow: 'none' }}>{t('project-settings:roles')}</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>

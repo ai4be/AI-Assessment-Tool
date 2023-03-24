@@ -30,6 +30,7 @@ import ToastContext from '@/src/store/toast-context'
 import QuestionAndComments from '@/src/components/project/modals/question-and-comments'
 import { Comment } from '@/src/types/comment'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 
 const AccordionItemStyled = ({ title, desc }): JSX.Element => {
   return (
@@ -68,6 +69,7 @@ interface Props {
 }
 
 const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
+  const { t } = useTranslation()
   const router = useRouter()
   card.userIds = card?.userIds ?? []
   const cardId = String(card._id)
@@ -131,7 +133,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
 
   return (
     <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
-      <ModalOverlay maxHeight='100vh' />
+      <ModalOverlay maxHeight='100%' />
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
       <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative' mr='2' ml='2'>
         <ModalBody p='0' height='100%' display='flex' width='100%' overflowY='scroll' position='relative'>
@@ -146,8 +148,8 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
                 </Box>
                 {card.example != null &&
                   <Accordion allowToggle allowMultiple>
-                    {Array.isArray(card.example) && <AccordionItemStyled title='Example' desc={card.example.map((txt, idx) => <p key={idx}>{txt}</p>)} />}
-                    {typeof card.example === 'string' && <AccordionItemStyled title='Example' desc={card.example} />}
+                    {Array.isArray(card.example) && <AccordionItemStyled title={`${t('titles:example')}`} desc={card.example.map((txt, idx) => <p key={idx}>{txt}</p>)} />}
+                    {typeof card.example === 'string' && <AccordionItemStyled title={`${t('titles:example')}`} desc={card.example} />}
                     {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
                   </Accordion>}
 
@@ -199,6 +201,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
 export default CardDetailsModal
 
 const Sidebar = ({ card }: { card: Card }): JSX.Element => {
+  const { t } = useTranslation()
   const cardId = String(card._id)
   const projectId = String(card.projectId)
   const { showToast } = useContext(ToastContext)
@@ -281,18 +284,18 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
             <ModalCloseButton position='relative' />
           </Flex>
           <Flex justifyContent='space-between' alignItems='center'>
-            <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Due date</Text>
+            <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:due-date')}</Text>
           </Flex>
           <SingleDatepicker name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
             <Flex justifyContent='space-between' alignItems='center'>
               <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
-                {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : 'click to set'}
+                {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : `${t('sidebar:define')}`}
               </Text>
               {card.dueDate != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
             </Flex>
           </SingleDatepicker>
           <Flex justifyContent='space-between' alignItems='center'>
-            <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>Assigned to</Text>
+            <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>{t('sidebar:assigned-to')}</Text>
             <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
               <FiEdit2 color='#C9C9C9' cursor='pointer' />
             </UserMenu>
@@ -303,7 +306,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
               <Text fontSize='sm' fontWeight='600' ml='2'>{getUserDisplayName(user)}</Text>
             </Flex>))}
           <label>
-            <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>Stage</Text>
+            <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:stage')}</Text>
             <Select size='xs' value={card.stage ?? CardStage.DEVELOPMENT} onChange={(e) => setStage((e?.target?.value ?? card.stage) as CardStage)}>
               {STAGE_VALUES.map(stage => <option key={stage} value={stage} style={{ textTransform: 'capitalize' }}>{stage.toLowerCase()}</option>)}
             </Select>

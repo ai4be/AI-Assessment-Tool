@@ -1,0 +1,15 @@
+{
+  "filter": {
+    "unassigned": "Niet toegewezen",
+    "assigned": "Toegewezen",
+    "assigned-to": "Toegewezen aan",
+    "filter": "Filter",
+    "clear-all-filters": "Verwijder alle filters",
+    "set": "Gedefiniëerd",
+    "not-set": "Niet gedefiniëerd"
+  },
+  "sort": {
+    "due-date": "Vervaldatum",
+    "number": "Nummer"
+  }
+}

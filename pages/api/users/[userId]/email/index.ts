@@ -14,19 +14,19 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
   switch (req.method) {
     case 'POST': {
       let { email } = req.body
-      if (!isEmailValid(email)) return res.status(400).send({ message: 'invalid email' })
+      if (!isEmailValid(email)) return res.status(400).send({ code: 12001 })
       email = cleanEmail(email)
       const user = await getUser({ email })
-      if (user != null && String(user._id) !== userId) return res.status(400).send({ message: 'email already used' })
+      if (user != null && String(user._id) !== userId) return res.status(400).send({ code: 12002 })
       const tokenInstance = await createEmailVerificationToken(email, userId)
-      if (tokenInstance == null) return res.status(400).send({ message: 'error while creating token' })
+      if (tokenInstance == null) return res.status(400).send({ code: 12003 })
       const html = getVerifyEmailHtml(tokenInstance.token)
       try {
         await sendMail(email, 'Email-verfication', html)
       } catch (error) {
-        return res.status(400).send({ message: 'error while sending email' })
+        return res.status(400).send({ code: 12004 })
       }
-      return res.status(200).send({ message: 'A code has been sent to your email. Use the code to verify you email' })
+      return res.status(200).send({ code: 12005 })
     }
     case 'DELETE': {
       let { email } = req.body
@@ -36,7 +36,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(204).end()
     }
     default:
-      return res.status(400).send({ message: 'Invalid request' })
+      return res.status(400).send({ code: 12006 })
   }
 }
 

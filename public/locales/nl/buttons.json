@@ -1,0 +1,21 @@
+{
+  "log-in": "Inloggen",
+  "sign-in": "Aanmelden",
+  "sign-up": "Aanmelden",
+  "settings": "Instellingen",
+  "log-out": "Uitloggen",
+  "home": "Startpagina",
+  "create-project": "Maak een project",
+  "submit": "Verzenden",
+  "create": "Creëren",
+  "save": "Opslaan",
+  "deleting": "Verwijderen",
+  "delete": "Verwijderen",
+  "cancel": "Annuleren",
+  "confirm": "Bevestigen",
+  "invite": "Uitnodigen",
+  "update": "Bijwerken",
+  "ask-new-code": "Vraag een nieuwe code",
+  "verify": "Controleren",
+  "export": "Exporteren"
+}
