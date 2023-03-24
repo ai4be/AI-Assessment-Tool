@@ -1,16 +1,15 @@
 {
-  "reset-password": {
-    "_file-path": "pages > api > auth > reset-password.ts - components > reset-password.tsx",
-    "1001": "Method not allowed",
-    "1002": "Invalid token",
-    "1003": "Token expired. Please ask for a new one",
-    "1004": "Password is not valid",
-    "1005": "Password was successfully reset",
-    "1006": "Something went wrong",
-    "1007": "There is no account for this email address",
-    "1008": "Too many consecutive requests. Wait at least two minutes before asking for a new password reset.",
-    "1009": "An email was sent to your address. Follow the instructions in the email to reset your password. Check you spam folder if you do not get the email."
-  },
+  "_range_reset-password": "Codes starting from 10001 are used on Reset Password feature at the following files: pages > api > auth > reset-password.ts - components > reset-password.tsx",
+  "10001": "Method not allowed",
+  "10002": "Invalid token",
+  "10003": "Token expired. Please ask for a new one",
+  "10004": "Password is not valid",
+  "10005": "Password was successfully reset",
+  "10006": "Something went wrong",
+  "10007": "There is no account for this email address",
+  "10008": "Too many consecutive requests. Wait at least two minutes before asking for a new password reset.",
+  "10009": "An email was sent to your address. Follow the instructions in the email to reset your password. Check you spam folder if you do not get the email.",
+
   "signup": {
     "_file-path": "pages > api > auth > signup.ts - components > signup.tsx",
     "1001": "Method not allowed",
