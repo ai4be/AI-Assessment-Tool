@@ -10,19 +10,14 @@
   "10008": "Te veel opeenvolgende verzoeken. Wacht minimaal twee minuten voordat u om een nieuwe wachtwoordreset vraagt.",
   "10009": "Er is een e-mail naar uw adres verzonden. Volg de instructies in de e-mail om uw wachtwoord opnieuw in te stellen. Controleer je spamfolder als je de e-mail niet ontvangt.",
 
-  "signup": {
-    "_file-path": "pages > api > auth > signup.ts - components > signup.tsx",
-    "1001": "Methode niet toegestaan",
-    "1002": "Het door u opgegeven e-mailadres is niet geldig",
-    "1003": "The password should be at least 8 characters long and contain a special character",
-    "1004": "Email is al in gebruik!",
-    "1005": "success",
-    "1006": "Het aanmaken van uw account is mislukt. Probeer het later opnieuw."
-  },
-  "activity-id-seen": {
-    "_file-path": "pages > api > activities > [activityId] > seen > index.ts",
-    "_description": "This is only used internally, no feedback messages to user, therefore translations aren't needed"
-  },
+  "_range_signup": "Codes starting from 11001 are used on Sign up feature at the following files: pages > api > auth > signup.ts - components > signup.tsx",
+  "11001": "Methode niet toegestaan",
+  "11002": "Het door u opgegeven e-mailadres is niet geldig",
+  "11003": "The password should be at least 8 characters long and contain a special character",
+  "11004": "Email is al in gebruik!",
+  "11005": "success",
+  "11006": "Het aanmaken van uw account is mislukt. Probeer het later opnieuw.",
+
   "email": {
     "_file-path": "pages > api > users > [userId] > email > index.tsx",
     "1001": "ongeldig e-mail",

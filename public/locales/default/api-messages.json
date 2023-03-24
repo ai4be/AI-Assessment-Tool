@@ -10,19 +10,14 @@
   "10008": "Too many consecutive requests. Wait at least two minutes before asking for a new password reset.",
   "10009": "An email was sent to your address. Follow the instructions in the email to reset your password. Check you spam folder if you do not get the email.",
 
-  "signup": {
-    "_file-path": "pages > api > auth > signup.ts - components > signup.tsx",
-    "1001": "Method not allowed",
-    "1002": "The email you provided in not valid",
-    "1003": "The password should be at least 8 characters long and contain a special character",
-    "1004": "Email is already used!",
-    "1005": "success",
-    "1006": "Your account creation failed. Please try again later."
-  },
-  "activity-id-seen": {
-    "_file-path": "pages > api > activities > [activityId] > seen > index.ts",
-    "_description": "This is only used internally, no feedback messages to user, therefore translations aren't needed"
-  },
+  "_range_signup": "Codes starting from 11001 are used on Sign up feature at the following files: pages > api > auth > signup.ts - components > signup.tsx",
+  "11001": "Method not allowed",
+  "11002": "The email you provided in not valid",
+  "11003": "The password should be at least 8 characters long and contain a special character",
+  "11004": "Email is already used!",
+  "11005": "success",
+  "11006": "Your account creation failed. Please try again later.",
+
   "email": {
     "_file-path": "pages > api > users > [userId] > email > index.tsx - components - modal-email-verification.tsx",
     "1001": "invalid email",

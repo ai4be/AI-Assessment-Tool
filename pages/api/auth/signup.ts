@@ -17,7 +17,7 @@ async function sendEmailVerifictionEmail (user: User): Promise<void> {
 }
 
 async function handler (req, res): Promise<any> {
-  if (req.method !== 'POST') return res.status(405).json({ code: 1001 })
+  if (req.method !== 'POST') return res.status(405).json({ code: 11001 })
 
   let { email, password, firstName, lastName, token } = req.body
   email = cleanEmail(email)
@@ -26,18 +26,18 @@ async function handler (req, res): Promise<any> {
   token = token != null ? sanitize(token) : token
 
   if (!isEmailValid(email)) {
-    return res.status(422).json({ code: 1002 })
+    return res.status(422).json({ code: 11002 })
   }
 
   if (!isPasswordValid(password)) {
     return res.status(422).json({
-      code: 1003
+      code: 11003
     })
   }
 
   const existingUser = await getUser({ email })
   if (existingUser != null) {
-    return res.status(422).json({ code: 1004 })
+    return res.status(422).json({ code: 11004 })
   }
 
   const hashedPassword = await hashPassword(password)
@@ -50,9 +50,9 @@ async function handler (req, res): Promise<any> {
   if (user?._id != null) {
     if (token != null) await invitedUserHandler(token, email)
     void sendEmailVerifictionEmail(user)
-    return res.status(201).send({ code: 1005 })
+    return res.status(201).send({ code: 11005 })
   }
-  return res.status(400).send({ code: 1006 })
+  return res.status(400).send({ code: 11006 })
 }
 
 export default handler

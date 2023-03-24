@@ -113,7 +113,7 @@ const SignUp = (): JSX.Element => {
       }
     } else {
       const resultCall = await response.json()
-      const msg = t([`api-messages:signup.${resultCall.code}`, 'signup.code'])
+      const msg = t([`api-messages:${resultCall.code}`, 'code'])
       await responseHandler(response, msg)
     }
     setIsCreatingStatus(false)
