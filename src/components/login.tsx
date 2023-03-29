@@ -66,12 +66,6 @@ const Login = (): JSX.Element => {
         description: t('validations:check-email-and-password'),
         status: 'error'
       })
-    } else {
-      showToast({
-        title: t('exceptions:something-went-wrong'),
-        description: t('exceptions:try-again-later'),
-        status: 'error'
-      })
     }
   }
 
