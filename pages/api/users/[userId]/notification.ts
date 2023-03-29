@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { upsertNotification, getNotifications } from '@/src/models/notification'
-import { isConnected, isCurrentUser } from '@/util/temp-middleware'
+import { isConnected } from '@/util/temp-middleware'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { getUser } from '@/src/models/user'
@@ -34,4 +34,4 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
   }
 }
 
-export default isCurrentUser(isConnected(handler))
+export default isConnected(handler)
