@@ -1,0 +1,29 @@
+import { ObjectId } from 'mongodb'
+import { isEmpty } from '@/util/index'
+import { connectToDatabase, toObjectId } from './mongodb'
+import { Notification } from '../types/Notification'
+
+export const TABLE_NAME = 'notifications'
+
+export const upsertNotification = async ({ _id, mentions, projectActivity }: { _id: string, mentions: boolean, projectActivity: boolean }): Promise<any> => {
+  const { db } = await connectToDatabase()
+  _id = _id != null ? toObjectId(_id) : undefined
+  const data: Partial<Notification> = {
+    _id, // userId
+    mentions,
+    projectActivity
+  }
+
+  const notificationExists = await getNotifications(_id)
+  if (isEmpty(notificationExists)) {
+    await db.collection(TABLE_NAME).insertOne(data)
+  } else {
+    await db.collection(TABLE_NAME).updateOne({ _id }, { $set: { mentions, projectActivity } })
+  }
+}
+
+export const getNotifications = async (_id: ObjectId | string): Promise<Notification> => {
+  const { db } = await connectToDatabase()
+  const response = await db.collection(TABLE_NAME).findOne({ _id })
+  return response
+}
