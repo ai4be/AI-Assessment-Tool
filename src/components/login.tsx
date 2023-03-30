@@ -59,19 +59,20 @@ const Login = (): JSX.Element => {
     setIsFetching(false)
     if (result?.ok === true) {
       await router.push('/home')
-    }
-    if (result?.status === 404 || result?.status === 401) {
-      showToast({
-        title: t('validations:invalid-credentials'),
-        description: t('validations:check-email-and-password'),
-        status: 'error'
-      })
     } else {
-      showToast({
-        title: t('exceptions:something-went-wrong'),
-        description: t('exceptions:try-again-later'),
-        status: 'error'
-      })
+      if (result?.status === 404 || result?.status === 401) {
+        showToast({
+          title: t('validations:invalid-credentials'),
+          description: t('validations:check-email-and-password'),
+          status: 'error'
+        })
+      } else {
+        showToast({
+          title: t('exceptions:something-went-wrong'),
+          description: t('exceptions:try-again-later'),
+          status: 'error'
+        })
+      }
     }
   }
 
