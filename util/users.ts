@@ -1,9 +1,13 @@
 import { defaultFetchOptions } from './api'
 import { User } from '@/src/types/user'
+import { isEmpty } from '@/util/index'
 
-export const getUserDisplayName = (user: User): string => {
-  let res = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()
-  if (res === '') res = user.email
+export const getUserDisplayName = (user: User | null): string | undefined => {
+  if (isEmpty(user)) {
+    return '?'
+  }
+  let res: string | undefined = `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim()
+  if (res === '') res = user?.email
   return res
 }
 

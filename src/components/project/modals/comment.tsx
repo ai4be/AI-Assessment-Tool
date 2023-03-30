@@ -135,7 +135,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
         {comment.updatedAt != null && <Text fontSize='x-small' ml='1' textDecoration='underline' color='var(--text-grey)'>(Edited)</Text>}
       </GridItem>
       <GridItem colSpan={1}>
-        {usersComment != null && <Avatar size='xs' name={getUserDisplayName(usersComment)} src={usersComment?.xsAvatar} mr='1' mt='1' />}
+        <Avatar size='xs' name={getUserDisplayName(usersComment)} src={usersComment?.xsAvatar} mr='1' mt='1' />
       </GridItem>
       <GridItem colSpan={1}>
         <Box width='100%' boxShadow='rgb(0 0 0 / 10%) 0 0 10px' borderRadius='0.5rem' padding='2'>
