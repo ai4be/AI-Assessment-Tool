@@ -5,8 +5,9 @@
     - [Demo](#demo)
   - [Features 🤩](#features-)
   - [Requirements](#requirements)
-  - [Steps to run this on your local](#steps-to-run-this-on-your-local)
-    - [If you want to run the project using docker](#if-you-want-to-run-the-project-using-docker)
+  - [Run the app](#run-the-app)
+    - [Without Docker](#without-docker)
+    - [With Docker-compose](#with-docker-compose)
   - [What's next 🚀](#whats-next-)
   - [Tech stacks](#tech-stacks)
   - [Contributing](#contributing)
@@ -33,22 +34,30 @@ This application is an improvement on the [ALTAI tool](https://futurium.ec.europ
 2. [npm](https://www.npmjs.com/)
 3. [Docker](https://www.docker.com/)
 
-## Steps to run this on your local
+## Run the app
 
 First install the MongoDB Compass for better visualization of data with MongoDB server.
 
 1. Clone this repo using `git clone git@github.com:AI4Belgium/AI-Assessment-Tool.git`
-2. Create _.env.local_ and add this env variable `LOCAL_MONGODB=mongodb://localhost:27017/trello`
-    Add `JWT_SECRET_KEY=randomstrings`
+2. Create _.env.local_ and add those env variables
+    - Add `MONGODB_URI=mongodb://localhost:27017/altai`
+      - you need to have an mongodb running on port 27017
+      - you can use the one from the docker-compose file (port is 27019 then!!!) or just run one locally with docker
+    - Add `JWT_SECRET_KEY=<TODO>`
+    - Add `SMTP_HOST=<TODO>` // create an account on https://ethereal.email/ for a testing SMTP server
+    - Add `SMTP_USER=<TODO>`
+    - Add `SMTP_PASS=<TODO>`
+    - Add `API_KEY=<TODO>`
+
+### Without Docker
+
 3. Run `yarn install`
 4. Run `yarn dev`
 
-### If you want to run the project using docker
+### With Docker-compose
 
 Install docker on your machine and start it
 
-1. Create _.env.development_ file.
-2. Add `LOCAL_MONGODB=mongodb://mongodb:27017/trello`
 3. Run `docker-compose up`
 
 ## What's next 🚀

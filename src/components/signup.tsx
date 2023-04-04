@@ -108,7 +108,7 @@ const SignUp = (): JSX.Element => {
 
     if (response.ok) {
       const result = await response.json()
-      if (result.code === 1005) {
+      if (result.code === 11005) {
         await redirectToLoginPage()
       }
     } else {

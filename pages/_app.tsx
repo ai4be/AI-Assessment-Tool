@@ -28,8 +28,6 @@ const theme = extendTheme({
   }
 })
 
-console.log(process.env)
-
 const App = ({ Component, pageProps }): JSX.Element => {
   return (
     <>
