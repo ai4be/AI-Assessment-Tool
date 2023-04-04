@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from '@/src/components/navbar'
-import { defaultFetchOptions, getResponseHandlerCustomMessage } from '@/util/api'
+import { defaultFetchOptions, getResponseHandler } from '@/util/api'
 import { isEmpty, debounce } from '@/util/index'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 import ToastContext from '@/src/store/toast-context'
@@ -45,7 +45,7 @@ const SignUp = (): JSX.Element => {
   const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
   const [isButtonDisabled, setButtonState] = useState(true)
 
-  const responseHandler = getResponseHandlerCustomMessage(showToast)
+  const responseHandler = getResponseHandler(showToast, t)
   useEffect(() => {
     if (!touched.email) return
     setEmailErr(!isEmailValid(values.email))
@@ -108,14 +108,11 @@ const SignUp = (): JSX.Element => {
 
     if (response.ok) {
       const result = await response.json()
-      if (result.code === 11005) {
-        await redirectToLoginPage()
+      if (result.code === 9005) {
+        return await redirectToLoginPage()
       }
-    } else {
-      const resultCall = await response.json()
-      const msg = t([`api-messages:${resultCall.code}`, 'code'])
-      await responseHandler(response, msg)
     }
+    await responseHandler(response)
     setIsCreatingStatus(false)
   }
 

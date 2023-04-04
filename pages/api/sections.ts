@@ -15,6 +15,6 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
       return res.send(sections)
     }
     default:
-      return res.status(400).send({ message: 'Invalid request' })
+      return res.status(400).send({ message: 'Invalid request', code: 9002 })
   }
 }

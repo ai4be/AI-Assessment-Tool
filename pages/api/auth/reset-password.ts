@@ -30,7 +30,7 @@ async function handler (req, res): Promise<any> {
       void setStatus(tokenEnt.token, TokenStatus.REDEEMED)
       return res.status(201).send({ code: 10005 })
     }
-    return res.status(400).json({ code: 10006 })
+    return res.status(400).json({ code: 9004 })
   } else if (email != null) {
     const user = await getUser({ email })
     if (user == null) {

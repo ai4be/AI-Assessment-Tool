@@ -1,21 +1,27 @@
 {
+  "_generic_api-codes": "",
+  "9001": "Methode niet toegestaan",
+  "9002": "Ongeldig verzoek",
+  "9003": "U heeft de nodige rechten niet om deze actie uit te voeren",
+  "9004": "Er is iets fout gegaan",
+  "9005": "Success",
   "_range_reset-password": "Codes starting from 10001 are used on Reset Password feature at the following files: pages > api > auth > reset-password.ts - components > reset-password.tsx",
-  "10001": "Methode niet toegestaan",
+  "10001": "",
   "10002": "Ongeldige token",
   "10003": "Token is verlopen. Vraag dan om een nieuwe",
   "10004": "Wachtwoord is niet geldig",
   "10005": "Wachtwoord is succesvol gereset",
-  "10006": "Er is iets fout gegaan",
+  "10006": "",
   "10007": "Er is geen account voor dit e-mailadres",
   "10008": "Te veel opeenvolgende verzoeken. Wacht minimaal twee minuten voordat u om een nieuwe wachtwoordreset vraagt.",
   "10009": "Er is een e-mail naar uw adres verzonden. Volg de instructies in de e-mail om uw wachtwoord opnieuw in te stellen. Controleer je spamfolder als je de e-mail niet ontvangt.",
 
   "_range_signup": "Codes starting from 11001 are used on Sign up feature at the following files: pages > api > auth > signup.ts - components > signup.tsx",
-  "11001": "Methode niet toegestaan",
+  "11001": "",
   "11002": "Het door u opgegeven e-mailadres is niet geldig",
   "11003": "The password should be at least 8 characters long and contain a special character",
   "11004": "Email is al in gebruik!",
-  "11005": "success",
+  "11005": "",
   "11006": "Het aanmaken van uw account is mislukt. Probeer het later opnieuw.",
 
   "_range_email": "Codes starting from 12001 are used on Email verification feature at the following files: pages > api > users > [userId] > email > index.tsx",
@@ -23,6 +29,5 @@
   "12002": "email is al gebruikt",
   "12003": "fout bij het maken van een token",
   "12004": "fout tijdens het verzenden van e-mail",
-  "12005": "Er is een code naar je e-mailadres gestuurd. Gebruik de code om je e-mailadres te verifiëren.",
-  "12006": "Ongeldig verzoek"
+  "12005": "Er is een code naar je e-mailadres gestuurd. Gebruik de code om je e-mailadres te verifiëren."
 }

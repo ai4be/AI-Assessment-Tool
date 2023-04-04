@@ -11,7 +11,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(200).json(users)
     }
     default:
-      return res.status(404).send({ message: 'Not found' })
+      return res.status(404).send({ message: 'Not found', code: 9006 })
   }
 }
 

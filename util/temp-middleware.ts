@@ -11,7 +11,7 @@ import { User } from '@/src/types/user'
 const API_KEY = process.env.API_KEY
 
 const returnUnauthorized = (res: NextApiResponse): void => {
-  res.status(401).send({ message: 'Unauthorized', status: 401 })
+  res.status(401).send({ message: 'Unauthorized', status: 401, code: 9010 })
 }
 
 export function hasApiKey (handler: any): Function {
@@ -31,7 +31,7 @@ export function isConnected (handler: any): Function {
       return returnUnauthorized(res)
     }
     if (!client.isConnected()) {
-      return res.status(500).send({ message: 'DB connection error', status: 500 })
+      return res.status(500).send({ message: 'DB connection error', status: 500, code: 9004 })
     }
     return addUserToReq(handler)(req, res)
   }
@@ -41,7 +41,7 @@ export function isCurrentUser (handler: Function): Function {
   return addUserToReq(async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
     const { userId } = req.query
     const user = getUserFromRequest(req)
-    if (user?._id?.toString() !== userId) return res.status(403).send({ message: 'forbidden' })
+    if (user?._id?.toString() !== userId) return res.status(403).send({ message: 'forbidden', code: 9003 })
     return handler(req, res)
   })
 }
@@ -78,7 +78,7 @@ export function hasProjectAccess (handler: Function): Function {
       hasAccess = users.some(u => String(u._id) === String(user._id))
     }
     if (!hasAccess) {
-      return res.status(403).send({ message: 'Forbidden', status: 403 })
+      return res.status(403).send({ message: 'Forbidden', status: 403, code: 9003 })
     }
     return handler(req, res)
   })
@@ -89,10 +89,10 @@ export function cardBelongsToProject (handler: Function): Function {
     const { projectId, cardId } = req.query
     const card = await getCard(cardId)
     if (card == null) {
-      return res.status(404).send({ message: 'Notfound', status: 404 })
+      return res.status(404).send({ message: 'Notfound', status: 404, code: 9006 })
     }
     if (String(card.projectId) !== String(projectId)) {
-      return res.status(400).send({ message: 'Bad Request', status: 400 })
+      return res.status(400).send({ message: 'Bad Request', status: 400, code: 9002 })
     }
     return handler(req, res)
   }

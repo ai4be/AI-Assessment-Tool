@@ -36,7 +36,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(204).end()
     }
     default:
-      return res.status(400).send({ code: 12006 })
+      return res.status(400).send({ code: 9002 })
   }
 }
 

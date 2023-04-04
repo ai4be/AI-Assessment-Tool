@@ -12,7 +12,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.send(201)
     }
     default:
-      res.status(404).send({ message: 'not found' })
+      res.status(404).send({ code: 9006, message: 'Not found' })
       break
   }
 }
