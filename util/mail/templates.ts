@@ -103,12 +103,24 @@ export function getProjectActivityHtml (projects: Project[], hostname: string = 
   `
 }
 
+export function userRemovedProjectHtml (project: string): string {
+  return `
+    <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
+      ${htmlLogo}
+      <span>
+        You have been removed from the project: ${project}
+      </span>
+    </div>
+  `
+}
+
 const templates = {
   getInvitationHtml,
   getResetPasswordHtml,
   getVerifyEmailHtml,
   commentMentionHtml,
-  getProjectActivityHtml
+  getProjectActivityHtml,
+  userRemovedProjectHtml
 }
 
 export default templates
