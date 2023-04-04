@@ -92,7 +92,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
               mt='2' onChange={(e) => setDescription(e.target.value)}
             />
             <Select size='xs' placeholder={`${t('placeholders:select-industry')}`} onChange={e => setIndustry(e.target.value)}>
-              {industries?.map(industry => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
+              {Array.isArray(industries) && industries?.map(industry => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
             </Select>
           </ModalBody>
           <ModalFooter>
@@ -112,7 +112,7 @@ export default function Projects (props: any): JSX.Element {
   const loadExistingProjects = (): JSX.Element => {
     return (
       <Box mt='1rem' minWidth='50vw' display='flex' flexWrap='wrap'>
-        {projects.map((pr, index) => (
+        {Array.isArray(projects) && projects.map((pr, index) => (
           <Link
             key={index}
             href={{

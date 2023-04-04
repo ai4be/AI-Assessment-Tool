@@ -96,7 +96,7 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
       <FormControl id='description' my='1.5'>
         <FormLabel>{t('project-settings:project-industry')}</FormLabel>
         <Select size='xs' placeholder={`${t('placeholders:select-industry')}`} onChange={e => setIndustry(e.target.value)} value={String(industry)}>
-          {industries?.map((industry, idx) => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
+          {Array.isArray(industries) && industries?.map((industry, idx) => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
         </Select>
       </FormControl>
       <Box align='right'>
