@@ -1,19 +1,21 @@
 version: '3.3'
 
 services:
-  assessment-app:
+  altai:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - ${PORT-3000}:3000
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.next
       - /usr/src/app/.husky
-    env_file:
-      - .env.development
+    environment:
+      - API_KEY=${API_KEY-very_weak_api_key}
+      - BASE_URL=http://altai:3000
+      - MONGODB_URI=mongodb://mongodb:27017/altai
     depends_on:
       - mongodb
     networks:
@@ -24,8 +26,9 @@ services:
       context: cron
       dockerfile: Dockerfile
     command: node index.js
-    env_file:
-      - .env.development
+    environment:
+      - BASE_URL=http://altai:3000
+      - API_KEY=${API_KEY-very_weak_api_key}
     networks:
       - ai-app
 
@@ -34,7 +37,7 @@ services:
     volumes:
       - assessment-db:/data/db
     ports:
-      - 27017:27017
+      - 27019:27017
     networks:
       - ai-app
 

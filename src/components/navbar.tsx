@@ -34,15 +34,15 @@ import { useTranslation } from 'next-i18next'
 import LocaleSwitcher from './locale-switcher'
 
 interface Props {
-  bg?: string,
+  bg?: string
   onShowSidebar?: Function
   showSidebarButton?: boolean
 }
 
 export const AI4BelgiumIcon = (): JSX.Element => (
-  <div className="px-3 py-5 flex flex-col justify-center icon-grey-color font-semibold text-lg cursor-pointer">
+  <div className='px-3 py-5 flex flex-col justify-center icon-grey-color font-semibold text-lg cursor-pointer'>
     <span>
-      AI<sub className="icon-blue-color text-lg">4</sub>Belgium
+      AI<sub className='icon-blue-color text-lg'>4</sub>Belgium
     </span>
   </div>
 )
@@ -191,9 +191,9 @@ const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): J
           <Box p={4} pr={2}>
             <IconButton
               icon={<ChevronRightIcon w={8} h={8} />}
-              colorScheme="blackAlpha"
+              colorScheme='blackAlpha'
               aria-label='Show menu'
-              variant="outline"
+              variant='outline'
               onClick={onShowSidebar}
             />
           </Box>

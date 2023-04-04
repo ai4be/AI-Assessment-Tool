@@ -2,7 +2,7 @@
 import nodemailer, { SentMessageInfo } from 'nodemailer'
 import { isEmpty } from '@/util/index'
 
-const EMAIL_FROM: string | undefined = process.env.EMAIL_FROM
+const SMTP_FROM: string | undefined = process.env.SMTP_FROM
 const SMTP_HOST: string | undefined = process.env.SMTP_HOST
 const SMTP_USER: string | undefined = process.env.SMTP_USER
 const SMTP_PASS: string | undefined = process.env.SMTP_PASS
@@ -12,14 +12,14 @@ const throwMissingEnvVar = (varName: string): void => {
   throw new Error(`missing ${varName} environment variable`)
 }
 
-['EMAIL_FROM', 'SMTP_USER', 'SMTP_PASS'].forEach((key) => process.env[key] == null && throwMissingEnvVar(key))
+['SMTP_FROM', 'SMTP_USER', 'SMTP_PASS'].forEach((key) => process.env[key] == null && throwMissingEnvVar(key))
 
 export const sendMailToBcc = async (subject: string, html: string | null = null, text = null, bcc: string | string[] = []): Promise<SentMessageInfo> => {
-  return await sendMail(String(EMAIL_FROM), subject, html, text, [], bcc)
+  return await sendMail(String(SMTP_FROM), subject, html, text, [], bcc)
 }
 
 export const sendMailWithSelfInBcc = async (to: string | string[], subject: string, html: string | null = null, text = null, cc: string | string[] = [], bcc: string | string[] = [EMAIL_FROM as string]): Promise<SentMessageInfo> => {
-  return await sendMail(String(EMAIL_FROM), subject, html, text, cc, bcc)
+  return await sendMail(String(SMTP_FROM), subject, html, text, cc, bcc)
 }
 
 export const sendMail = async (to: string | string[], subject: string, html: string | null = null, text = null, cc: string | string[] = [], bcc: string | string[] = []): Promise<SentMessageInfo> => {
@@ -35,7 +35,7 @@ export const sendMail = async (to: string | string[], subject: string, html: str
   }
   const transporter = nodemailer.createTransport(options)
   const mailOptions: any = {
-    from: EMAIL_FROM, // sender address
+    from: SMTP_FROM, // sender address
     to, // list of receivers
     subject // Subject line
   }

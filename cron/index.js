@@ -7,7 +7,7 @@ const {
 } = process.env
 
 console.log('BASE_URL', BASE_URL)
-console.log('API_KEY', API_KEY)
+console.log('API_KEY', API_KEY?.slice(0, 5), '...')
 
 const fetchOptions = {
   cache: 'no-cache',

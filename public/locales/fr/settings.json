@@ -1,4 +1,9 @@
 {
+  "profile": "Profil",
+  "password": "Mot de passe",
+  "email": "E-mail",
+  "notifications": "Notifications",
+
   "password-change-success-message": "Mot de passe modifié avec succès",
   "password-change-error-message": "Échec du changement de mot de passe",
   "change-password": "Changer le mot de passe",
@@ -6,7 +11,6 @@
 
   "profile-updated-success-message": "Profil mis à jour",
   "profile-updated-error-message": "Le changement de profil a échoué",
-  "profile": "Profil",
 
   "first-name": "Prénom",
   "last-name": "Nom",
@@ -19,5 +23,13 @@
   "email-verified-successfully": "Address e-mail vérifié avec succès",
   "email-address-verification": "Vérification de l'adresse e-mail",
   "update-new-email-message": "Nous avons envoyé un code de vérification à votre nouvelle adresse e-mail. Veuillez entrer le code ci-dessous pour vérifier votre nouvelle adresse e-mail.",
-  "update-email-message": "Nous avons envoyé un code de vérification à votre adresse e-mail. Veuillez entrer le code ci-dessous pour vérifier votre adresse e-mail."
+  "update-email-message": "Nous avons envoyé un code de vérification à votre adresse e-mail. Veuillez entrer le code ci-dessous pour vérifier votre adresse e-mail.",
+
+  "notifications-by-email": "Notifications par e-mail",
+  "project-activities": "Activités du projet",
+  "project-activities-caption": "Nouvelles activités ajoutés aux projet que vous suivez",
+  "mentions": "Commentaires",
+  "mentions-caption": "Nouveaux commentaires ajoutés aux cartes que vous suivez",
+  "notifications-change-success-message": "Notifications modifiées avec succès",
+  "notifications-change-error-message": "Modification des notifications a échoué"
 }

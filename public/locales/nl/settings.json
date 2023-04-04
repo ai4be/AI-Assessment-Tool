@@ -1,4 +1,9 @@
 {
+  "profile": "Profiel",
+  "password": "Wachtwoord",
+  "email": "E-mail",
+  "notifications": "Meldingen",
+
   "password-change-success-message": "Wachtwoord succesvol veranderd",
   "password-change-error-message": "Wachtwoord wijzigen mislukt",
   "change-password": "Wachtwoord wijzigen",
@@ -6,7 +11,6 @@
 
   "profile-updated-success-message": "Profiel bijgewerkt",
   "profile-updated-error-message": "Profielwijziging mislukt",
-  "profile": "Profiel",
 
   "first-name": "Voornaam",
   "last-name": "Achternaam",
@@ -19,5 +23,13 @@
   "email-verified-successfully": "Emailadres is succesvol gevalideerd",
   "email-address-verification": "E-mailadres verificatie",
   "update-new-email-message": "We hebben een verificatiecode naar je nieuwe e-mailadres gestuurd. Voer de onderstaande code in om uw nieuwe e-mailadres te verifiëren.",
-  "update-email-message": "We hebben een verificatiecode naar uw e-mailadres gestuurd. Voer de onderstaande code in om uw e-mailadres te verifiëren."
+  "update-email-message": "We hebben een verificatiecode naar uw e-mailadres gestuurd. Voer de onderstaande code in om uw e-mailadres te verifiëren.",
+
+  "notifications-by-email": "Meldingen per e-mail",
+  "project-activities": "Projectactiviteiten",
+  "project-activities-caption": "Nieuwe activiteiten toegevoegd aan de projecten die je volgt",
+  "mentions": "Opmerkingen",
+  "mentions-caption": "Nieuwe opmerkingen die zijn toegevoegd aan kaarten die je volgt",
+  "notifications-change-success-message": "Meldingen zijn gewijzigd",
+  "notifications-change-error-message": "Het wijzigen van meldingen is mislukt"
 }
