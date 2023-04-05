@@ -12,7 +12,7 @@ import AppLogo from '@/src/components/app-logo'
 
 import 'nprogress/nprogress.css'
 
-const theme = extendTheme({
+export const theme = extendTheme({
   colors: {
     brand: '#0079bf',
     success: '#70b500',
