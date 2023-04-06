@@ -31,5 +31,12 @@
   "mentions": "Mentions",
   "mentions-caption": "New comments added on cards you’re watching",
   "notifications-change-success-message": "Notifications changed successfully",
-  "notifications-change-error-message": "Notifications change failed"
+  "notifications-change-error-message": "Notifications change failed",
+
+  "delete-account": "Delete account",
+  "about-to-delete-account": "You're about to delete your account",
+  "delete-account-message1": "Your account will be deleted immediately.",
+  "delete-account-message2": "By deleting your account you will no longer receive email alerts.",
+  "delete-account-message3": "Also, you won't be able to retrieve past activities, even if a new account with your former e-mail is created.",
+  "account-deleted-successfully": "Account has been deleted successfully. Redirecting you to login page..."
 }
