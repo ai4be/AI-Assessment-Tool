@@ -1,13 +1,14 @@
-import { renderWithTheme, renderWithThemeAndTranslations } from '@/util/test-utils'
+import { renderWithThemeAndTranslations } from '@/util/test-utils'
 import Index from '@/pages/index'
 // use in memory mongodb
 // TODO https://dev.to/remrkabledev/testing-with-mongodb-memory-server-4ja2
+// import { logRoles } from '@testing-library/dom'
+import { useSession } from 'next-auth/react'
+import enWelcomeJson from '@/public/locales/en/welcome.json'
+import nlWelcomeJson from '@/public/locales/nl/welcome.json'
 
-import { logRoles } from '@testing-library/dom'
 // need to mock next-auth/react
 // https://github.com/nextauthjs/next-auth/issues/775
-import { useSession } from 'next-auth/react'
-
 jest.mock('next-auth/react')
 jest.mock('next/router', () => require('next-router-mock'))
 // how to setup jest with next-i18next
@@ -17,37 +18,33 @@ jest.mock('next/router', () => require('next-router-mock'))
 // }))
 
 describe('Index page', () => {
-  it('Renders the paragraphs', () => {
+  it('Renders the paragraphs', async () => {
     (useSession as any).mockReturnValueOnce([false, false])
-    const res = renderWithTheme(<Index />)
-    logRoles(res.container)
-    const { container } = res
-    console.log(container.childNodes)
-    console.log(container.innerHTML)
+    const { container } = await renderWithThemeAndTranslations(<Index />)
     const elements = container.querySelectorAll('p')
     const strings = []
     for (const e of elements) {
-      console.log(e.innerHTML)
       strings.push(e.innerHTML)
     }
-    // expect(strings).toContain('welcome:description-ai-assessment-tool-1')
-    // expect(strings).toContain('welcome:description-ai-assessment-tool-2')
-    // expect(strings).toContain('AI Assessment Tool')
+    expect(strings).toContain('AI Assessment Tool')
+    const vals = Object.values(enWelcomeJson)
+    for (const val of vals) {
+      expect(strings).toContain(val)
+    }
   })
 
-  // it('Translates the keys', () => {
-  //   (useSession as any).mockReturnValueOnce([false, false])
-  //   const res = renderWithThemeAndTranslations(<Index />)
-  //   logRoles(res.container)
-  //   const { container } = res
-  //   const elements = container.querySelectorAll('p')
-  //   const strings = []
-  //   for (const e of elements) {
-  //     console.log(e.innerHTML)
-  //     strings.push(e.innerHTML)
-  //   }
-  //   expect(strings).toContain('welcome:description-ai-assessment-tool-1')
-  //   expect(strings).toContain('welcome:description-ai-assessment-tool-2')
-  //   expect(strings).toContain('AI Assessment Tool')
-  // })
+  it('Translates the keys', async () => {
+    (useSession as any).mockReturnValueOnce([false, false])
+    const { container } = await renderWithThemeAndTranslations(<Index />, 'nl')
+    const elements = container.querySelectorAll('p')
+    const strings = []
+    for (const e of elements) {
+      strings.push(e.innerHTML)
+    }
+    expect(strings).toContain('AI Assessment Tool')
+    const vals = Object.values(nlWelcomeJson)
+    for (const val of vals) {
+      expect(strings).toContain(val)
+    }
+  })
 })
