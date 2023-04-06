@@ -32,10 +32,14 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
 
   const deleteUser = async (user: Partial<User>): Promise<void> => {
     setIsLoading(true)
+    const data: any = {
+      projectName: project.name
+    }
     const url = `/api/projects/${String(project._id)}/users/${String(user._id)}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: HTTP_METHODS.DELETE
+      method: HTTP_METHODS.DELETE,
+      body: JSON.stringify(data)
     })
     if (response.ok) {
       context.users = context.users?.filter((u: any) => u._id !== user._id)
