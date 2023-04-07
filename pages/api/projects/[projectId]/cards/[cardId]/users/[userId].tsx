@@ -11,7 +11,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
     case 'POST': {
       const users = await getProjectUsers(projectId, [userId])
       const user = users?.find(u => String(u._id) === userId) ?? null
-      if (user == null) return res.status(400).send({ message: 'invalid user', code: 906 })
+      if (user == null) return res.status(400).send({ message: 'invalid user', code: 9006 })
       // const res =
       if (creator == null) return res.status(401).send({ message: 'unauthorized', code: 9010 })
       await addUserToCardAndCreateActivity(cardId, creator._id as string, userId as string)
