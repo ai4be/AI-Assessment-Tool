@@ -2,8 +2,8 @@ import Login from '@/src/components/login'
 import { getSession } from 'next-auth/react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-export default function LoginPage ({ session }): JSX.Element {
-  return (<Login />)
+export default function LoginPage ({ onSubmit }: { onSubmit?: Function }): JSX.Element {
+  return (<Login onSubmit={onSubmit} />)
 }
 
 export async function getServerSideProps (ctx): Promise<any> {
@@ -20,7 +20,6 @@ export async function getServerSideProps (ctx): Promise<any> {
 
   return {
     props: {
-      session,
       ...await serverSideTranslations(ctx.locale as string, ['buttons', 'placeholders', 'validations', 'exceptions', 'login', 'links', 'api-messages'])
     }
   }

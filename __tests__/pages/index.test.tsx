@@ -1,7 +1,8 @@
 import { renderWithThemeAndTranslations } from '@/util/test-utils'
 import Index from '@/pages/index'
-// use in memory mongodb
-// TODO https://dev.to/remrkabledev/testing-with-mongodb-memory-server-4ja2
+// TODO test API routes
+// https://seanconnolly.dev/unit-testing-nextjs-api-routes
+// https://www.paigeniedringhaus.com/blog/how-to-unit-test-next-js-api-routes-with-typescript
 // import { logRoles } from '@testing-library/dom'
 import { useSession } from 'next-auth/react'
 import enWelcomeJson from '@/public/locales/en/welcome.json'
@@ -17,34 +18,30 @@ jest.mock('next/router', () => require('next-router-mock'))
 //   useTranslation: () => ({ t: (key: any) => key })
 // }))
 
+const TOOL_TITLE = 'AI Assessment Tool'
+
+const renderIndexAndAssert = async (valuesInHtml: string[], locale = 'en'): Promise<void> => {
+  (useSession as any).mockReturnValueOnce([false, false])
+  const { container } = await renderWithThemeAndTranslations(<Index />, locale)
+  const elements = container.querySelectorAll('p')
+  const strings = []
+  for (const e of elements) {
+    strings.push(e.innerHTML)
+  }
+  expect(strings).toContain(TOOL_TITLE)
+  for (const val of valuesInHtml) {
+    expect(strings).toContain(val)
+  }
+}
+
 describe('Index page', () => {
-  it('Renders the paragraphs', async () => {
-    (useSession as any).mockReturnValueOnce([false, false])
-    const { container } = await renderWithThemeAndTranslations(<Index />)
-    const elements = container.querySelectorAll('p')
-    const strings = []
-    for (const e of elements) {
-      strings.push(e.innerHTML)
-    }
-    expect(strings).toContain('AI Assessment Tool')
+  it('Renders the paragraphs with the default locale text values', async () => {
     const vals = Object.values(enWelcomeJson)
-    for (const val of vals) {
-      expect(strings).toContain(val)
-    }
+    await renderIndexAndAssert(vals)
   })
 
-  it('Translates the keys', async () => {
-    (useSession as any).mockReturnValueOnce([false, false])
-    const { container } = await renderWithThemeAndTranslations(<Index />, 'nl')
-    const elements = container.querySelectorAll('p')
-    const strings = []
-    for (const e of elements) {
-      strings.push(e.innerHTML)
-    }
-    expect(strings).toContain('AI Assessment Tool')
+  it('Renders the paragraphs with the "nl" locale text values', async () => {
     const vals = Object.values(nlWelcomeJson)
-    for (const val of vals) {
-      expect(strings).toContain(val)
-    }
+    await renderIndexAndAssert(vals, 'nl')
   })
 })

@@ -8,23 +8,33 @@ if (MONGODB_URI == null || MONGODB_URI === '') {
   throw new Error('Please define the MONGODB_URI environment variable inside the .env files')
 }
 
-const globalAny: any = global
-
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cached = globalAny.mongo
+let cached = {} as any
 
 if (cached == null) {
-  cached = globalAny.mongo = { conn: null, promise: null }
+  cached = { conn: null, promise: null, uri: null }
 }
 
-export async function connectToDatabase (): Promise<{ client: MongoClient, db: Db }> {
-  if (cached.conn instanceof MongoClient) {
-    return cached.conn
+export async function connectToDatabase (mongoDbUri?: string, dbName?: string | null): Promise<{ client: MongoClient, db: Db }> {
+  if (cached.conn?.client instanceof MongoClient) {
+    let res = null
+    try {
+      res = await cached.conn.client.db().admin().ping()
+    } catch (e) {
+      res = null
+    }
+    if (res?.ok === 1 && ((mongoDbUri != null && cached.conn.uri === mongoDbUri) || mongoDbUri == null)) return cached.conn
+    else {
+      await cached.conn.client.close()
+      cached = { conn: null, promise: null, uri: null }
+    }
   }
+  mongoDbUri = mongoDbUri ?? String(MONGODB_URI)
+  dbName = dbName ?? (MONGODB_DB != null ? String(MONGODB_DB) : null)
 
   if (cached.promise == null) {
     const opts = {
@@ -32,13 +42,12 @@ export async function connectToDatabase (): Promise<{ client: MongoClient, db: D
       useUnifiedTopology: true
     }
 
-    const mongoURL: string = String(MONGODB_URI)
-
-    cached.promise = MongoClient.connect(mongoURL, opts).then(client => {
-      const db = typeof MONGODB_DB === 'string' && MONGODB_DB.length > 0 ? client.db(MONGODB_DB) : client.db()
+    cached.promise = MongoClient.connect(mongoDbUri, opts).then(client => {
+      const db = typeof dbName === 'string' && dbName.length > 0 ? client.db(dbName) : client.db()
       return {
         client,
-        db
+        db,
+        uri: mongoDbUri
       }
     })
   }
