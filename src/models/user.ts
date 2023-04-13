@@ -91,3 +91,21 @@ export const updateUser = async (_id: string | ObjectId, updateData: Partial<Use
   const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: update })
   return res.modifiedCount === 1
 }
+
+export const updateToDeletedUser = async (_id: string | ObjectId): Promise<boolean> => {
+  const deletedUserData: Partial<User> = {
+    email: 'deleted@user.com',
+    firstName: 'deleted',
+    lastName: 'user',
+    avatar: '',
+    xsAvatar: '',
+    isDeleted: true,
+    deletedAt: new Date()
+  }
+
+  const { db } = await connectToDatabase()
+  _id = toObjectId(_id)
+
+  const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: deletedUserData })
+  return res.modifiedCount === 1
+}

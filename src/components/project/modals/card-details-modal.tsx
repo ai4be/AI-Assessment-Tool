@@ -209,7 +209,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
   const responseHandler = getResponseHandler(showToast)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const { users } = useContext(ProjectContext)
+  const { nonDeletedUsers } = useContext(ProjectContext)
 
   const saveCard = async (data: Partial<Card>): Promise<void> => {
     setIsLoading(true)
@@ -273,7 +273,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
 
   useEffect(() => {
     const userIds = card.userIds ?? []
-    setAssignedUsers(users?.filter(user => userIds.includes(user._id)) ?? [])
+    setAssignedUsers(nonDeletedUsers?.filter(user => userIds.includes(user._id)) ?? [])
   }, [card.userIds, renderTrigger])
 
   return (
@@ -296,7 +296,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
           </SingleDatepicker>
           <Flex justifyContent='space-between' alignItems='center'>
             <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>{t('sidebar:assigned-to')}</Text>
-            <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
+            <UserMenu users={nonDeletedUsers ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
               <FiEdit2 color='#C9C9C9' cursor='pointer' />
             </UserMenu>
           </Flex>

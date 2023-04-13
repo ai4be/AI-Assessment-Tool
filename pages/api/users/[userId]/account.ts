@@ -1,21 +1,79 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getUserFromRequest, isConnected, isCurrentUser } from '@/util/temp-middleware'
+import { isConnected, isCurrentUser } from '@/util/temp-middleware'
 import templates from '@/util/mail/templates'
 import { sendMail } from '@/util/mail'
+import { getUser, getUsers, updateToDeletedUser } from '@/src/models/user'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { getUserProjects } from '@/src/models/project'
+import { Project } from '@/src/types/project'
+import { User } from '@/src/types/user'
 
-async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const user = getUserFromRequest(req)
+interface SendEmailUserRemoved {
+  project: string
+  recipients: string[]
+}
+
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  const session = await unstable_getServerSession(req, res, authOptions)
+  const user: any = await getUser({ _id: String(session?.user?.name) })
+  const { userId } = req.query
+
+  /**
+   * Function used to retrieve all projects and users emails of theses projects which the deleted user used to be part of.
+   * @returns SendEmailUserRemoved[]
+   */
+  async function buildProjectAndUsersEmails(): Promise<SendEmailUserRemoved[]> {
+    const projects: Project[] = await getUserProjects(userId) // retrieves all project that user to be deleted is part of.
+    const response = await Promise.all(
+      projects.map(async p => {
+        const users = await getUsers(p.userIds) // retrieves all members of projects which to be deleted user is part of.
+        const userCreatedBy = await getUser({ _id: p.createdBy }) // includes creator of the project
+        const userEmails = users.filter(user => user?.isDeleted !== true).map(user => user.email) // adds project users only if they're not deleted
+        userEmails.push(userCreatedBy?.isDeleted !== true ? userCreatedBy?.email ?? '' : '') // adds creator of the project only if they're not deleted
+        const recipients = userEmails.filter(email => email !== user.email) // removes to be deleted user from recipient list
+        return {
+          project: p.name,
+          recipients
+        }
+      })
+    )
+    return response
+  }
+
+  /**
+   * Sends email to deleted user to notify their account has been deleted
+   */
+  const notifyDeletedUserByEmail = async (): Promise<void> => {
+    const htmlContent = templates.deletedUserAccountHtml()
+    await sendMail(user.email, 'Deleted account', htmlContent)
+  }
+
+  /**
+   * Notifies by email all users of all projects that deleted user was part of.
+   * @param user
+   */
+  const notifyMembersProjectAboutDeletedUserByEmail = async (user: User): Promise<void> => {
+    const notificateUsersProject = await buildProjectAndUsersEmails()
+    notificateUsersProject.map(async array => {
+      const htmlContent = templates.notificationDeletedUserHtml(`${user.firstName} ${user.lastName}`, user.email, array.project)
+      await sendMail(array.recipients, 'User part of project had their account deleted', htmlContent)
+    })
+  }
 
   switch (req.method) {
     case 'DELETE': {
-      console.log('chegou delete')
-      const htmlContent = templates.deletedUserAccountHtml()
+      if (String(user._id) !== userId) return res.status(403).json({ message: 'You are not authorized to update this user' })
+      await updateToDeletedUser(userId) // marks user as deleted
+
+      // TODO: create and use a function that creates activity to all people who are in the same project as deleted user to inform that user has been deleted (maybe to be created somewhere else)
       if (user == null) {
         return res.status(422).json({ code: 10007 })
       } else {
-        await sendMail(user.email, 'Deleted account', htmlContent)
-        return res.send(200)
+        await notifyMembersProjectAboutDeletedUserByEmail(user)
+        await notifyDeletedUserByEmail()
       }
+      return res.send(200)
     }
     default:
       return res.status(400).send({ message: 'Invalid request' })

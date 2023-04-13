@@ -10,7 +10,7 @@ import { SortMenu } from '@/src/components/project/project-bar/sort-menu'
 import { FilterMenu } from '@/src/components/project/project-bar/filter-menu'
 
 const ProjectBar = ({ project }: { project: any }): JSX.Element => {
-  const { users = [] } = useContext(ProjectContext)
+  const { nonDeletedUsers = [] } = useContext(ProjectContext)
 
   return (
     <Flex justifyContent='center' alignItems='center' position='relative' height='40px'>
@@ -32,7 +32,7 @@ const ProjectBar = ({ project }: { project: any }): JSX.Element => {
         {/* <Box>{loadProjectUsers()}</Box> */}
         <AvatarGroup size='sm' max={5}>
           {/* {users.map((u, idx) => (<Avatar key={idx} bg='transparent' icon={<BiUser size='20' className='icon-blue-color' />} />))} */}
-          {Array.isArray(users) && users.map(user => <Avatar key={user._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
+          {Array.isArray(nonDeletedUsers) && nonDeletedUsers.map(user => <Avatar key={user._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
         </AvatarGroup>
         <Box>
           {/* <InviteModal project={project} /> */}

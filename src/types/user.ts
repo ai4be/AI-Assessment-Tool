@@ -8,6 +8,8 @@ export interface User {
   avatar?: string
   xsAvatar?: string
   createdAt?: Date
+  isDeleted?: boolean
+  deletedAt?: Date
 }
 
 export type UserCreate = Pick<User, 'email' | 'password' | 'firstName' | 'lastName'>

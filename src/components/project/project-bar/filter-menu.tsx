@@ -49,7 +49,7 @@ let timeoutId: any
 export const FilterMenu = (props: any): JSX.Element => {
   const { t } = useTranslation()
   const router = useRouter()
-  const { users = [] } = useContext(ProjectContext)
+  const { nonDeletedUsers = [] } = useContext(ProjectContext)
   const [includedUserIds, setIncludedUserIds] = useState<string[]>([])
   const [assignment, setAssigment] = useState<Assignment | String>('')
   const [dueDate, setDueDate] = useState<DueDate | String>('')
@@ -176,7 +176,7 @@ export const FilterMenu = (props: any): JSX.Element => {
             {ASSIGNMENT_LABELS[Assignment.ASSIGNED_TO]}
           </MenuItemOption>
           <MenuOptionGroup type='checkbox' value={includedUserIds} onChange={val => setIncludedUserIds(val as string[])}>
-            {Array.isArray(users) && users.map(user => (
+            {Array.isArray(nonDeletedUsers) && nonDeletedUsers.map(user => (
               <MenuItemOption key={user._id} value={String(user._id)} pl='6' isDisabled={assignment !== Assignment.ASSIGNED_TO}>
                 <Flex justifyContent='flex-start' alignItems='center'>
                   <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} mr='1' />
