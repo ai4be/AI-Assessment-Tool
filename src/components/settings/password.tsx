@@ -3,13 +3,17 @@ import {
   Box, Heading, FormControl, Button,
   Input,
   Text,
-  useToast
+  useToast,
+  InputGroup,
+  InputRightElement,
+  IconButton
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import { defaultFetchOptions } from '@/util/api'
 import { isEmpty } from '@/util/index'
 import { isPasswordValid } from '@/util/validator'
 import UserContext from '../../store/user-context'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 const PasswordSettings = (): JSX.Element => {
   const { t } = useTranslation()
@@ -29,6 +33,11 @@ const PasswordSettings = (): JSX.Element => {
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
+  })
+  const [showPasswords, setShowPasswords] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false
   })
 
   useEffect(() => {
@@ -104,40 +113,71 @@ const PasswordSettings = (): JSX.Element => {
     <Box p='2' height='fit-content' minW={300}>
       <Heading size='md'>{t('settings:change-password')}</Heading>
       <FormControl my='4' isRequired>
-        <Input
-          type='password'
-          name='currentPassword'
-          value={values.currentPassword}
-          placeholder={`${t('placeholders:current-password')}`}
-          onBlur={() => setTouched({ ...touched, currentPassword: true })}
-          onChange={handleChange}
-        />
+        <InputGroup>
+          <Input
+            type={showPasswords.currentPassword ? 'text' : 'password'}
+            name='currentPassword'
+            value={values.currentPassword}
+            placeholder={`${t('placeholders:current-password')}`}
+            onBlur={() => setTouched({ ...touched, currentPassword: true })}
+            onChange={handleChange}
+          />
+          <InputRightElement>
+            <IconButton
+              size='sm'
+              aria-label={showPasswords.currentPassword ? 'Hide password' : 'Show password'}
+              icon={showPasswords.currentPassword ? <ViewIcon /> : <ViewOffIcon />}
+              onClick={() => setShowPasswords({ ...showPasswords, currentPassword: !showPasswords.currentPassword })}
+            />
+          </InputRightElement>
+        </InputGroup>
       </FormControl>
       <FormControl my='4' isInvalid={passwordLengthErr || passwordCharErr} isRequired>
-        <Input
-          type='password'
-          name='newPassword'
-          value={values.newPassword}
-          placeholder={`${t('placeholders:new-password')}`}
-          onBlur={() => setTouched({ ...touched, newPassword: true })}
-          onChange={handleChange}
-        />
+        <InputGroup>
+          <Input
+            type={showPasswords.newPassword ? 'text' : 'password'}
+            name='newPassword'
+            value={values.newPassword}
+            placeholder={`${t('placeholders:new-password')}`}
+            onBlur={() => setTouched({ ...touched, newPassword: true })}
+            onChange={handleChange}
+          />
+          <InputRightElement>
+            <IconButton
+              size='sm'
+              aria-label={showPasswords.newPassword ? 'Hide password' : 'Show password'}
+              icon={showPasswords.newPassword ? <ViewIcon /> : <ViewOffIcon />}
+              onClick={() => setShowPasswords({ ...showPasswords, newPassword: !showPasswords.newPassword })}
+            />
+          </InputRightElement>
+        </InputGroup>
         <Text noOfLines={3} fontSize='xs' color='red.500'>
-          {passwordLengthErr && `${t('validations:password-length')}`}
-          {passwordCharErr && `${t('validations:password-must-contain-number-and-special')}`}
+          {passwordLengthErr && t('validations:password-length')}
+          <br />
+          {passwordCharErr && t('validations:password-must-contain-number-and-special')}
         </Text>
       </FormControl>
       <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
-        <Input
-          type='password'
-          name='confirmPassword'
-          value={values.confirmPassword}
-          placeholder={`${t('placeholders:confirm-password')}`}
-          onChange={handleChange}
-          onBlur={() => setTouchedWrapper('confirmPassword', 0)}
-        />
+        <InputGroup>
+          <Input
+            type={showPasswords.confirmPassword ? 'text' : 'password'}
+            name='confirmPassword'
+            value={values.confirmPassword}
+            placeholder={`${t('placeholders:confirm-password')}`}
+            onChange={handleChange}
+            onBlur={() => setTouchedWrapper('confirmPassword', 0)}
+          />
+          <InputRightElement>
+            <IconButton
+              size='sm'
+              aria-label={showPasswords.confirmPassword ? 'Hide password' : 'Show password'}
+              icon={showPasswords.confirmPassword ? <ViewIcon /> : <ViewOffIcon />}
+              onClick={() => setShowPasswords({ ...showPasswords, confirmPassword: !showPasswords.confirmPassword })}
+            />
+          </InputRightElement>
+        </InputGroup>
         <Text noOfLines={1} fontSize='xs' color='red.500'>
-          {confirmPasswordErr && <p color='red'>{t('validations:passwords-unmatch')}</p>}
+          {confirmPasswordErr && t('validations:passwords-unmatch')}
         </Text>
       </FormControl>
       <Button

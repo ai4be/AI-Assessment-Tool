@@ -7,7 +7,10 @@ import {
   Button,
   Image,
   Link,
-  Text
+  Text,
+  InputGroup,
+  InputRightElement,
+  IconButton
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from '@/src/components/navbar'
@@ -16,6 +19,7 @@ import { isEmpty, debounce } from '@/util/index'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 import ToastContext from '@/src/store/toast-context'
 import { useTranslation } from 'next-i18next'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 const SignUp = (): JSX.Element => {
   const { t } = useTranslation()
@@ -31,6 +35,12 @@ const SignUp = (): JSX.Element => {
     lastName: '',
     confirmPassword: ''
   })
+
+  const [showPasswords, setShowPasswords] = useState({
+    password: false,
+    confirmPassword: false
+  })
+
   const [touched, setTouched] = useState({
     email: false,
     password: false,
@@ -228,26 +238,46 @@ const SignUp = (): JSX.Element => {
               />
             </FormControl>
             <FormControl my='4' isInvalid={passwordLengthErr || passwordCharErr} isRequired>
-              <Input
-                type='password'
-                name='password'
-                value={values.password}
-                placeholder={`${t('placeholders:create-password')}`}
-                onBlur={() => setTouched({ ...touched, password: true })}
-                onChange={handleChange}
-              />
+              <InputGroup>
+                <Input
+                  type={showPasswords.password ? 'text' : 'password'}
+                  name='password'
+                  value={values.password}
+                  placeholder={`${t('placeholders:create-password')}`}
+                  onBlur={() => setTouched({ ...touched, password: true })}
+                  onChange={handleChange}
+                />
+                <InputRightElement>
+                  <IconButton
+                    size='sm'
+                    aria-label={showPasswords.password ? 'Hide password' : 'Show password'}
+                    icon={showPasswords.password ? <ViewIcon /> : <ViewOffIcon />}
+                    onClick={() => setShowPasswords({ ...showPasswords, password: !showPasswords.password })}
+                  />
+                </InputRightElement>
+              </InputGroup>
               {passwordLengthErr && <Text size='xs' color='red'>{t('validations:password-too-short')}</Text>}
               {passwordCharErr && <Text size='xs' color='red'>{t('validations:include-special-character-and-number')}</Text>}
             </FormControl>
             <FormControl my='4' isInvalid={confirmPasswordErr} isRequired>
-              <Input
-                type='password'
-                name='confirmPassword'
-                value={values.confirmPassword}
-                placeholder={`${t('placeholders:confirm-password')}`}
-                onChange={handleChange}
-                onBlur={() => setTouched({ ...touched, confirmPassword: true })}
-              />
+              <InputGroup>
+                <Input
+                  type={showPasswords.confirmPassword ? 'text' : 'password'}
+                  name='confirmPassword'
+                  value={values.confirmPassword}
+                  placeholder={`${t('placeholders:confirm-password')}`}
+                  onChange={handleChange}
+                  onBlur={() => setTouched({ ...touched, confirmPassword: true })}
+                />
+                <InputRightElement>
+                  <IconButton
+                    size='sm'
+                    aria-label={showPasswords.password ? 'Hide confirm password' : 'Show confirm password'}
+                    icon={showPasswords.confirmPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    onClick={() => setShowPasswords({ ...showPasswords, confirmPassword: !showPasswords.confirmPassword })}
+                  />
+                </InputRightElement>
+              </InputGroup>
               {confirmPasswordErr && <Text size='xs' color='red'>{t('validations:passwords-unmatch')}</Text>}
             </FormControl>
             <Button

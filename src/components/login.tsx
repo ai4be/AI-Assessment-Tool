@@ -7,7 +7,10 @@ import {
   Input,
   Button,
   Image,
-  Link
+  Link,
+  InputGroup,
+  InputRightElement,
+  IconButton
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from './navbar'
@@ -15,6 +18,7 @@ import { isEmailValid } from '@/util/validator'
 import { isEmpty } from '@/util/index'
 import ToastContext from '@/src/store/toast-context'
 import { useTranslation } from 'next-i18next'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 const Login = (): JSX.Element => {
   const { t } = useTranslation()
@@ -30,6 +34,13 @@ const Login = (): JSX.Element => {
     email: emailQuery ?? '',
     password: ''
   })
+
+  const [showPassword, setShowPassword] = useState(false)
+
+  const handleClick = (e): void => {
+    e.preventDefault()
+    setShowPassword(!showPassword)
+  }
 
   useEffect(() => {
     setDisabled(isEmpty(values.email) || isEmpty(values.password))
@@ -141,16 +152,27 @@ const Login = (): JSX.Element => {
                   onChange={handleChange}
                   autoComplete='off'
                 />
+
               </FormControl>
               <FormControl mt={6}>
-                <Input
-                  type='password'
-                  name='password'
-                  value={values.password}
-                  placeholder={`${t('placeholders:password')}`}
-                  autoComplete='off'
-                  onChange={handleChange}
-                />
+                <InputGroup>
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    name='password'
+                    value={values.password}
+                    placeholder={`${t('placeholders:password')}`}
+                    autoComplete='off'
+                    onChange={handleChange}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      size='sm'
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      icon={showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                      onClick={handleClick}
+                    />
+                  </InputRightElement>
+                </InputGroup>
               </FormControl>
               <Button
                 width='full'
