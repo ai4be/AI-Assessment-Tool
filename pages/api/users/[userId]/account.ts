@@ -14,7 +14,7 @@ interface SendEmailUserRemoved {
   recipients: string[]
 }
 
-async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
   const user: any = await getUser({ _id: String(session?.user?.name) })
   const { userId } = req.query
@@ -23,15 +23,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
    * Function used to retrieve all projects and users emails of theses projects which the deleted user used to be part of.
    * @returns SendEmailUserRemoved[]
    */
-  async function buildProjectAndUsersEmails(): Promise<SendEmailUserRemoved[]> {
+  async function buildProjectAndUsersEmails (): Promise<SendEmailUserRemoved[]> {
     const projects: Project[] = await getUserProjects(userId) // retrieves all project that user to be deleted is part of.
     const response = await Promise.all(
       projects.map(async p => {
         const users = await getUsers(p.userIds) // retrieves all members of projects which to be deleted user is part of.
         const userCreatedBy = await getUser({ _id: p.createdBy }) // includes creator of the project
-        const userEmails = users.filter(user => user?.isDeleted !== true).map(user => user.email) // adds project users only if they're not deleted
-        userEmails.push(userCreatedBy?.isDeleted !== true ? userCreatedBy?.email ?? '' : '') // adds creator of the project only if they're not deleted
-        const recipients = userEmails.filter(email => email !== user.email) // removes to be deleted user from recipient list
+        const recipients = users.filter(user => user?.isDeleted !== true).map(user => user.email) // adds project users only if they're not deleted
+        recipients.push(userCreatedBy?.isDeleted !== true ? userCreatedBy?.email ?? '' : '') // adds creator of the project only if they're not deleted
         return {
           project: p.name,
           recipients
