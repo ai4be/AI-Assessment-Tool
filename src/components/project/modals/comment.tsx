@@ -56,7 +56,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
   const router = useRouter()
   const { comment: commentId } = router.query
   const commentElement = useRef<HTMLDivElement>(null) // to be able to access the current one
-  const { users, nonDeletedUsers } = useContext(ProjectContext)
+  const { users, nonDeletedUsers, inactiveUsers } = useContext(ProjectContext)
   const { user } = useContext(UserContext)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [value, setValue] = useState(comment?.text ?? '')
@@ -86,9 +86,10 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
   }, [comment.parent])
 
   useEffect(() => {
+    const activeAndInactiveUsers = users?.concat(inactiveUsers)
     if (comment?._id == null) setUsersComment(user)
     else {
-      const userComment = users?.find(u => u._id === comment.userId)
+      const userComment = activeAndInactiveUsers?.find(u => u._id === comment.userId)
       setUsersComment(userComment)
     }
   }, [comment?.userId, user, users])

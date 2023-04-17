@@ -12,6 +12,7 @@ interface ProjectContextType {
   categoryClickHandler?: any
   users?: any[]
   nonDeletedUsers?: any[]
+  inactiveUsers?: any[]
 }
 
 const ProjectContext: Context<ProjectContextType> = createContext({})
@@ -39,8 +40,9 @@ export function ProjectContextProvider (props: any): JSX.Element {
     setProject,
     categories,
     categoryClickHandler,
-    users,
-    nonDeletedUsers: users?.filter(user => user.isDeleted !== true)
+    users: users?.activeUsers,
+    nonDeletedUsers: users?.activeUsers?.filter(user => user.isDeleted !== true),
+    inactiveUsers: users?.inactiveUsers
   }
 
   return (

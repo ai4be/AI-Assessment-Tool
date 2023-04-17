@@ -97,8 +97,6 @@ export const updateToDeletedUser = async (_id: string | ObjectId): Promise<boole
     email: 'deleted@user.com',
     firstName: 'deleted',
     lastName: 'user',
-    avatar: '',
-    xsAvatar: '',
     isDeleted: true,
     deletedAt: new Date()
   }
