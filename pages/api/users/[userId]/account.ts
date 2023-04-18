@@ -5,7 +5,7 @@ import { sendMail } from '@/util/mail'
 import { getUser, getUsers, updateToDeletedUser } from '@/src/models/user'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { getUserProjects } from '@/src/models/project'
+import { getUserProjects, removeUser } from '@/src/models/project'
 import { Project } from '@/src/types/project'
 import { User } from '@/src/types/user'
 
@@ -63,9 +63,10 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
   switch (req.method) {
     case 'DELETE': {
       if (String(user._id) !== userId) return res.status(403).json({ message: 'You are not authorized to update this user' })
+      // update user to inactive in all projects which user is part of.
+      const allProjectIdsUser = await getUserProjects(userId)
+      allProjectIdsUser.map(async project => await removeUser(project._id, userId)) // remove user from user project lists and put user into project inactive user lists.
       await updateToDeletedUser(userId) // marks user as deleted
-
-      // TODO: create and use a function that creates activity to all people who are in the same project as deleted user to inform that user has been deleted (maybe to be created somewhere else)
       if (user == null) {
         return res.status(422).json({ code: 10007 })
       } else {
