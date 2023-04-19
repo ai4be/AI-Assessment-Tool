@@ -12,6 +12,7 @@
   - [Tech stacks](#tech-stacks)
   - [Contributing](#contributing)
   - [License](#license)
+  - [Tests](#tests)
 
 ## Overview
 
@@ -82,3 +83,13 @@ All contributions are welcome!
 This project is licensed under the **MIT license**. Feel free to edit and distribute this template as you like.
 
 See [LICENSE](LICENSE) for more information.
+
+## Tests
+
+```bash
+# to run all tests
+yarn test
+
+# to run specific tests executed from the base directory
+yarn test --rootDir $PWD __tests__/api/projects/index.test.ts "__tests__/api/auth/\[...nextauth\].test.ts"
+```

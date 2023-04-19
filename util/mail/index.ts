@@ -45,7 +45,7 @@ export const sendMail = async (to: string | string[], subject: string, html: str
   if (!isEmpty(bcc)) mailOptions.bcc = bcc
   // send mail with defined transport object
   const info = await transporter.sendMail(mailOptions)
-  console.log(info)
+  // console.log(info)
   transporter.close()
   return info
 }

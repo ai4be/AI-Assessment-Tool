@@ -1,7 +1,8 @@
 import { hash, compare } from 'bcryptjs'
 
 export async function hashPassword (password: string): Promise<string> {
-  const hashedPassword = await hash(password, 12)
+  const SALT_ROUNDS = +(process.env.SALT_ROUNDS ?? 12)
+  const hashedPassword = await hash(password, SALT_ROUNDS)
   return hashedPassword
 }
 

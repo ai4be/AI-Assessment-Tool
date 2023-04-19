@@ -10,11 +10,18 @@ import i18NextConfig from '../../next-i18next.config'
 import i18nextFSBackend from 'i18next-fs-backend'
 import { faker } from '@faker-js/faker'
 import { createUser } from '@/src/models/user'
+import { createProject, getProject } from '@/src/models/project'
 import { User } from '@/src/types/user'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { connectToDatabase } from '@/src/models/mongodb'
 import { MongoClient } from 'mongodb'
 import { hashPassword } from '@/util/auth'
+import { encode } from 'next-auth/jwt'
+import { industries } from '@/pages/api/industries'
+import { Project } from '@/src/types/project'
+import { timeIt } from '..'
+
+const { JWT_SECRET_KEY } = process.env
 
 const namespaces = [
   'api-messages',
@@ -79,27 +86,80 @@ export const setupMongoDB = (): { mongoServer: MongoMemoryServer | null, client:
     mongoServer: null,
     client: null
   }
-  beforeEach(async () => {
+  beforeAll(async () => {
     // https://dev.to/remrkabledev/testing-with-mongodb-memory-server-4ja2
     context.mongoServer = await MongoMemoryServer.create()
     const uri = context.mongoServer.getUri()
-    const clientAndDB = await connectToDatabase(uri, faker.random.word())
+    const clientAndDB = await connectToDatabase(uri, faker.random.alphaNumeric(10))
     context.client = clientAndDB.client
   })
+  // beforeEach(async () => {
+  //   await context.client?.db().dropDatabase()
+  // })
   afterEach(async () => {
+    await context.client?.db().dropDatabase()
+  })
+  afterAll(async () => {
     await context.client?.close()
     await context.mongoServer?.stop()
   })
   return context
 }
 
-export const givenAUser = async (data = {}): Promise<Partial<User>> => {
-  const user = {
+export const givenUserData = (data: any = {}): Partial<User> => {
+  return {
     email: faker.internet.email(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    password: faker.internet.password()
+    password: faker.internet.password(10, undefined, undefined,'P@ssw0rd'),
+    ...data
   }
-  await createUser({ ...user, password: await hashPassword(user.password) })
-  return user
+}
+
+export const givenProjectData = (data: any = {}): Partial<Project> => {
+  return {
+    name: faker.internet.userName(),
+    description: faker.lorem.paragraph(),
+    industry: faker.helpers.arrayElement(industries).name,
+    ...data
+  }
+}
+
+export const givenAUser = async (data = {}): Promise<User> => {
+  const user = givenUserData(data) as User
+  const hashedPassword = await hashPassword(String(user.password))
+  const createdUser = await createUser({ ...user, password: hashedPassword })
+  return { ...createdUser, password: user.password }
+}
+
+export const givenMultipleUsers = async (count: number, data = {}): Promise<User[]> => {
+  const users = []
+  for (let i = 0; i < count; i++) {
+    users.push(givenAUser(data))
+  }
+  return await Promise.all(users)
+}
+
+export const givenAProject = async (data = {}, user: User | undefined): Promise<Project> => {
+  if (user == null) user = await givenAUser()
+  const project = givenProjectData(data) as Project
+  const projectId = await createProject({ ...project, createdBy: user._id })
+  return await getProject(projectId)
+}
+
+export const givenMultipleProjects = async (count: number, data = {}, user: User | undefined): Promise<Project[]> => {
+  const projects = []
+  for (let i = 0; i < count; i++) {
+    projects.push(givenAProject(data, user))
+  }
+  return await Promise.all(projects)
+}
+
+export const givenAnAuthenticationToken = async (user: User, secret: string = String(JWT_SECRET_KEY)): Promise<string> => {
+  const tokenData = { sub: String(user._id), email: user.email, name: String(user._id) }
+  const token = await encode({
+    secret,
+    token: tokenData
+  })
+  return token
 }

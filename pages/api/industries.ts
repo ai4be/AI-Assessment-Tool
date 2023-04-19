@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { isConnected } from '@/util/temp-middleware'
 
-const industries = [
+export const industries = [
   'Accommodation and Food Services',
   'Administration, Business Support and Waste Management Services',
   'Agriculture, Forestry, Fishing and Hunting',
