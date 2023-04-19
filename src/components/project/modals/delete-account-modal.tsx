@@ -13,6 +13,7 @@ import {
   ListItem
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
+import { signOut } from 'next-auth/react'
 import { defaultFetchOptions, getResponseHandlerCustomMessage, HTTP_METHODS } from '@/util/api'
 import UserContext from '@/src/store/user-context'
 import ToastContext from '@/src/store/toast-context'
@@ -59,6 +60,7 @@ export const DeleteAccountModal = ({ successCb, cancelCb, failCb, onCloseCb }: E
     })
     await responseHandler(response, `${t('settings:account-deleted-successfully')}`)
     if (response.ok) {
+      await signOut()
       await redirectToLoginPage()
       closeFn()
       if (successCb != null) successCb()
