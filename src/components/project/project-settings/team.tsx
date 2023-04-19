@@ -45,6 +45,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
       context.nonDeletedUsers = context.nonDeletedUsers?.filter((u: any) => u._id !== user._id)
       project.userIds = project.userIds?.filter(uid => uid !== user._id)
       context.setProject(project)
+      await context.fetchUsers()
     }
     setDeleteHandler(() => emptyFn)
     setIsLoading(false)
