@@ -125,7 +125,7 @@ const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionS
       <QuestionComp question={question} onChange={saveQuestion} />
       <CommentComponent comment={newComment} onSave={async (data: Partial<Comment>) => await saveComment(newComment, data, question)} ml='3' />
       {question.comments?.map(c => (
-        <CommentComponent key={c._id} comment={c} setNewCommentParent={setNewCommentParent} onSave={async data => await saveComment(c, data, question)} onDelete={async () => await deleteComment(c, question)} ml='3' />
+        <CommentComponent key={c._id} comment={c} setNewCommentParent={setNewCommentParent} onSave={async (data: Partial<Comment>) => await saveComment(c, data, question)} onDelete={async () => await deleteComment(c, question)} ml='3' />
       ))}
     </Box>
   )

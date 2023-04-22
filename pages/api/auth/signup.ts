@@ -8,6 +8,7 @@ import { User } from '@/src/types/user'
 import { sendMail } from '@/util/mail'
 import { getVerifyEmailHtml } from '@/util/mail/templates'
 import SignUp from '@/src/components/signup'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 async function sendEmailVerifictionEmail (user: User): Promise<void> {
   const tokenInstance = await createEmailVerificationToken(user.email, user?._id as string)
@@ -16,7 +17,7 @@ async function sendEmailVerifictionEmail (user: User): Promise<void> {
   await sendMail(user.email, 'Email-verfication', html)
 }
 
-async function handler (req, res): Promise<any> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<any> {
   if (req.method !== 'POST') return res.status(405).json({ code: 11001 })
 
   let { email, password, firstName, lastName, token } = req.body

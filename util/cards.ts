@@ -1,3 +1,4 @@
+import { Card } from '@/src/types/card'
 import { defaultFetchOptions } from './api'
 
 interface CardPatch {
@@ -9,7 +10,7 @@ interface CardPatch {
   sequence?: number
 }
 
-export const addCard = async (columnId: string, projectId: string, userId: string, cards): Promise<any> => {
+export const addCard = async (columnId: string, projectId: string, userId: string, cards: Card[]): Promise<any> => {
   const filteredCards = cards.filter((card) => card.columnId === columnId)
   let sequence = 1
   if (filteredCards.length > 0) {

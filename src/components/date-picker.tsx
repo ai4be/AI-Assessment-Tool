@@ -155,7 +155,7 @@ const SingleDatepickerCalendar = (
               </Box>
             ))}
             {calendar.weeks.map((week, weekIndex) => {
-              return week.map((dateObj: DateObj, index) => {
+              return week.map((dateObj: any, index: number) => {
                 const {
                   date,
                   today,
@@ -244,6 +244,8 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   if (date != null) opts.selected = date
   const dayzedData = useDayzed(opts)
 
+  const PopoverTrigger2 = PopoverTrigger as any
+
   return (
     <Popover
       placement='bottom'
@@ -254,12 +256,12 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
       initialFocusRef={initialFocusRef}
       isLazy
     >
-      <PopoverTrigger>
+      <PopoverTrigger2>
         <Box cursor='pointer' onClick={() => popoverOpen ? null : openpopover()}>
-          {props.children}
+          {(props as any).children}
           <Box display='none'>{date != null ? date.toISOString() : ''}</Box>
         </Box>
-      </PopoverTrigger>
+      </PopoverTrigger2>
       <PopoverContent ref={ref}>
         <PopoverBody
           padding='10px 5px'

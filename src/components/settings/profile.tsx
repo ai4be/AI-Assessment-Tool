@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, MouseEvent } from 'react'
 import {
   Box, Heading, FormControl, Button,
   FormLabel,
@@ -66,7 +66,7 @@ const Profile = (): JSX.Element => {
   }, [values.lastName, touched.lastName])
 
   const setTouchedWrapper = (field: string, waitTimeMS = 0): void => {
-    if (touched[field] !== true) {
+    if ((touched as any)[field] !== true) {
       waitTimeMS > 0
         ? setTimeout(() => setTouchedWrapper(field, 0), waitTimeMS)
         : setTouched({ ...touched, [field]: true })
@@ -84,7 +84,7 @@ const Profile = (): JSX.Element => {
     setTouched({ ...touched, [name]: true })
   }
 
-  const updateProfile = async (e): Promise<void> => {
+  const updateProfile = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     const data: any = {
@@ -184,8 +184,8 @@ const Profile = (): JSX.Element => {
         <FormLabel fontSize='xs' pl='1' color='var(--text-grey)'>Avatar</FormLabel>
         <ImgInput
           data={values.avatar}
-          onChange={(base64Data) => setValues({ ...values, avatar: base64Data })}
-          placeholder={`${user?.firstName} ${user?.lastName}`}
+          onChange={(base64Data: string) => setValues({ ...values, avatar: base64Data })}
+          placeholder={user != null ? `${user?.firstName} ${user?.lastName}` : ''}
         />
       </FormControl>
       <Button
@@ -195,7 +195,7 @@ const Profile = (): JSX.Element => {
         disabled={isDisabled}
         bg='success'
         color='white'
-        onClick={updateProfile}
+        onClick={updateProfile} // eslint-disable-line @typescript-eslint/no-misused-promises
         isLoading={isLoading}
         loadingText={`${t('settings:updating')}`}
       >

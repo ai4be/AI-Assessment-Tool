@@ -148,11 +148,11 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
           <Divider orientation='vertical' height='50%' color='#F0EEF9' position='absolute' />
         </Flex>
         <Menu>
-          <MenuButton size='xs' mr='5px'>
+          <MenuButton mr='5px'>
             <Flex justifyContent='center' alignItems='center'>
               <Avatar
                 size='sm'
-                name={`${user?.firstName} ${user?.lastName}`}
+                name={ user != null ? `${user?.firstName} ${user?.lastName}` : ''}
                 src={user?.xsAvatar}
                 // backgroundColor='#F0EEF9'
                 // icon={<BiUser size='20' className='icon-blue-color' />}
@@ -194,11 +194,11 @@ const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): J
               colorScheme='blackAlpha'
               aria-label='Show menu'
               variant='outline'
-              onClick={onShowSidebar}
+              onClick={onShowSidebar != null ? () => onShowSidebar() : () => { }}
             />
           </Box>
         )}
-        <Box href='/' onClick={async () => await router.push('/home')}>
+        <Box onClick={async () => await router.push('/home')}>
           <AI4BelgiumIcon />
         </Box>
         <Spacer />

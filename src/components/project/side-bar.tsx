@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import {
-  Box, Button, Slide, IconButton, Collapse, useDisclosure
+  Box, Button,
+  // Slide,
+  IconButton, Collapse, useDisclosure
 } from '@chakra-ui/react'
 import ProjectContext from '@/src/store/project-context'
 import { useRouter } from 'next/router'
@@ -8,11 +10,11 @@ import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-men
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
 interface Props {
-  page: string,
-  children: string | JSX.Element | JSX.Element[],
+  page: string
   isOpen: boolean
-  variant: 'menu' | 'sidebar' | undefined | string,
-  showSidebarButton?: boolean,
+  variant: 'menu' | 'sidebar' | undefined | string
+  children?: string | JSX.Element | JSX.Element[]
+  showSidebarButton?: boolean
 }
 
 const SideBar = (props: Props): JSX.Element => {

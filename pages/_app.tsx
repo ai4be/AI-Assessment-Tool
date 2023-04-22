@@ -28,7 +28,7 @@ export const theme = extendTheme({
   }
 })
 
-const App = ({ Component, pageProps }): JSX.Element => {
+const App = ({ Component, pageProps }: any): JSX.Element => {
   return (
     <>
       <Head>

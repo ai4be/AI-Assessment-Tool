@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, useBreakpointValue } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import ProjectColumns from '@/src/components/project/columns'
 import { ProjectContextProvider } from '@/src/store/project-context'
@@ -9,7 +9,6 @@ import ProgressBar, { SECTION_CHECKLIST } from '@/src/components/project/progres
 import { Category, Project, Section } from '@/src/types/project'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 import Checklist from '@/src/components/project/checklist'
-import { useBreakpointValue } from '@chakra-ui/react'
 
 const smVariant = { navigation: 'menu', navigationButton: true }
 const mdVariant = { navigation: 'sidebar', navigationButton: false }
@@ -41,6 +40,7 @@ const ProjectComponent: FC<Props> = (props): JSX.Element => {
               : <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
                 <Box display='flex' position='relative'>
                   <SideBar
+                    page='projects'
                     variant={variants?.navigation}
                     isOpen={isSidebarOpen}
                     showSidebarButton={variants?.navigationButton}

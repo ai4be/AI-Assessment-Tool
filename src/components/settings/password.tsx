@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, MouseEvent } from 'react'
 import {
   Box, Heading, FormControl, Button,
   Input,
@@ -58,7 +58,7 @@ const PasswordSettings = (): JSX.Element => {
   }, [values.confirmPassword, values.currentPassword, values.newPassword, passwordLengthErr, passwordCharErr, confirmPasswordErr])
 
   const setTouchedWrapper = (field: string, waitTimeMS = 0): void => {
-    if (touched[field] !== true) {
+    if ((touched as any)[field] !== true) {
       waitTimeMS > 0
         ? setTimeout(() => setTouchedWrapper(field, 0), waitTimeMS)
         : setTouched({ ...touched, [field]: true })
@@ -71,7 +71,7 @@ const PasswordSettings = (): JSX.Element => {
     setTouchedWrapper(name, 800)
   }
 
-  const changePassword = async (e): Promise<void> => {
+  const changePassword = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     const { currentPassword, confirmPassword, newPassword } = values
@@ -187,7 +187,7 @@ const PasswordSettings = (): JSX.Element => {
         disabled={isDisabled}
         bg='success'
         color='white'
-        onClick={changePassword}
+        onClick={changePassword} // eslint-disable-line @typescript-eslint/no-misused-promises
         isLoading={isLoading}
         loadingText={`${t('settings:updating')}`}
       >

@@ -8,7 +8,7 @@ export default function Page (props: any): JSX.Element {
   return (<ResetPassword {...props} />)
 }
 
-export const getServerSideProps = setup(async (ctx): Promise<any> => {
+export const getServerSideProps = setup(async (ctx: any): Promise<any> => {
   const session = await getSession()
   const { token } = ctx.query
   const dbToken = token != null ? await getToken({ token, type: TokenType.RESET_PASSWORD }) : null

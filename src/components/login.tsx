@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { MouseEvent, PointerEvent, useContext, useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import {
   Flex,
@@ -46,7 +46,7 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
     setDisabled(isEmpty(values.email) || isEmpty(values.password))
   }, [values.email, values.password])
 
-  const loginUser = async (e): Promise<void> => {
+  const loginUser = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     if (!isEmailValid(values.email)) {
       showToast({

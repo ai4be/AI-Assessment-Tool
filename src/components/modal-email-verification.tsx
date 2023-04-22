@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, MouseEvent } from 'react'
 import {
   Button,
   Input,
@@ -75,7 +75,7 @@ export const EmailVerificationModal = ({
   }
 
   const setTouchedWrapper = (field: string, waitTimeMS = 0): void => {
-    if (touched[field] !== true) {
+    if ((touched as any)[field] !== true) {
       waitTimeMS > 0
         ? setTimeout(() => setTouchedWrapper(field, 0), waitTimeMS)
         : setTouched({ ...touched, [field]: true })
@@ -92,7 +92,7 @@ export const EmailVerificationModal = ({
     })
   }
 
-  const cancelTokenVerification = async (e): Promise<void> => {
+  const cancelTokenVerification = async (e: React.MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     if (getTokenAtInit) await invalidateToken()
@@ -102,7 +102,7 @@ export const EmailVerificationModal = ({
     setIsLoading(false)
   }
 
-  const finializeVerification = async (e): Promise<void> => {
+  const finializeVerification = async (e: React.MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     const { email, token } = values
@@ -127,7 +127,7 @@ export const EmailVerificationModal = ({
     setIsLoading(false)
   }
 
-  const initiateEmailVerificationRequest = async (e?): Promise<void> => {
+  const initiateEmailVerificationRequest = async (e?: React.MouseEvent): Promise<void> => {
     if (e?.preventDefault != null) e.preventDefault()
     setIsLoading(true)
     const { email } = values
@@ -141,12 +141,12 @@ export const EmailVerificationModal = ({
       body: JSON.stringify(data)
     })
     const resultCall = await response.json()
-    const msg = t([`api-messages:${resultCall.code}`, 'code'])
+    const msg = t([`api-messages:${String(resultCall.code)}`, 'code'])
     await responseHandler(response, msg)
     setIsLoading(false)
   }
 
-  const askForNewToken = async (e): Promise<void> => {
+  const askForNewToken = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     await invalidateToken()

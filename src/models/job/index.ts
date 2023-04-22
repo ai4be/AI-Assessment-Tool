@@ -64,7 +64,7 @@ export default class Job extends Model implements JobInterface {
     let error = null
     try {
       await job.run()
-    } catch (e) {
+    } catch (e: any) {
       error = e.message
     }
     await db

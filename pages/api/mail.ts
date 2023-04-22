@@ -23,7 +23,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       try {
         tokenInstance = await inviteUser(projectId, email, creator?._id)
       } catch (error) {
-        return res.status(400).json({ message: error?.message ?? 'Something went wrong' })
+        return res.status(400).json({ message: (error as any)?.message ?? 'Something went wrong' })
       }
       const user = await getUser({ email })
       const page = user != null ? 'login' : 'signup'

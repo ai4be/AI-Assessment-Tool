@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useContext, MouseEvent } from 'react'
 import {
   Flex,
   Box,
@@ -34,7 +34,7 @@ const ResetPassword = (props: any): JSX.Element => {
     email: false
   })
   const [isCreating, setIsCreatingStatus] = useState(false)
-  const [hasError, setErrorState] = useState(false)
+  // const [hasError, setErrorState] = useState(false)
   const [emailErr, setEmailErr] = useState(false)
   const [passwordLengthErr, setPasswordLengthErr] = useState(false)
   const [passwordCharErr, setPasswordCharErr] = useState(false)
@@ -87,7 +87,7 @@ const ResetPassword = (props: any): JSX.Element => {
     }
   }, [props.message])
 
-  const resetPassword = async (e): Promise<void> => {
+  const resetPassword = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsCreatingStatus(true)
     const token = props.token
@@ -126,7 +126,7 @@ const ResetPassword = (props: any): JSX.Element => {
           status: 'error',
           duration: null
         })
-      } catch (e) {
+      } catch (e: any) {
         showToast({
           title: t('exceptions:something-went-wrong'),
           status: 'error',

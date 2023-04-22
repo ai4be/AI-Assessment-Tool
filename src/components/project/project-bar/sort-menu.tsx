@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, MouseEvent } from 'react'
 import {
   Button,
   Menu,
@@ -43,7 +43,7 @@ export const SortMenu = (props: SortMenuProps): JSX.Element => {
     setSelectedSort(sort === Sort.DUE_DATA ? Sort.DUE_DATA : Sort.NUMBER)
   }, [sort, ord])
 
-  const clickHandler = (e, sort: Sort): void => {
+  const clickHandler = (e: MouseEvent, sort: Sort): void => {
     e.stopPropagation()
     const query: any = {
       ...router.query,

@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useMemo,
   useState,
-  useRef
+  useRef,
+  MouseEvent
 } from 'react'
 import {
   Box,
@@ -183,7 +184,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
             <BsReply size='20px' className='ml-1 cursor-pointer -scale-x-100 mb-0.5' color='var(--main-blue)' onClick={replyToHandler} />
           </Tooltip>}
       </GridItem>
-      <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={(e) => onDelete != null ? onDelete(comment) : null} />
+      <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={(e: MouseEvent) => onDelete != null ? onDelete(comment) : null} />
     </Grid>
   )
 }

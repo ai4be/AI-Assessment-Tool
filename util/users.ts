@@ -25,7 +25,7 @@ export const fetchUsersByProjectId = async (projectId: string): Promise<{ active
   return { activeUsers: [], inactiveUsers: [] }
 }
 
-export const inviteUser = async ({ email, projectId }): Promise<boolean> => {
+export const inviteUser = async ({ email, projectId }: { email: string, projectId: string }): Promise<boolean> => {
   const URL = '/api/invite-user'
   const data = {
     email,

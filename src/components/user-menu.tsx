@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MouseEvent } from 'react'
 import { FiCheck } from 'react-icons/fi'
 import {
   Avatar,
@@ -22,9 +22,9 @@ interface UserMenuProps {
 
 export const UserMenu = (props: UserMenuProps): JSX.Element => {
   const { users, includedUserIds, onUserRemove, onUserAdd } = props
-  const clickHandler = (e, user: any): void => {
+  const clickHandler = (e: MouseEvent<HTMLButtonElement>, user: User): void => {
     e.stopPropagation()
-    includedUserIds.includes(user._id)
+    includedUserIds.includes(String(user._id))
       ? onUserRemove(user._id)
       : onUserAdd(user._id)
   }

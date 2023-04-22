@@ -6,7 +6,7 @@ export default function LoginPage ({ onSubmit }: { onSubmit?: Function }): JSX.E
   return (<Login onSubmit={onSubmit} />)
 }
 
-export async function getServerSideProps (ctx): Promise<any> {
+export async function getServerSideProps (ctx: any): Promise<any> {
   const session = await getSession()
 
   if (session != null) {

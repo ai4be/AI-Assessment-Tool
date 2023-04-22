@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, MouseEvent } from 'react'
 import {
   Avatar,
   Badge,
@@ -130,13 +130,13 @@ export const FilterMenu = (props: any): JSX.Element => {
     }, undefined, { shallow: true })
   }, [includedUserIds])
 
-  const cleartHandler = (e, val: any, currentVal: any, setter: any): void => {
+  const cleartHandler = (e: MouseEvent, val: any, currentVal: any, setter: any): void => {
     e.stopPropagation()
     e.preventDefault()
     if (val === currentVal) setter('')
   }
 
-  const clearAllFilters = (e): void => {
+  const clearAllFilters = (e: MouseEvent): void => {
     e.stopPropagation()
     e.preventDefault()
     setAssigment('')
@@ -165,7 +165,7 @@ export const FilterMenu = (props: any): JSX.Element => {
           </Badge>}
       </MenuButton>
       <MenuList>
-        <MenuOptionGroup title={`${t('titles:assignment')}`} type='radio' value={assignment as string} onChange={(val: string) => setAssigment(val)}>
+        <MenuOptionGroup title={`${t('titles:assignment')}`} type='radio' value={assignment as string} onChange={setAssigment as any}>
           <MenuItemOption value={Assignment.UNASSIGNED} onClick={(e) => cleartHandler(e, Assignment.UNASSIGNED, assignment, setAssigment)}>
             {ASSIGNMENT_LABELS[Assignment.UNASSIGNED]}
           </MenuItemOption>
@@ -187,7 +187,7 @@ export const FilterMenu = (props: any): JSX.Element => {
           </MenuOptionGroup>
         </MenuOptionGroup>
         <MenuDivider />
-        <MenuOptionGroup title={`${t('titles:due-date')}`} type='radio' value={dueDate as string} onChange={(val: string) => setDueDate(val)}>
+        <MenuOptionGroup title={`${t('titles:due-date')}`} type='radio' value={dueDate as string} onChange={setDueDate as any}>
           <MenuItemOption value={DueDate.SET} onClick={(e) => cleartHandler(e, DueDate.SET, dueDate, setDueDate)}>
             {DUE_DATE_LABELS[DueDate.SET]}
           </MenuItemOption>

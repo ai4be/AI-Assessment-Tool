@@ -86,13 +86,16 @@ export function randomIntFromInterval (min: number, max: number): number { // mi
 // WARNING: This is not a drop in replacement solution and
 // it might not work for some edge cases. Test your code!
 export const debounce = (func: Function, delay: number, { leading }: { leading?: boolean } = {}): (...args: any[]) => any => {
-  let timerId
+  let timerId: NodeJS.Timeout | null = null
 
   return (...args: any[]) => {
-    if (!timerId && leading) {
+    if (timerId == null && leading === true) {
       func(...args)
     }
-    clearTimeout(timerId)
+    if (timerId != null) {
+      clearTimeout(timerId)
+      timerId = null
+    }
 
     timerId = setTimeout(() => func(...args), delay)
   }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, KeyboardEvent, ChangeEvent } from 'react'
 import {
   Box,
   Heading,
@@ -20,6 +20,8 @@ enum SortKeys {
   NUMBER = 'number',
   DUE_DATE = 'dueDate'
 }
+
+const Droppable2 = Droppable as any
 
 function sortCards (cards: any[], sort: Sort, order: Order): any[] {
   let key = SortKeys.NUMBER
@@ -53,7 +55,7 @@ function sortCards (cards: any[], sort: Sort, order: Order): any[] {
   return copy
 }
 
-const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }): JSX.Element => {
+const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }: any): JSX.Element => {
   const { t } = useTranslation()
   const { data } = useSession()
   const router = useRouter()
@@ -95,7 +97,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     )
   }
 
-  const handleKeyDown = (e): void => {
+  const handleKeyDown = (e: KeyboardEvent): void => {
     if (e.keyCode === 13) {
       e.preventDefault()
       setEditBoxVisibility(false)
@@ -109,9 +111,10 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     setIsLoading(false)
   }
 
-  const handleChange = (e): void => {
-    setColumnName(e.target.value)
-    handleColumnNameChange(e.target.value)
+  const handleChange = (e: ChangeEvent): void => {
+    const val = (e.target as any).value
+    setColumnName(val)
+    handleColumnNameChange(val)
   }
 
   // const handleColumnDelete = async (): Promise<void> => {
@@ -122,11 +125,11 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
   // }
 
   const handleColumnNameChange = useCallback(
-    debounce(async (value) => await nameChange(value), 800),
+    debounce(async (value: string) => await nameChange(value), 800),
     []
   )
 
-  const nameChange = async (value): Promise<void> => {
+  const nameChange = async (value: string): Promise<void> => {
     setIsLoading(true)
     const data = {
       name: value,
@@ -152,8 +155,8 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
         <Box display='flex' alignItems='center' justifyContent='center' className='mt-1.5'>
           {loadColumnTitle()}
         </Box>
-        <Droppable droppableId={column._id} type='card'>
-          {(provided) => (
+        <Droppable2 droppableId={column._id} type='card'>
+          {(provided: any) => (
             // 2px height is needed to make the drop work when there is no card.
             <Box ref={provided.innerRef} {...provided.droppableProps} flexGrow={1}>
               {cardsInSortedSequence?.map((card, index) => (
@@ -162,7 +165,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
               {provided.placeholder}
             </Box>
           )}
-        </Droppable>
+        </Droppable2>
         {/* <Button
           size='xs'
           my='10px'

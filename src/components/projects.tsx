@@ -22,7 +22,7 @@ import { defaultFetchOptions, fetcher } from '@/util/api'
 import useSWR from 'swr'
 import { useTranslation } from 'next-i18next'
 
-const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
+const CreateProjectModal = ({ fetchProjects }: { fetchProjects: Function }): JSX.Element => {
   const { t } = useTranslation('projects')
   const { data: industries, error } = useSWR('/api/industries', fetcher)
   const [isLoading, setIsLoading] = useState<boolean>(false)

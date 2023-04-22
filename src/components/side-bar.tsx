@@ -23,7 +23,7 @@ interface Props {
   onShowSidebar?: Function
 }
 
-const SidebarContent = (props): JSX.Element => {
+const SidebarContent = (props: { page: string }): JSX.Element => {
   const { t } = useTranslation()
   const sidebarMenu = [
     { path: '/home', buttonName: `${t('buttons:home')}`, page: 'home', icon: AiOutlineHome },

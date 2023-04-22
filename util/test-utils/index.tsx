@@ -4,8 +4,8 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { theme } from '@/pages/_app'
 import { I18nextProvider, useTranslation, initReactI18next } from 'react-i18next'
 import i18n from 'i18next'
-import { createConfig } from 'next-i18next/dist/commonjs/config/createConfig'
-// import CreateClient from 'next-i18next/dist/commonjs/createClient'
+// import { createConfig } from 'next-i18next/dist/commonjs/config/createConfig'
+// import { createConfig } from 'next-i18next/dist/types/config/createConfig'
 import i18NextConfig from '../../next-i18next.config'
 import i18nextFSBackend from 'i18next-fs-backend'
 import { faker } from '@faker-js/faker'
@@ -19,7 +19,9 @@ import { hashPassword } from '@/util/auth'
 import { encode } from 'next-auth/jwt'
 import { industries } from '@/pages/api/industries'
 import { Project } from '@/src/types/project'
-import { timeIt } from '..'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { createConfig } = require('next-i18next/dist/commonjs/config/createConfig')
 
 const { JWT_SECRET_KEY } = process.env
 
@@ -53,7 +55,7 @@ export const initTranslations = async (): Promise<void> => {
   if (initTranslationPromise != null) return await initTranslationPromise
   else {
     const locale = i18NextConfig.i18n.defaultLocale
-    const i18Config = createConfig({ i18NextConfig, lng: locale })
+    const i18Config = createConfig({ ...i18NextConfig, lng: locale } as any)
     await i18n.use(initReactI18next).use(i18nextFSBackend).init({
       ...i18Config,
       debug: false,

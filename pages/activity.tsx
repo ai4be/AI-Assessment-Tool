@@ -1,13 +1,14 @@
 import * as React from 'react'
 import { authOptions } from './api/auth/[...nextauth]'
-import { unstable_getServerSession } from 'next-auth/next'
+import { getServerSession } from 'next-auth/next'
+import { NextPageContext } from 'next'
 
 export function Page (): JSX.Element {
   return (<></>)
 }
 
-export async function getServerSideProps (ctx): Promise<any> {
-  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
+export async function getServerSideProps (ctx: any): Promise<any> {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions)
 
   if (session?.user == null) {
     return {

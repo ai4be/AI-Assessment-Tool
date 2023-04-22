@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useContext, MouseEvent } from 'react'
 import {
   Flex,
   Box,
@@ -95,7 +95,7 @@ const SignUp = (): JSX.Element => {
     })
   }
 
-  const registerUser = async (e): Promise<void> => {
+  const registerUser = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault()
     setIsCreatingStatus(true)
     const { email, password, confirmPassword, firstName, lastName } = values
@@ -154,6 +154,7 @@ const SignUp = (): JSX.Element => {
     setPropTouchedDebounced(name)
   }
 
+  // eslint-disable @typescript-eslint/no-misused-promises
   return (
     <>
       <Box display='flex' alignItems='center' justifyContent='center'>

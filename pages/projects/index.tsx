@@ -4,7 +4,7 @@ import { authOptions } from '../api/auth/[...nextauth]'
 import useSWR from 'swr'
 import { fetcher } from '@/util/api'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { unstable_getServerSession } from 'next-auth/next'
+import { getServerSession } from 'next-auth/next'
 import { useState } from 'react'
 import { useBreakpointValue } from '@chakra-ui/react'
 
@@ -33,8 +33,8 @@ export default function Page ({ session }: { session: any }): JSX.Element {
   )
 }
 
-export async function getServerSideProps (ctx): Promise<any> {
-  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
+export async function getServerSideProps (ctx: any): Promise<any> {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions)
 
   if (session?.user == null) {
     return {

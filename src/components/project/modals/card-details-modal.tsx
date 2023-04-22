@@ -32,7 +32,10 @@ import { Comment } from '@/src/types/comment'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-const AccordionItemStyled = ({ title, desc }): JSX.Element => {
+// ugly hack to get around the fact that the SingleDatepicker  Property 'children' does not exist on type 'IntrinsicAttributes & SingleDatepickerProps'.
+const SingleDatepicker2 = SingleDatepicker as any
+
+const AccordionItemStyled = ({ title, desc }: { title: string, desc: string | string[] | JSX.Element[] }): JSX.Element => {
   return (
     <AccordionItem
       border='none'
@@ -221,7 +224,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
     })
     if (response.ok) {
       Object.keys(data).forEach(key => {
-        card[key] = data[key]
+        (card as any)[key] = (data as any)[key]
       })
     } else {
       await responseHandler(response)
@@ -286,14 +289,14 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
           <Flex justifyContent='space-between' alignItems='center'>
             <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:due-date')}</Text>
           </Flex>
-          <SingleDatepicker name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
+          <SingleDatepicker2 name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
             <Flex justifyContent='space-between' alignItems='center'>
               <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
                 {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : `${t('sidebar:define')}`}
               </Text>
               {card.dueDate != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
             </Flex>
-          </SingleDatepicker>
+          </SingleDatepicker2>
           <Flex justifyContent='space-between' alignItems='center'>
             <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>{t('sidebar:assigned-to')}</Text>
             <UserMenu users={nonDeletedUsers ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>

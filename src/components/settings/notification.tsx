@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, MouseEvent } from 'react'
 import {
   Box,
   Heading,
@@ -33,7 +33,7 @@ const NotificationSettings = (): JSX.Element => {
     }
   }, [data])
 
-  const changeNotifications = async (e): Promise<void> => {
+  const changeNotifications = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     const url = `/api/users/${String(user?._id)}/notification`
@@ -92,7 +92,7 @@ const NotificationSettings = (): JSX.Element => {
         mt={4}
         bg='success'
         color='white'
-        onClick={changeNotifications}
+        onClick={changeNotifications} // eslint-disable-line @typescript-eslint/no-misused-promises
         isLoading={isLoading}
         loadingText={`${t('settings:updating')}`}
       >

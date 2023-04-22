@@ -18,7 +18,7 @@ export const sendMailToBcc = async (subject: string, html: string | null = null,
   return await sendMail(String(SMTP_FROM), subject, html, text, [], bcc)
 }
 
-export const sendMailWithSelfInBcc = async (to: string | string[], subject: string, html: string | null = null, text = null, cc: string | string[] = [], bcc: string | string[] = [EMAIL_FROM as string]): Promise<SentMessageInfo> => {
+export const sendMailWithSelfInBcc = async (to: string | string[], subject: string, html: string | null = null, text = null, cc: string | string[] = [], bcc: string | string[] = [SMTP_FROM as string]): Promise<SentMessageInfo> => {
   return await sendMail(String(SMTP_FROM), subject, html, text, cc, bcc)
 }
 

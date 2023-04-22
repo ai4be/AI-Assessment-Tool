@@ -1,22 +1,23 @@
 import SignUp from '@/src/components/signup'
-import { unstable_getServerSession } from 'next-auth/next'
+import { getServerSession } from 'next-auth/next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { authOptions } from './api/auth/[...nextauth]'
 import sanitize from 'mongo-sanitize'
 import { getUser } from '@/src/models/user'
 import { getToken, TokenStatus } from '@/src/models/token'
 import { isEmpty } from '@/util/index'
+import { Session } from 'next-auth'
 
-export default function SignUpPage ({ session }): JSX.Element {
+export default function SignUpPage ({ session }: { session: Session }): JSX.Element {
   return (<SignUp />)
 }
 
-export async function getServerSideProps (ctx): Promise<any> {
-  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
+export async function getServerSideProps (ctx: any): Promise<any> {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions)
   let { token, email, projectId } = ctx.query
   email = !isEmpty(email) ? sanitize(decodeURIComponent(String(email)).trim().toLowerCase()) : null
-  projectId = sanitize(projectId)
-  token = sanitize(token)
+  projectId = String(sanitize(projectId))
+  token = String(sanitize(token))
   if (!isEmpty(token) && !isEmpty(email) && !isEmpty(projectId)) {
     // If token is invalid then redirect to error page
     const tokenValue = token != null ? await getToken({ token }) : null

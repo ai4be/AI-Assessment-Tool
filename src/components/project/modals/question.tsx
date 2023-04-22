@@ -49,7 +49,7 @@ export const QuestionHelp = ({ question }: { question: Question }): JSX.Element 
           <PopoverTrigger>
             <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
           </PopoverTrigger>
-          <PopoverContent opacity='1' _opacity='1 !important'>
+          <PopoverContent opacity='1'>
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverBody opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
@@ -66,7 +66,7 @@ type QuestionAnswerProps = BoxProps & {
 
 export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAnswerProps): JSX.Element => {
   const [value, setValue] = React.useState<any>(question.responses ?? '')
-  const valueHandler = (value): void => {
+  const valueHandler = (value: any): void => {
     if (!Array.isArray(value)) value = [value]
     if (Array.isArray(value) && value.length > 1) {
       value = value.filter(v => v !== '')
@@ -146,7 +146,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
           {question.enabledCondition?.disabledText}
         </Text>}
       <Box ml='1.5'>
-        <QuestionAnswers question={question} onChange={value => onChange(question, value)} marginY='1rem' />
+        <QuestionAnswers question={question} onChange={(value: any) => onChange(question, value)} marginY='1rem' />
         <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
           Justification
         </Text>

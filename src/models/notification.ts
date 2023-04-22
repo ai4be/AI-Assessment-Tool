@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
-import { connectToDatabase, toObjectId } from './mongodb'
-import { Notification } from '../types/Notification'
+import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
+import { Notification } from '@/src/types/notification'
 
 export const TABLE_NAME = 'notifications'
 
