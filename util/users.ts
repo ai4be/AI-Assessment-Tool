@@ -16,13 +16,13 @@ export const getCurrentUser = async (): Promise<User | null> => {
   return null
 }
 
-export const fetchUsersByProjectId = async (projectId: string): Promise<User[]> => {
+export const fetchUsersByProjectId = async (projectId: string): Promise<{ activeUsers: User[], inactiveUsers: User[] }> => {
   const response = await fetch(`/api/projects/${projectId}/users`)
   if (response.ok) {
-    const users = await response.json()
-    return users
+    const { activeUsers, inactiveUsers } = await response.json()
+    return { activeUsers, inactiveUsers }
   }
-  return []
+  return { activeUsers: [], inactiveUsers: [] }
 }
 
 export const inviteUser = async ({ email, projectId }): Promise<boolean> => {

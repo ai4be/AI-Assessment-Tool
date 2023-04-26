@@ -46,10 +46,17 @@ export default class Activity extends Model {
       // TODO: log error
       return null
     }
+    const data = await Activity.getUserName(userId)
+    return await this.createActivity(card.projectId, createdBy, type, data, { cardId, userIds: [userId] })
+  }
+
+  static async getUserName (userId: string): Promise<any> {
     const user = await getUser({ _id: toObjectId(userId) })
     let data: any = null
-    if (user != null) data = { name: getUserDisplayName(user) }
-    return await this.createActivity(card.projectId, createdBy, type, data, { cardId, userIds: [userId] })
+    if (user != null) {
+      data = { name: getUserDisplayName(user) }
+      return data
+    }
   }
 
   static async createCardUserAddActivity (cardId: string, createdBy: string, userId: string): Promise<string | null> {
@@ -58,6 +65,11 @@ export default class Activity extends Model {
 
   static async createCardUserRemoveActivity (cardId: string, createdBy: string, userId: string): Promise<string | null> {
     return await this.createCardUserChangeActivity(cardId, createdBy, userId, ActivityType.CARD_USER_REMOVE)
+  }
+
+  static async removeUserProjectActivity (projectId: string, createdBy: string, userId: string): Promise<string | null> {
+    const data = await Activity.getUserName(userId)
+    return await this.createActivity(projectId, createdBy, ActivityType.PROJECT_USER_REMOVE, data, { userIds: [userId] })
   }
 
   static async createCardDueDateAddActivity (projectId: string, createdBy: string, cardId: string, dueDate: Date): Promise<string | null> {

@@ -15,6 +15,7 @@ const authorize: any = async (credentials: any, req): Promise<User | null> => {
   const user = await getUser({ email }, [])
 
   if (user == null) throw new Error('Wrong credentials')
+  if (user.isDeleted === true) throw new Error('User has no longer access')
 
   const isValid = await verifyPassword(
     credentials.password, // don't need to sanitize because it's hashed

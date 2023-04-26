@@ -66,15 +66,15 @@ export const RoleBox = ({ project, role, deleteRole, saveRole, index }: RoleBoxP
   const [name, setName] = useState(role.name)
   const [description, setDescription] = useState(role.desc)
   const [userIdTrigger, setUserIdTrigger] = useState(0)
-  const { users = [] } = useContext(ProjectContext)
+  const { nonDeletedUsers = [] } = useContext(ProjectContext)
 
   useEffect(() => {
-    if (Array.isArray(users)) {
+    if (Array.isArray(nonDeletedUsers)) {
       role.userIds = role.userIds ?? []
-      const iu: any[] = users.filter(u => role.userIds?.includes(u._id))
+      const iu: any[] = nonDeletedUsers.filter(u => role.userIds?.includes(u._id))
       setIncludedUsers(iu)
     }
-  }, [users, role.userIds, userIdTrigger])
+  }, [nonDeletedUsers, role.userIds, userIdTrigger])
 
   const setIsEditingWrapper = (value: boolean): void => {
     setIsEditing(value)
@@ -161,7 +161,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole, index }: RoleBoxP
             <AvatarGroup size='sm' max={5}>
               {includedUsers.map(user => <Avatar key={user?._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
             </AvatarGroup>
-            <UserMenuMemo users={users} includedUserIds={role.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
+            <UserMenuMemo users={nonDeletedUsers} includedUserIds={role.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
               <FiUserPlus color='var(--main-blue)' cursor='pointer' />
             </UserMenuMemo>
           </Flex>

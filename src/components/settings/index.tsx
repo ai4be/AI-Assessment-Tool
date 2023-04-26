@@ -5,6 +5,7 @@ import Profile from '@/src/components/settings/profile'
 import Email from '@/src/components/settings/email'
 import NotificationSettings from './notification'
 import { useTranslation } from 'next-i18next'
+import DeleteAccountSettings from './delete-account'
 
 const Settings = (): JSX.Element => {
   const { t } = useTranslation()
@@ -15,6 +16,7 @@ const Settings = (): JSX.Element => {
         <Tab>{t('settings:password')}</Tab>
         <Tab>{t('settings:email')}</Tab>
         <Tab>{t('settings:notifications')}</Tab>
+        <Tab>{t('settings:delete-account')}</Tab>
       </TabList>
       <Center maxW={500}>
         <TabPanels boxShadow={0}>
@@ -29,6 +31,9 @@ const Settings = (): JSX.Element => {
           </TabPanel>
           <TabPanel>
             <NotificationSettings />
+          </TabPanel>
+          <TabPanel>
+            <DeleteAccountSettings />
           </TabPanel>
         </TabPanels>
       </Center>

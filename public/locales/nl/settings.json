@@ -31,5 +31,12 @@
   "mentions": "Opmerkingen",
   "mentions-caption": "Nieuwe opmerkingen die zijn toegevoegd aan kaarten die je volgt",
   "notifications-change-success-message": "Meldingen zijn gewijzigd",
-  "notifications-change-error-message": "Het wijzigen van meldingen is mislukt"
+  "notifications-change-error-message": "Het wijzigen van meldingen is mislukt",
+
+  "delete-account": "Account verwijderen",
+  "about-to-delete-account": "U staat op het punt uw account te verwijderen",
+  "delete-account-message1": "Uw account wordt onmiddellijk verwijderd.",
+  "delete-account-message2": "Door uw account te verwijderen, ontvangt u geen e-mailwaarschuwingen meer.",
+  "delete-account-message3": "Ook kunt u eerdere activiteiten niet meer terughalen, zelfs niet als er een nieuw account met uw oude e-mailadres is aangemaakt.",
+  "account-deleted-successfully": "Account is succesvol verwijderd. U wordt omgeleid naar de inlogpagina..."
 }

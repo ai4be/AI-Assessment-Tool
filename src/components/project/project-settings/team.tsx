@@ -32,15 +32,20 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
 
   const deleteUser = async (user: Partial<User>): Promise<void> => {
     setIsLoading(true)
+    const data: any = {
+      projectName: project.name
+    }
     const url = `/api/projects/${String(project._id)}/users/${String(user._id)}`
     const response = await fetch(url, {
       ...defaultFetchOptions,
-      method: HTTP_METHODS.DELETE
+      method: HTTP_METHODS.DELETE,
+      body: JSON.stringify(data)
     })
     if (response.ok) {
-      context.users = context.users?.filter((u: any) => u._id !== user._id)
+      context.nonDeletedUsers = context.nonDeletedUsers?.filter((u: any) => u._id !== user._id)
       project.userIds = project.userIds?.filter(uid => uid !== user._id)
       context.setProject(project)
+      await context.fetchUsers()
     }
     setDeleteHandler(() => emptyFn)
     setIsLoading(false)
@@ -75,7 +80,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
       <Flex flexDirection='column' className='mb-2'>
         <Box className='text-grey mt-2'>{t('project-settings:project-users')}</Box>
         <hr className='my-2' />
-        {context.users != null && context.users?.length > 0 && context.users.map((user) => (
+        {context.nonDeletedUsers != null && context.nonDeletedUsers?.length > 0 && context.nonDeletedUsers.map((user) => (
           <Flex key={user._id} justifyContent='space-between' alignItems='center' paddingY='1'>
             <Flex alignItems='center'>
               <Avatar size='xs' name={getUserDisplayName(user)} src={user.xsAvatar} mr='2' />

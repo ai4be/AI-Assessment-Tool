@@ -103,12 +103,48 @@ export function getProjectActivityHtml (projects: Project[], hostname: string = 
   `
 }
 
+export function userRemovedProjectHtml (project: string): string {
+  return `
+    <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
+      ${htmlLogo}
+      <span>
+        You have been removed from the project: ${project}
+      </span>
+    </div>
+  `
+}
+
+export function notificationDeletedUserHtml (deletedUserName: string, deletedUserEmail: string, deletedUserProjectName: string): string {
+  return `
+    <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
+      ${htmlLogo}
+      <span>
+        User "${deletedUserName}"&lt;${deletedUserEmail}&gt; has no longer access to project "${deletedUserProjectName}" because their account has been deleted
+      </span>
+    </div>
+  `
+}
+
+export function deletedUserAccountHtml (): string {
+  return `
+    <div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
+      ${htmlLogo}
+      <span>
+        Your account has been successfully deleted
+      </span>
+    </div>
+  `
+}
+
 const templates = {
   getInvitationHtml,
   getResetPasswordHtml,
   getVerifyEmailHtml,
   commentMentionHtml,
-  getProjectActivityHtml
+  getProjectActivityHtml,
+  userRemovedProjectHtml,
+  deletedUserAccountHtml,
+  notificationDeletedUserHtml
 }
 
 export default templates
