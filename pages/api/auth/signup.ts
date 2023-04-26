@@ -37,7 +37,7 @@ async function handler (req, res): Promise<any> {
 
   const existingUser = await getUser({ email })
   if (existingUser != null) {
-    return res.status(422).json({ code: 11004 })
+    return res.status(422).json({ code: 12002 })
   }
 
   const hashedPassword = await hashPassword(password)
@@ -50,7 +50,7 @@ async function handler (req, res): Promise<any> {
   if (user?._id != null) {
     if (token != null) await invitedUserHandler(token, email)
     void sendEmailVerifictionEmail(user)
-    return res.status(201).send({ code: 11005 })
+    return res.status(201).send({ code: 9005 })
   }
   return res.status(400).send({ code: 11006 })
 }

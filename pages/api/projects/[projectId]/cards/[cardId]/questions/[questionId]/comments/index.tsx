@@ -11,7 +11,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
   switch (req.method) {
     case 'POST': {
       const comment = await createCommentAndActivity({ ...req.body, projectId, questionId, cardId, userId: user._id })
-      return comment != null ? res.status(201).send(comment) : res.status(400).send({ message: 'could not create' })
+      return comment != null ? res.status(201).send(comment) : res.status(400).send({ code: 9009 })
     }
     case 'GET': {
       const result = await Comment.find({ projectId, cardId })
@@ -19,7 +19,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.status(200).send(comments)
     }
     default:
-      return res.status(400).send({ message: 'Invalid request' })
+      return res.status(400).send({ message: 'Invalid request', code: 9002 })
   }
 }
 

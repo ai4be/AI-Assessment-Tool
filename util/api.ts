@@ -24,7 +24,7 @@ export const defaultFetchOptions: any = {
   referrerPolicy: 'no-referrer'
 }
 
-export const getResponseHandler = (showToast: Function): (response: Response, defaultSuccesMsg?: string, defaultErrMsg?: string) => Promise<void> => {
+export const getResponseHandler = (showToast: Function, translator?: Function): (response: Response, defaultSuccesMsg?: string, defaultErrMsg?: string) => Promise<void> => {
   return async (response: Response, defaultSuccesMsg = '', defaultErrMsg: string = 'Something went wrong'): Promise<void> => {
     let msg = defaultSuccesMsg
     let status: Status = 'success'
@@ -34,25 +34,15 @@ export const getResponseHandler = (showToast: Function): (response: Response, de
     }
     try {
       const result = await response.json()
-      msg = String(result?.message ?? msg)
+      if (result?.code != null && translator != null) {
+        const code = String(result.code)
+        msg = translator([`api-messages:${code}`, 'code'])
+      } else if (result.message != null || result?.msg != null) {
+        msg = String(result?.message ?? msg)
+      }
     } catch (error) { }
     showToast({
       title: msg,
-      status
-    })
-  }
-}
-
-export const getResponseHandlerCustomMessage = (showToast: Function): (response: Response, customMsg: String, defaultSuccesMsg?: string, defaultErrMsg?: string) => Promise<void> => {
-  return async (response: Response, customMsg: String, defaultSuccesMsg = '', defaultErrMsg: string = 'Something went wrong'): Promise<void> => {
-    let msg = defaultSuccesMsg
-    let status: Status = 'success'
-    if (!response.ok) {
-      msg = defaultErrMsg
-      status = 'error'
-    }
-    showToast({
-      title: customMsg,
       status
     })
   }

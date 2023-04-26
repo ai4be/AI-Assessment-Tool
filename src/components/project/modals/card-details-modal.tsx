@@ -206,7 +206,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
   const projectId = String(card.projectId)
   const { showToast } = useContext(ToastContext)
   const [renderTrigger, setRenderTrigger] = useState(0)
-  const responseHandler = getResponseHandler(showToast)
+  const responseHandler = getResponseHandler(showToast, t)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const { users } = useContext(ProjectContext)
