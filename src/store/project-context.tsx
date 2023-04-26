@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { Category, Project } from '@/src/types/project'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 import { fetcher } from '@/util/api'
-import { User } from '../types/user'
+import { User } from '@/src/types/user'
 
 interface ProjectContextType {
   project?: Project | undefined
@@ -44,7 +44,7 @@ export function ProjectContextProvider (props: any): JSX.Element {
     categories,
     categoryClickHandler,
     users: users?.activeUsers,
-    nonDeletedUsers: users?.activeUsers?.filter(user => user.isDeleted !== true),
+    nonDeletedUsers: users?.activeUsers?.filter((user: User) => user.isDeleted !== true),
     inactiveUsers: users?.inactiveUsers
   }
 

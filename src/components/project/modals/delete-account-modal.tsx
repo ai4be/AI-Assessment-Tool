@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, MouseEventHandler } from 'react'
 import {
   Button,
   Modal,
@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'next-i18next'
 import { signOut } from 'next-auth/react'
-import { defaultFetchOptions, getResponseHandlerCustomMessage, HTTP_METHODS } from '@/util/api'
+import { defaultFetchOptions, getResponseHandler, HTTP_METHODS } from '@/util/api'
 import UserContext from '@/src/store/user-context'
 import ToastContext from '@/src/store/toast-context'
 import { useRouter } from 'next/router'
@@ -35,14 +35,14 @@ export const DeleteAccountModal = ({ successCb, cancelCb, failCb, onCloseCb }: E
   const [isLoading, setIsLoading] = useState(false)
   const { onClose } = useDisclosure()
 
-  const responseHandler = getResponseHandlerCustomMessage(showToast)
+  const responseHandler = getResponseHandler(showToast, t)
 
   const closeFn = (): void => {
     onClose()
     if (onCloseCb != null) onCloseCb()
   }
 
-  const cancelAccountDeletion = async (e): Promise<void> => {
+  const cancelAccountDeletion: MouseEventHandler = (e: React.MouseEvent<Element, MouseEvent>): void => {
     e.preventDefault()
     setIsLoading(true)
     closeFn()
@@ -50,7 +50,7 @@ export const DeleteAccountModal = ({ successCb, cancelCb, failCb, onCloseCb }: E
     setIsLoading(false)
   }
 
-  const confirmAccountDeletion = async (e): Promise<void> => {
+  const confirmAccountDeletion = async (e: React.MouseEvent<Element, MouseEvent>): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     const url = `/api/users/${String(user?._id)}/account`

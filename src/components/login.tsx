@@ -1,4 +1,4 @@
-import React, { MouseEvent, PointerEvent, useContext, useEffect, useState } from 'react'
+import React, { MouseEvent, useContext, useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import {
   Flex,
@@ -37,7 +37,7 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
 
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleClick = (e): void => {
+  const handleClick = (e: MouseEvent): void => {
     e.preventDefault()
     setShowPassword(!showPassword)
   }

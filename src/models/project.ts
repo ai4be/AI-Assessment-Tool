@@ -188,11 +188,11 @@ export const getInactiveProjectUsers = async (_id: ObjectId | string, filterUser
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
   const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { userIdsInactive: 1, createdBy: 1 } })
-  let userIdsInactive: any = []
+  let userIdsInactive: ObjectId[] = []
   if (project?.userIdsInactive != null) userIdsInactive.push(...project.userIdsInactive)
   if (filterUserIds != null) {
     filterUserIds = filterUserIds.map(String)
-    userIdsInactive = userIdsInactive.filter(id => filterUserIds?.includes(String(id)))
+    userIdsInactive = userIdsInactive.filter((id: ObjectId) => filterUserIds?.includes(String(id)))
   }
   return await getUsers(userIdsInactive)
 }
