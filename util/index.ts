@@ -55,10 +55,11 @@ export const isEqual = (first: any, second: any): boolean => {
       return false
     }
     for (let i = 0; i < fKeys.length; i++) {
-      if (first[fKeys[i]] && second[fKeys[i]]) {
+      if (first[fKeys[i]] && second[fKeys[i]]) { // eslint-disable-line @typescript-eslint/strict-boolean-expressions
         if (first[fKeys[i]] === second[fKeys[i]]) {
           continue; // eslint-disable-line
         }
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (first[fKeys[i]] && (first[fKeys[i]].constructor.name === 'Array' ||
           first[fKeys[i]].constructor.name === 'Object')) {
           equal = isEqual(first[fKeys[i]], second[fKeys[i]])
@@ -69,6 +70,7 @@ export const isEqual = (first: any, second: any): boolean => {
           equal = false
           break
         }
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       } else if ((first[fKeys[i]] && !second[fKeys[i]]) || (!first[fKeys[i]] && second[fKeys[i]])) {
         equal = false
         break

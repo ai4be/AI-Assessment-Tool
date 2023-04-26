@@ -80,7 +80,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
   const { question: questionId, comment: commentId } = router.query
   const [scoredQuestions, setScoredQuestions] = useState<DisplayQuestion[]>([])
   const [unscoredQuestions, setUnscoredQuestions] = useState<DisplayQuestion[]>([])
-  const [unscoredQuestionsCollapsed, setUnscoredQuestionsCollapsed] = useState<boolean>(true)
+  const [, setUnscoredQuestionsCollapsed] = useState<boolean>(true)
   const [commentsFetched, setCommentsFetched] = useState<boolean>(false)
 
   const fetchComments = async (question?: Partial<DisplayQuestion>): Promise<void> => {
@@ -211,7 +211,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
   const [renderTrigger, setRenderTrigger] = useState(0)
   const responseHandler = getResponseHandler(showToast, t)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [, setIsLoading] = useState(false)
   const { nonDeletedUsers } = useContext(ProjectContext)
 
   const saveCard = async (data: Partial<Card>): Promise<void> => {

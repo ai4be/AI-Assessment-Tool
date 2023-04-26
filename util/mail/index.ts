@@ -6,7 +6,7 @@ const SMTP_FROM: string | undefined = process.env.SMTP_FROM
 const SMTP_HOST: string | undefined = process.env.SMTP_HOST
 const SMTP_USER: string | undefined = process.env.SMTP_USER
 const SMTP_PASS: string | undefined = process.env.SMTP_PASS
-const BASE_URL: string | undefined = process.env.BASE_URL
+// const BASE_URL: string | undefined = process.env.BASE_URL
 
 const throwMissingEnvVar = (varName: string): void => {
   throw new Error(`missing ${varName} environment variable`)

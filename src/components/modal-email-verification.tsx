@@ -153,7 +153,7 @@ export const EmailVerificationModal = ({
     await initiateEmailVerificationRequest()
     setIsLoading(false)
   }
-
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <Modal onClose={closeFn} isOpen isCentered>
       <ModalOverlay />

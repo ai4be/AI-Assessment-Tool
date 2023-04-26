@@ -207,7 +207,7 @@ const SignUp = (): JSX.Element => {
                 name='email'
                 value={values.email}
                 placeholder={`${t('placeholders:email')}`}
-                onChange={handleChange}
+                onChange={(e) => { void handleChange(e) }}
                 onBlur={() => setTouched({ ...touched, email: true })}
                 autoComplete='off'
               />
@@ -219,7 +219,7 @@ const SignUp = (): JSX.Element => {
                 name='firstName'
                 value={values.firstName}
                 placeholder={`${t('placeholders:first-name')}`}
-                onChange={handleChange}
+                onChange={(e) => { void handleChange(e) }}
                 onBlur={() => setTouched({ ...touched, firstName: true })}
                 autoComplete='off'
               />
@@ -230,7 +230,7 @@ const SignUp = (): JSX.Element => {
                 name='lastName'
                 value={values.lastName}
                 placeholder={`${t('placeholders:last-name')}`}
-                onChange={handleChange}
+                onChange={(e) => { void handleChange(e) }}
                 onBlur={() => setTouched({ ...touched, lastName: true })}
                 autoComplete='off'
               />
@@ -243,7 +243,7 @@ const SignUp = (): JSX.Element => {
                   value={values.password}
                   placeholder={`${t('placeholders:create-password')}`}
                   onBlur={() => setTouched({ ...touched, password: true })}
-                  onChange={handleChange}
+                  onChange={(e) => { void handleChange(e) }}
                 />
                 <InputRightElement>
                   <IconButton
@@ -264,7 +264,7 @@ const SignUp = (): JSX.Element => {
                   name='confirmPassword'
                   value={values.confirmPassword}
                   placeholder={`${t('placeholders:confirm-password')}`}
-                  onChange={handleChange}
+                  onChange={(e) => { void handleChange(e) }}
                   onBlur={() => setTouched({ ...touched, confirmPassword: true })}
                 />
                 <InputRightElement>
@@ -285,7 +285,7 @@ const SignUp = (): JSX.Element => {
               disabled={isButtonDisabled}
               bg='success'
               color='white'
-              onClick={registerUser}
+              onClick={(e) => { void registerUser(e) }}
               isLoading={isCreating}
               loadingText={`${t('signup:registering')}`}
             >

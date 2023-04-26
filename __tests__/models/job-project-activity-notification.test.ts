@@ -1,10 +1,9 @@
 /**
  * @jest-environment node
  */
-import { givenAProject, givenAUser, givenCommentTextData, setupMongoDB } from '@/util/test-utils'
+import { givenAProject, givenAUser, setupMongoDB } from '@/util/test-utils'
 import * as ProjectModel from '@/src/models/project'
 import * as CardModel from '@/src/models/card'
-import * as CommentModel from '@/src/models/comment'
 import JobModel from '@/src/models/job'
 import { JobProjectActivityNotification } from '@/src/models/job/job-project-activity-notification'
 // import waitForExpect from 'wait-for-expect'

@@ -7,7 +7,7 @@ import { isEmailValid, isPasswordValid } from '@/util/validator'
 import { User } from '@/src/types/user'
 import { sendMail } from '@/util/mail'
 import { getVerifyEmailHtml } from '@/util/mail/templates'
-import SignUp from '@/src/components/signup'
+// import SignUp from '@/src/components/signup'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 async function sendEmailVerifictionEmail (user: User): Promise<void> {

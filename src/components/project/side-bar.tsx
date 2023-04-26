@@ -60,7 +60,7 @@ const SideBar = (props: Props): JSX.Element => {
     : (
       <>
         <Box display='flex' flexDirection='column'>
-          {props.showSidebarButton && (
+          {props.showSidebarButton === true && (
             <Box ml={-4} mr={4}>
               <IconButton
                 isRound

@@ -62,17 +62,17 @@ export const FilterMenu = (props: any): JSX.Element => {
     const assignmentVal = query[QueryFilterKeys.ASSIGNMENT]
     if (assignmentVal != null && !ASSINGMENT_VALUES.includes(assignmentVal)) {
       reroute = true
-      delete query[QueryFilterKeys.ASSIGNMENT]
+      delete query[QueryFilterKeys.ASSIGNMENT] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     const dueDateVal = query[QueryFilterKeys.DUE_DATE]
     if (dueDateVal != null && !DUE_DATE_VALUES.includes(dueDateVal)) {
       reroute = true
-      delete query[QueryFilterKeys.DUE_DATE]
+      delete query[QueryFilterKeys.DUE_DATE] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     let userIdsVal = query[QueryFilterKeys.ASSIGNED_TO]
     if (userIdsVal != null && assignmentVal !== Assignment.ASSIGNED_TO) {
       reroute = true
-      delete query[QueryFilterKeys.ASSIGNED_TO]
+      delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     if (userIdsVal != null && typeof userIdsVal === 'string') {
       userIdsVal = [userIdsVal]
@@ -91,17 +91,17 @@ export const FilterMenu = (props: any): JSX.Element => {
   useEffect(() => {
     const query: any = { ...router.query }
     if (isEmpty(assignment)) {
-      delete query[QueryFilterKeys.ASSIGNMENT]
-      delete query[QueryFilterKeys.ASSIGNED_TO]
+      delete query[QueryFilterKeys.ASSIGNMENT] // eslint-disable-line @typescript-eslint/no-dynamic-delete
+      delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     } else {
       query[QueryFilterKeys.ASSIGNMENT] = assignment
       if (assignment === Assignment.ASSIGNED_TO) {
         if (includedUserIds.length > 0) query[QueryFilterKeys.ASSIGNED_TO] = includedUserIds
       } else {
-        delete query[QueryFilterKeys.ASSIGNED_TO]
+        delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
       }
     }
-    if (isEmpty(dueDate)) delete query[QueryFilterKeys.DUE_DATE]
+    if (isEmpty(dueDate)) delete query[QueryFilterKeys.DUE_DATE] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     else {
       query[QueryFilterKeys.DUE_DATE] = dueDate
     }
@@ -123,7 +123,7 @@ export const FilterMenu = (props: any): JSX.Element => {
     if (assignment === Assignment.ASSIGNED_TO && includedUserIds.length > 0) {
       query[QueryFilterKeys.ASSIGNED_TO] = includedUserIds
     } else {
-      delete query[QueryFilterKeys.ASSIGNED_TO]
+      delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     void router.push({
       query

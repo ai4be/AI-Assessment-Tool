@@ -77,6 +77,7 @@ export const DeleteAccountModal = ({ successCb, cancelCb, failCb, onCloseCb }: E
     })
   }
 
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <Modal onClose={closeFn} isOpen isCentered>
       <ModalOverlay />

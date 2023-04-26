@@ -14,18 +14,19 @@ import {
   SimpleGrid,
   Text,
   useOutsideClick,
-  VStack,
-  Input as InputComponent
+  VStack
+  // ,
+  // Input as InputComponent
 } from '@chakra-ui/react'
-import { CalendarIcon } from '@chakra-ui/icons'
+// import { CalendarIcon } from '@chakra-ui/icons'
 import {
-  DateObj,
+  // DateObj,
   useDayzed,
   RenderProps,
   GetBackForwardPropsOptions,
   Calendar
 } from 'dayzed'
-import { format } from 'date-fns'
+// import { format } from 'date-fns'
 
 const MONTH_NAMES_DEFAULT = [
   'Jan',
@@ -174,8 +175,8 @@ const SingleDatepickerCalendar = (
                     key={key}
                     size='sm'
                     variant='outline'
-                    borderColor={today ? 'purple.400' : 'transparent'}
-                    bg={selected ? 'purple.200' : undefined}
+                    borderColor={today === true ? 'purple.400' : 'transparent'}
+                    bg={selected === true ? 'purple.200' : undefined}
                   >
                     {date.getDate()}
                   </Button>
@@ -198,7 +199,12 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   },
   ...props
 }): JSX.Element => {
-  const { date, name, disabled, onDateChange, id } = props
+  const {
+    date,
+    // name, disabled,
+    // id,
+    onDateChange
+  } = props
 
   const ref = useRef<HTMLElement>(null)
   const initialFocusRef = useRef<HTMLInputElement>(null)

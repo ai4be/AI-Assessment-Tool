@@ -31,7 +31,7 @@ export function ProjectContextProvider (props: any): JSX.Element {
     } = router.query ?? {}
     const query: any = { ...router.query, [QueryFilterKeys.CATEGORY]: cat._id }
 
-    if (currentCat === cat._id) delete query[QueryFilterKeys.CATEGORY]
+    if (currentCat === cat._id) delete query[QueryFilterKeys.CATEGORY] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     void router.push({
       query
     }, undefined, { shallow: true })

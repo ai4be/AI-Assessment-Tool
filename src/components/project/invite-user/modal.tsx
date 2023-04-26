@@ -64,7 +64,7 @@ const InviteModal = ({ project, callback }: { project: Project, callback: Functi
       }
     }
   }
-
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <>
       <Box>

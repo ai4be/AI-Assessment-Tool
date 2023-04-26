@@ -36,7 +36,7 @@ export async function getServerSideProps (ctx: any): Promise<any> {
     if (isExistingUser != null) {
       return {
         redirect: {
-          destination: `/login?token=${token}&email=${encodeURIComponent(email)}&projectId=${projectId}`,
+          destination: `/login?token=${String(token)}&email=${encodeURIComponent(email)}&projectId=${String(projectId)}`,
           permanent: false
         }
       }

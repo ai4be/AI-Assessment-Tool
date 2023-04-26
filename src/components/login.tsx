@@ -96,7 +96,7 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
       [name]: value
     })
   }
-
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' my='40px'>

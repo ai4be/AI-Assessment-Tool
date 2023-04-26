@@ -185,7 +185,7 @@ const Profile = (): JSX.Element => {
         <ImgInput
           data={values.avatar}
           onChange={(base64Data: string) => setValues({ ...values, avatar: base64Data })}
-          placeholder={user != null ? `${user?.firstName} ${user?.lastName}` : ''}
+          placeholder={user != null ? `${String(user.firstName)} ${String(user.lastName)}` : ''}
         />
       </FormControl>
       <Button

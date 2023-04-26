@@ -27,7 +27,7 @@ const Team = ({ project }: { project: Project }): JSX.Element => {
   const context = useContext(ProjectContext)
   const { data, mutate } = useSWR(`/api/projects/${String(project._id)}/tokens/pending`, fetcher)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [isLoading, setIsLoading] = useState(false)
+  const [, setIsLoading] = useState(false)
   const [deleteHandler, setDeleteHandler] = useState<Function>(() => emptyFn)
 
   const deleteUser = async (user: Partial<User>): Promise<void> => {

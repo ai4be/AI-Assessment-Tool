@@ -4,11 +4,11 @@ import {
   Heading,
   Input
 } from '@chakra-ui/react'
-import { Droppable, Draggable } from 'react-beautiful-dnd'
+import { Droppable } from 'react-beautiful-dnd'
 import { debounce } from '@/util/index'
 import Card from '@/src/components/project/card'
-import { addCard } from '@/util/cards'
-import { useSession } from 'next-auth/react'
+// import { addCard } from '@/util/cards'
+// import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { Sort, Order } from '@/src/components/project/project-bar/sort-menu'
 import {
@@ -57,18 +57,17 @@ function sortCards (cards: any[], sort: Sort, order: Order): any[] {
 
 const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }: any): JSX.Element => {
   const { t } = useTranslation()
-  const { data } = useSession()
+  // const { data } = useSession()
   const router = useRouter()
   const {
     sort = Sort.NUMBER,
     ord = Order.ASC
   } = router.query
   const [showEditBox, setEditBoxVisibility] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [, setIsLoading] = useState<boolean>(false)
   const [cardsInSortedSequence, setCardsInSortedSequence] = useState<any[]>(sortCards(cards, sort as Sort, ord as Order))
   const [columnName, setColumnName] = useState<string>(column.name)
-
-  const user: any = data?.user
+  // const user: any = data?.user
 
   useEffect(() => {
     setCardsInSortedSequence(sortCards(cards ?? [], sort as Sort, ord as Order))
@@ -104,12 +103,12 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     }
   }
 
-  const handleCardAdd = async (): Promise<void> => {
-    setIsLoading(true)
-    await addCard(id, projectId, user.id, cards)
-    await fetchCards()
-    setIsLoading(false)
-  }
+  // const handleCardAdd = async (): Promise<void> => {
+  //   setIsLoading(true)
+  //   await addCard(id, projectId, user.id, cards)
+  //   await fetchCards()
+  //   setIsLoading(false)
+  // }
 
   const handleChange = (e: ChangeEvent): void => {
     const val = (e.target as any).value

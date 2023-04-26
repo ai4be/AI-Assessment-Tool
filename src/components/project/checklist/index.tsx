@@ -47,7 +47,7 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
       setFilteredCategories(localCategories)
       if (categoryId != null && localCategories.length === 0) {
         const query = { ...router.query }
-        delete query[QueryFilterKeys.CATEGORY]
+        delete query[QueryFilterKeys.CATEGORY] // eslint-disable-line @typescript-eslint/no-dynamic-delete
         void router.push({ query }, undefined, { shallow: true })
       }
     }

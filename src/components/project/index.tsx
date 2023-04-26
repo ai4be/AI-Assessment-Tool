@@ -23,8 +23,22 @@ interface Props {
 const ProjectComponent: FC<Props> = (props): JSX.Element => {
   const router = useRouter()
   const { [QueryFilterKeys.STAGE]: stage } = router.query ?? {}
-  const [isSidebarOpen, setSidebarOpen] = useState(false)
+  const [isSidebarOpen] = useState(false)
   const variants = useBreakpointValue({ base: smVariant, md: mdVariant })
+
+  const el = (
+    <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
+      <Box display='flex' position='relative'>
+        <SideBar
+          page='projects'
+          variant={variants?.navigation}
+          isOpen={isSidebarOpen}
+          showSidebarButton={variants?.navigationButton}
+        />
+        <ProjectColumns project={props.project} />
+      </Box>
+    </Box>
+  )
 
   return (
     <Box bgColor='#F7F7F7'>
@@ -37,17 +51,7 @@ const ProjectComponent: FC<Props> = (props): JSX.Element => {
             </Box>
             {stage === SECTION_CHECKLIST.toUpperCase()
               ? <Checklist project={props.project} categories={props.categories} sections={props.sections} />
-              : <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
-                <Box display='flex' position='relative'>
-                  <SideBar
-                    page='projects'
-                    variant={variants?.navigation}
-                    isOpen={isSidebarOpen}
-                    showSidebarButton={variants?.navigationButton}
-                  />
-                  <ProjectColumns project={props.project} />
-                </Box>
-              </Box>}
+              : el}
           </Box>
         </ProjectContextProvider>}
     </Box>

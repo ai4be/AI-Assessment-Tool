@@ -29,13 +29,11 @@ export const UserMenu = (props: UserMenuProps): JSX.Element => {
       : onUserAdd(user._id)
   }
 
+  const el = props.children?.type?.displayName === 'MenuButton' ? props.children : <MenuButton>{props.children}</MenuButton>
+
   return (
     <Menu>
-      {props.children?.type?.displayName === 'MenuButton'
-        ? props.children
-        : <MenuButton>
-          {props.children}
-        </MenuButton>}
+      {el}
       <MenuList>
         {users.map(user => (
           <MenuItem key={user._id} display='block' onClick={e => clickHandler(e, user)} px='1' closeOnSelect={false}>

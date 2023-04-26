@@ -43,8 +43,8 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
     [QueryFilterKeys.DUE_DATE]: dueDate,
     [QueryFilterKeys.ASSIGNMENT]: assignment
   } = router.query
-  const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
-  const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
+  const { data, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
+  const { data: dataCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [columns, setColumns] = useState<Column[]>(defaultColumns)
   const [cards, setCards] = useState<Card[]>([])
@@ -166,7 +166,7 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
           )}
         </Droppable2>
       </DragDropContext2>
-      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery} card={card} />}
+      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery as any} card={card} />}
     </Box>
   )
 }
