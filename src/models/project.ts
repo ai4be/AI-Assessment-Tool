@@ -112,6 +112,18 @@ export const getUserProjects = async (userId: ObjectId | string, projectId?: str
   return await db.collection(TABLE_NAME).find(where).toArray()
 }
 
+export const getUserProjectIds = async (userId: ObjectId | string): Promise<ObjectId[]> => {
+  const { db } = await connectToDatabase()
+  userId = toObjectId(userId)
+  const where: any = {
+    $or: [
+      { userIds: userId },
+      { createdBy: userId }
+    ]
+  }
+  return ((await db.collection(TABLE_NAME).find(where).project({ _id: 1 }).toArray()) ?? []).map(p => p._id)
+}
+
 export const addUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, addedUserId: ObjectId | string): Promise<boolean> => {
   const res = await addUser(_id, addedUserId)
   if (res) void Activity.createCardUserAddActivity(_id, userId, addedUserId)

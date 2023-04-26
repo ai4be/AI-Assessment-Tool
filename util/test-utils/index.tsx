@@ -10,7 +10,7 @@ import i18NextConfig from '../../next-i18next.config'
 import i18nextFSBackend from 'i18next-fs-backend'
 import { faker } from '@faker-js/faker'
 import { createUser } from '@/src/models/user'
-import { createProject, getProject } from '@/src/models/project'
+import { createProject, getProject, createProjectWithDefaultColumnsAndCardsAndActivity } from '@/src/models/project'
 import { User } from '@/src/types/user'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { connectToDatabase } from '@/src/models/mongodb'
@@ -19,6 +19,9 @@ import { hashPassword } from '@/util/auth'
 import { encode } from 'next-auth/jwt'
 import { industries } from '@/pages/api/industries'
 import { Project } from '@/src/types/project'
+import { dataToCards } from '@/src/models/card'
+import { defaultCards, defaultRoles } from '@/src/data'
+import { addRoles } from '@/src/models/role'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createConfig } = require('next-i18next/dist/commonjs/config/createConfig')
@@ -100,6 +103,7 @@ export const setupMongoDB = (): { mongoServer: MongoMemoryServer | null, client:
   // })
   afterEach(async () => {
     await context.client?.db().dropDatabase()
+    // console.log('Dropped database')
   })
   afterAll(async () => {
     await context.client?.close()
@@ -142,10 +146,21 @@ export const givenMultipleUsers = async (count: number, data = {}): Promise<User
   return await Promise.all(users)
 }
 
-export const givenAProject = async (data = {}, user: User | undefined): Promise<Project> => {
+export const givenAProject = async (data = {}, user: User | undefined, withCardsAndRoles: boolean = false): Promise<Project> => {
   if (user == null) user = await givenAUser()
   const project = givenProjectData(data) as Project
-  const projectId = await createProject({ ...project, createdBy: user._id })
+  let projectId = null
+  if (withCardsAndRoles) {
+    const cardsData = await dataToCards(defaultCards)
+    projectId = await createProjectWithDefaultColumnsAndCardsAndActivity(
+      { ...project, createdBy: user._id },
+      cardsData,
+      String(user._id)
+    )
+    await addRoles(projectId, defaultRoles)
+  } else {
+    projectId = await createProject({ ...project, createdBy: user._id })
+  }
   return await getProject(projectId)
 }
 
@@ -164,4 +179,13 @@ export const givenAnAuthenticationToken = async (user: User, secret: string = St
     token: tokenData
   })
   return token
+}
+
+export const givenCommentTextData = (users: User[]): string => {
+  let commentText = faker.lorem.paragraph()
+  // creates a string of users to be tagged in the comment
+  for (const user of users) {
+    commentText = `${commentText} @[${user.firstName} ${user.lastName}](${String(user._id)})`
+  }
+  return `${commentText} ${faker.lorem.paragraph()}`
 }

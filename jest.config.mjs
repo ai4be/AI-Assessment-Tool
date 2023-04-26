@@ -12,7 +12,12 @@ const config = {
   verbose: true,
   testEnvironment: 'jest-environment-jsdom',
   // Add more setup options before each test is run
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  // testTimeout: 10000,
+  // other config settings
+  // transform: {
+  //   '^.+\\.(js|jsx|ts|tsx|mjs)$': 'babel-jest'
+  // }
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
