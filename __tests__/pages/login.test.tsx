@@ -28,7 +28,7 @@ describe('Login page', () => {
     await userEvent.type(emailInput, user.email)
     const passwordInput = screen.getByTestId(/password/i)
     await userEvent.type(passwordInput, user.password as string)
-    const loginButton = screen.getByRole('button')
+    const loginButton = screen.getByRole('button', { name: 'Sign in' })
     expect(loginButton).not.toBeDisabled()
     await userEvent.click(loginButton)
 

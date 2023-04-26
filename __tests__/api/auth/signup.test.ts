@@ -25,7 +25,7 @@ describe(PATH, () => {
     const data = res._getData()
     expect(res._getStatusCode()).toBe(201)
     expect(data).toHaveProperty('code')
-    expect(data.code).toEqual(11005)
+    expect(data.code).toEqual(9005)
   })
 
   it('user cannot singup with email already existing in the db', async () => {
@@ -40,8 +40,8 @@ describe(PATH, () => {
     const data = res._getData()
     const decodedData = JSON.parse(data)
     expect(decodedData).toHaveProperty('code')
-    expect(decodedData.code).toEqual(11004)
-    expect((apiResponseCodes as any)[decodedData.code as key]).toMatch(/email .*/i)
+    expect(decodedData.code).toEqual(12002)
+    expect((apiResponseCodes as any)[decodedData.code]).toMatch(/email .*/i)
   })
 
   it('user cannot singup with too short password', async () => {
