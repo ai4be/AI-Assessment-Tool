@@ -152,7 +152,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
             <Flex justifyContent='center' alignItems='center'>
               <Avatar
                 size='sm'
-                name={ user != null ? `${user?.firstName} ${user?.lastName}` : ''}
+                name={user != null ? `${user?.firstName} ${user?.lastName}` : ''}
                 src={user?.xsAvatar}
                 // backgroundColor='#F0EEF9'
                 // icon={<BiUser size='20' className='icon-blue-color' />}

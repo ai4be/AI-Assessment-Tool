@@ -25,7 +25,7 @@ describe('Login page', () => {
     const user = await givenAUser()
     await renderWithThemeAndTranslations(<Login onSubmit={mockLogin} />)
     const emailInput = screen.getByTestId(/email/i)
-    await userEvent.type(emailInput, user.email as string)
+    await userEvent.type(emailInput, user.email)
     const passwordInput = screen.getByTestId(/password/i)
     await userEvent.type(passwordInput, user.password as string)
     const loginButton = screen.getByRole('button')

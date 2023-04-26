@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "ts-standard --fix .",
+    "lint": "ts-standard .",
     "start-cron": "source .env.local && node cron/index.js",
     "test": "NODE_ENV=test && jest --runInBand --detectOpenHandles --transformIgnorePatterns \"node_modules/(?!jose|@panva/hkdf)/\""
   },

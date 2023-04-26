@@ -117,7 +117,7 @@ export const givenUserData = (data: any = {}): Partial<User> => {
     email: faker.internet.email(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    password: faker.internet.password(10, undefined, undefined,'P@ssw0rd'),
+    password: faker.internet.password(10, undefined, undefined, 'P@ssw0rd'),
     ...data
   }
 }

@@ -12,7 +12,7 @@ const config = {
   verbose: true,
   testEnvironment: 'jest-environment-jsdom',
   // Add more setup options before each test is run
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
   // testTimeout: 10000,
   // other config settings
   // transform: {
