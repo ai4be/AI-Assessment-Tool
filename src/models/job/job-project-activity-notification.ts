@@ -1,15 +1,16 @@
+import { ObjectId } from 'mongodb'
 import { Job as JobInterface } from '@/src/types/job'
 import { isEmpty } from '@/util/index'
 import Activity from '@/src/models/activity'
 import { Activity as ActivityTypeDef } from '@/src/types/activity'
 import Job from '@/src/models/job'
 import UserModel from '@/src/models/user'
-import { ObjectId } from 'mongodb'
 import { getUserProjectIds, getUserProjects } from '@/src/models/project'
 import { getProjectActivityHtml } from '@/util/mail/templates'
 import { sendMailWithSelfInBcc } from '@/util/mail'
 import { User } from '@/src/types/user'
-import { toObjectId } from '../mongodb'
+import { toObjectId } from '@/src/models/mongodb'
+import { getNotifications } from '@/src/models/notification'
 
 export type PartialActivityTypeDef = Pick<ActivityTypeDef, 'createdAt' | '_id' | 'projectId' | 'type' | 'createdBy'> & { sent?: boolean }
 
@@ -104,8 +105,21 @@ export class JobProjectActivityNotification extends Job {
     const { latestActivityPerProject, userId } = this.data as JobProjectActivityNotificationData
     const latestActivityPerProjectToSend = latestActivityPerProject.filter((activity: PartialActivityTypeDef) => activity.sent !== true)
     const projectIds = latestActivityPerProjectToSend.map((activity: PartialActivityTypeDef) => activity.projectId)
+    if (isEmpty(projectIds)) {
+      this.result = 'No projects to notify'
+      return
+    }
     const user = await UserModel.get(userId)
     if (user == null) throw Error(`User not found: ${userId}`)
+    if (user.emailVerified !== true) {
+      this.result = 'User email not verified'
+      return
+    }
+    const notification = await getNotifications(user._id)
+    if (notification == null || !notification.projectActivity) {
+      this.result = 'User has disabled project activity notifications'
+      return
+    }
     const projects = await getUserProjects(userId, projectIds)
     if (isEmpty(projects)) throw Error(`No projects found for user: ${userId}`)
     const html = getProjectActivityHtml(projects)

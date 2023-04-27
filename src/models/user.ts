@@ -38,13 +38,14 @@ export const getUsers = async (userIds?: Array<string | ObjectId>, omitFields: s
   return await db.collection(TABLE_NAME).find(where, { projection }).toArray()
 }
 
-export const createUser = async ({ email, password, firstName, lastName }: UserCreate): Promise<User> => {
+export const createUser = async ({ email, password, firstName, lastName, emailVerified = false }: UserCreate): Promise<User> => {
   const { db } = await connectToDatabase()
   email = cleanEmail(email)
   firstName = cleanText(firstName)
   lastName = cleanText(lastName)
+  if (emailVerified !== true) emailVerified = false
   const createdAt = new Date()
-  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt, emailVerified: false })
+  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt, emailVerified })
   return { email, password, firstName, lastName, _id: res.insertedId }
 }
 

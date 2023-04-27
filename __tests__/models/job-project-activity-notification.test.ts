@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { givenAProject, givenAUser, setupMongoDB } from '@/util/test-utils'
+import { givenAProject, givenAUser, givenAUserAcceptingNotifications, setupMongoDB } from '@/util/test-utils'
 import * as ProjectModel from '@/src/models/project'
 import * as CardModel from '@/src/models/card'
 import JobModel from '@/src/models/job'
@@ -9,6 +9,7 @@ import { JobProjectActivityNotification } from '@/src/models/job/job-project-act
 // import waitForExpect from 'wait-for-expect'
 import * as Mail from '@/util/mail/index'
 import { JobStatus } from '@/src/types/job'
+import { jobFactory } from '@/src/models/job/job-factory'
 
 // because of swc issue, we need to mock the module
 jest.mock('../../util/mail/index', () => ({
@@ -39,12 +40,13 @@ const baseExpect = async (context: any): Promise<void> => {
   }
 }
 
-describe('Job', () => {
+describe('JobProjectActivityNotification', () => {
   setupMongoDB()
   let spy: jest.SpyInstance
   let spy2: jest.SpyInstance
   let spy3: jest.SpyInstance
   let context: any
+
   beforeAll(async () => {
     const originalFn = JobProjectActivityNotification.createProjectActivityNotificationJobs.bind(JobProjectActivityNotification)
     const originalFn2 = Mail.sendMailToBcc
@@ -61,17 +63,7 @@ describe('Job', () => {
       return await originalFn3(data, jobType)
     })
   })
-  beforeEach(async () => {
-    const user1 = await givenAUser()
-    const user2 = await givenAUser()
-    const user3 = await givenAUser()
-    const project1 = await givenAProject({}, user1, true)
-    const project2 = await givenAProject({}, user2, true)
-    await ProjectModel.addUser(project1._id, user2._id)
-    await ProjectModel.addUser(project1._id, user3._id)
-    await ProjectModel.addUser(project2._id, user3._id)
-    context = { user1, user2, user3, project1, project2 }
-  })
+
   afterEach(() => {
     spy.mockClear()
     spy2.mockClear()
@@ -84,11 +76,23 @@ describe('Job', () => {
   })
 
   describe('.createProjectActivityNotificationJobs()', () => {
+    beforeEach(async () => {
+      const user1 = await givenAUser()
+      const user2 = await givenAUser()
+      const user3 = await givenAUser()
+      const project1 = await givenAProject({}, user1, true)
+      const project2 = await givenAProject({}, user2, true)
+      await ProjectModel.addUser(project1._id, user2._id)
+      await ProjectModel.addUser(project1._id, user3._id)
+      await ProjectModel.addUser(project2._id, user3._id)
+      context = { user1, user2, user3, project1, project2 }
+    })
+
     it('Creates the jobs', async () => {
       await baseExpect(context)
     })
 
-    it('Sends activities only once', async () => {
+    it('Creates the job for activities only once', async () => {
       const { user1, user2, user3, project1 } = context
       await baseExpect(context)
       const jobIds2 = await JobProjectActivityNotification.createProjectActivityNotificationJobs()
@@ -111,7 +115,7 @@ describe('Job', () => {
         expect(job?.data?.latestActivityPerProject).toHaveLength(1)
       }
     })
-    it('Sends activities only once 2', async () => {
+    it('Creates the job for activities only once test 2', async () => {
       const { user1, user2, user3, project2 } = context
       await baseExpect(context)
       const cards = await CardModel.getCards({ projectId: project2._id })
@@ -126,7 +130,56 @@ describe('Job', () => {
         expect(job?.type).toEqual(JobProjectActivityNotification.JOB_TYPE)
         expect(job?.data).toBeDefined()
         expect(userIds2.includes(strUserId)).toBeTruthy()
-        // expect(job?.data?.latestActivityPerProject).toHaveLength(1)
+      }
+    })
+  })
+  describe('#run()', () => {
+    beforeEach(async () => {
+      const user1 = await givenAUser()
+      const project1 = await givenAProject({}, context.user1, true)
+      context = { user1, project1 }
+    })
+    it('Sends the email', async () => {
+      const user2 = await givenAUserAcceptingNotifications()
+      await ProjectModel.addUser(context.project1._id, user2._id)
+      const jobIds = await JobProjectActivityNotification.createProjectActivityNotificationJobs()
+      expect(jobIds).toHaveLength(1)
+      for (const jobId of jobIds) {
+        const job = await JobModel.get(jobId)
+        const activityJob = jobFactory(job)
+        await activityJob.run()
+        expect(activityJob.result).toBeDefined()
+        expect(activityJob.result).toHaveProperty('accepted')
+        expect(activityJob.result).toHaveProperty('rejected')
+        expect(activityJob.result).toHaveProperty('response')
+        expect(activityJob.result).toHaveProperty('envelope')
+        expect(activityJob.result).toHaveProperty('messageId')
+      }
+    })
+    it('Does not send the email if the email is not verified', async () => {
+      const user2 = await givenAUserAcceptingNotifications({ emailVerified: false })
+      await ProjectModel.addUser(context.project1._id, user2._id)
+      const jobIds = await JobProjectActivityNotification.createProjectActivityNotificationJobs()
+      expect(jobIds).toHaveLength(1)
+      for (const jobId of jobIds) {
+        const job = await JobModel.get(jobId)
+        const activityJob = jobFactory(job)
+        await activityJob.run()
+        expect(activityJob.result).toBeDefined()
+        expect(activityJob.result).toMatch(/.* not verified.*/i)
+      }
+    })
+    it('Does not send the email if the user has disabled project avtivity notifications', async () => {
+      const user2 = await givenAUserAcceptingNotifications({ }, { projectActivity: false })
+      await ProjectModel.addUser(context.project1._id, user2._id)
+      const jobIds = await JobProjectActivityNotification.createProjectActivityNotificationJobs()
+      expect(jobIds).toHaveLength(1)
+      for (const jobId of jobIds) {
+        const job = await JobModel.get(jobId)
+        const activityJob = jobFactory(job)
+        await activityJob.run()
+        expect(activityJob.result).toBeDefined()
+        expect(activityJob.result).toMatch(/.* disabled project activity notifications.*/i)
       }
     })
   })

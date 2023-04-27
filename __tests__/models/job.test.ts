@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { givenAProject, givenAUser, givenCommentTextData, setupMongoDB } from '@/util/test-utils'
+import { givenAProject, givenAUserAcceptingNotifications, givenCommentTextData, setupMongoDB } from '@/util/test-utils'
 import * as ProjectModel from '@/src/models/project'
 import * as CardModel from '@/src/models/card'
 import * as CommentModel from '@/src/models/comment'
@@ -42,8 +42,8 @@ describe('Job', () => {
         data.createdAt = new Date(Date.now() - 1000) // overwrite createdAt to 1 second ago to make it picked in the findAndExecuteJobs
         return await originalFn3(data, jobType)
       })
-      const user = await givenAUser()
-      const user2 = await givenAUser()
+      const user = await givenAUserAcceptingNotifications()
+      const user2 = await givenAUserAcceptingNotifications()
       const project = await givenAProject({}, user, true)
       await ProjectModel.addUser(project._id, user2._id)
       // const projectUpdated =

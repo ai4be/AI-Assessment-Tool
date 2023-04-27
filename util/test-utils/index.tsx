@@ -22,6 +22,8 @@ import { Project } from '@/src/types/project'
 import { dataToCards } from '@/src/models/card'
 import { defaultCards, defaultRoles } from '@/src/data'
 import { addRoles } from '@/src/models/role'
+import { upsertNotification } from '@/src/models/notification'
+import { Notification } from '@/src/types/notification'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createConfig } = require('next-i18next/dist/commonjs/config/createConfig')
@@ -118,6 +120,7 @@ export const givenUserData = (data: any = {}): Partial<User> => {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     password: faker.internet.password(10, undefined, undefined, 'P@ssw0rd'),
+    emailVerified: true,
     ...data
   }
 }
@@ -136,6 +139,12 @@ export const givenAUser = async (data = {}): Promise<User> => {
   const hashedPassword = await hashPassword(String(user.password))
   const createdUser = await createUser({ ...user, password: hashedPassword })
   return { ...createdUser, password: user.password }
+}
+
+export const givenAUserAcceptingNotifications = async (userData: Partial<User> = {}, notificationData: Partial<Notification> = { projectActivity: true, mentions: true }): Promise<User> => {
+  const user = await givenAUser(userData)
+  await upsertNotification({ mentions: true, projectActivity: true, ...notificationData, _id: user._id })
+  return user
 }
 
 export const givenMultipleUsers = async (count: number, data = {}): Promise<User[]> => {
