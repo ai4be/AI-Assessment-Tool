@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { connectToDatabase } from '@/src/models/mongodb'
 import { authOptions } from '../pages/api/auth/[...nextauth]'
-import { unstable_getServerSession } from 'next-auth/next'
+import { getServerSession } from 'next-auth/next'
 import { getProjectUsers } from '@/src/models/project'
 import { getUser } from '@/src/models/user'
 import { getCard } from '@/src/models/card'
@@ -24,7 +24,7 @@ export function hasApiKey (handler: any): Function {
 
 export function isConnected (handler: any): Function {
   return async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
-    const session = await unstable_getServerSession(req, res, authOptions)
+    const session = await getServerSession(req, res, authOptions)
     const { client } = await connectToDatabase()
 
     if (session?.user == null) {
@@ -50,7 +50,7 @@ export function addUserToReq (handler: Function): Function {
   return async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
     let user = getUserFromRequest(req)
     if (user != null) return handler(req, res)
-    const session = await unstable_getServerSession(req, res, authOptions)
+    const session = await getServerSession(req, res, authOptions)
     if (session?.user == null) {
       return returnUnauthorized(res)
     }

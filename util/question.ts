@@ -49,7 +49,7 @@ export const questionEnabler = (questions: DisplayQuestion[]): void => {
             disabledText = hasNotBefore ? `${q?.TOCnumber as string} is not empty` : `${q?.TOCnumber as string} is empty`
           } else if (condition.includes('=')) {
             const res = condition.match(/=\s?'(.+)'/i)
-            const [_, value] = res ?? []
+            const [, value] = res ?? []
             const responsesValues = Array.isArray(q?.responses) ? q?.responses.map((r: any) => q.answers[r]) : []
             const includesValue: boolean = responsesValues.includes(value)
             isConditionTrue = hasNotBefore ? !includesValue : includesValue

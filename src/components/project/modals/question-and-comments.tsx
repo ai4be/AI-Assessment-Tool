@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import {
   Box,
   BoxProps
@@ -22,7 +22,7 @@ type Props = {
 
 const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionSaveCallback, ...rest }): JSX.Element => {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const [, setIsLoading] = useState(false)
   const { showToast } = useContext(ToastContext)
   const [renderTrigger, setRenderTrigger] = useState(0)
   const [newComment, setNewComment] = useState<Partial<Comment>>({})
@@ -35,6 +35,7 @@ const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionS
       const url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}`
       const data: any = {}
       if (Array.isArray(responses)) {
+        // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
         if (!Array.isArray(question?.responses) || (Array.isArray(question?.responses) && !isEqual(question.responses?.sort(), responses.sort()))) {
           data.responses = responses
         }
@@ -63,7 +64,7 @@ const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionS
   const saveComment = async (comment: Partial<Comment>, data: Partial<Comment>, question: DisplayQuestion): Promise<void> => {
     setIsLoading(true)
     let method = HTTP_METHODS.PATCH
-    let url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments/${comment._id}`
+    let url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments/${String(comment._id)}`
     if (isEmpty(comment._id)) {
       method = HTTP_METHODS.POST
       url = `/api/projects/${projectId}/cards/${cardId}/questions/${question.id}/comments`
@@ -125,7 +126,7 @@ const QuestionAndComments: FC<Props> = ({ cardId, projectId, question, questionS
       <QuestionComp question={question} onChange={saveQuestion} />
       <CommentComponent comment={newComment} onSave={async (data: Partial<Comment>) => await saveComment(newComment, data, question)} ml='3' />
       {question.comments?.map(c => (
-        <CommentComponent key={c._id} comment={c} setNewCommentParent={setNewCommentParent} onSave={async data => await saveComment(c, data, question)} onDelete={async () => await deleteComment(c, question)} ml='3' />
+        <CommentComponent key={c._id} comment={c} setNewCommentParent={setNewCommentParent} onSave={async (data: Partial<Comment>) => await saveComment(c, data, question)} onDelete={async () => await deleteComment(c, question)} ml='3' />
       ))}
     </Box>
   )

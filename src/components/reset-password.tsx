@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useContext, MouseEvent } from 'react'
 import {
   Flex,
   Box,
@@ -34,7 +34,7 @@ const ResetPassword = (props: any): JSX.Element => {
     email: false
   })
   const [isCreating, setIsCreatingStatus] = useState(false)
-  const [hasError, setErrorState] = useState(false)
+  // const [hasError, setErrorState] = useState(false)
   const [emailErr, setEmailErr] = useState(false)
   const [passwordLengthErr, setPasswordLengthErr] = useState(false)
   const [passwordCharErr, setPasswordCharErr] = useState(false)
@@ -87,7 +87,7 @@ const ResetPassword = (props: any): JSX.Element => {
     }
   }, [props.message])
 
-  const resetPassword = async (e): Promise<void> => {
+  const resetPassword = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsCreatingStatus(true)
     const token = props.token
@@ -110,7 +110,7 @@ const ResetPassword = (props: any): JSX.Element => {
 
     if (response.ok) {
       const result = await response.json()
-      const msg = t([`api-messages:${result.code}`, 'code'])
+      const msg = t([`api-messages:${String(result.code)}`, 'code'])
       showToast({
         title: msg,
         status: 'success',
@@ -120,13 +120,13 @@ const ResetPassword = (props: any): JSX.Element => {
     } else {
       try {
         const result = await response.json()
-        const msg = t([`api-messages:${result.code}`, 'code'])
+        const msg = t([`api-messages:${String(result.code)}`, 'code'])
         showToast({
           title: msg,
           status: 'error',
           duration: null
         })
-      } catch (e) {
+      } catch (e: any) {
         showToast({
           title: t('exceptions:something-went-wrong'),
           status: 'error',
@@ -163,7 +163,7 @@ const ResetPassword = (props: any): JSX.Element => {
           value={values.email}
           placeholder={`${t('placeholders:email')}`}
           onBlur={() => setTouched({ ...touched, password: true })}
-          onChange={handleChange}
+          onChange={(e) => { void handleChange(e) }}
         />
         {emailErr && <Text size='xs' color='red'>{t('validations:invalid-email')}</Text>}
       </FormControl>
@@ -174,7 +174,7 @@ const ResetPassword = (props: any): JSX.Element => {
         disabled={isButtonDisabled}
         bg='success'
         color='white'
-        onClick={resetPassword}
+        onClick={(e) => { void resetPassword(e) }}
         isLoading={isCreating}
         loadingText={`${t('reset-password:submitting')}`}
       >
@@ -192,7 +192,7 @@ const ResetPassword = (props: any): JSX.Element => {
           value={values.password}
           placeholder={`${t('placeholders:new-password')}`}
           onBlur={() => setTouched({ ...touched, password: true })}
-          onChange={handleChange}
+          onChange={(e) => { void handleChange(e) }}
         />
         {passwordLengthErr && <Text size='xs' color='red'>{t('validations:password-too-short')}</Text>}
         {passwordCharErr && <Text size='xs' color='red'>{t('validations:include-special-character-and-number')}</Text>}
@@ -203,7 +203,7 @@ const ResetPassword = (props: any): JSX.Element => {
           name='confirmPassword'
           value={values.confirmPassword}
           placeholder={`${t('placeholders:confirm-password')}`}
-          onChange={handleChange}
+          onChange={(e) => { void handleChange(e) }}
           onBlur={() => setTouched({ ...touched, confirmPassword: true })}
         />
         {confirmPasswordErr && <Text size='xs' color='red'>{t('validations:passwords-unmatch')}</Text>}
@@ -215,7 +215,7 @@ const ResetPassword = (props: any): JSX.Element => {
         disabled={isButtonDisabled}
         bg='success'
         color='white'
-        onClick={resetPassword}
+        onClick={(e) => { void resetPassword(e) }}
         isLoading={isCreating}
         loadingText={`${t('reset-password:resetting')}`}
       >

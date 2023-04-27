@@ -30,10 +30,12 @@ const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
     )
   }
 
+  const Draggable2 = Draggable as any // ugly hack to get around typescript error
+
   return (
     // https://github.com/atlassian/react-beautiful-dnd/issues/1767
-    <Draggable draggableId={card._id} index={cardIndex} key={card._id}>
-      {(provided) => (
+    <Draggable2 draggableId={card._id} index={cardIndex} key={card._id}>
+      {(provided: any) => (
         <Box
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -56,7 +58,7 @@ const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
           {loadAssignedToUser()}
         </Box>
       )}
-    </Draggable>
+    </Draggable2>
   )
 }
 

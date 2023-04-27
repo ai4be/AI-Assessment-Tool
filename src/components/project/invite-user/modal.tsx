@@ -16,8 +16,9 @@ import { useTranslation } from 'next-i18next'
 import { defaultFetchOptions } from '@/util/api'
 import { isEmailValid } from '@/util/validator'
 import ToastContext from '@/src/store/toast-context'
+import { Project } from '@/src/types/project'
 
-const InviteModal = ({ project, callback }): JSX.Element => {
+const InviteModal = ({ project, callback }: { project: Project, callback: Function }): JSX.Element => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { showToast } = useContext(ToastContext)
@@ -63,10 +64,10 @@ const InviteModal = ({ project, callback }): JSX.Element => {
       }
     }
   }
-
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <>
-      <Box align='right'>
+      <Box>
         <Button
           backgroundColor='success'
           color='white'

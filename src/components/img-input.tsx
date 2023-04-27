@@ -50,10 +50,12 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
     }
   }
 
+  const Box2 = Box as any
+
   return (
     <Flex display='flex' justifyContent='center'>
       <Box position='relative' height='100px' width='100px' overflow='hidden'>
-        <Box
+        <Box2
           display='flex'
           flexDirection='column'
           cursor='pointer'
@@ -79,7 +81,7 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
             </Heading>
             <Text fontWeight='light' fontSize='10'>{t('img-input:drop-images-caption2')}</Text>
           </Stack>
-        </Box>
+        </Box2>
         <Avatar src={dataBase64} name={placeholder} position='absolute' bottom='0' left='0' height='100%' width='100%' opacity={opacityImg} />
         <Input
           type='file'
@@ -101,7 +103,7 @@ export default function ImgInput ({ onChange, data, placeholder }: { onChange?: 
         />
       </Box>
       <Box alignSelf='flex-end'>
-        <RiDeleteBin6Line color='var(--main-blue)' opacity={disabled ? 0.2 : 1} cursor={!disabled ? 'pointer' : ''} onClick={deleteAvatar}/>
+        <RiDeleteBin6Line color='var(--main-blue)' opacity={disabled ? 0.2 : 1} cursor={!disabled ? 'pointer' : ''} onClick={deleteAvatar} />
       </Box>
     </Flex>
   )

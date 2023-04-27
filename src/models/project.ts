@@ -112,6 +112,18 @@ export const getUserProjects = async (userId: ObjectId | string, projectId?: str
   return await db.collection(TABLE_NAME).find(where).toArray()
 }
 
+export const getUserProjectIds = async (userId: ObjectId | string): Promise<ObjectId[]> => {
+  const { db } = await connectToDatabase()
+  userId = toObjectId(userId)
+  const where: any = {
+    $or: [
+      { userIds: userId },
+      { createdBy: userId }
+    ]
+  }
+  return ((await db.collection(TABLE_NAME).find(where).project({ _id: 1 }).toArray()) ?? []).map(p => p._id)
+}
+
 export const addUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, addedUserId: ObjectId | string): Promise<boolean> => {
   const res = await addUser(_id, addedUserId)
   if (res) void Activity.createCardUserAddActivity(_id, userId, addedUserId)
@@ -163,7 +175,7 @@ export const getProjectUsers = async (_id: ObjectId | string, filterUserIds?: Ar
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
   const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { userIds: 1, createdBy: 1 } })
-  let userIds: any = []
+  let userIds: ObjectId[] = []
   if (project?.userIds != null) userIds.push(...project.userIds, project.createdBy)
   if (filterUserIds != null) {
     filterUserIds = filterUserIds.map(String)
@@ -176,11 +188,11 @@ export const getInactiveProjectUsers = async (_id: ObjectId | string, filterUser
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
   const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { userIdsInactive: 1, createdBy: 1 } })
-  let userIdsInactive: any = []
+  let userIdsInactive: ObjectId[] = []
   if (project?.userIdsInactive != null) userIdsInactive.push(...project.userIdsInactive)
   if (filterUserIds != null) {
     filterUserIds = filterUserIds.map(String)
-    userIdsInactive = userIdsInactive.filter(id => filterUserIds?.includes(String(id)))
+    userIdsInactive = userIdsInactive.filter((id: ObjectId) => filterUserIds?.includes(String(id)))
   }
   return await getUsers(userIdsInactive)
 }

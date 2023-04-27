@@ -1,4 +1,5 @@
 'use strict'
+/* eslint-disable */
 
 Object.defineProperty(exports, '__esModule', { value: true })
 
@@ -26,7 +27,7 @@ PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
-var extendStatics = function (d, b) {
+let extendStatics = function (d, b) {
   extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b }) ||
         function (d, b) { for (const p in b) if (b.hasOwnProperty(p)) d[p] = b[p] }
@@ -39,7 +40,7 @@ function __extends (d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __())
 }
 
-var __assign = function () {
+let __assign = function () {
   __assign = Object.assign || function __assign (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
       s = arguments[i]

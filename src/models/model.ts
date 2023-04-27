@@ -84,7 +84,7 @@ export function generatePaginationQuery (where: any, sort: any[], nextKey?: any)
 
   nextKey = JSON.parse(Buffer.from(nextKey, 'base64').toString('utf-8'))
 
-  console.log('nextKey', nextKey)
+  // console.log('nextKey', nextKey)
 
   let wherePagined = where
 

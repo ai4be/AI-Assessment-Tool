@@ -81,7 +81,7 @@ export const updateUser = async (_id: string | ObjectId, updateData: Partial<Use
   const updateableTxtFields = ['email', 'firstName', 'lastName', 'avatar', 'xsAvatar', 'organization', 'department', 'role']
   const update: Partial<User> = {}
   for (const field of updateableTxtFields) {
-    if (updateData[field] != null) update[field] = cleanText(updateData[field])
+    if ((updateData as any)[field] != null) (update as any)[field] = cleanText((updateData as any)[field])
   }
   if (update.email != null) update.email = cleanEmail(update.email)
   if (update.email != null && !isEmailValid(update.email)) throw new Error('Invalid email')

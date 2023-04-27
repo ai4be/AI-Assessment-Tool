@@ -5,13 +5,14 @@ import { authOptions } from './api/auth/[...nextauth]'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useState } from 'react'
 import { Box, useBreakpointValue } from '@chakra-ui/react'
+import { Session } from 'next-auth'
 
 const smVariant = { navigation: 'drawer', navigationButton: true }
 const mdVariant = { navigation: 'sidebar', navigationButton: false }
 
 const PAGE = 'settings'
 
-export default function SettingsPage ({ session }): JSX.Element {
+export default function SettingsPage ({ session }: { session: Session }): JSX.Element {
   const [isSidebarOpen, setSidebarOpen] = useState(false)
   const variants = useBreakpointValue({ base: smVariant, md: mdVariant })
 
@@ -33,7 +34,7 @@ export default function SettingsPage ({ session }): JSX.Element {
   )
 }
 
-export async function getServerSideProps (ctx): Promise<any> {
+export async function getServerSideProps (ctx: any): Promise<any> {
   const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
 
   if (session == null) {

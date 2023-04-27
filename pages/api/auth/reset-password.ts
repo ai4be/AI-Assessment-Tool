@@ -7,8 +7,9 @@ import { isPasswordValid } from '@/util/validator'
 import { csrf } from '@/util/csrf'
 import { sendMail } from '@/util/mail'
 import templates from '@/util/mail/templates'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-async function handler (req, res): Promise<any> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<any> {
   if (req.method !== 'POST') return res.status(405).json({ code: 10001 })
 
   let { email, password, token } = req.body
@@ -43,7 +44,8 @@ async function handler (req, res): Promise<any> {
       }
       const tokenEnt2 = await createResetPasswordToken(user._id)
       const htmlContent = templates.getResetPasswordHtml(tokenEnt2.token, String(req.headers.origin))
-      const result = await sendMail(user.email, 'Reset password', htmlContent)
+      // const result =
+      await sendMail(user.email, 'Reset password', htmlContent)
       return res.status(200).json({ code: 10009 })
     }
   }

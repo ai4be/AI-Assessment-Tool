@@ -49,7 +49,7 @@ export const QuestionHelp = ({ question }: { question: Question }): JSX.Element 
           <PopoverTrigger>
             <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
           </PopoverTrigger>
-          <PopoverContent opacity='1' _opacity='1 !important'>
+          <PopoverContent opacity='1'>
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverBody opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
@@ -66,7 +66,7 @@ type QuestionAnswerProps = BoxProps & {
 
 export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAnswerProps): JSX.Element => {
   const [value, setValue] = React.useState<any>(question.responses ?? '')
-  const valueHandler = (value): void => {
+  const valueHandler = (value: any): void => {
     if (!Array.isArray(value)) value = [value]
     if (Array.isArray(value) && value.length > 1) {
       value = value.filter(v => v !== '')
@@ -82,8 +82,8 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Radio
-              key={idx} value={`${String(idx)}`} disabled={!question.enabled} size='sm' fontSize='sm'
-              opacity={question.enabled ? 1 : 0.5}
+              key={idx} value={`${String(idx)}`} disabled={question.enabled !== true} size='sm' fontSize='sm'
+              opacity={question.enabled === true ? 1 : 0.5}
             >
               <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Radio>
@@ -99,8 +99,8 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
         <Stack direction='row'>
           {question?.answers?.map((a, idx) => (
             <Checkbox
-              size='sm' key={idx} value={`${idx}`} disabled={!question.enabled} fontSize='sm'
-              opacity={question.enabled ? 1 : 0.5}
+              size='sm' key={idx} value={`${idx}`} disabled={question.enabled !== true} fontSize='sm'
+              opacity={question.enabled === true ? 1 : 0.5}
             >
               <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Checkbox>
@@ -137,7 +137,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
 
   return (
     <>
-      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5} ref={element}>
+      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled === true ? 1 : 0.5} ref={element}>
         {`${question.TOCnumber as string} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
         <QuestionHelp question={question} />
       </Text>
@@ -146,12 +146,12 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
           {question.enabledCondition?.disabledText}
         </Text>}
       <Box ml='1.5'>
-        <QuestionAnswers question={question} onChange={value => onChange(question, value)} marginY='1rem' />
-        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled ? 1 : 0.5}>
+        <QuestionAnswers question={question} onChange={(value: any) => onChange(question, value)} marginY='1rem' />
+        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled === true ? 1 : 0.5}>
           Justification
         </Text>
         <Textarea
-          disabled={!question.enabled}
+          disabled={question.enabled !== true}
           placeholder={`${t('placeholders:motivate-answer')}`}
           size='sm'
           style={{ resize: 'none' }}
@@ -163,7 +163,9 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
         {showEditOptions &&
           <Flex alignItems='center' justifyContent='space-between' mt='1'>
             <Flex alignItems='center'>
-              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={saveHandler}>{t('buttons:save')}</Button>
+              <Button size='sm' colorScheme='blue' disabled={conclusion.trim() === question?.conclusion} onClick={() => { void saveHandler() }}>
+                {t('buttons:save')}
+              </Button>
               <GiCancel size='20px' color='#286cc3' cursor='pointer' className='ml-1' onClick={cancelHandler} />
             </Flex>
           </Flex>}

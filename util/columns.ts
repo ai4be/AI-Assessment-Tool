@@ -22,7 +22,7 @@ export const addColumnToProject = async (columnId: string, projectId: string, co
   let sequence = 1
 
   if (columns.length > 0) {
-    sequence = columns[columns.length - 1].sequence + 1
+    sequence = columns[columns.length - 1].sequence + 1 // eslint-disable-line @typescript-eslint/restrict-plus-operands
   }
 
   const data = {

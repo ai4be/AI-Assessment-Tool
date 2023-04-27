@@ -9,13 +9,13 @@ export default function LocaleSwitcher (): JSX.Element {
     { key: 'nl', name: 'Nederlands' }
   ]
 
-  const handleOnChange = (locale): void => {
+  const handleOnChange = (locale: string): void => {
     // push new locale into a cookie so it can be overwritten and used on middleware
     setCookie(locale)
-    router.push(router.asPath, router.asPath, { locale })
+    void router.push(router.asPath, router.asPath, { locale })
   }
 
-  const setCookie = (lang): void => {
+  const setCookie = (lang: string): void => {
     document.cookie = `NEXT_LOCALE=${lang}; path=/;`
   }
 

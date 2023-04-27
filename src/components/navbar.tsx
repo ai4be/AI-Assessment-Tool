@@ -139,6 +139,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
       await router.push('/')
     }
 
+    /* eslint-disable @typescript-eslint/no-misused-promises */
     return (
       <>
         <Flex flexDirection='column' justifyContent='center'>
@@ -148,11 +149,11 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
           <Divider orientation='vertical' height='50%' color='#F0EEF9' position='absolute' />
         </Flex>
         <Menu>
-          <MenuButton size='xs' mr='5px'>
+          <MenuButton mr='5px'>
             <Flex justifyContent='center' alignItems='center'>
               <Avatar
                 size='sm'
-                name={`${user?.firstName} ${user?.lastName}`}
+                name={user != null ? `${user?.firstName} ${user?.lastName}` : ''}
                 src={user?.xsAvatar}
                 // backgroundColor='#F0EEF9'
                 // icon={<BiUser size='20' className='icon-blue-color' />}
@@ -161,7 +162,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
             </Flex>
           </MenuButton>
           <MenuList backgroundColor='white'>
-            <MenuItem onClick={() => void router.push('/settings')} className='icon-blue-color' color='#0000E6'>{t('buttons:settings')}</MenuItem>
+            <MenuItem onClick={() => { void router.push('/settings') }} className='icon-blue-color' color='#0000E6'>{t('buttons:settings')}</MenuItem>
             <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>{t('buttons:log-out')}</MenuItem>
           </MenuList>
         </Menu>
@@ -179,6 +180,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
       </Button>
     </>
   )
+  /* eslint-enable @typescript-eslint/no-misused-promises */
 }
 
 const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): JSX.Element => {
@@ -194,11 +196,11 @@ const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): J
               colorScheme='blackAlpha'
               aria-label='Show menu'
               variant='outline'
-              onClick={onShowSidebar}
+              onClick={onShowSidebar != null ? () => onShowSidebar() : () => { }}
             />
           </Box>
         )}
-        <Box href='/' onClick={async () => await router.push('/home')}>
+        <Box onClick={() => { void router.push('/home') }}>
           <AI4BelgiumIcon />
         </Box>
         <Spacer />

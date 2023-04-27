@@ -6,9 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the develop branch
   push:
-    branches: [develop]
   pull_request:
-    branches: [develop]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,6 +22,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
 
       # Runs a single command using the runners shell
       - name: Installing package
@@ -31,3 +33,17 @@ jobs:
 
       - name: Running ESlint
         run: yarn lint
+
+      - name: Running Tests
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+        run: yarn test
+
+      - name: Build app
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+          NODE_ENV: test
+        run: |
+          cp .env.test .env
+          yarn build
+

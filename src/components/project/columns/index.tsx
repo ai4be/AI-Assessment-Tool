@@ -16,6 +16,10 @@ import { useQueryCardId } from '@/src/hooks/index'
 import { Project } from '@/src/types/project'
 import { useTranslation } from 'next-i18next'
 
+// ugly hack to get around typescript issues
+const DragDropContext2 = DragDropContext as any
+const Droppable2 = Droppable as any
+
 interface IProps {
   project: Project
 }
@@ -39,8 +43,8 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
     [QueryFilterKeys.DUE_DATE]: dueDate,
     [QueryFilterKeys.ASSIGNMENT]: assignment
   } = router.query
-  const { data, error, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
-  const { data: dataCards, error: errorCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
+  const { data, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
+  const { data: dataCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [columns, setColumns] = useState<Column[]>(defaultColumns)
   const [cards, setCards] = useState<Card[]>([])
@@ -74,7 +78,7 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
     }
     if (val && assignedTo != null && assignedTo?.length > 0) {
       const fileterUserIds = typeof assignedTo === 'string' ? [assignedTo] : assignedTo
-      const assignedToArr = card.userIds?.map(uid => String(uid)) ?? []
+      const assignedToArr = card.userIds?.map((uid: string) => uid) ?? []
       val = fileterUserIds.some(uid => assignedToArr.includes(uid))
     }
     if (val && dueDate != null) {
@@ -91,7 +95,7 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
     return cards.filter(card => filterCardsArrayFn(card, columnId))
   }
 
-  const onDragEnd = async (result): Promise<void> => {
+  const onDragEnd = async (result: any): Promise<void> => {
     const { destination, source, draggableId, type } = result
     // Don't do anything where there is not destination
     if (destination == null) return
@@ -140,9 +144,9 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
   return (
     <Box>
       <ProjectBar project={project} />
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId='all-collumns' direction='horizontal' type='column'>
-          {(provided) => (
+      <DragDropContext2 onDragEnd={onDragEnd}>
+        <Droppable2 droppableId='all-collumns' direction='horizontal' type='column'>
+          {(provided: any) => (
             <Box ref={provided.innerRef} {...provided.droppableProps} display='flex'>
               {Array.isArray(columns) && columns.map((column, index) => (
                 <ColumnComponent
@@ -160,9 +164,9 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
               {provided.placeholder}
             </Box>
           )}
-        </Droppable>
-      </DragDropContext>
-      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery} card={card} />}
+        </Droppable2>
+      </DragDropContext2>
+      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery as any} card={card} />}
     </Box>
   )
 }

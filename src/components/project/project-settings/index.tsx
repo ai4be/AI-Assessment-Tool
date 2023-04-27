@@ -38,7 +38,7 @@ import { Project } from '@/src/types/project'
 
 const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element => {
   const { t } = useTranslation()
-  const { data: industries, error } = useSWR('/api/industries', fetcher)
+  const { data: industries } = useSWR('/api/industries', fetcher)
   const { isBusy, setIsBusy } = useContext(ProjectSettingsContext)
   const { showToast } = useContext(ToastContext)
   const [projectName, setProjectName] = useState(project.name)
@@ -99,11 +99,11 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
           {Array.isArray(industries) && industries?.map((industry, idx) => (<option key={industry.key} value={industry.name}>{industry.name}</option>))}
         </Select>
       </FormControl>
-      <Box align='right'>
+      <Box>
         <Button
           backgroundColor='success'
           color='white'
-          onClick={handleSave}
+          onClick={() => { void handleSave() }}
           disabled={isLoading || projectName == null || projectName === '' || isBusy}
           isLoading={isLoading}
         >
@@ -114,7 +114,7 @@ const ProjectBaseProperties = ({ project }: { project: Project }): JSX.Element =
   )
 }
 
-const DeleteProject = ({ project }): JSX.Element => {
+const DeleteProject = ({ project }: { project: Project }): JSX.Element => {
   const { t } = useTranslation()
   const { isBusy, setIsBusy } = useContext(ProjectSettingsContext)
   const [isLoading, setIsLoading] = useState(false)
@@ -142,7 +142,7 @@ const DeleteProject = ({ project }): JSX.Element => {
       <Text as='b'>{t('project-settings:danger-zone')}</Text>
       <Flex justifyContent='space-between' alignItems='center'>
         <p>{t('project-settings:delete-project-caption')}</p>
-        <Box align='right'>
+        <Box>
           <Button
             bg='red.500'
             color='white'
@@ -188,7 +188,7 @@ export function ProjectSettingsContextProvider (props: any): JSX.Element {
   )
 }
 
-const ProjectSettings = ({ project }): JSX.Element => {
+const ProjectSettings = ({ project }: { project: Project }): JSX.Element => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isBusy } = useContext(ProjectSettingsContext)

@@ -20,13 +20,13 @@
   "11001": "",
   "11002": "Het door u opgegeven e-mailadres is niet geldig",
   "11003": "The password should be at least 8 characters long and contain a special character",
-  "11004": "Email is al in gebruik!",
+  "11004": "",
   "11005": "",
   "11006": "Het aanmaken van uw account is mislukt. Probeer het later opnieuw.",
 
   "_range_email": "Codes starting from 12001 are used on Email verification feature at the following files: pages > api > users > [userId] > email > index.tsx",
   "12001": "ongeldig e-mail",
-  "12002": "email is al gebruikt",
+  "12002": "Email is al in gebruik!",
   "12003": "fout bij het maken van een token",
   "12004": "fout tijdens het verzenden van e-mail",
   "12005": "Er is een code naar je e-mailadres gestuurd. Gebruik de code om je e-mailadres te verifiëren."

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, MouseEvent } from 'react'
 import {
   Avatar,
   Badge,
@@ -62,17 +62,17 @@ export const FilterMenu = (props: any): JSX.Element => {
     const assignmentVal = query[QueryFilterKeys.ASSIGNMENT]
     if (assignmentVal != null && !ASSINGMENT_VALUES.includes(assignmentVal)) {
       reroute = true
-      delete query[QueryFilterKeys.ASSIGNMENT]
+      delete query[QueryFilterKeys.ASSIGNMENT] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     const dueDateVal = query[QueryFilterKeys.DUE_DATE]
     if (dueDateVal != null && !DUE_DATE_VALUES.includes(dueDateVal)) {
       reroute = true
-      delete query[QueryFilterKeys.DUE_DATE]
+      delete query[QueryFilterKeys.DUE_DATE] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     let userIdsVal = query[QueryFilterKeys.ASSIGNED_TO]
     if (userIdsVal != null && assignmentVal !== Assignment.ASSIGNED_TO) {
       reroute = true
-      delete query[QueryFilterKeys.ASSIGNED_TO]
+      delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     if (userIdsVal != null && typeof userIdsVal === 'string') {
       userIdsVal = [userIdsVal]
@@ -91,17 +91,17 @@ export const FilterMenu = (props: any): JSX.Element => {
   useEffect(() => {
     const query: any = { ...router.query }
     if (isEmpty(assignment)) {
-      delete query[QueryFilterKeys.ASSIGNMENT]
-      delete query[QueryFilterKeys.ASSIGNED_TO]
+      delete query[QueryFilterKeys.ASSIGNMENT] // eslint-disable-line @typescript-eslint/no-dynamic-delete
+      delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     } else {
       query[QueryFilterKeys.ASSIGNMENT] = assignment
       if (assignment === Assignment.ASSIGNED_TO) {
         if (includedUserIds.length > 0) query[QueryFilterKeys.ASSIGNED_TO] = includedUserIds
       } else {
-        delete query[QueryFilterKeys.ASSIGNED_TO]
+        delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
       }
     }
-    if (isEmpty(dueDate)) delete query[QueryFilterKeys.DUE_DATE]
+    if (isEmpty(dueDate)) delete query[QueryFilterKeys.DUE_DATE] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     else {
       query[QueryFilterKeys.DUE_DATE] = dueDate
     }
@@ -123,20 +123,20 @@ export const FilterMenu = (props: any): JSX.Element => {
     if (assignment === Assignment.ASSIGNED_TO && includedUserIds.length > 0) {
       query[QueryFilterKeys.ASSIGNED_TO] = includedUserIds
     } else {
-      delete query[QueryFilterKeys.ASSIGNED_TO]
+      delete query[QueryFilterKeys.ASSIGNED_TO] // eslint-disable-line @typescript-eslint/no-dynamic-delete
     }
     void router.push({
       query
     }, undefined, { shallow: true })
   }, [includedUserIds])
 
-  const cleartHandler = (e, val: any, currentVal: any, setter: any): void => {
+  const cleartHandler = (e: MouseEvent, val: any, currentVal: any, setter: any): void => {
     e.stopPropagation()
     e.preventDefault()
     if (val === currentVal) setter('')
   }
 
-  const clearAllFilters = (e): void => {
+  const clearAllFilters = (e: MouseEvent): void => {
     e.stopPropagation()
     e.preventDefault()
     setAssigment('')
@@ -165,7 +165,7 @@ export const FilterMenu = (props: any): JSX.Element => {
           </Badge>}
       </MenuButton>
       <MenuList>
-        <MenuOptionGroup title={`${t('titles:assignment')}`} type='radio' value={assignment as string} onChange={(val: string) => setAssigment(val)}>
+        <MenuOptionGroup title={`${t('titles:assignment')}`} type='radio' value={assignment as string} onChange={setAssigment as any}>
           <MenuItemOption value={Assignment.UNASSIGNED} onClick={(e) => cleartHandler(e, Assignment.UNASSIGNED, assignment, setAssigment)}>
             {ASSIGNMENT_LABELS[Assignment.UNASSIGNED]}
           </MenuItemOption>
@@ -187,7 +187,7 @@ export const FilterMenu = (props: any): JSX.Element => {
           </MenuOptionGroup>
         </MenuOptionGroup>
         <MenuDivider />
-        <MenuOptionGroup title={`${t('titles:due-date')}`} type='radio' value={dueDate as string} onChange={(val: string) => setDueDate(val)}>
+        <MenuOptionGroup title={`${t('titles:due-date')}`} type='radio' value={dueDate as string} onChange={setDueDate as any}>
           <MenuItemOption value={DueDate.SET} onClick={(e) => cleartHandler(e, DueDate.SET, dueDate, setDueDate)}>
             {DUE_DATE_LABELS[DueDate.SET]}
           </MenuItemOption>

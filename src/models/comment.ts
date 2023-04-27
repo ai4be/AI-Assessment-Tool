@@ -122,9 +122,10 @@ export const createComment = async (data: Partial<CommentTypeDef>): Promise<Comm
   const { db } = await connectToDatabase()
   data = sanitizeData(data)
   data.createdAt = new Date()
-  let localData: any = {};
+  let localData: any = {}
+  const anyData = data as any;
   ['projectId', 'userId', 'text', 'cardId', 'createdAt', 'questionId', 'parentId'].forEach(k => {
-    if (data[k] != null) localData[k] = data[k]
+    if (anyData[k] != null) localData[k] = anyData[k]
   })
   localData = sanitize(localData)
   localData.userIds = Comment.getUserIdsFromMentions(localData)

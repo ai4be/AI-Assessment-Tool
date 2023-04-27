@@ -11,7 +11,7 @@ import { isEmpty } from '@/util/index'
 import { setQuestionCleanTitle } from '@/util/question'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import { Card } from '@/src/types/card'
+import { Card, Question } from '@/src/types/card'
 import { useTranslation } from 'next-i18next'
 
 interface Props {
@@ -47,7 +47,7 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
       setFilteredCategories(localCategories)
       if (categoryId != null && localCategories.length === 0) {
         const query = { ...router.query }
-        delete query[QueryFilterKeys.CATEGORY]
+        delete query[QueryFilterKeys.CATEGORY] // eslint-disable-line @typescript-eslint/no-dynamic-delete
         void router.push({ query }, undefined, { shallow: true })
       }
     }
@@ -55,7 +55,7 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
 
   useEffect(() => {
     if (Array.isArray(categories) && Array.isArray(dataCards)) {
-      dataCards.forEach(c => c.questions.map(q => setQuestionCleanTitle(q)))
+      dataCards.forEach(c => c.questions.map((q: Question) => setQuestionCleanTitle(q)))
       const catToShow: Category[] = []
       for (const cat of categories) {
         if (isEmpty(cat.sections)) {

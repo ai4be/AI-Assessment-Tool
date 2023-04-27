@@ -16,7 +16,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       try {
         await updatePassword(data)
         return res.status(204).end()
-      } catch (error) {
+      } catch (error: any) {
         return res.status(400).send({ message: error?.message ?? 'something went wrong' })
       }
     }

@@ -22,9 +22,9 @@ import { defaultFetchOptions, fetcher } from '@/util/api'
 import useSWR from 'swr'
 import { useTranslation } from 'next-i18next'
 
-const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
+const CreateProjectModal = ({ fetchProjects }: { fetchProjects: Function }): JSX.Element => {
   const { t } = useTranslation('projects')
-  const { data: industries, error } = useSWR('/api/industries', fetcher)
+  const { data: industries } = useSWR('/api/industries', fetcher)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const inputRef: any = useRef()
@@ -56,7 +56,8 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
         body: JSON.stringify(data)
       })
 
-      const inJSON = await response.json()
+      // const inJSON =
+      await response.json()
       await fetchProjects()
     } finally {
       onClose()
@@ -85,7 +86,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
             <Input
               ref={el => { inputRef.current = el }}
               placeholder={`${t('placeholders:project-name')}`}
-              onKeyUp={handleSubmit}
+              onKeyUp={(e) => { void handleSubmit(e) }}
             />
             <Textarea
               placeholder={`${t('placeholders:project-description')}`}
@@ -96,7 +97,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
             </Select>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText={`${t('projects:creating-project')}`}>
+            <Button onClick={() => { void handleCreate() }} isLoading={isLoading} isDisabled={isLoading} loadingText={`${t('projects:creating-project')}`}>
               {t('buttons:create')}
             </Button>
           </ModalFooter>
@@ -129,7 +130,7 @@ export default function Projects (props: any): JSX.Element {
                 rgba(0, 0, 0, 0.4),
                 rgba(0, 0, 0, 0.4)
               ),
-              url(${pr.backgroundImage})`}
+              url(${String(pr.backgroundImage)})`}
               backgroundPosition='center'
               backgroundRepeat='no-repeat'
               backgroundSize='cover'
