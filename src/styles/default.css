@@ -122,5 +122,6 @@ mentions {
   -webkit-text-fill-color: transparent;
   background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(92,92,153,1) 0%, rgba(0,212,255,1) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
 }
 

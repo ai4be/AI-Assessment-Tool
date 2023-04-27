@@ -1,7 +1,7 @@
 import React from 'react'
 import { ChakraProvider, extendTheme, Text } from '@chakra-ui/react'
 import { appWithTranslation } from 'next-i18next'
-import '@/src/styles/default.css'
+import '@/src/styles/default.scss'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 import NextNprogress from 'nextjs-progressbar'

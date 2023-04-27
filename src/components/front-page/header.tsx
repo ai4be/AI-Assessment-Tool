@@ -11,7 +11,7 @@ export const AI4BelgiumHeader = (): JSX.Element => (
   <Flex minWidth='max-content' alignItems='center' gap='2' p='2'>
     <AI4BelgiumIcon />
     <Spacer />
-    <Breadcrumb color='white' opacity='0.75' px='3' py='5'>
+    <Breadcrumb color='white' opacity='0.75' px='3' py='5' fontWeight='medium' fontSize='lg'>
       <BreadcrumbItem>
         <BreadcrumbLink href='#'>Docs</BreadcrumbLink>
       </BreadcrumbItem>

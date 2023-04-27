@@ -13,8 +13,8 @@ const FrontPage = (): JSX.Element => {
       <style>
         {css}
       </style>
+      <AI4BelgiumHeader />
       <Box height='100%'>
-        <AI4BelgiumHeader />
         <Content />
         <Footer />
       </Box>
