@@ -12,4 +12,4 @@ export interface User {
   deletedAt?: Date
 }
 
-export type UserCreate = Pick<User, 'email' | 'password' | 'firstName' | 'lastName'>
+export type UserCreate = Pick<User, 'email' | 'password' | 'firstName' | 'lastName'> & { emailVerified?: Boolean }

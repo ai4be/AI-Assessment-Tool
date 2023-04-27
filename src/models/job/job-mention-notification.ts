@@ -8,6 +8,7 @@ import { getUser } from '@/src/models/user'
 import { sendMailToBcc } from '@/util/mail'
 import { commentMentionHtml } from '@/util/mail/templates'
 import Job from '@/src/models/job'
+import { getNotifications } from '@/src/models/notification'
 
 export interface JobMentionNotificationData {
   userIds: string[]
@@ -56,9 +57,10 @@ export class JobMentionNotification extends Job {
     const emails: string[] = []
     for (const uid of userIds) {
       const user = await getUser({ _id: toObjectId(uid) })
-      if (user == null) continue
-      const { email } = user
-      emails.push(email)
+      if (user == null || user.emailVerified !== true) continue
+      const notification = await getNotifications(user._id)
+      if (notification == null || !notification.mentions) continue
+      emails.push(user.email)
     }
     if (!isEmpty(emails)) {
       const html = commentMentionHtml(commentId, projectId, cardId)
