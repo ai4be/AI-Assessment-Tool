@@ -1,6 +1,6 @@
-import sanitize from 'mongo-sanitize'
-import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
+import sanitize from 'mongo-sanitize'
+import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
 import { getColumnsByProjectId } from '@/src/models/column'
 import { Card, STAGE_VALUES, Question } from '@/src/types/card'
 import { isEmpty, isEqual } from '@/util/index'
@@ -199,7 +199,7 @@ export const dataToCards = async (data: any[], projectId?: string | ObjectId, co
         TOCnumber: `${catIdx}.${idx + 1}`,
         title: card.title
       }
-      card.questions = card.questions.map((q: any, i: number): Question => ({
+      returnCard.questions = card.questions.map((q: any, i: number): Question => ({
         ...q,
         TOCnumber: `${returnCard.TOCnumber}.${i + 1}`,
         title: q.title,
