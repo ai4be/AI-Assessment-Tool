@@ -5,7 +5,7 @@ import checkEnvironment from '@/util/check-environment'
 import { TeamMembersContainer } from './team'
 import { AltaiSections } from './altai-sections'
 import { TryItOutButton } from './try-out-button'
-import { WaveBlackToGray, WaveGrayToBlack, WavesOutline } from './waves'
+import { WaveBlackToGray, WavePurple, WavesOutline } from './waves'
 
 export const Content = (): JSX.Element => {
   return (
@@ -15,39 +15,18 @@ export const Content = (): JSX.Element => {
       <Part2 />
       <WaveBlackToGray />
       <Part3 />
-      <WavePurple />
+      <WaveBlackToGray />
       <TeamMembersContainer />
+      <WavePurple />
       <AltaiSections />
       <WaveBlackToGray />
     </Flex>
   )
 }
 
-const WavePurple = (): JSX.Element => {
-  return (
-    <section className='fVQDoZ'>
-      <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 2986 393' className='Title__BackgroundSwoop-sc-p0p5jt-5 dZeCoq'>
-        <path
-          fill='hsl(267deg 50% 11%)'
-          d='M573.5 94C346.756 91.146.5 0 .5 0v393h2985V222s-334.14-75.852-530.5-94c-222.28-20.544-346.81 47.19-570 43-327.93-6.157-501.55-136.097-829.5-131.5-189.414 2.655-292.583 56.884-482 54.5z'
-        />
-      </svg>
-      <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 2839 579' className='Title__ForegroundSwoop-sc-p0p5jt-4 lffttN'>
-        <g clipPath='url(#clip0)'>
-          <path
-            fill='var(--color-background)'
-            d='M2095 482c344.77-31.423 744-482 744-482v578.5H-127s0-214 331-256C392.489 298.583 452.227 451.156 625.5 482c332.323 59.155 508.95-108.5 846.5-108.5 237.5 0 374.02 131.192 623 108.5z'
-          />
-        </g>
-      </svg>
-      <div className='ijRRAe hbvmPw' />
-    </section>
-  )
-}
-
 const Part1 = (): JSX.Element => {
   return (
-    <Box mt={['5vh', '10vh']} mb={['5vh', '10vh']} ml={['5vh', '35vh']} mr={['5vh', '35vh']} justifyContent='center' color='white' fontSize='2em' textAlign={['center', 'left']}>
+    <Box pt={['5vh', '20vh']} pb={['5vh', '20vh']} pl={['5vh', '35vh']} pr={['5vh', '35vh']} color='white' fontSize='2em' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
       <Flex flexDirection='column' justifyContent='space-between'>
         <Wrap align={['center', 'left']} justify={['center', 'left']}>
           <Box>
@@ -69,7 +48,7 @@ const Part1 = (): JSX.Element => {
 
 const Part2 = (): JSX.Element => {
   return (
-    <Box mt={['5vh', '10vh']} mb={['5vh', '10vh']} ml={['5vh', '35vh']} mr={['5vh', '35vh']} justifyContent='center' color='white' fontSize='2em'>  {/* bgGradient='linear-gradient(black, black, black, gray)' } */}
+    <Box pt={['5vh', '20vh']} pb={['5vh', '20vh']} pl={['5vh', '35vh']} pr={['5vh', '35vh']} justifyContent='center' color='white' fontSize='2em' bgColor='rgba(20, 17, 24)'>  {/* bgGradient='linear-gradient(black, black, black, gray)' } */}
       {/* <span className='hsnUkW'><strong>Highlight Areas of Risk</strong>
         <img alt='' src='/frontpage/long-underline.png' className='jPBecK hyFyLL' />
       </span> */}
@@ -92,7 +71,7 @@ const Part2 = (): JSX.Element => {
         <Heading className='highlight dark-yellow'>GET AND INSTALL IN YOUR OWN SERVERS</Heading>
       </Center>
       <Center mt='10vh'>
-        <TryItOutButton link={checkEnvironment()} label='Try it here' />
+        <TryItOutButton link={checkEnvironment()} label='Install it here' />
       </Center>
     </Box>
   )
@@ -100,16 +79,16 @@ const Part2 = (): JSX.Element => {
 
 const Part3 = (): JSX.Element => {
   return (
-    <Box mt={['5vh', '10vh']} mb={['5vh', '10vh']} ml={['5vh', '35vh']} mr={['5vh', '35vh']} justifyContent='center' color='white' fontSize='2em' textAlign={['center', 'left']}>
+    <Box pt={['5vh', '20vh']} pb={['5vh', '20vh']} pl={['5vh', '35vh']} pr={['5vh', '35vh']} justifyContent='center' color='white' fontSize='2em' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
       <Heading className='highlight dark-yellow'>TRY OUR DEMO INSTANCE</Heading>
-      <Flex flexDirection='column' mt='5vh'>
+      <Flex flexDirection='column' justifyContent='space-between' mt='5vh'>
         <Wrap align={['center', 'left']} justify={['center', 'left']}>
           <Box maxWidth='40vh'>
             <Text fontSize='1em'>This text explains this is for demo purposes only ad we hold no responsibility</Text>
           </Box>
           <Spacer />
           <Box>
-            <Image src='/frontpage/demo2.png' alt='Demo image' height='30vh' width='65vh' />
+            <Image src='/frontpage/demo2.png' alt='Demo image' height='30vh' width='50vh' />
           </Box>
         </Wrap>
       </Flex>
@@ -136,9 +115,9 @@ const TypingEffect = ({ texts }): JSX.Element => {
   }, [])
 
   return (
-    <Box h='250px'>
+    <Box w='12em' h='250px'>
       <Text className='text-gradient-purple-light-blue' style={{ fontSize: '1.2em' }}>Is your AI</Text>
-      <span className='text-gradient-purple-light-blue' style={{ fontSize: '2em' }} ref={el} />
+      <span className='text-gradient-purple-light-blue' style={{ fontSize: '2em', width: 'fit-content' }} ref={el} />
     </Box>
   )
 }

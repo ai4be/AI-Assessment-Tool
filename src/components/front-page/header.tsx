@@ -8,7 +8,7 @@ const AI4BelgiumIcon = (): JSX.Element => (
 )
 
 export const AI4BelgiumHeader = (): JSX.Element => (
-  <Flex minWidth='max-content' alignItems='center' gap='2' p='2'>
+  <Flex minWidth='max-content' alignItems='center' gap='2' p='2' bgColor='rgba(14,16,18)'>
     <AI4BelgiumIcon />
     <Spacer />
     <Breadcrumb color='white' opacity='0.75' px='3' py='5' fontWeight='medium' fontSize='lg'>

@@ -5,14 +5,8 @@ import { Footer } from './footer'
 import { AI4BelgiumHeader } from './header'
 
 const FrontPage = (): JSX.Element => {
-  const css = `body {
-    background-color: rgba(14,16,18)
-  }`
   return (
     <>
-      <style>
-        {css}
-      </style>
       <AI4BelgiumHeader />
       <Box height='100%'>
         <Content />

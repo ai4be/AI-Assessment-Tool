@@ -1,6 +1,5 @@
 import React from 'react'
-import { Box, Flex, Text, Avatar, Stack, useColorModeValue, Container, Wrap, Center, Heading } from '@chakra-ui/react'
-import { WaveBlackToGray, WaveGrayToBlack } from './waves'
+import { Center, Heading } from '@chakra-ui/react'
 
 const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTitle } }): JSX.Element => {
   return (
@@ -87,7 +86,6 @@ export const TeamMembersContainer = (): JSX.Element => {
     <>
       <section>
         <section className='kxXjAn'>
-          <WaveBlackToGray />
           <div className='sLKkl'>
             <div className='gupFpE'>
               <Center>
@@ -110,10 +108,8 @@ export const TeamMembersContainer = (): JSX.Element => {
               </div>
             </div>
           </div>
-          <WaveGrayToBlack />
         </section>
       </section>
-      <div className='ieJWhu' />
     </>
   )
 }
