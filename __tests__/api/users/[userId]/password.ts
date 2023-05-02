@@ -4,8 +4,6 @@
 import { createMocks } from 'node-mocks-http'
 import handler from '@/pages/api/users/[userId]/password'
 import { givenAPassword, givenAUser, givenAnAuthenticationToken, setupMongoDB } from '@/util/test-utils'
-import { User } from '@/src/types/user'
-import { isPasswordValid } from '@/util/validator'
 
 const PATH = '/api/users/[projectId]/password'
 // nextjs req will automatically parse the params from the url and add them to the query object but this is not done by node-mocks-http
