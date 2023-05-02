@@ -12,12 +12,14 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
         password: req.body.newPassword,
         currentPassword: req.body.currentPassword
       }
-      // TODO handle errors and false!!!
       try {
-        await updatePassword(data)
+        const successful = await updatePassword(data)
+        if (!successful) throw new Error('something went wrong')
         return res.status(204).end()
       } catch (error: any) {
-        return res.status(400).send({ message: error?.message ?? 'something went wrong' })
+        const responseObj: any = { message: error?.message ?? 'something went wrong', code: 9004 }
+        if (error?.code != null) responseObj.code = error.code
+        return res.status(400).send(responseObj)
       }
     }
     default:

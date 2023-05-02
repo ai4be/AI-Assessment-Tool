@@ -114,12 +114,16 @@ export const setupMongoDB = (): { mongoServer: MongoMemoryServer | null, client:
   return context
 }
 
+export const givenAPassword = (length: number = 10, prefix: string = 'P@ssw0rd'): string => {
+  return faker.internet.password(length, undefined, undefined, prefix)
+}
+
 export const givenUserData = (data: any = {}): Partial<User> => {
   return {
     email: faker.internet.email(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    password: faker.internet.password(10, undefined, undefined, 'P@ssw0rd'),
+    password: givenAPassword(),
     emailVerified: true,
     ...data
   }
