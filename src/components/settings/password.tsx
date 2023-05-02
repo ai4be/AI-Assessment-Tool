@@ -15,6 +15,18 @@ import { isPasswordValid } from '@/util/validator'
 import UserContext from '../../store/user-context'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
+const ORIGINAL_STATE = {
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+}
+
+const ORIGINAL_TOUCHED_AND_SHOW = {
+  currentPassword: false,
+  newPassword: false,
+  confirmPassword: false
+}
+
 const PasswordSettings = (): JSX.Element => {
   const { t } = useTranslation()
   const toast = useToast()
@@ -24,21 +36,9 @@ const PasswordSettings = (): JSX.Element => {
   const [passwordLengthErr, setPasswordLengthErr] = useState(false)
   const [passwordCharErr, setPasswordCharErr] = useState(false)
   const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
-  const [touched, setTouched] = useState({
-    currentPassword: false,
-    newPassword: false,
-    confirmPassword: false
-  })
-  const [values, setValues] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  })
-  const [showPasswords, setShowPasswords] = useState({
-    currentPassword: false,
-    newPassword: false,
-    confirmPassword: false
-  })
+  const [touched, setTouched] = useState({ ...ORIGINAL_TOUCHED_AND_SHOW })
+  const [values, setValues] = useState({ ...ORIGINAL_STATE })
+  const [showPasswords, setShowPasswords] = useState({ ...ORIGINAL_TOUCHED_AND_SHOW })
 
   useEffect(() => {
     if (!touched.newPassword) return
@@ -98,7 +98,8 @@ const PasswordSettings = (): JSX.Element => {
         title: t('settings:password-change-success-message'),
         status: 'success'
       })
-      setValues({} as any)
+      setValues({ ...ORIGINAL_STATE })
+      setTouched({ ...ORIGINAL_TOUCHED_AND_SHOW })
     } else {
       toast({
         ...toastDefaultOptions,

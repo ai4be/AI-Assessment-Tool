@@ -5,6 +5,7 @@ import { hashPassword, verifyPassword } from '@/util/auth'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 import { User, UserCreate } from '@/src/types/user'
 import Model from '@/src/models/model'
+import { InvalidPasswordError, WrongCredentialError } from './errors'
 
 const TABLE_NAME = 'users'
 
@@ -60,9 +61,9 @@ export const updatePassword = async ({ _id, password, currentPassword }: { _id: 
       currentPassword,
       String(user?.password)
     )
-    if (!isValid) throw new Error('Wrong credentials')
+    if (!isValid) throw new WrongCredentialError()
   }
-  if (!isPasswordValid(password)) throw new Error('Invalid password, password should be at least 8 characters long, contain a number and a special character')
+  if (!isPasswordValid(password)) throw new InvalidPasswordError()
   const hashedPassword = await hashPassword(password)
   const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: { password: hashedPassword } })
   return res.modifiedCount === 1
