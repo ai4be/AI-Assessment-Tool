@@ -1,5 +1,5 @@
 import React from 'react'
-import { Center, Heading } from '@chakra-ui/react'
+import { Box, Center, Heading } from '@chakra-ui/react'
 
 const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTitle } }): JSX.Element => {
   return (
@@ -83,7 +83,7 @@ const teamMemberData = {
 
 export const TeamMembersContainer = (): JSX.Element => {
   return (
-    <>
+    <Box py='20vh' px={['15vh', '35vh']} bgColor='rgba(20, 17, 24)'>
       <section>
         <section className='kxXjAn'>
           <div className='sLKkl'>
@@ -110,6 +110,6 @@ export const TeamMembersContainer = (): JSX.Element => {
           </div>
         </section>
       </section>
-    </>
+    </Box>
   )
 }

@@ -26,10 +26,21 @@ export const Content = (): JSX.Element => {
 
 const Part1 = (): JSX.Element => {
   return (
-    <Box pt={['5vh', '20vh']} pb={['5vh', '20vh']} pl={['5vh', '35vh']} pr={['5vh', '35vh']} color='white' fontSize='2em' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
-      <Flex flexDirection='column' justifyContent='space-between'>
+    <Box py='20vh' px={['15vh', '35vh']} color='white' fontSize='2em' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
+      {/* <Flex flexDirection='column' justifyContent='space-between'>
         <Wrap align={['center', 'left']} justify={['center', 'left']}>
           <Box>
+            <TypingEffect texts={['ethical?', 'trustworthy?', 'racially unbiased?']} />
+          </Box>
+          <Spacer />
+          <Box>
+            <Image src='/frontpage/demo1.png' alt='Demo image' height='30vh' width='50vh' />
+          </Box>
+        </Wrap>
+      </Flex> */}
+      <Flex flexDirection='column' justifyContent='space-between' mt='5vh'>
+        <Wrap align={['center', 'left']} justify={['center', 'left']}>
+          <Box maxWidth='40vh'>
             <TypingEffect texts={['ethical?', 'trustworthy?', 'racially unbiased?']} />
           </Box>
           <Spacer />
@@ -48,7 +59,7 @@ const Part1 = (): JSX.Element => {
 
 const Part2 = (): JSX.Element => {
   return (
-    <Box pt={['5vh', '20vh']} pb={['5vh', '20vh']} pl={['5vh', '35vh']} pr={['5vh', '35vh']} justifyContent='center' color='white' fontSize='2em' bgColor='rgba(20, 17, 24)'>  {/* bgGradient='linear-gradient(black, black, black, gray)' } */}
+    <Box py='20vh' px={['15vh', '35vh']} justifyContent='center' color='white' fontSize='2em' bgColor='rgba(20, 17, 24)'>  {/* bgGradient='linear-gradient(black, black, black, gray)' } */}
       {/* <span className='hsnUkW'><strong>Highlight Areas of Risk</strong>
         <img alt='' src='/frontpage/long-underline.png' className='jPBecK hyFyLL' />
       </span> */}
@@ -79,7 +90,7 @@ const Part2 = (): JSX.Element => {
 
 const Part3 = (): JSX.Element => {
   return (
-    <Box pt={['5vh', '20vh']} pb={['5vh', '20vh']} pl={['5vh', '35vh']} pr={['5vh', '35vh']} justifyContent='center' color='white' fontSize='2em' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
+    <Box py='20vh' px={['15vh', '35vh']} justifyContent='center' color='white' fontSize='2em' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
       <Heading className='highlight dark-yellow'>TRY OUR DEMO INSTANCE</Heading>
       <Flex flexDirection='column' justifyContent='space-between' mt='5vh'>
         <Wrap align={['center', 'left']} justify={['center', 'left']}>

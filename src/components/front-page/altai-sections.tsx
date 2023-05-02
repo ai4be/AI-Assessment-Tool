@@ -38,7 +38,7 @@ const altaiSections = [
 
 export const AltaiSections = (): JSX.Element => {
   return (
-    <Box pt={['5vh', '20vh']} pb={['5vh', '20vh']} pl={['5vh', '35vh']} pr={['5vh', '35vh']} color='white' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
+    <Box py='20vh' px={['15vh', '35vh']} color='white' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
       <div className='ijRRAe hUUorZ'>
         <em className='dErbTQ'>TOOL DESCRIPTION</em>
         <p className='cNGIMJ'>
