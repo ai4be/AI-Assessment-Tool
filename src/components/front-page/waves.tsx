@@ -3,19 +3,22 @@ import { Image } from '@chakra-ui/react'
 export const WavesOutline = (): JSX.Element => {
   return (<Image width='100%' height='250px' src='/frontpage/waves.svg' alt='brand logo' />)
 }
-export const Waves = ({ colour1 = 'rgba(255,255,255,0.5)', colour2 = 'rgba(255,255,255,0.7)', colour3 = 'rgba(255,255,255,0.3)', colour4 = 'rgba(14,16,18)' }): JSX.Element => {
+
+export const WaveGrayToBlack = (): JSX.Element => {
   return (
-    <div>
-      <svg className='waves' xmlns='http://www.w3.org/2000/svg' viewBox='0 24 150 28' preserveAspectRatio='none' shapeRendering='auto'>
-        <defs>
-          <path id='gentle-wave' d='M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z' />
-        </defs>
-        <g className='parallax'>
-          <use xlinkHref='#gentle-wave' x='48' y='3' fill={colour1} />
-          <use xlinkHref='#gentle-wave' x='48' y='0' fill={colour2} />
-          <use xlinkHref='#gentle-wave' x='48' y='5' fill={colour3} />
-          <use xlinkHref='#gentle-wave' x='48' y='7' fill={colour4} />
-        </g>
+    <div className='irrXeY bBGrjK'>
+      <svg preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 441 73' className='fUfQTM'>
+        <path d='M133 39.5C80.795 39.858 0 26 0 26V0h440.5v51.5S427.546 62.233 418 67c-49.342 24.641-78.218-41.116-133-47.5-59.469-6.93-92.13 19.589-152 20z' />
+      </svg>
+    </div>
+  )
+}
+
+export const WaveBlackToGray = (): JSX.Element => {
+  return (
+    <div className='irrXeY cAuVNc'>
+      <svg preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 440 52' className='fUfQTM'>
+        <path d='M220 1C133.228-1.86 0 33 0 33v18.5h439.5V12s-24.077 14.898-41 21C331.878 57.02 290.781 3.333 220 1z' />
       </svg>
     </div>
   )
