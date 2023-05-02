@@ -1,10 +1,16 @@
+import { getSession } from 'next-auth/react'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import ResetPassword from '@/src/components/reset-password'
 import { TokenType, getToken, isTokenExpired } from '@/src/models/token'
-import { getSession } from 'next-auth/react'
 import { setup } from '@/util/csrf'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-export default function Page (props: any): JSX.Element {
+interface Props {
+  token: string
+  message?: string
+  _nextI18Next: any
+}
+
+export default function Page (props: Props): JSX.Element {
   return (<ResetPassword {...props} />)
 }
 
@@ -20,8 +26,8 @@ export const getServerSideProps = setup(async (ctx: any): Promise<any> => {
 
   return {
     props: {
-      props,
-      ...await serverSideTranslations(ctx.locale as string, ['reset-password', 'buttons', 'validations', 'exceptions', 'placeholders', 'api-messages'])
+      ...props,
+      ...(await serverSideTranslations(ctx.locale as string, ['reset-password', 'buttons', 'validations', 'exceptions', 'placeholders', 'api-messages']))
     }
   }
 })
