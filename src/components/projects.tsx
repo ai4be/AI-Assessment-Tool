@@ -3,6 +3,7 @@ import PropType from 'prop-types'
 import {
   Box,
   Button,
+  Flex,
   Modal,
   ModalBody,
   ModalOverlay,
@@ -112,7 +113,7 @@ export default function Projects (props: any): JSX.Element {
 
   const loadExistingProjects = (): JSX.Element => {
     return (
-      <Box mt='1rem' minWidth='50vw' display='flex' flexWrap='wrap'>
+      <Flex mt='1rem' minWidth='50vw' flexWrap='wrap'>
         {Array.isArray(projects) && projects.map((pr, index) => (
           <Link
             key={index}
@@ -121,7 +122,7 @@ export default function Projects (props: any): JSX.Element {
               query: { projectId: pr._id }
             }}
           >
-            <Box
+            <Flex
               mr='1rem'
               mt='1rem'
               height='150px'
@@ -137,9 +138,10 @@ export default function Projects (props: any): JSX.Element {
               borderRadius='5px'
               boxShadow='lg'
               cursor='pointer'
+              flexDirection='column'
+              justifyContent='center'
             >
               <Text
-                marginTop='calc(50% - 25px)'
                 height='25px'
                 textAlign='center'
                 textTransform='capitalize'
@@ -151,10 +153,10 @@ export default function Projects (props: any): JSX.Element {
               >
                 {pr.name}
               </Text>
-            </Box>
+            </Flex>
           </Link>
         ))}
-      </Box>
+      </Flex>
     )
   }
 
