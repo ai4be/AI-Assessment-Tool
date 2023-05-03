@@ -38,6 +38,7 @@ const SidebarContent = (props: { page: string }): JSX.Element => {
             mb='5px'
             height='4rem'
             borderRadius='1rem'
+            width='100%'
             boxShadow={props.page === menu.page ? 'inner' : 'base'}
             display='flex'
             justifyContent='left'
