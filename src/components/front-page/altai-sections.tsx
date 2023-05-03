@@ -1,5 +1,5 @@
 
-import { Box } from '@chakra-ui/react'
+import { Box, Text, Heading } from '@chakra-ui/react'
 
 const altaiSections = [
   {
@@ -38,13 +38,11 @@ const altaiSections = [
 
 export const AltaiSections = (): JSX.Element => {
   return (
-    <Box py='20vh' px={['15vh', '35vh']} color='white' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)'>
-      <div className='ijRRAe hUUorZ'>
-        <em className='dErbTQ'>TOOL DESCRIPTION</em>
-        <p className='cNGIMJ'>
-          Our tool was designed with a multidisciplinary team in mind, enabling team members with diverse expertise to collaborate and have conversations about key topics related to the trustworthiness of their AI implementation. <br className='dlKhGG' />
-          The tool consists of eight sections:
-        </p>
+    <Box py='20vh' px={['15vh', '35vh']} justifyContent='center' color='white' bgColor='rgba(14, 16, 18)'>
+      <div className='centralised-container'>
+        <Heading className='centralised-sunshine-gradient-title'>TOOL DESCRIPTION</Heading>
+        <Text fontSize='1em'>Our tool was designed with a multidisciplinary team in mind, enabling team members with diverse expertise to collaborate and have conversations about key topics related to the trustworthiness of their AI implementation.</Text>
+        <Text fontSize='1em' my='5vh'>The tool consists of eight sections:</Text>
         <div className='ksXelq'>
           <div className='jdPXMj'>
             <ul className='loozsJ'>
@@ -75,8 +73,8 @@ export const AltaiSections = (): JSX.Element => {
           </div>
           <div className='kWZXb' />
         </div>
-        <div className='LFaQi bmXsqC' />
-        <div className='LFaQi cRgQMO' />
+        <div className='gradient-fade-section bmXsqC' />
+        <div className='gradient-fade-section cRgQMO' />
       </div>
     </Box>
   )

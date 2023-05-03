@@ -3,7 +3,7 @@ import { Box, Image } from '@chakra-ui/react'
 export const WavesOutline = (): JSX.Element => {
   return (
     <Box bgColor='rgba(20, 17, 24)'>
-      <Image width='100%' height='250px' src='/frontpage/waves.svg' alt='brand logo' />
+      <Image width='100%' height='250px' src='/frontpage/waves.svg' alt='divider image' />
     </Box>
   )
 }
@@ -48,7 +48,6 @@ export const WavePurple = (): JSX.Element => {
             />
           </g>
         </svg>
-        <div className='ijRRAe hbvmPw' />
       </section>
     </Box>
   )
