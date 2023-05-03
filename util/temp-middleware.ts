@@ -1,7 +1,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase } from '@/src/models/mongodb'
-import { authOptions } from '../pages/api/auth/[...nextauth]'
+import { connectToDatabase, isConnected as dbIsConnected } from '@/src/models/mongodb'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { getServerSession } from 'next-auth/next'
 import { getProjectUsers } from '@/src/models/project'
 import { getUser } from '@/src/models/user'
@@ -30,7 +30,7 @@ export function isConnected (handler: any): Function {
     if (session?.user == null) {
       return returnUnauthorized(res)
     }
-    if (!client.isConnected()) {
+    if (!(await dbIsConnected(client))) {
       return res.status(500).send({ message: 'DB connection error', status: 500, code: 9004 })
     }
     return addUserToReq(handler)(req, res)
