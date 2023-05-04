@@ -249,7 +249,7 @@
                         {"answer":"Low","score":3},
                         {"answer":"Moderate","score":2},
                         {"answer":"High","score":1}, 
-                        {"answer":"Very likely","score":0}, 
+                        {"answer":"Very likely","score":0} 
                     ]
                 }
             ]
