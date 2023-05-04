@@ -1,5 +1,5 @@
 import {
-  Status
+  AlertStatus
 } from '@chakra-ui/react'
 
 export const fetcher = async (url: string, options?: any): Promise<any> => await fetch(url).then(async r => await r.json())
@@ -27,7 +27,7 @@ export const defaultFetchOptions: any = {
 export const getResponseHandler = (showToast: Function, translator?: Function): (response: Response, defaultSuccesMsg?: string, defaultErrMsg?: string) => Promise<void> => {
   return async (response: Response, defaultSuccesMsg = '', defaultErrMsg: string = 'Something went wrong'): Promise<void> => {
     let msg = defaultSuccesMsg
-    let status: Status = 'success'
+    let status: AlertStatus = 'success'
     if (!response.ok) {
       msg = defaultErrMsg
       status = 'error'
