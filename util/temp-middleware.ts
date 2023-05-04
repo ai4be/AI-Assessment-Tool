@@ -1,8 +1,8 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth/next'
 import { connectToDatabase, isConnected as dbIsConnected } from '@/src/models/mongodb'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
-import { getServerSession } from 'next-auth/next'
 import { getProjectUsers } from '@/src/models/project'
 import { getUser } from '@/src/models/user'
 import { getCard } from '@/src/models/card'
