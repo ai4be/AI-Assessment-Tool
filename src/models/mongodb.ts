@@ -19,6 +19,19 @@ if (cached == null) {
   cached = { conn: null, promise: null, uri: null }
 }
 
+export async function isConnected (client: MongoClient): Promise<boolean> {
+  if (client instanceof MongoClient) {
+    let res = null
+    try {
+      res = await client.db().admin().ping()
+    } catch (e: any) {
+      res = null
+    }
+    return res?.ok === 1
+  }
+  return false
+}
+
 export async function connectToDatabase (mongoDbUri?: string, dbName?: string | null): Promise<{ client: MongoClient, db: Db }> {
   if (cached.conn?.client instanceof MongoClient) {
     let res = null
