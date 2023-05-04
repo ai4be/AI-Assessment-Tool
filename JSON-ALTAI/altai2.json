@@ -43,9 +43,13 @@
                     "isVisibleIf": "",
                     "type": "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers":
                     [
-                        "Exposed", "To some extent", "Not exposed", "Don't know"
+                        {"answer":"Exposed","score":0},
+                        {"answer":"To some extent","score":0},
+                        {"answer":"Not exposed","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -54,9 +58,11 @@
                     "isVisibleIf" : "{TRS1.1} notempty and !({TRS1.1} = 'Not exposed')",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -65,12 +71,13 @@
                     "isVisibleIf" : "{TRS-Q1.1-B} = 'Yes'",
                     "type" : "checkbox",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "=gb=Data poisoning=ge= (i.e., manipulation of the training data)",
-                        "=gb=Model evasion=ge= (i.e., classify the data according to the attacker will)",
-                        "=gb=Model inversion=ge= (i.e., infer the model parameters)",
-                        "Other "
+                        {"answer":"=gb=Data poisoning=ge= (i.e., manipulation of the training data)","score":0},
+                        {"answer":"=gb=Model evasion=ge= (i.e., classify the data according to the attacker will)","score":0},
+                        {"answer":"=gb=Model inversion=ge= (i.e., infer the model parameters)","score":0},
+                        {"answer":"Other","score":0}
                     ]
                 },
                 {
@@ -79,9 +86,11 @@
                     "isVisibleIf" : "{TRS-Q1.1-B} notempty",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -90,9 +99,11 @@
                     "isVisibleIf" : "{TRS-Q1.2-B} = 'Yes'",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No"
+                        {"answer":"Yes", "score":0},
+                        {"answer":"No", "score":0}
                     ]
                 },
                 {
@@ -101,9 +112,11 @@
                     "isVisibleIf" : "{TRS-Q1.2-B} = 'Yes'",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -114,7 +127,12 @@
                     "isScored":1,
                     "answers" :
                     [
-                        "non-existent", "low", "moderate", "significant", "high"
+                        {"answer":"non-existent","score":4},
+                        {"answer":"low","score":3}, 
+                        {"answer":"moderate","score":2}, 
+                        {"answer":"significant","score":1},
+                        {"answer":"high","score":0}
+
                     ]
                 },
                 {
@@ -125,11 +143,11 @@
                     "isScored":1,
                     "answers":
                     [
-                        "Non-existent",
-                        "Completely inadequate",
-                        "Almost adequate",
-                        "Adequate",
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely inadequate","score":1},
+                        {"answer":"Almost adequate","score":2},
+                        {"answer":"Adequate","score":3},
+                        {"answer":"Fully adequate","score":4}
                     ]
                 }
             ]
@@ -150,9 +168,12 @@
                     "isVisibleIf" : "",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -161,9 +182,12 @@
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty and !({TRS-Q2.1-B} = 'No')",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -172,9 +196,12 @@
                     "isVisibleIf" : "{TRS-Q2.1.1-B} = 'Yes'",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -183,9 +210,12 @@
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty",
                     "type" : "radio",
                     "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -193,10 +223,13 @@
                     "title" : "Did you assess the risk of possible malicious use, misuse or inappropriate use of the =gb=AI system=ge=?",
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -204,10 +237,13 @@
                     "title" : "Did you define safety criticality levels (e.g., related to human integrity) of the possible consequences of faults or misuse of the =gb=AI system=ge=?",
                     "isVisibleIf" : "{TRS-Q1.2-B} = 'Yes'",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers":
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -215,10 +251,13 @@
                     "title" : "Did you assess the dependency of critical system’s decisions on its stable and reliable behavior?",
                     "isVisibleIf" : "{TRS-Q1.2-B} = 'Yes'",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -226,10 +265,13 @@
                     "title" : "Did you align the reliability/testing requirements to the appropriate levels of stability and reliability?",
                     "isVisibleIf" : "{TRS-Q2.5-B} notempty and !({TRS-Q2.5-B} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -237,10 +279,13 @@
                     "title" : "Did you plan fault tolerance via, e.g., a duplicated system or another parallel system (AI-based or “conventional”)?",
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -248,10 +293,13 @@
                     "title" : "Did you develop a mechanism to evaluate when the =gb=AI system=ge= has been changed enough to merit a new review of its technical robustness and safety?=hb=If the system is a learning system or if it is for example a rule-based system on which modifications and updates are performed, it is necessary or review its dependability.=he=",
                     "isVisibleIf" : "{TRS-Q2.1-B} notempty and !({TRS-Q2.1-B} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -262,7 +310,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Low", "Moderate", "Significant", "High"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Low","score":1},
+                        {"answer":"Moderate","score":2},
+                        {"answer":"Significant","score":3},
+                        {"answer":"High","score":4}
                     ]
                 },
                 {
@@ -273,7 +325,11 @@
                     "isScored": 1,
                     "answers" :
                     [
-                        "Non-existent", "Completely inadequate ", "Almost adequate ", "Adequate ", "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely inadequate ","score":1},
+                        {"answer":"Almost adequate ","score":2},
+                        {"answer":"Adequate ","score":3},
+                        {"answer":"Fully adequate","score":4}
                     ]
 
                 }
@@ -294,10 +350,13 @@
                     "title" : "Could a low level of accuracy of the =gb=AI system=ge= have critical, adversarial or damaging consequences?",
                     "isVisibleIf" : "",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -305,10 +364,13 @@
                     "title" : "Did you put in place measures to ensure that the data (including training data) used to develop the =gb=AI system=ge= is up to date, of high quality, complete and representative of the environment the system will be deployed in? =hb=A learning AI system's performance depends on the quality of the data which must represent correctly the domain in which it will operate.=he=",
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -316,10 +378,13 @@
                     "title" : "Did you put in place a series of steps to monitor, and document the =gb=AI system=ge=’s accuracy?",
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -327,10 +392,13 @@
                     "title" : "Did you consider whether the =gb=AI system=ge='s operation can invalidate the data or assumptions it was trained on, and how this might lead to adversarial effects (e.g. biased estimators, echo chambers etc.)? =hb=Echo chambers result from a feedback loop between the AI system's output and inputs, where the output reinforces the input data, resulting in the amplification bias.=he=",
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -338,10 +406,13 @@
                     "title" : "Did you put processes in place to ensure that the level of accuracy of the =gb=AI system=ge= to be expected by =gb=end-users=ge= and/or =gb=subjects=ge= is properly communicated?=hb=Users’ trust in AI systems will depend, among other factors, on their accuracy.=he=",
                     "isVisibleIf" : "{TRS3} notempty and !({TRS3} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -352,7 +423,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Low", "Moderate", "Significant", "High"
+                        {"answer":"Non-existent","score":4},
+                        {"answer":"Low","score":3},
+                        {"answer":"Moderate","score":2},
+                        {"answer":"Significant","score":1},
+                        {"answer":"High","score":0}
                     ]
                 },
                 {
@@ -363,7 +438,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Completely inadequate ", "Almost adequate ", "Adequate ", "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely inadequate","score":1},
+                        {"answer":"Almost adequate","score":2},
+                        {"answer":"Adequate","score":3},
+                        {"answer":"Fully adequate","score":4}
                     ]
                 }
             ]
@@ -383,10 +462,13 @@
                     "title" : "Could a low level of reliability of the =gb=AI system=ge= have critical, adversarial or damaging consequences?",
                     "isVisibleIf" : "",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -394,10 +476,13 @@
                     "title" : "Did you put in place a well-defined process to monitor if the =gb=AI system=ge= is meeting the goals of the intended applications?=hb=AI systems can be developed for various applications. It is essential to verify if they are indeed adapted to the considered applications.=he=",
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -405,10 +490,13 @@
                     "title" : "Did you test whether specific contexts or conditions need to be taken into account to ensure reproducibility? =hb=Environment conditions or varying data might impact system reproducibility if they fall outside the training data domain and challenge the generalization ability of the system.=he=",
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -416,10 +504,13 @@
                     "title" : "Did you put in place verification and validation methods and documentation (e.g. logging) to evaluate and ensure different aspects of the system’s reliability and reproducibility?",
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -427,10 +518,13 @@
                     "title" : "Did you clearly document and operationalize processes for the testing and verification of the reliability and reproducibility of the =gb=AI system=ge=?=hb=Documentation is key for system development, update, verification, as well as for auditability of the AI system.=he=",
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -438,10 +532,13 @@
                     "title" : "Did you define tested failsafe fallback plans to address =gb=AI system=ge= errors of whatever origin and put governance procedures in place to trigger them?",
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -449,10 +546,13 @@
                     "title" : "Did you put in place a proper procedure for handling the cases where the =gb=AI system=ge= yields results with a low confidence score?",
                     "isVisibleIf" : "{TRS4} notempty and !({TRS4} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -460,10 +560,13 @@
                     "title" : "Is your =gb=AI system=ge= using =gb=online continual learning=ge=?",
                     "isVisibleIf" : "",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -471,10 +574,13 @@
                     "title" : "Did you consider potential negative consequences from the =gb=AI system=ge= learning novel or unusual methods to score well on its objective function?    =hb=The system might learn actions when optimizing its objective function which might not be aligned with what it was expected to achieve. This might lead to undesirable consequences.=he=",
                     "isVisibleIf" : "{TRS4.1} notempty and !({TRS4.1} = 'No')",
                     "type" : "radio",
-                    "isScored" : 0,
+                    "isScored":0,
+                    "graph":"blue",
                     "answers" :
                     [
-                        "Yes", "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -485,7 +591,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Low", "Moderate", "Significant", "High"
+                        {"answer":"Non-existent","score":4},
+                        {"answer":"Low","score":3},
+                        {"answer":"Moderate","score":2},
+                        {"answer":"Significant","score":1},
+                        {"answer":"High","score":0}
                     ]
                 },
                 {
@@ -496,7 +606,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Completely inadequate ", "Almost adequate ", "Adequate ", "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely inadequate","score":1},
+                        {"answer":"Almost adequate","score":2},
+                        {"answer":"Adequate","score":3},
+                        {"answer":"Fully adequate","score":4}
                     ]
                 },
                 {
@@ -507,7 +621,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Low", "Moderate", "Significant", "High"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Low","score":1},
+                        {"answer":"Moderate","score":2},
+                        {"answer":"Significant","score":3},
+                        {"answer":"High","score":4}
                     ]
                 },
                 {
@@ -518,7 +636,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Completely inadequate ", "Almost adequate ", "Adequate ", "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely inadequate","score":1},
+                        {"answer":"Almost adequate","score":2},
+                        {"answer":"Adequate","score":3},
+                        {"answer":"Fully adequate","score":4}
                     ]
                 },
                 {
@@ -529,7 +651,11 @@
                     "isScored" : 1,
                     "answers" :
                     [
-                        "Non-existent", "Low", "Moderate", "Significant", "High"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Low","score":1},
+                        {"answer":"Moderate","score":2},
+                        {"answer":"Significant","score":3},
+                        {"answer":"High","score":4}
                     ]
                 }
             ]

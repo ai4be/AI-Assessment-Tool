@@ -34,10 +34,10 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "To some extent",
-                        "No",
-                        "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"To some extent","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -48,8 +48,8 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -60,8 +60,8 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 }, 
                 {
@@ -72,8 +72,8 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0} 
                     ]
                 },
                 {
@@ -84,8 +84,8 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -96,8 +96,8 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -108,8 +108,8 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -120,10 +120,10 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "To some extent",
-                        "No",
-                        "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"To some extent","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -134,8 +134,8 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -146,11 +146,11 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Non-existent", 
-                        "Low", 
-                        "Moderate", 
-                        "Significant", 
-                        "High"
+                        {"answer":"Non-existent","score":4},
+                        {"answer":"Low","score":3},
+                        {"answer":"Moderate","score":2},
+                        {"answer":"Significant","score":1}, 
+                        {"answer":"High","score":0}
                     ]
                 },
                 {
@@ -161,11 +161,12 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Non-existent", 
-                        "Completely Inadequate", 
-                        "Almost adequate", 
-                        "Adequate", 
-                        "Fully adequate"
+
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely Inadequate","score":1},
+                        {"answer":"Almost adequate","score":5},
+                        {"answer":"Adequate","score":7}, 
+                        {"answer":"Fully adequate","score":9}
                     ]
                 }
             ]
@@ -188,12 +189,12 @@
                     "type":"checkbox",
                     "answers": 
                     [
-                        "Is a self-learning or autonomous system", 
-                        "Is overseen by a =gb=human-in-the-loop=ge=", 
-                        "Is overseen by a =gb=human-on-the-loop=ge=", 
-                        "Is overseen by a =gb=human-in-command=ge=", 
-                        "Other", 
-                        "Don't know"
+                        {"answer":"Is a self-learning or autonomous system","score":0},
+                        {"answer":"Is overseen by a =gb=human-in-the-loop=ge=","score":0}, 
+                        {"answer":"Is overseen by a =gb=human-on-the-loop=ge=","score":0}, 
+                        {"answer":"Is overseen by a =gb=human-in-command=ge=","score":0}, 
+                        {"answer":"Other","score":0}, 
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -204,9 +205,9 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes", 
-                        "No",
-                        "Don't know" 
+                        {"answer":"Yes","score":0}, 
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
                 },
                 {
@@ -217,9 +218,10 @@
                     "type":"radio",
                     "answers":
                     [
-                        "Yes", 
-                        "No",
-                        "Don't know" 
+                        {"answer":"Yes","score":0}, 
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0}
+
                     ]
                 },
                 {
@@ -230,9 +232,9 @@
                     "type":"radio",
                     "answers":
                     [
-                        "Yes", 
-                        "No",
-                        "Don't know" 
+                        {"answer":"Yes","score":0}, 
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0} 
                     ]
                 },
                 {
@@ -243,11 +245,11 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Non-existent", 
-                        "Completely Inadequate", 
-                        "Almost adequate", 
-                        "Adequate", 
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":4},
+                        {"answer":"Low","score":3},
+                        {"answer":"Moderate","score":2},
+                        {"answer":"High","score":1}, 
+                        {"answer":"Very likely","score":0}, 
                     ]
                 }
             ]
@@ -270,12 +272,12 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Abort the process entirely", 
-                        "Abort the process in part", 
-                        "Delegate control to a human", 
-                        "Other", "Don't know"
+                        {"answer":"Abort the process entirely","score":0}, 
+                        {"answer":"Abort the process in part","score":0}, 
+                        {"answer":"Delegate control to a human","score":0}, 
+                        {"answer":"Other","score":0},
+                        {"answer":"Don't know","score":0}
                     ]
-
                 },
                 {
                     "id":"HAO-Q11-B",
@@ -285,9 +287,9 @@
                     "type":"radio",
                     "answers": 
                     [
-                        "Yes", 
-                        "No",
-                        "Don't know" 
+                        {"answer":"Yes","score":0}, 
+                        {"answer":"No","score":0},
+                        {"answer":"Don't know","score":0} 
                     ]
                 },
                 {
@@ -298,13 +300,11 @@
                     "type":"radio",
                     "answers": 
                     [
-                    
-                        "Non-existent", 
-                        "Completely Inadequate", 
-                        "Almost adequate", 
-                        "Adequate", 
-                        "Fully adequate"
-                    
+                        {"answer":"Non-existent","score":4},
+                        {"answer":"Completely Inadequate","score":3},
+                        {"answer":"Almost adequate","score":2},
+                        {"answer":"Adequate","score":1}, 
+                        {"answer":"Fully adequate","score":0}
                     ]
                 }
             ]     
