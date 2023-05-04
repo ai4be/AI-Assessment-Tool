@@ -300,11 +300,11 @@
                     "type":"radio",
                     "answers": 
                     [
-                        {"answer":"Non-existent","score":4},
-                        {"answer":"Completely Inadequate","score":3},
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely Inadequate","score":1},
                         {"answer":"Almost adequate","score":2},
-                        {"answer":"Adequate","score":1}, 
-                        {"answer":"Fully adequate","score":0}
+                        {"answer":"Adequate","score":3}, 
+                        {"answer":"Fully adequate","score":4}
                     ]
                 }
             ]     
