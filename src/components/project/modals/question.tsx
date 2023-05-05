@@ -23,7 +23,7 @@ import {
 import { isEmpty } from '@/util/index'
 import { GiCancel } from 'react-icons/gi'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { Question, DisplayQuestion, QuestionType } from '@/src/types/card'
+import { Question, DisplayQuestion, QuestionType, Answer } from '@/src/types/card'
 import { useRouter } from 'next/router'
 import { StringOrNumber } from '@chakra-ui/utils'
 import { useTranslation } from 'next-i18next'
@@ -80,12 +80,12 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
     return (
       <RadioGroup {...radioGroupProps} onChange={valueHandler} value={value[0]} name={question.id}>
         <Stack direction='row'>
-          {question?.answers?.map((a, idx) => (
+          {question?.answers?.map((a: Answer, idx) => (
             <Radio
               key={idx} value={`${String(idx)}`} disabled={question.enabled !== true} size='sm' fontSize='sm'
               opacity={question.enabled === true ? 1 : 0.5}
             >
-              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
+              <Box display='inline' color='var(--text-grey)'>{a?.answer.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Radio>
           ))}
         </Stack>
@@ -97,12 +97,12 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
     return (
       <CheckboxGroup {...checkoxGroupProps} onChange={valueHandler} value={valueCheck}>
         <Stack direction='row'>
-          {question?.answers?.map((a, idx) => (
+          {question?.answers?.map((a: Answer, idx) => (
             <Checkbox
               size='sm' key={idx} value={`${idx}`} disabled={question.enabled !== true} fontSize='sm'
               opacity={question.enabled === true ? 1 : 0.5}
             >
-              <Box display='inline' color='var(--text-grey)'>{a?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
+              <Box display='inline' color='var(--text-grey)'>{a?.answer.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Checkbox>
           ))}
         </Stack>

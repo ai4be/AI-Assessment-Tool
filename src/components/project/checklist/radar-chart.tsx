@@ -68,7 +68,7 @@ const listenerFn = (e: any): void => {
   }
 }
 
-const RadarChart = ({ categories }: { categories: Category[] }): JSX.Element => {
+const RadarChart = ({ categories, scoresPerCatId }: { categories: Category[], scoresPerCatId: { [key: string]: number } }): JSX.Element => {
   const el = useRef<HTMLCanvasElement>(null)
 
   const datasets: any[] = [{
@@ -77,21 +77,23 @@ const RadarChart = ({ categories }: { categories: Category[] }): JSX.Element => 
     borderColor: 'rgb(255, 99, 132)',
     backgroundColor: 'rgba(255, 99, 132, 0.2)',
     lineTension
-  }, {
-    label: 'Dataset 2',
-    data: [],
-    borderColor: 'rgb(54, 162, 235)',
-    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-    lineTension
-  }]
+  }
+  // , {
+  //   label: 'Dataset 2',
+  //   data: [],
+  //   borderColor: 'rgb(54, 162, 235)',
+  //   backgroundColor: 'rgba(54, 162, 235, 0.2)',
+  //   lineTension
+  // }
+  ]
 
   let labels: any[] = []
   if (Array.isArray(categories)) {
     labels = categories.map((cat) => cat.name.split(' '))
-    const data1 = categories.map(() => Math.round(Math.random() * 100))
-    const data2 = categories.map(() => Math.round(Math.random() * 100))
+    const data1 = categories.map((c) => (scoresPerCatId?.[c._id] ?? 0) * 100)
+    // const data2 = categories.map(() => Math.round(Math.random() * 100))
     datasets[0].data = data1
-    datasets[1].data = data2
+    // datasets[1].data = data2
   }
   const data = {
     labels,
