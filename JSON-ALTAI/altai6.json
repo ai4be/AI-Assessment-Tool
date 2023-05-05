@@ -29,9 +29,10 @@
                     "type": "radio",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "To some extent",
-                        "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"To some extent","score":0},
+                        {"answer":"I don't know","score":0}
                     ]
                 },
                 {
@@ -41,8 +42,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -52,8 +53,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -63,11 +64,10 @@
                     "visibleIf": "",
                     "isScored": 1,
                     "answers": [
-                        "Non-existent",
-                        "Completely Inadequate",
-                        "Almost adequate",
-                        "Adequate",
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":7},
+                        {"answer":"Low","score":2},
+                        {"answer":"High","score":1},
+                        {"answer":"Very high","score":0} 
                     ]
                 },
                 {
@@ -77,7 +77,11 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Non-existent", "Completely Inadequate", "Almost adequate", "Adequate", "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely Inadequate","score":1},
+                        {"answer":"Almost adequate","score":5},
+                        {"answer":"Adequate","score":7}, 
+                        {"answer":"Fully adequate","score":9}
                     ]
                 }
             ]
@@ -97,9 +101,10 @@
                     "type": "radio",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "To some extent",
-                        "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"To some extent","score":0},
+                        {"answer":"I don't know","score":0}
                     ]
                 },
                 {
@@ -109,8 +114,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -120,8 +125,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -130,8 +135,8 @@
                     "type": "radio",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -141,8 +146,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -152,8 +157,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -163,8 +168,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -174,8 +179,9 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No", "Don't know"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"I don't know","score":0}
                     ]
                 },
                 {
@@ -185,8 +191,8 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -196,11 +202,10 @@
                     "visibleIf": "",
                     "isScored": 1,
                     "answers": [
-                        "Non-existent",
-                        "Completely Inadequate",
-                        "Almost adequate",
-                        "Adequate",
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":7},
+                        {"answer":"Low","score":2},
+                        {"answer":"High","score":1},
+                        {"answer":"Very high","score":0}
                     ]
                 },
                 {
@@ -210,11 +215,11 @@
                     "visibleIf": "",
                     "isScored": 1,
                     "answers": [
-                        "Non-existent",
-                        "Completely Inadequate",
-                        "Almost adequate",
-                        "Adequate",
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely Inadequate","score":1},
+                        {"answer":"Almost adequate","score":5},
+                        {"answer":"Adequate","score":7}, 
+                        {"answer":"Fully adequate","score":9}
                     ]
                 }
             ]
