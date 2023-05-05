@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, MouseEvent } from 'react'
 import {
   Box, Heading, FormControl, Button,
   Input,
@@ -15,6 +15,18 @@ import { isPasswordValid } from '@/util/validator'
 import UserContext from '../../store/user-context'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
+const ORIGINAL_STATE = {
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+}
+
+const ORIGINAL_TOUCHED_AND_SHOW = {
+  currentPassword: false,
+  newPassword: false,
+  confirmPassword: false
+}
+
 const PasswordSettings = (): JSX.Element => {
   const { t } = useTranslation()
   const toast = useToast()
@@ -24,21 +36,9 @@ const PasswordSettings = (): JSX.Element => {
   const [passwordLengthErr, setPasswordLengthErr] = useState(false)
   const [passwordCharErr, setPasswordCharErr] = useState(false)
   const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
-  const [touched, setTouched] = useState({
-    currentPassword: false,
-    newPassword: false,
-    confirmPassword: false
-  })
-  const [values, setValues] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  })
-  const [showPasswords, setShowPasswords] = useState({
-    currentPassword: false,
-    newPassword: false,
-    confirmPassword: false
-  })
+  const [touched, setTouched] = useState({ ...ORIGINAL_TOUCHED_AND_SHOW })
+  const [values, setValues] = useState({ ...ORIGINAL_STATE })
+  const [showPasswords, setShowPasswords] = useState({ ...ORIGINAL_TOUCHED_AND_SHOW })
 
   useEffect(() => {
     if (!touched.newPassword) return
@@ -58,7 +58,7 @@ const PasswordSettings = (): JSX.Element => {
   }, [values.confirmPassword, values.currentPassword, values.newPassword, passwordLengthErr, passwordCharErr, confirmPasswordErr])
 
   const setTouchedWrapper = (field: string, waitTimeMS = 0): void => {
-    if (touched[field] !== true) {
+    if ((touched as any)[field] !== true) {
       waitTimeMS > 0
         ? setTimeout(() => setTouchedWrapper(field, 0), waitTimeMS)
         : setTouched({ ...touched, [field]: true })
@@ -71,7 +71,7 @@ const PasswordSettings = (): JSX.Element => {
     setTouchedWrapper(name, 800)
   }
 
-  const changePassword = async (e): Promise<void> => {
+  const changePassword = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     setIsLoading(true)
     const { currentPassword, confirmPassword, newPassword } = values
@@ -98,7 +98,8 @@ const PasswordSettings = (): JSX.Element => {
         title: t('settings:password-change-success-message'),
         status: 'success'
       })
-      setValues({} as any)
+      setValues({ ...ORIGINAL_STATE })
+      setTouched({ ...ORIGINAL_TOUCHED_AND_SHOW })
     } else {
       toast({
         ...toastDefaultOptions,
@@ -187,7 +188,7 @@ const PasswordSettings = (): JSX.Element => {
         disabled={isDisabled}
         bg='success'
         color='white'
-        onClick={changePassword}
+        onClick={changePassword} // eslint-disable-line @typescript-eslint/no-misused-promises
         isLoading={isLoading}
         loadingText={`${t('settings:updating')}`}
       >

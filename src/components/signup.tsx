@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useContext, MouseEvent } from 'react'
 import {
   Flex,
   Box,
@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { AI4BelgiumIcon } from '@/src/components/navbar'
-import { defaultFetchOptions, getResponseHandlerCustomMessage } from '@/util/api'
+import { defaultFetchOptions, getResponseHandler } from '@/util/api'
 import { isEmpty, debounce } from '@/util/index'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 import ToastContext from '@/src/store/toast-context'
@@ -55,7 +55,7 @@ const SignUp = (): JSX.Element => {
   const [confirmPasswordErr, setConfirmPasswordErr] = useState(false)
   const [isButtonDisabled, setButtonState] = useState(true)
 
-  const responseHandler = getResponseHandlerCustomMessage(showToast)
+  const responseHandler = getResponseHandler(showToast, t)
   useEffect(() => {
     if (!touched.email) return
     setEmailErr(!isEmailValid(values.email))
@@ -95,7 +95,7 @@ const SignUp = (): JSX.Element => {
     })
   }
 
-  const registerUser = async (e): Promise<void> => {
+  const registerUser = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault()
     setIsCreatingStatus(true)
     const { email, password, confirmPassword, firstName, lastName } = values
@@ -118,14 +118,11 @@ const SignUp = (): JSX.Element => {
 
     if (response.ok) {
       const result = await response.json()
-      if (result.code === 11005) {
-        await redirectToLoginPage()
+      if (result.code === 9005) {
+        return await redirectToLoginPage()
       }
-    } else {
-      const resultCall = await response.json()
-      const msg = t([`api-messages:${resultCall.code}`, 'code'])
-      await responseHandler(response, msg)
     }
+    await responseHandler(response)
     setIsCreatingStatus(false)
   }
 
@@ -157,6 +154,7 @@ const SignUp = (): JSX.Element => {
     setPropTouchedDebounced(name)
   }
 
+  // eslint-disable @typescript-eslint/no-misused-promises
   return (
     <>
       <Box display='flex' alignItems='center' justifyContent='center'>
@@ -209,7 +207,7 @@ const SignUp = (): JSX.Element => {
                 name='email'
                 value={values.email}
                 placeholder={`${t('placeholders:email')}`}
-                onChange={handleChange}
+                onChange={(e) => { void handleChange(e) }}
                 onBlur={() => setTouched({ ...touched, email: true })}
                 autoComplete='off'
               />
@@ -221,7 +219,7 @@ const SignUp = (): JSX.Element => {
                 name='firstName'
                 value={values.firstName}
                 placeholder={`${t('placeholders:first-name')}`}
-                onChange={handleChange}
+                onChange={(e) => { void handleChange(e) }}
                 onBlur={() => setTouched({ ...touched, firstName: true })}
                 autoComplete='off'
               />
@@ -232,7 +230,7 @@ const SignUp = (): JSX.Element => {
                 name='lastName'
                 value={values.lastName}
                 placeholder={`${t('placeholders:last-name')}`}
-                onChange={handleChange}
+                onChange={(e) => { void handleChange(e) }}
                 onBlur={() => setTouched({ ...touched, lastName: true })}
                 autoComplete='off'
               />
@@ -245,7 +243,7 @@ const SignUp = (): JSX.Element => {
                   value={values.password}
                   placeholder={`${t('placeholders:create-password')}`}
                   onBlur={() => setTouched({ ...touched, password: true })}
-                  onChange={handleChange}
+                  onChange={(e) => { void handleChange(e) }}
                 />
                 <InputRightElement>
                   <IconButton
@@ -266,7 +264,7 @@ const SignUp = (): JSX.Element => {
                   name='confirmPassword'
                   value={values.confirmPassword}
                   placeholder={`${t('placeholders:confirm-password')}`}
-                  onChange={handleChange}
+                  onChange={(e) => { void handleChange(e) }}
                   onBlur={() => setTouched({ ...touched, confirmPassword: true })}
                 />
                 <InputRightElement>
@@ -287,7 +285,7 @@ const SignUp = (): JSX.Element => {
               disabled={isButtonDisabled}
               bg='success'
               color='white'
-              onClick={registerUser}
+              onClick={(e) => { void registerUser(e) }}
               isLoading={isCreating}
               loadingText={`${t('signup:registering')}`}
             >

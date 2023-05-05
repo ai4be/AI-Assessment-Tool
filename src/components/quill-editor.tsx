@@ -4,7 +4,7 @@ import { Box } from '@chakra-ui/react'
 // https://github.com/zenoamaro/react-quill/issues/122
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false
 
-const QuillEditor = ({ value, onChange }): JSX.Element => {
+const QuillEditor = ({ value, onChange }: { value: string, onChange: Function }): JSX.Element => {
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],
@@ -35,7 +35,7 @@ const QuillEditor = ({ value, onChange }): JSX.Element => {
         theme='snow'
         style={{ height: '120px' }}
         value={value}
-        onChange={(value) => onChange(value)}
+        onChange={(value: string) => onChange(value)}
         modules={modules}
         formats={formats}
       />

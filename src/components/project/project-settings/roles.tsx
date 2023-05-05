@@ -58,32 +58,32 @@ const saveRoleApiCall = async (project: Project, role: Partial<Role>): Promise<R
 
 export const RoleBox = ({ project, role, deleteRole, saveRole, index }: RoleBoxProps): JSX.Element => {
   const [isEditing, setIsEditing] = useState(false)
-  const [isUserAdd, setIsUserAdd] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [, setIsUserAdd] = useState(false)
+  // const [isLoading, setIsLoading] = useState(false)
   const [includedUsers, setIncludedUsers] = useState<any[]>([])
   const rows = useBreakpointValue({ base: 2, sm: 5 })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [name, setName] = useState(role.name)
   const [description, setDescription] = useState(role.desc)
   const [userIdTrigger, setUserIdTrigger] = useState(0)
-  const { users = [] } = useContext(ProjectContext)
+  const { nonDeletedUsers = [] } = useContext(ProjectContext)
 
   useEffect(() => {
-    if (Array.isArray(users)) {
+    if (Array.isArray(nonDeletedUsers)) {
       role.userIds = role.userIds ?? []
-      const iu: any[] = users.filter(u => role.userIds?.includes(u._id))
+      const iu: any[] = nonDeletedUsers.filter(u => role.userIds?.includes(u._id))
       setIncludedUsers(iu)
     }
-  }, [users, role.userIds, userIdTrigger])
+  }, [nonDeletedUsers, role.userIds, userIdTrigger])
 
   const setIsEditingWrapper = (value: boolean): void => {
     setIsEditing(value)
     setIsUserAdd(false)
   }
-  const setIsUserAddWrapper = (value: boolean): void => {
-    setIsEditing(value)
-    setIsUserAdd(false)
-  }
+  // const setIsUserAddWrapper = (value: boolean): void => {
+  //   setIsEditing(value)
+  //   setIsUserAdd(false)
+  // }
 
   const handleSave = async (e?: any): Promise<Role | null> => {
     if (e?.preventDefault != null) e.preventDefault()
@@ -146,7 +146,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole, index }: RoleBoxP
               <RiDeleteBin6Line onClick={onOpen} color='var(--main-blue)' cursor='pointer' />
             </Flex>}
           {isEditing &&
-            <Button onClick={handleSave} size='sm' bg='var(--main-blue)' color='white' className='ml-1'>Save</Button>}
+            <Button onClick={(e) => { void handleSave(e) }} size='sm' bg='var(--main-blue)' color='white' className='ml-1'>Save</Button>}
         </Flex>
         <Textarea
           rows={rows}
@@ -161,7 +161,7 @@ export const RoleBox = ({ project, role, deleteRole, saveRole, index }: RoleBoxP
             <AvatarGroup size='sm' max={5}>
               {includedUsers.map(user => <Avatar key={user?._id} name={getUserDisplayName(user)} src={user.xsAvatar} />)}
             </AvatarGroup>
-            <UserMenuMemo users={users} includedUserIds={role.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
+            <UserMenuMemo users={nonDeletedUsers} includedUserIds={role.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={userIdTrigger}>
               <FiUserPlus color='var(--main-blue)' cursor='pointer' />
             </UserMenuMemo>
           </Flex>
@@ -228,11 +228,11 @@ const Roles = ({ project }: { project: Project }): JSX.Element => {
   return (
     <Flex flexDirection='column'>
       {Array.isArray(roles) && roles.map((role, index) =>
-        <RoleBox key={`${index}-${String(role._id)}`} role={role} project={project} index={index} deleteRole={deleteRole} saveRole={handleSave} isLoading={isLoading} />)}
+        <RoleBox key={`${index}-${String(role._id)}`} role={role} project={project} index={index} deleteRole={(role) => { void deleteRole(role) }} saveRole={handleSave} isLoading={isLoading} />)}
       <Flex
         width={[200, 350]} height={[120, 168]} boxShadow='0px 4px 25px rgba(0, 0, 0, 0.07)' borderRadius='15px' justifyContent='center' alignItems='center'
         cursor='pointer'
-        onClick={addRole}
+        onClick={() => { void addRole() }}
       >
         <RiAddCircleLine size='30px' color='#C9C9C9' />
       </Flex>

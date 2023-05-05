@@ -20,7 +20,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return success ? res.status(201).end() : res.status(400).end()
     }
     default:
-      return res.status(400).send({ message: 'Invalid request' })
+      return res.status(400).send({ message: 'Invalid request', code: 9002 })
   }
 }
 

@@ -14,18 +14,19 @@ import {
   SimpleGrid,
   Text,
   useOutsideClick,
-  VStack,
-  Input as InputComponent
+  VStack
+  // ,
+  // Input as InputComponent
 } from '@chakra-ui/react'
-import { CalendarIcon } from '@chakra-ui/icons'
+// import { CalendarIcon } from '@chakra-ui/icons'
 import {
-  DateObj,
+  // DateObj,
   useDayzed,
   RenderProps,
   GetBackForwardPropsOptions,
   Calendar
 } from 'dayzed'
-import { format } from 'date-fns'
+// import { format } from 'date-fns'
 
 const MONTH_NAMES_DEFAULT = [
   'Jan',
@@ -155,7 +156,7 @@ const SingleDatepickerCalendar = (
               </Box>
             ))}
             {calendar.weeks.map((week, weekIndex) => {
-              return week.map((dateObj: DateObj, index) => {
+              return week.map((dateObj: any, index: number) => {
                 const {
                   date,
                   today,
@@ -174,8 +175,8 @@ const SingleDatepickerCalendar = (
                     key={key}
                     size='sm'
                     variant='outline'
-                    borderColor={today ? 'purple.400' : 'transparent'}
-                    bg={selected ? 'purple.200' : undefined}
+                    borderColor={today === true ? 'purple.400' : 'transparent'}
+                    bg={selected === true ? 'purple.200' : undefined}
                   >
                     {date.getDate()}
                   </Button>
@@ -198,7 +199,12 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   },
   ...props
 }): JSX.Element => {
-  const { date, name, disabled, onDateChange, id } = props
+  const {
+    date,
+    // name, disabled,
+    // id,
+    onDateChange
+  } = props
 
   const ref = useRef<HTMLElement>(null)
   const initialFocusRef = useRef<HTMLInputElement>(null)
@@ -244,6 +250,8 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   if (date != null) opts.selected = date
   const dayzedData = useDayzed(opts)
 
+  const PopoverTrigger2 = PopoverTrigger as any
+
   return (
     <Popover
       placement='bottom'
@@ -254,12 +262,12 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
       initialFocusRef={initialFocusRef}
       isLazy
     >
-      <PopoverTrigger>
+      <PopoverTrigger2>
         <Box cursor='pointer' onClick={() => popoverOpen ? null : openpopover()}>
-          {props.children}
+          {(props as any).children}
           <Box display='none'>{date != null ? date.toISOString() : ''}</Box>
         </Box>
-      </PopoverTrigger>
+      </PopoverTrigger2>
       <PopoverContent ref={ref}>
         <PopoverBody
           padding='10px 5px'

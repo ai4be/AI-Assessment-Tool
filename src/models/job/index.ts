@@ -40,7 +40,7 @@ export default class Job extends Model implements JobInterface {
     this.runCount = job.runCount
   }
 
-  static async createJob (data: Partial<Job>, type: string = this.JOB_TYPE): Promise<string | null> {
+  static async createJob (data: Partial<Job>, type: string = this.JOB_TYPE): Promise<ObjectId | null> {
     const { db } = await connectToDatabase()
     const job: JobInterface = {
       _id: new ObjectId(),
@@ -52,19 +52,22 @@ export default class Job extends Model implements JobInterface {
       ...data
     }
     const res = await db.collection(this.TABLE_NAME).insertOne(job)
-    return res.result.ok === 1 ? String(job._id) : null
+    return res.result.ok === 1 ? job._id : null
   }
 
   static async executeJob (job: Job): Promise<void> {
     const { db } = await connectToDatabase()
+    job.status = JobStatus.EXECUTING
+    job.runAt = new Date()
     await db.collection(this.TABLE_NAME).updateOne(
       { _id: job._id },
-      { $set: { status: JobStatus.EXECUTING, runAt: new Date() } }
+      { $set: { status: job.status, runAt: job.runAt } }
     )
     let error = null
     try {
       await job.run()
-    } catch (e) {
+      if (job.status === JobStatus.EXECUTING) job.status = JobStatus.FINISHED
+    } catch (e: any) {
       error = e.message
     }
     await db
@@ -102,7 +105,7 @@ export default class Job extends Model implements JobInterface {
   static async findAndExecuteJobs (): Promise<void> {
     // avoid concurrent executions
     if (this.executingPromise != null) return await this.executingPromise
-    console.log('findAndExecuteJobs: started')
+    // console.log('findAndExecuteJobs: started')
     try {
       this.executingPromise = this._findAndExecuteJobs()
       await this.executingPromise
@@ -115,11 +118,9 @@ export default class Job extends Model implements JobInterface {
 
   private static async _findAndExecuteJobs (): Promise<void> {
     let jobsResult = await this.getJobsToExecute()
-    console.log(`Found ${jobsResult.count} jobs to execute`)
     while (!isEmpty(jobsResult?.data)) {
       const { jobFactory } = await import('@/src/models/job/job-factory') // dynamic import to avoid circular dependency
       const jobs = jobsResult.data
-      console.log(`Found ${jobs.length} jobs to execute`)
       const promises = jobs.map(async (job) => {
         const jobInstance = jobFactory(job)
         return await this.executeJob(jobInstance)

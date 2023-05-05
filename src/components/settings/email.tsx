@@ -12,7 +12,7 @@ import EmailVerificationModal from '@/src/components/modal-email-verification'
 const EmailSettings = (): JSX.Element => {
   const { t } = useTranslation()
   const { user } = useContext(UserContext)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading] = useState(false)
   const [isDisabled, setIsDisabled] = useState(false)
   const [emailErr, setEmailErr] = useState(false)
   const [email, setEmail] = useState(user?.email ?? '')
@@ -36,7 +36,7 @@ const EmailSettings = (): JSX.Element => {
   }, [email, touched.email])
 
   const setTouchedWrapper = (field: string, waitTimeMS = 0): void => {
-    if (touched[field] !== true) {
+    if ((touched as any)[field] !== true) {
       waitTimeMS > 0
         ? setTimeout(() => setTouchedWrapper(field, 0), waitTimeMS)
         : setTouched({ ...touched, [field]: true })

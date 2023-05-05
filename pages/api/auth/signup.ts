@@ -7,7 +7,8 @@ import { isEmailValid, isPasswordValid } from '@/util/validator'
 import { User } from '@/src/types/user'
 import { sendMail } from '@/util/mail'
 import { getVerifyEmailHtml } from '@/util/mail/templates'
-import SignUp from '@/src/components/signup'
+// import SignUp from '@/src/components/signup'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 async function sendEmailVerifictionEmail (user: User): Promise<void> {
   const tokenInstance = await createEmailVerificationToken(user.email, user?._id as string)
@@ -16,7 +17,7 @@ async function sendEmailVerifictionEmail (user: User): Promise<void> {
   await sendMail(user.email, 'Email-verfication', html)
 }
 
-async function handler (req, res): Promise<any> {
+async function handler (req: NextApiRequest, res: NextApiResponse): Promise<any> {
   if (req.method !== 'POST') return res.status(405).json({ code: 11001 })
 
   let { email, password, firstName, lastName, token } = req.body
@@ -37,7 +38,7 @@ async function handler (req, res): Promise<any> {
 
   const existingUser = await getUser({ email })
   if (existingUser != null) {
-    return res.status(422).json({ code: 11004 })
+    return res.status(422).json({ code: 12002 })
   }
 
   const hashedPassword = await hashPassword(password)
@@ -50,7 +51,7 @@ async function handler (req, res): Promise<any> {
   if (user?._id != null) {
     if (token != null) await invitedUserHandler(token, email)
     void sendEmailVerifictionEmail(user)
-    return res.status(201).send({ code: 11005 })
+    return res.status(201).send({ code: 9005 })
   }
   return res.status(400).send({ code: 11006 })
 }

@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
-import { connectToDatabase, toObjectId } from './mongodb'
-import { Notification } from '../types/Notification'
+import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
+import { Notification } from '@/src/types/notification'
 
 export const TABLE_NAME = 'notifications'
 
-export const upsertNotification = async ({ _id, mentions, projectActivity }: { _id: string, mentions: boolean, projectActivity: boolean }): Promise<any> => {
+export const upsertNotification = async ({ _id, mentions, projectActivity }: { _id: string | ObjectId, mentions: boolean, projectActivity: boolean }): Promise<any> => {
   const { db } = await connectToDatabase()
   _id = _id != null ? toObjectId(_id) : undefined
   const data: Partial<Notification> = {

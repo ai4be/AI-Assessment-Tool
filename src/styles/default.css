@@ -104,19 +104,3 @@ mentions {
   width: 100% !important;
   height: 100% !important;
 }
-
-.waves {
-  position:relative;
-  width: 100%;
-  height:15vh;
-  margin-bottom:-7px; /*Fix for safari gap*/
-  min-height:100px;
-  max-height:150px;
-}
-
-.typed {
-  -webkit-text-fill-color: transparent;
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(92,92,153,1) 0%, rgba(0,212,255,1) 100%);
-  -webkit-background-clip: text;
-}
-

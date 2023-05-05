@@ -17,7 +17,7 @@ export const SECTION_CHECKLIST: string = 'checklist'
 
 function stageClickHandler (router: NextRouter, stage: string | null): void {
   const query: any = { ...router.query, [QueryFilterKeys.STAGE]: stage }
-  if (stage == null) delete query[QueryFilterKeys.STAGE]
+  if (stage == null) delete query[QueryFilterKeys.STAGE] // eslint-disable-line @typescript-eslint/no-dynamic-delete
   void router.push({
     query
   }, undefined, { shallow: true })

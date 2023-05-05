@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useMemo,
   useState,
-  useRef
+  useRef,
+  MouseEvent
 } from 'react'
 import {
   Box,
@@ -56,7 +57,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
   const router = useRouter()
   const { comment: commentId } = router.query
   const commentElement = useRef<HTMLDivElement>(null) // to be able to access the current one
-  const { users } = useContext(ProjectContext)
+  const { users, nonDeletedUsers, inactiveUsers } = useContext(ProjectContext)
   const { user } = useContext(UserContext)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [value, setValue] = useState(comment?.text ?? '')
@@ -66,9 +67,9 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
   const [parent, setParent] = useState<Comment | undefined>(comment?.parent)
 
   const mentionsUsers = useMemo(
-    () => users?.map(u => ({ id: String(u._id), display: getUserDisplayName(u) }))
+    () => nonDeletedUsers?.map(u => ({ id: String(u._id), display: getUserDisplayName(u) }))
       .filter(u => u.id !== user?._id) ?? []
-    , [users])
+    , [nonDeletedUsers])
 
   useEffect(() => {
     if (commentElement?.current != null && commentId != null && commentId === comment._id) {
@@ -86,19 +87,20 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
   }, [comment.parent])
 
   useEffect(() => {
+    const activeAndInactiveUsers = users?.concat(inactiveUsers)
     if (comment?._id == null) setUsersComment(user)
     else {
-      const userComment = users?.find(u => u._id === comment.userId)
+      const userComment = activeAndInactiveUsers?.find(u => u._id === comment.userId)
       setUsersComment(userComment)
     }
   }, [comment?.userId, user, users])
 
   useEffect(() => {
     if (comment.parent != null && comment.parent.user == null) {
-      const parentUser = users?.find(u => u._id === comment.parent?.userId)
+      const parentUser = nonDeletedUsers?.find(u => u._id === comment.parent?.userId)
       comment.parent.user = parentUser
     }
-  }, [comment?.parent?.user, users])
+  }, [comment?.parent?.user, nonDeletedUsers])
 
   const saveHandler = (e: any): void => {
     e.preventDefault()
@@ -148,10 +150,6 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
                 value={value}
                 maxLength={maxLength}
                 onFocus={() => setShowEditOptions(true)}
-                onBlur={(e, isFromSuggestion: boolean) => {
-                  // console.log(e)
-                  // !isFromSuggestion ? setShowEditOptions(false) : null
-                }}
                 onKeyDown={(e) => {
                   const target = e.target as HTMLInputElement
                   if (e.key === 'Backspace' && target.selectionStart === 0 && parent != null) {
@@ -186,7 +184,7 @@ const CommentComponent = ({ comment, onSave, onCancel, onDelete, setNewCommentPa
             <BsReply size='20px' className='ml-1 cursor-pointer -scale-x-100 mb-0.5' color='var(--main-blue)' onClick={replyToHandler} />
           </Tooltip>}
       </GridItem>
-      <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={(e) => onDelete != null ? onDelete(comment) : null} />
+      <ConfirmDialog isOpen={isOpen} onClose={onClose} confirmHandler={(e: MouseEvent) => onDelete != null ? onDelete(comment) : null} />
     </Grid>
   )
 }

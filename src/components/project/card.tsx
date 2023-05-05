@@ -12,12 +12,12 @@ interface Props {
 }
 
 const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
-  const { users = [] } = useContext(ProjectContext)
+  const { nonDeletedUsers = [] } = useContext(ProjectContext)
 
   const loadAssignedToUser = (): JSX.Element => {
     if (card.userIds == null) return <></>
     const stringUserIds = card.userIds.map(String)
-    const assignedUsers = users.filter(user => stringUserIds.includes(user._id))
+    const assignedUsers = nonDeletedUsers.filter(user => stringUserIds.includes(user._id))
 
     return (
       <Flex justifyContent='flex-end'>
@@ -30,10 +30,12 @@ const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
     )
   }
 
+  const Draggable2 = Draggable as any // ugly hack to get around typescript error
+
   return (
     // https://github.com/atlassian/react-beautiful-dnd/issues/1767
-    <Draggable draggableId={card._id} index={cardIndex} key={card._id}>
-      {(provided) => (
+    <Draggable2 draggableId={card._id} index={cardIndex} key={card._id}>
+      {(provided: any) => (
         <Box
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -56,7 +58,7 @@ const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
           {loadAssignedToUser()}
         </Box>
       )}
-    </Draggable>
+    </Draggable2>
   )
 }
 

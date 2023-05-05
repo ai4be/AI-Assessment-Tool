@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import {
-  Box, Button, Slide, IconButton, Collapse, useDisclosure
+  Box, Button,
+  // Slide,
+  IconButton, Collapse, useDisclosure
 } from '@chakra-ui/react'
 import ProjectContext from '@/src/store/project-context'
 import { useRouter } from 'next/router'
@@ -8,11 +10,11 @@ import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-men
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
 interface Props {
-  page: string,
-  children: string | JSX.Element | JSX.Element[],
+  page: string
   isOpen: boolean
-  variant: 'menu' | 'sidebar' | undefined | string,
-  showSidebarButton?: boolean,
+  variant: 'menu' | 'sidebar' | undefined | string
+  children?: string | JSX.Element | JSX.Element[]
+  showSidebarButton?: boolean
 }
 
 const SideBar = (props: Props): JSX.Element => {
@@ -49,22 +51,24 @@ const SideBar = (props: Props): JSX.Element => {
       </Button>
     ))
     : null
-  return props.variant === 'sidebar' ? (
-    <Box display='flex' flexDirection='column' mt='5rem'>
-      {content}
-    </Box>
-  ) : (
-    <>
-      <Box display='flex' flexDirection='column'>
-        {props.showSidebarButton && (
+  return props.variant === 'sidebar'
+    ? (
+      <Box display='flex' flexDirection='column' mt='5rem'>
+        {content}
+      </Box>
+      )
+    : (
+      <>
+        <Box display='flex' flexDirection='column'>
+          {props.showSidebarButton === true && (
             <Box ml={-4} mr={4}>
               <IconButton
                 isRound
                 icon={isOpen ? <ChevronLeftIcon w={8} h={8} /> : <ChevronRightIcon w={8} h={8} />}
-                colorScheme="blackAlpha"
+                colorScheme='blackAlpha'
                 aria-label='Display project menu'
-                variant="outline"
-                bg="white"
+                variant='outline'
+                bg='white'
                 onClick={onToggle}
               />
               <Collapse in={isOpen} animateOpacity>
@@ -73,18 +77,18 @@ const SideBar = (props: Props): JSX.Element => {
                 </Box>
               </Collapse>
             </Box>
-        )}
-        <Box display='flex' flexDirection='column'>
-        {props.isOpen && (
-          <Box display='flex' flexDirection='column' mt='2.5rem'>
-            {content}
+          )}
+          <Box display='flex' flexDirection='column'>
+            {props.isOpen && (
+              <Box display='flex' flexDirection='column' mt='2.5rem'>
+                {content}
+              </Box>
+            )}
           </Box>
-        )}
         </Box>
-      </Box>
-      {props.children}
-    </>
-  )
+        {props.children}
+      </>
+      )
 }
 
 export default SideBar

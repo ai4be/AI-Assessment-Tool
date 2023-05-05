@@ -35,6 +35,7 @@ const ConfirmDialog = (props: any): JSX.Element => {
     setIsLoading(false)
   }
 
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
       <AlertDialogOverlay>

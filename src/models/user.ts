@@ -5,6 +5,7 @@ import { hashPassword, verifyPassword } from '@/util/auth'
 import { isEmailValid, isPasswordValid } from '@/util/validator'
 import { User, UserCreate } from '@/src/types/user'
 import Model from '@/src/models/model'
+import { InvalidPasswordError, WrongCredentialError } from './errors'
 
 const TABLE_NAME = 'users'
 
@@ -38,13 +39,14 @@ export const getUsers = async (userIds?: Array<string | ObjectId>, omitFields: s
   return await db.collection(TABLE_NAME).find(where, { projection }).toArray()
 }
 
-export const createUser = async ({ email, password, firstName, lastName }: UserCreate): Promise<User> => {
+export const createUser = async ({ email, password, firstName, lastName, emailVerified = false }: UserCreate): Promise<User> => {
   const { db } = await connectToDatabase()
   email = cleanEmail(email)
   firstName = cleanText(firstName)
   lastName = cleanText(lastName)
+  if (emailVerified !== true) emailVerified = false
   const createdAt = new Date()
-  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt, emailVerified: false })
+  const res = await db.collection(TABLE_NAME).insertOne({ email, password, firstName, lastName, createdAt, emailVerified })
   return { email, password, firstName, lastName, _id: res.insertedId }
 }
 
@@ -59,9 +61,9 @@ export const updatePassword = async ({ _id, password, currentPassword }: { _id: 
       currentPassword,
       String(user?.password)
     )
-    if (!isValid) throw new Error('Wrong credentials')
+    if (!isValid) throw new WrongCredentialError()
   }
-  if (!isPasswordValid(password)) throw new Error('Invalid password, password should be at least 8 characters long, contain a number and a special character')
+  if (!isPasswordValid(password)) throw new InvalidPasswordError()
   const hashedPassword = await hashPassword(password)
   const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: { password: hashedPassword } })
   return res.modifiedCount === 1
@@ -81,7 +83,7 @@ export const updateUser = async (_id: string | ObjectId, updateData: Partial<Use
   const updateableTxtFields = ['email', 'firstName', 'lastName', 'avatar', 'xsAvatar', 'organization', 'department', 'role']
   const update: Partial<User> = {}
   for (const field of updateableTxtFields) {
-    if (updateData[field] != null) update[field] = cleanText(updateData[field])
+    if ((updateData as any)[field] != null) (update as any)[field] = cleanText((updateData as any)[field])
   }
   if (update.email != null) update.email = cleanEmail(update.email)
   if (update.email != null && !isEmailValid(update.email)) throw new Error('Invalid email')
@@ -89,5 +91,21 @@ export const updateUser = async (_id: string | ObjectId, updateData: Partial<Use
   if (isEmpty(update)) return false
 
   const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: update })
+  return res.modifiedCount === 1
+}
+
+export const updateToDeletedUser = async (_id: string | ObjectId): Promise<boolean> => {
+  const deletedUserData: Partial<User> = {
+    email: 'deleted@user.com',
+    firstName: 'deleted',
+    lastName: 'user',
+    isDeleted: true,
+    deletedAt: new Date()
+  }
+
+  const { db } = await connectToDatabase()
+  _id = toObjectId(_id)
+
+  const res = await db.collection(TABLE_NAME).updateOne({ _id }, { $set: deletedUserData })
   return res.modifiedCount === 1
 }

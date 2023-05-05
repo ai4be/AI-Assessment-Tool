@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { isConnected } from '@/util/temp-middleware'
 
-const industries = [
+export const industries = [
   'Accommodation and Food Services',
   'Administration, Business Support and Waste Management Services',
   'Agriculture, Forestry, Fishing and Hunting',
@@ -29,7 +29,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       return res.send(industries)
     }
     default:
-      return res.status(400).send({ message: 'Invalid request' })
+      return res.status(400).send({ message: 'Invalid request', code: 9002 })
   }
 }
 

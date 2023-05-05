@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react'
+import React, { MouseEvent, useContext, useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import {
   Flex,
@@ -20,7 +20,7 @@ import ToastContext from '@/src/store/toast-context'
 import { useTranslation } from 'next-i18next'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
-const Login = (): JSX.Element => {
+const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToastContext)
   const [disabled, setDisabled] = useState(true)
@@ -37,7 +37,7 @@ const Login = (): JSX.Element => {
 
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleClick = (e): void => {
+  const handleClick = (e: MouseEvent): void => {
     e.preventDefault()
     setShowPassword(!showPassword)
   }
@@ -46,7 +46,7 @@ const Login = (): JSX.Element => {
     setDisabled(isEmpty(values.email) || isEmpty(values.password))
   }, [values.email, values.password])
 
-  const loginUser = async (e): Promise<void> => {
+  const loginUser = async (e: MouseEvent): Promise<void> => {
     e.preventDefault()
     if (!isEmailValid(values.email)) {
       showToast({
@@ -65,7 +65,9 @@ const Login = (): JSX.Element => {
     }
     if (token != null) signinOptions.token = token
     if (projectId != null) signinOptions.projectId = projectId
-    const result = await signIn('credentials', signinOptions)
+    let result = null
+    if (onSubmit != null) result = onSubmit(signinOptions)
+    else result = await signIn('credentials', signinOptions)
 
     setIsFetching(false)
     if (result?.ok === true) {
@@ -94,7 +96,7 @@ const Login = (): JSX.Element => {
       [name]: value
     })
   }
-
+  /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' my='40px'>
@@ -151,6 +153,7 @@ const Login = (): JSX.Element => {
                   placeholder={`${t('placeholders:email')}`}
                   onChange={handleChange}
                   autoComplete='off'
+                  data-testid='email'
                 />
 
               </FormControl>
@@ -163,6 +166,7 @@ const Login = (): JSX.Element => {
                     placeholder={`${t('placeholders:password')}`}
                     autoComplete='off'
                     onChange={handleChange}
+                    data-testid='password'
                   />
                   <InputRightElement>
                     <IconButton
@@ -178,6 +182,7 @@ const Login = (): JSX.Element => {
                 width='full'
                 mt={4}
                 bg='success'
+                name='login'
                 color='white'
                 onClick={loginUser}
                 isLoading={isFetching}

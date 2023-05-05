@@ -8,6 +8,7 @@ import { getUser } from '@/src/models/user'
 import { sendMailToBcc } from '@/util/mail'
 import { commentMentionHtml } from '@/util/mail/templates'
 import Job from '@/src/models/job'
+import { getNotifications } from '@/src/models/notification'
 
 export interface JobMentionNotificationData {
   userIds: string[]
@@ -18,8 +19,9 @@ export interface JobMentionNotificationData {
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class JobMentionNotification extends Job {
   static JOB_TYPE = 'mention-notification'
+  data?: JobMentionNotificationData
 
-  static async createMentionNotificationJob (comment: CommentInterface | ObjectId, delaySeconds = 60 * 60): Promise<string | null> {
+  static async createMentionNotificationJob (comment: CommentInterface | ObjectId, delaySeconds = 60 * 60): Promise<ObjectId | null> {
     if (comment instanceof ObjectId) {
       comment = await CommentModel.get(comment)
     }
@@ -37,15 +39,16 @@ export class JobMentionNotification extends Job {
   }
 
   async run (): Promise<any> {
+    if (this.data == null) throw Error('Invalid job data, data is null')
     const { commentId, updatedAt: originalUpdatedAt }: JobMentionNotificationData = this.data
     const comment = await CommentModel.get(commentId)
     if (comment == null) throw Error('Comment not found')
     let result: string = ''
     if (comment.deletedAt != null) result = 'Comment deleted'
     const { projectId, userId, userIds = [], text, updatedAt, cardId } = comment
-    if (updatedAt !== originalUpdatedAt) result = `${result} Comment was updated`
+    if (updatedAt !== originalUpdatedAt && updatedAt != null && originalUpdatedAt != null) result = `${result} Comment was updated`
     if (isEmpty(userIds)) result = `${result} No users to notify`
-    if (result != null) {
+    if (!isEmpty(result)) {
       this.status = JobStatus.CANCELLED
       this.result = result
       return false
@@ -54,9 +57,10 @@ export class JobMentionNotification extends Job {
     const emails: string[] = []
     for (const uid of userIds) {
       const user = await getUser({ _id: toObjectId(uid) })
-      if (user == null) continue
-      const { email } = user
-      emails.push(email)
+      if (user == null || user.emailVerified !== true) continue
+      const notification = await getNotifications(user._id)
+      if (notification == null || !notification.mentions) continue
+      emails.push(user.email)
     }
     if (!isEmpty(emails)) {
       const html = commentMentionHtml(commentId, projectId, cardId)

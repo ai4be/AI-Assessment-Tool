@@ -3,6 +3,7 @@ import PropType from 'prop-types'
 import {
   Box,
   Button,
+  Flex,
   Modal,
   ModalBody,
   ModalOverlay,
@@ -22,9 +23,9 @@ import { defaultFetchOptions, fetcher } from '@/util/api'
 import useSWR from 'swr'
 import { useTranslation } from 'next-i18next'
 
-const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
+const CreateProjectModal = ({ fetchProjects }: { fetchProjects: Function }): JSX.Element => {
   const { t } = useTranslation('projects')
-  const { data: industries, error } = useSWR('/api/industries', fetcher)
+  const { data: industries } = useSWR('/api/industries', fetcher)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const inputRef: any = useRef()
@@ -56,7 +57,8 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
         body: JSON.stringify(data)
       })
 
-      const inJSON = await response.json()
+      // const inJSON =
+      await response.json()
       await fetchProjects()
     } finally {
       onClose()
@@ -85,7 +87,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
             <Input
               ref={el => { inputRef.current = el }}
               placeholder={`${t('placeholders:project-name')}`}
-              onKeyUp={handleSubmit}
+              onKeyUp={(e) => { void handleSubmit(e) }}
             />
             <Textarea
               placeholder={`${t('placeholders:project-description')}`}
@@ -96,7 +98,7 @@ const CreateProjectModal = ({ fetchProjects }): JSX.Element => {
             </Select>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={handleCreate} isLoading={isLoading} isDisabled={isLoading} loadingText={`${t('projects:creating-project')}`}>
+            <Button onClick={() => { void handleCreate() }} isLoading={isLoading} isDisabled={isLoading} loadingText={`${t('projects:creating-project')}`}>
               {t('buttons:create')}
             </Button>
           </ModalFooter>
@@ -111,7 +113,7 @@ export default function Projects (props: any): JSX.Element {
 
   const loadExistingProjects = (): JSX.Element => {
     return (
-      <Box mt='1rem' minWidth='50vw' display='flex' flexWrap='wrap'>
+      <Flex mt='1rem' minWidth='50vw' flexWrap='wrap'>
         {Array.isArray(projects) && projects.map((pr, index) => (
           <Link
             key={index}
@@ -120,7 +122,7 @@ export default function Projects (props: any): JSX.Element {
               query: { projectId: pr._id }
             }}
           >
-            <Box
+            <Flex
               mr='1rem'
               mt='1rem'
               height='150px'
@@ -129,16 +131,17 @@ export default function Projects (props: any): JSX.Element {
                 rgba(0, 0, 0, 0.4),
                 rgba(0, 0, 0, 0.4)
               ),
-              url(${pr.backgroundImage})`}
+              url(${String(pr.backgroundImage)})`}
               backgroundPosition='center'
               backgroundRepeat='no-repeat'
               backgroundSize='cover'
               borderRadius='5px'
               boxShadow='lg'
               cursor='pointer'
+              flexDirection='column'
+              justifyContent='center'
             >
               <Text
-                marginTop='calc(50% - 25px)'
                 height='25px'
                 textAlign='center'
                 textTransform='capitalize'
@@ -150,10 +153,10 @@ export default function Projects (props: any): JSX.Element {
               >
                 {pr.name}
               </Text>
-            </Box>
+            </Flex>
           </Link>
         ))}
-      </Box>
+      </Flex>
     )
   }
 

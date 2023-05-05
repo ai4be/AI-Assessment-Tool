@@ -1,6 +1,6 @@
-import sanitize from 'mongo-sanitize'
-import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
+import sanitize from 'mongo-sanitize'
+import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
 import { getColumnsByProjectId } from '@/src/models/column'
 import { Card, STAGE_VALUES, Question } from '@/src/types/card'
 import { isEmpty, isEqual } from '@/util/index'
@@ -170,7 +170,7 @@ export const sanitizeQuestionData = async (data: any, cardId: string, questionId
 export const updateQuestion = async (cardId: ObjectId | string, questionId: string, data: any): Promise<boolean> => {
   const { db } = await connectToDatabase()
   const { responses, conclusion } = data
-  const set = {}
+  const set: any = {}
   if (responses != null) set['questions.$.responses'] = sanitize(responses)
   if (conclusion != null) set['questions.$.conclusion'] = sanitize(conclusion)
   const res = await db.collection(TABLE_NAME).updateOne(
@@ -199,11 +199,11 @@ export const dataToCards = async (data: any[], projectId?: string | ObjectId, co
         TOCnumber: `${catIdx}.${idx + 1}`,
         title: card.title
       }
-      card.questions = card.questions.map((q: any, i: number): Question => ({
+      returnCard.questions = card.questions.map((q: any, i: number): Question => ({
         ...q,
         TOCnumber: `${returnCard.TOCnumber}.${i + 1}`,
         title: q.title,
-        ...(q.answers != null ? { answers: q.answers.map(a => typeof a === 'string' ? a.trim() : a) } : {})
+        ...(q.answers != null ? { answers: q.answers.map((a: any) => typeof a === 'string' ? a.trim() : a) } : {})
       }))
       cards.push(returnCard)
       idx++

@@ -1,0 +1,54 @@
+// import { connectToDatabase } from './src/models/mongodb'
+
+// async function cleanDb (): Promise<void> {
+//   const { db } = await connectToDatabase()
+
+//   const cursor = db.collection('cards').find()
+//   while (await cursor.hasNext()) {
+//     const doc = await cursor.next()
+//     const { title, TOCnumber } = doc
+//     const chapterNb = (title.match(/^\s?([0-9.]+)/) ?? [null, ''])[1].trim()
+//     // console.log(title, TOCnumber, chapterNb)
+//     if (chapterNb != null && chapterNb.length > 0 && TOCnumber == null) {
+//       doc.TOCnumber = chapterNb
+//       await db.collection('cards').updateOne({ _id: doc._id }, { $set: { TOCnumber: chapterNb } })
+//     }
+//     const cleanedTitle = title.replace(/^\s?[0-9.]+/, '').trim()
+//     if (cleanedTitle !== title) {
+//       console.log('cleaned title', cleanedTitle)
+//       console.log('old title', title)
+//       await db.collection('cards').updateOne({ _id: doc._id }, { $set: { title: cleanedTitle } })
+//     }
+//     const { questions } = doc
+//     if (Array.isArray(questions)) {
+//       let idx = 0
+//       for (const q of questions) {
+//         let { TOCnumber, title } = q
+//         if (TOCnumber == null) {
+//           TOCnumber = `${doc.TOCnumber}.${idx + 1}`
+//           console.log(TOCnumber)
+//           await db.collection('cards').updateOne(
+//             { _id: doc._id, 'questions.id': q.id },
+//             {
+//               $set: {
+//                 'questions.$.TOCnumber': TOCnumber
+//               }
+//             }
+//           )
+//         }
+//         idx++
+//       }
+//     }
+//   }
+// }
+
+// void cleanDb().then(() => {
+//   console.log('done')
+// })
+
+
+// <img width="270"
+// height="63"
+// src="https://www.ai4belgium.be/wp-content/uploads/2019/03/LOGO-270x63.jpg"
+// class="custom-logo" alt="AI4Belgium"
+// srcset="https://www.ai4belgium.be/wp-content/uploads/2019/03/LOGO-270x63.jpg 270w, https://www.ai4belgium.be/wp-content/uploads/2019/03/LOGO-300x70.jpg 300w, https://www.ai4belgium.be/wp-content/uploads/2019/03/LOGO.jpg 500w" sizes="(max-width: 270px) 100vw, 270px"></img>

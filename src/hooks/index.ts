@@ -64,7 +64,6 @@ export const useQueryCardId = (cards: Card[], cardSetCb?: Function, cardUnsetCb?
   return { card, setCardQuery, unSetCardQuery }
 }
 
-
 /**
  * Helps tracking the props changes made in a react functional component.
  *

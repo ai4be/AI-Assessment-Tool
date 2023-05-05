@@ -32,7 +32,10 @@ import { Comment } from '@/src/types/comment'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
-const AccordionItemStyled = ({ title, desc }): JSX.Element => {
+// ugly hack to get around the fact that the SingleDatepicker  Property 'children' does not exist on type 'IntrinsicAttributes & SingleDatepickerProps'.
+const SingleDatepicker2 = SingleDatepicker as any
+
+const AccordionItemStyled = ({ title, desc }: { title: string, desc: string | string[] | JSX.Element[] }): JSX.Element => {
   return (
     <AccordionItem
       border='none'
@@ -77,7 +80,7 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
   const { question: questionId, comment: commentId } = router.query
   const [scoredQuestions, setScoredQuestions] = useState<DisplayQuestion[]>([])
   const [unscoredQuestions, setUnscoredQuestions] = useState<DisplayQuestion[]>([])
-  const [unscoredQuestionsCollapsed, setUnscoredQuestionsCollapsed] = useState<boolean>(true)
+  const [, setUnscoredQuestionsCollapsed] = useState<boolean>(true)
   const [commentsFetched, setCommentsFetched] = useState<boolean>(false)
 
   const fetchComments = async (question?: Partial<DisplayQuestion>): Promise<void> => {
@@ -206,10 +209,10 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
   const projectId = String(card.projectId)
   const { showToast } = useContext(ToastContext)
   const [renderTrigger, setRenderTrigger] = useState(0)
-  const responseHandler = getResponseHandler(showToast)
+  const responseHandler = getResponseHandler(showToast, t)
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const { users } = useContext(ProjectContext)
+  const [, setIsLoading] = useState(false)
+  const { nonDeletedUsers } = useContext(ProjectContext)
 
   const saveCard = async (data: Partial<Card>): Promise<void> => {
     setIsLoading(true)
@@ -221,7 +224,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
     })
     if (response.ok) {
       Object.keys(data).forEach(key => {
-        card[key] = data[key]
+        (card as any)[key] = (data as any)[key]
       })
     } else {
       await responseHandler(response)
@@ -273,7 +276,7 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
 
   useEffect(() => {
     const userIds = card.userIds ?? []
-    setAssignedUsers(users?.filter(user => userIds.includes(user._id)) ?? [])
+    setAssignedUsers(nonDeletedUsers?.filter(user => userIds.includes(user._id)) ?? [])
   }, [card.userIds, renderTrigger])
 
   return (
@@ -286,17 +289,17 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
           <Flex justifyContent='space-between' alignItems='center'>
             <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:due-date')}</Text>
           </Flex>
-          <SingleDatepicker name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
+          <SingleDatepicker2 name='date-input' date={card.dueDate != null ? new Date(card.dueDate) : null} onDateChange={setDate}>
             <Flex justifyContent='space-between' alignItems='center'>
               <Text fontSize='sm' fontWeight='600' w='100%' minH='2'>
                 {card.dueDate != null ? format(new Date(card.dueDate), 'dd MMM yyyy') : `${t('sidebar:define')}`}
               </Text>
               {card.dueDate != null && <RiDeleteBin6Line color='#C9C9C9' cursor='pointer' onClick={() => setDate(null)} />}
             </Flex>
-          </SingleDatepicker>
+          </SingleDatepicker2>
           <Flex justifyContent='space-between' alignItems='center'>
             <Text color='var(--main-blue)' fontSize='sm' as='b' mt='3' mb='2'>{t('sidebar:assigned-to')}</Text>
-            <UserMenu users={users ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
+            <UserMenu users={nonDeletedUsers ?? []} includedUserIds={card.userIds ?? []} onUserAdd={onUserAdd} onUserRemove={onUserRemove} userIdTrigger={renderTrigger}>
               <FiEdit2 color='#C9C9C9' cursor='pointer' />
             </UserMenu>
           </Flex>

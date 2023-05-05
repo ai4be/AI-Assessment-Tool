@@ -28,7 +28,9 @@ const CategoryQuestions: FC<Props> = ({ project, categories, cards, ...boxProps 
     <Box backgroundColor='white' {...boxProps}>
       {Array.isArray(categories) && categories.map(category =>
         <Box key={category._id} className='break-after-page last:break-after-avoid'>
-          <Text fontSize='xl' textTransform='uppercase' fontWeight='semibold' marginBottom='1rem'>{category?.name}</Text>
+          <Text fontSize='xl' textTransform='uppercase' fontWeight='semibold' marginBottom='1rem'>
+            {category?.name}
+          </Text>
           <Box display='flex' flexDirection='column'>
             {category.sections?.map((section, idx) =>
               <Grid templateColumns='min-content auto 8rem' key={`${category._id}-${section.id ?? idx}`} _last={{ marginBottom: '1rem' }} alignItems='center'>
@@ -39,11 +41,11 @@ const CategoryQuestions: FC<Props> = ({ project, categories, cards, ...boxProps 
                     <GridItem colSpan={1}>
                       <Box height='2rem' width='2rem' borderRadius='full' backgroundColor='var(--main-light-blue)' className='print:background' />
                     </GridItem>
-                    <GridItem colSpan={1} paddingLeft='1rem' onClick={() => (void setCardQuery(c._id, q.id))} cursor='pointer'>
+                    <GridItem colSpan={1} paddingLeft='1rem' onClick={() => { void setCardQuery(c._id, q.id) }} cursor='pointer'>
                       <Text fontWeight='semibold' fontSize='sm' cursor='pointer'>{(q as DisplayQuestion).cleanTitle}</Text>
                     </GridItem>
                     <GridItem colSpan={1}>
-                      <Text fontWeight='semibold' fontSize='sm' color='var(--main-blue)' textAlign='center' onClick={() => (void setCardQuery(c._id, q.id))} cursor='pointer'>
+                      <Text fontWeight='semibold' fontSize='sm' color='var(--main-blue)' textAlign='center' onClick={() => { void setCardQuery(c._id, q.id) }} cursor='pointer'>
                         {Array.isArray(q.responses) && !isEmpty(q.responses) ? q.answers[q.responses[0]] : '-'}
                       </Text>
                     </GridItem>
@@ -65,7 +67,7 @@ const CategoryQuestions: FC<Props> = ({ project, categories, cards, ...boxProps 
               </Grid>)}
           </Box>
         </Box>)}
-      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery} card={card} />}
+      {card != null && <CardDetailsModal isOpen={isOpen} onClose={unSetCardQuery as any} card={card} />}
     </Box>
   )
 }

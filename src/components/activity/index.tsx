@@ -256,7 +256,7 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
       }
       if (data?.responses != null && question?.answers != null) {
         if (question.type === QuestionType.CHECKBOX || question.type === QuestionType.RADIO) {
-          const values = data?.responses.map(r => question.answers[r])
+          const values = data?.responses.map((r: number) => question.answers[r])
           text = <>{text}: "<Text display='inline' fontSize='xs'>{values.join(',')}</Text>"</>
         } else {
           text = <>{text}: "<Text display='inline' fontSize='xs'>{data?.responses}</Text>"</>

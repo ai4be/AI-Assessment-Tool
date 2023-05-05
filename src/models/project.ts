@@ -112,16 +112,27 @@ export const getUserProjects = async (userId: ObjectId | string, projectId?: str
   return await db.collection(TABLE_NAME).find(where).toArray()
 }
 
+export const getUserProjectIds = async (userId: ObjectId | string): Promise<ObjectId[]> => {
+  const { db } = await connectToDatabase()
+  userId = toObjectId(userId)
+  const where: any = {
+    $or: [
+      { userIds: userId },
+      { createdBy: userId }
+    ]
+  }
+  return ((await db.collection(TABLE_NAME).find(where).project({ _id: 1 }).toArray()) ?? []).map(p => p._id)
+}
+
 export const addUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, addedUserId: ObjectId | string): Promise<boolean> => {
   const res = await addUser(_id, addedUserId)
   if (res) void Activity.createCardUserAddActivity(_id, userId, addedUserId)
   return res
 }
 
-export const removeUserAndCreateActivity = async (_id: ObjectId | string, userId: ObjectId | string, removedUserId: ObjectId | string): Promise<boolean> => {
+export const removeUserAndCreateActivity = async (_id: ObjectId | string, loggedUserId: ObjectId | string, removedUserId: ObjectId | string): Promise<void> => {
   const res = await removeUser(_id, removedUserId)
-  if (res) void Activity.createCardUserRemoveActivity(_id, userId, removedUserId)
-  return res
+  if (res) void Activity.removeUserProjectActivity(_id, loggedUserId, removedUserId)
 }
 
 export const addUser = async (_id: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
@@ -134,6 +145,19 @@ export const addUser = async (_id: ObjectId | string, userId: ObjectId | string)
   return result.result.ok === 1
 }
 
+export const removeUserInactive = async (_id: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
+  const { db } = await connectToDatabase()
+  const res = await db.collection(TABLE_NAME).updateOne(
+    { _id: toObjectId(_id) },
+    {
+      $pull: {
+        userIdsInactive: toObjectId(userId)
+      }
+    }
+  )
+  return res.result.ok === 1
+}
+
 export const removeUser = async (_id: ObjectId | string, userId: ObjectId | string): Promise<boolean> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
@@ -141,20 +165,36 @@ export const removeUser = async (_id: ObjectId | string, userId: ObjectId | stri
   const result = await db
     .collection(TABLE_NAME)
     .updateOne({ _id }, { $pull: { userIds: userId } })
-  return result.result.ok === 1
+  const addUserListDeleted = await db
+    .collection(TABLE_NAME)
+    .updateOne({ _id }, { $addToSet: { userIdsInactive: userId } })
+  return result.result.ok === 1 && addUserListDeleted.result.ok === 1
 }
 
 export const getProjectUsers = async (_id: ObjectId | string, filterUserIds?: Array<string | ObjectId>): Promise<User[]> => {
   const { db } = await connectToDatabase()
   _id = toObjectId(_id)
   const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { userIds: 1, createdBy: 1 } })
-  let userIds: any = []
+  let userIds: ObjectId[] = []
   if (project?.userIds != null) userIds.push(...project.userIds, project.createdBy)
   if (filterUserIds != null) {
     filterUserIds = filterUserIds.map(String)
     userIds = userIds.filter(id => filterUserIds?.includes(String(id)))
   }
   return await getUsers(userIds)
+}
+
+export const getInactiveProjectUsers = async (_id: ObjectId | string, filterUserIds?: Array<string | ObjectId>): Promise<User[]> => {
+  const { db } = await connectToDatabase()
+  _id = toObjectId(_id)
+  const project = await db.collection(TABLE_NAME).findOne({ _id }, { projection: { userIdsInactive: 1, createdBy: 1 } })
+  let userIdsInactive: ObjectId[] = []
+  if (project?.userIdsInactive != null) userIdsInactive.push(...project.userIdsInactive)
+  if (filterUserIds != null) {
+    filterUserIds = filterUserIds.map(String)
+    userIdsInactive = userIdsInactive.filter((id: ObjectId) => filterUserIds?.includes(String(id)))
+  }
+  return await getUsers(userIdsInactive)
 }
 
 export const getProjectRoles = async (_id: ObjectId | string): Promise<any[]> => {

@@ -1,13 +1,13 @@
 import NextAuth, { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-
+import { NextApiRequest } from 'next'
 import { verifyPassword } from '@/util/auth'
 import { invitedUserHandler } from '@/src/models/token'
 import sanitize from 'mongo-sanitize'
 import { getUser } from '@/src/models/user'
 import { isEmpty } from '@/util/index'
 
-const authorize: any = async (credentials: any, req): Promise<User | null> => {
+const authorize: any = async (credentials: any, req: NextApiRequest): Promise<User | null> => {
   // Check any field is empty
   if (isEmpty(credentials.email) || isEmpty(credentials.password)) throw new Error('email or password is missing')
   const email = sanitize(credentials.email.trim().toLowerCase())
@@ -15,11 +15,13 @@ const authorize: any = async (credentials: any, req): Promise<User | null> => {
   const user = await getUser({ email }, [])
 
   if (user == null) throw new Error('Wrong credentials')
+  if (user.isDeleted === true) throw new Error('User has no longer access')
 
   const isValid = await verifyPassword(
     credentials.password, // don't need to sanitize because it's hashed
     user?.password ?? ''
   )
+
   if (!isValid) throw new Error('Wrong credentials')
   if (token != null) await invitedUserHandler(sanitize(token), email)
   const userId = String(user._id)
