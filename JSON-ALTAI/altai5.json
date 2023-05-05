@@ -36,8 +36,8 @@
                     "title": "Did you establish a strategy or a set of procedures to avoid creating or reinforcing =gb=unfair=ge= =gb=bias=ge= in the =gb=AI system=ge=, both regarding the use of input data as well as for the algorithm design?=hb=The way in which AI systems are developed (e.g. algorithms' programming, data) may suffer from unfair bias. This could be counteracted by putting in place oversight processes to analyse and address the system's purpose, constraints, requirements and decisions in a clear and transparent manner. Moreover, hiring from diverse backgrounds, cultures and disciplines can ensure diversity of opinions and should be encouraged.=br= EGTAI p. 18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -47,8 +47,8 @@
                     "title": "Did you consider diversity and representativeness of =gb=end-users=ge= and/or =gb=subjects=ge= in the data?=hb=Data sets used by AI systems (both for training and operation) may suffer from the inclusion of inadvertent historic bias, incompleteness and bad governance models. The continuation of such biases could lead to unintended (in)direct prejudice and discrimination against certain groups or people, potentially exacerbating prejudice and marginalisation<br/>EGTAI p 18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -58,9 +58,9 @@
                     "visibleIf": "",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No",
-                        "Not applicable"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"Not applicable","score":0}
                     ]
                 },
                 {
@@ -70,8 +70,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -81,9 +81,9 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "To some extent",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"To some extent","score":0}
                     ]
                 },
                 {
@@ -93,8 +93,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -104,9 +104,9 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "To some extent",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0},
+                        {"answer":"To some extent","score":0}   
                     ]
                 },
                 {
@@ -116,8 +116,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -127,8 +127,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -138,8 +138,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -149,8 +149,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -160,8 +160,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -171,8 +171,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -182,8 +182,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}   
                     ]
                 },
                 {
@@ -193,8 +193,8 @@
                     "visibleIf": "",
                     "isRequired": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -204,11 +204,11 @@
                     "visibleIf": "",
                     "isScored": 1,
                     "answers": [
-                        "Non-existent",
-                        "Completely inadequate",
-                        "Almost adequate",
-                        "Adequate",
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely Inadequate","score":1},
+                        {"answer":"Almost adequate","score":5},
+                        {"answer":"Adequate","score":7}, 
+                        {"answer":"Fully adequate","score":9}
                     ]
                 }
             ]
@@ -228,8 +228,8 @@
                     "type": "radio",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -239,8 +239,8 @@
                     "title": "Did you assess whether the =gb=AI system=ge='s user interface is usable by those with special needs or disabilities or those at risk of exclusion?=hb=Goes together with the principle of UD to involve all the possible target groups from the scratch. Assistive Technologies are products like Screenreaders, Magnifiers, Text2Speed Software.<br/>EGTAI p 18",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -250,8 +250,8 @@
                     "title": "Did you ensure that information about, and the user interface of, the =gb=AI system=ge= is accessible and usable also to =gb=users=ge= of =gb=assistive technologies=ge= (such as screenreaders)? =hb=Goes together with the principle of UD to involve all the possible target groups from the scratch. Assistive Technologies are products like Screenreaders, Magnifiers, Text2Speed Software.<br/>Use technical tools like assistive technologies.<br/>EGTAI p 18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -261,8 +261,8 @@
                     "title": "Did you involve or consult with =gb=end-users=ge= or =gb=subjects=ge= in need for =gb=assistive technology=ge= during the planning and development phase of the AI system?=hb=Goes together with the principle of UD to involve all the possible target groups from the scratch. Assistive Technologies are products like Screenreaders, Magnifiers, Text2Speed Software.<br/>Use technical tools like assistive technologies.<br/>EGTAI p 18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -272,8 +272,8 @@
                     "title": "Did you ensure that =gb=Universal Design=ge= principles are taken into account during every step of the planning and development process, if applicable?=hb=The process approach is aligned with, compatible with, and complementary to established management system standards, including quality management systems. The Design for All approach as specified in this document is written to be easily integrated into existing organisational processes and practices. As with management systems, outcomes are realized most effectively and efficiently when they are understood and managed as deliberate, interrelated processes.=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -283,8 +283,8 @@
                     "title": "Did you take the impact of the =gb=AI system=ge= on the potential =gb=end-users=ge= and/or =gb=subjects=ge= into account?=hb=AI systems should not have a one-size-fits-all approach and should consider Universal Design principles addressing the widest possible range of users, following relevant accessibility standards.  This will enable equitable access and active participation of all people in existing and emerging computer-mediated human activities and with regard to assistive technologies.<br/>EGTAI p.18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -294,8 +294,8 @@
                     "title": "Did you assess whether the team involved in building the =gb=AI system=ge= engaged with the possible target =gb=end-users=ge= and/or =gb=subjects=ge=?=hb=AI systems should not have a one-size-fits-all approach and should consider Universal Design principles addressing the widest possible range of users, following relevant accessibility standards.  This will enable equitable access and active participation of all people in existing and emerging computer-mediated human activities and with regard to assistive technologies.<br/>EGTAI p.18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -305,8 +305,8 @@
                     "title": "Did you assess whether there could be groups who might be disproportionately affected by the outcomes of the system?=hb=AI systems should not have a one-size-fits-all approach and should consider Universal Design principles addressing the widest possible range of users, following relevant accessibility standards.<br/>EGTAI p 18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -322,8 +322,8 @@
                     "title": "Did you assess the risk of the possible =gb=unfairness=ge= of the system onto the =gb=end-users=ge=' or =gb=subjects=ge=' communities?=hb=Data sets used by AI systems (both for training and operation) may suffer from the inclusion of inadvertent historic bias, incompleteness and bad governance models. The continuation of such biases could lead to unintended (in)direct prejudice and discrimination  against certain groups or people, potentially exacerbating prejudice and marginalisation. Harm can also result from the intentional exploitation of (consumer) biases or by engaging in unfair competition, such as the homogenisation of prices by means of collusion or a non-transparent market.<br/>EGTAI p. 18=he=",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -339,11 +339,11 @@
                     "title": "Based on your answers to the previous questions, how would you rate the measures you implemented to ensure =gb=accessibility=ge= and =gb=Universal Design=ge=?=hb=A Design for All approach takes account of human diversity to extend the range of users. This approach inspires innovation in organisations so that management value an inclusive and non-stigmatizing mindset and supports a culture, which prioritises people. The Design for All approach and innovation ensure optimal practices and activities, so that operations have the best tools and resources in place to enable them to achieve accessible products, goods and services, i.e. what this document refers to as 'accessibility outcomes'. Accessibility seeks to prevent and remove barriers, ensuring that persons with disabilities have access to products, goods and services on an equal basis with others. Accessibility as an outcome from integrating a Design for All approach throughout the whole organization can maximize the range of potential users of products, goods and services. Extending the range of users can increase markets. It can also increase the proportion of the population, including persons with disabilities, able to participate fully and independently in society. The accessibility of products, goods and services realized by Design for All can benefit all users. Every organization can benefit from this approach.=he=",
                     "isScored": 1,
                     "answers": [
-                        "Non-existent",
-                        "Completely inadequate",
-                        "Almost adequate",
-                        "Adequate",
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely Inadequate","score":1},
+                        {"answer":"Almost adequate","score":5},
+                        {"answer":"Adequate","score":7}, 
+                        {"answer":"Fully adequate","score":9}
                     ]
                 }
             ]
@@ -363,8 +363,8 @@
                     "type": "radio",
                     "isScored": 0,
                     "answers": [
-                        "Yes",
-                        "No"
+                        {"answer":"Yes","score":0},
+                        {"answer":"No","score":0}
                     ]
                 },
                 {
@@ -374,11 +374,11 @@
                     "visibleIf": "",
                     "isScored": 1,
                     "answers": [
-                        "Non-existent",
-                        "Completely inadequate",
-                        "Almost adequate",
-                        "Adequate",
-                        "Fully adequate"
+                        {"answer":"Non-existent","score":0},
+                        {"answer":"Completely Inadequate","score":1},
+                        {"answer":"Almost adequate","score":5},
+                        {"answer":"Adequate","score":7}, 
+                        {"answer":"Fully adequate","score":9}
                     ]
                 }
             ]
