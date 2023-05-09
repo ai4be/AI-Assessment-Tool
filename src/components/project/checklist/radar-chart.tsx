@@ -74,14 +74,14 @@ const RadarChart = ({ categories, scoresPerCatId }: { categories: Category[], sc
   const [config, setConfig] = React.useState<any>(defaultConfig)
   const [labels, setLabels] = useState<string[]>([])
   const [datasets, setDatasets] = useState<any[]>([{
-    label: 'Dataset 1',
+    label: 'req-questions',
     data: [],
     borderColor: 'rgb(255, 99, 132)',
     backgroundColor: 'rgba(255, 99, 132, 0.2)',
     lineTension
   }
   // , {
-  //   label: 'Dataset 2',
+  //   label: 'blue-questions',
   //   data: [],
   //   borderColor: 'rgb(54, 162, 235)',
   //   backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -96,9 +96,9 @@ const RadarChart = ({ categories, scoresPerCatId }: { categories: Category[], sc
       localLabels = categories.map((cat) => cat.name.split(' '))
       localDatasets[0].data = categories.map((c) => (scoresPerCatId?.[c._id] ?? 0) * 100)
       // localDatasets[1].data = categories.map(() => Math.round(Math.random() * 100))
+      setLabels(localLabels)
+      setDatasets(localDatasets)
     }
-    setLabels(localLabels)
-    setDatasets(localDatasets)
   }, [categories, scoresPerCatId])
 
   useEffect(() => {
