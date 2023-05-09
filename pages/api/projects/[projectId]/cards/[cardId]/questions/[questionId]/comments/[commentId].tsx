@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { cardBelongsToProject, hasProjectAccess, isConnected } from '@/util/temp-middleware'
+import { cardBelongsToProject, hasProjectAccess, isConnected } from '@/util/custom-middleware'
 import { deleteCommentAndCreateActivity, getComment, updateCommentAndCreateActivity } from '@/src/models/comment'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

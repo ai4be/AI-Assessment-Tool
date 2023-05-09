@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { addRoleAndCreateActivity } from '@/src/models/role'
-import { isConnected, hasProjectAccess, getUserFromRequest } from '@/util/temp-middleware'
+import { isConnected, hasProjectAccess, getUserFromRequest } from '@/util/custom-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId } = req.query

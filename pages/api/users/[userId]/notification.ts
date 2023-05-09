@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { upsertNotification, getNotifications } from '@/src/models/notification'
-import { isConnected } from '@/util/temp-middleware'
+import { isConnected } from '@/util/custom-middleware'
 import { getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { getUser } from '@/src/models/user'

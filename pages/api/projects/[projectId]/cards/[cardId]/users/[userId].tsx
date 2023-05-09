@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { hasProjectAccess, isConnected, getUserFromRequest } from '@/util/temp-middleware'
+import { hasProjectAccess, isConnected, getUserFromRequest } from '@/util/custom-middleware'
 import { addUserToCardAndCreateActivity, removeUserFromCardAndCreateActivity } from '@/src/models/card'
 import { getProjectUsers } from '@/src/models/project'
 

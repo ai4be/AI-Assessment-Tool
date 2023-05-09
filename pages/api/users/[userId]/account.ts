@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { isConnected, isCurrentUser } from '@/util/temp-middleware'
+import { isConnected, isCurrentUser } from '@/util/custom-middleware'
 import templates from '@/util/mail/templates'
 import { sendMail } from '@/util/mail'
 import { getUser, getUsers, updateToDeletedUser } from '@/src/models/user'

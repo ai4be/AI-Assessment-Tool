@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
+import { hasProjectAccess, isConnected } from '@/util/custom-middleware'
 import { getColumns } from '@/src/models/column'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

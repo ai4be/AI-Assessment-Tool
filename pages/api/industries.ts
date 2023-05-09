@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { isConnected } from '@/util/temp-middleware'
+import { isConnected } from '@/util/custom-middleware'
 
 export const industries = [
   'Accommodation and Food Services',
