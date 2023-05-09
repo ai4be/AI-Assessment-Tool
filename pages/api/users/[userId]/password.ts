@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { updatePassword } from '@/src/models/user'
-import { isConnected, isCurrentUser } from '@/util/temp-middleware'
+import { isConnected, isCurrentUser } from '@/util/custom-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { userId } = req.query

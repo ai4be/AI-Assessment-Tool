@@ -3,7 +3,7 @@ import { createProjectWithDefaultColumnsAndCardsAndActivity, getProject, getUser
 import { dataToCards } from '@/src/models/card'
 import { defaultCards, defaultRoles } from '@/src/data'
 import { addRoles } from '@/src/models/role'
-import { isConnected } from '@/util/temp-middleware'
+import { isConnected } from '@/util/custom-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const anyReq = req as any

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { hasApiKey } from '@/util/temp-middleware'
+import { hasApiKey } from '@/util/custom-middleware'
 import { JobProjectActivityNotification } from '@/src/models/job/job-project-activity-notification'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {

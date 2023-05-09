@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getInactiveProjectUsers, getProjectUsers } from '@/src/models/project'
-import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
+import { isConnected, hasProjectAccess } from '@/util/custom-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { projectId } = req.query

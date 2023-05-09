@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { isConnected, getUserFromRequest } from '@/util/temp-middleware'
+import { isConnected, getUserFromRequest } from '@/util/custom-middleware'
 import Activity from '@/src/models/activity'
 import { getUserProjects } from '@/src/models/project'
 

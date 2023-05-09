@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getUser } from '@/src/models/user'
-import { isConnected, isCurrentUser } from '@/util/temp-middleware'
+import { isConnected, isCurrentUser } from '@/util/custom-middleware'
 import { isEmailValid } from '@/util/validator'
 import { createEmailVerificationToken, deleteToken, getToken, TokenStatus, TokenType } from '@/src/models/token'
 import { cleanEmail } from '@/src/models/mongodb'

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { updateCardAndCreateActivities } from '@/src/models/card'
-import { hasProjectAccess, isConnected } from '@/util/temp-middleware'
+import { hasProjectAccess, isConnected } from '@/util/custom-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { cardId } = req.query

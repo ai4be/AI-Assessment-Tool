@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { isConnected, hasProjectAccess, getUserFromRequest } from '@/util/temp-middleware'
+import { isConnected, hasProjectAccess, getUserFromRequest } from '@/util/custom-middleware'
 import { removeUserAndCreateActivity } from '@/src/models/project'
 import templates from '@/util/mail/templates'
 import { sendMail } from '@/util/mail'

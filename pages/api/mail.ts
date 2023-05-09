@@ -7,7 +7,7 @@ import { authOptions } from './auth/[...nextauth]'
 import { isEmailValid } from '@/util/validator'
 import { sendMail } from '@/util/mail'
 import templates from '@/util/mail/templates'
-import { isConnected, hasProjectAccess } from '@/util/temp-middleware'
+import { isConnected, hasProjectAccess } from '@/util/custom-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const session = await unstable_getServerSession(req, res, authOptions)
