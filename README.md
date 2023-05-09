@@ -13,6 +13,7 @@
   - [Contributing](#contributing)
   - [License](#license)
   - [Tests](#tests)
+  - [Run a single file](#run-a-single-file)
 
 ## Overview
 
@@ -63,9 +64,9 @@ Install docker on your machine and start it
 
 ## What's next 🚀
 
-- Add testing
 - Improve styling (responsiveness styling)
 - Add Web Accessibility
+- Add request validation
 
 ## Tech stacks
 
@@ -92,4 +93,15 @@ yarn test
 
 # to run specific tests executed from the base directory
 yarn test --rootDir $PWD __tests__/api/projects/index.test.ts "__tests__/api/auth/\[...nextauth\].test.ts"
+```
+
+## Run a single file
+
+In order to run a single Typescript file from the project you need to include `-r tsconfig-paths/register` to have all paths defined in the `ts-config.json` working.
+Otherwise all the `@/src/`, `@/pages/`, etc. paths will not work.
+
+The package `tsconfig-paths` is included in the dev dependencies of the project.
+
+```bash
+ts-node -r tsconfig-paths/register <my-script>.ts
 ```

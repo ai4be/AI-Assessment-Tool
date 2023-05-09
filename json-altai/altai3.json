@@ -21,7 +21,9 @@
                     "type": "radio",
                     "isScored": 0,
                     "answers": [
-                        "Yes", "No", "Don't know"
+                        { "answer":"Yes","score":0 },
+                        { "answer":"No","score":0 },
+                        { "answer":"Don't know","score":0 }
                     ]
                 }, {
                     "id": "PDG-Q2-B",
@@ -30,7 +32,8 @@
                     "visibleIf": "{PDG-Q1-B} notempty",
                     "isScored": 0,
                     "answers": [
-                        "Yes", "No"
+                        { "answer":"Yes","score":0 },
+                        { "answer":"No","score":0 }
                     ]
                 }, {
                     "id": "PDG1",
@@ -39,20 +42,23 @@
                     "visibleIf": "{PDG-Q2-B} notempty",
                     "isScored": 0,
                     "answers": [
-                        "Yes", "To some extent", "No", "Don't know"
+                        { "answer":"Yes","score":0 },
+                        { "answer":"To some extent","score":0 },
+                        { "answer":"No","score":0 },
+                        { "answer":"Don't know","score":0 }
                     ]
                 }, {
                     "id": "PDG-Q3-B",
                     "title": "Did you put in place any of the following measures to thoroughly implement the General Data Protection Regulation (GDPR), or non-European equivalent?     ",
                     "type": "checkbox",
-                    "visibleIf": "{PDG1} notempty",
+                    "visibleIf": "{PDG1 } notempty",
                     "isScored": 0,
                     "answers": [
-                        "=gb=Data Protection Impact Assessment=ge= (DPIA). =hb=A DPIA is required whenever processing is likely to result in a high risk to the rights and freedoms of individuals. A DPIA is required at least in the following cases:<ul><li>a systematic and extensive evaluation of the personal aspects of an individual, including profiling;</li><li>processing of sensitive data on a large scale;</li><li>systematic monitoring of public areas on a large scale.</li></ul><a href='https://ec.europa.eu/commission/sites/beta-political/files/national-data-protection-authorities-jan_2018_en.pdf'>National Data Protection Authorities</a>, in concertation with the < a href ='https://europa.eu/european-union/about-eu/institutions-bodies/european-data-protection-supervisor_en'>European Data Protection Board</a>, may provide lists of cases where a DPIA would be required.The DPIA should be conducted before the processing and should be considered as a living tool, not merely as a one - off exercise.Where there are residual risks that can’t be mitigated by the measures put in place, the DPA must be consulted prior to the start of the processing. =br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/when-data-protection-impact-assessment-dpia-required_en'>link</a> =br= <b>References</b> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=611236'>EDPB Guidelines on Data Protection Impact Assessment(DPIA)</a> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e3546-1-1'>Articles 35 and 36 </a> and <a href ='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'> Recitals(89) to(96) of the GDPR </a> =he=",
-                        "Designate a =gb=Data Protection Officer=ge= (DPO) and include him/her at an early stage in the development, procurement or use phase of the =gb=AI system=ge= =hb=Your company/organisation needs to appoint a DPO, whether it's a controller or a processor, if its <b>core activities</b> involve processing of <b>sensitive data</b> on a <b>large scale or involve large scale, regular and systematic monitoring</b> of individuals. In that respect, monitoring the behaviour of individuals includes all forms of tracking and profiling on the internet, including for the purposes of behavioural advertising. =br= Public administrations always have an obligation to appoint a DPO(except for courts acting in their judicial capacity). =br= The DPO may be a staff member of your organisation or may be contracted externally on the basis of a service contact.A DPO can be an individual or an organisation =br==br=<b>References</b> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=612048'>EDPB Guidelines on Data Protection Officers('DPOs')</a> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Articles 37, 38 and 39 and Recital(97) of the GDPR</a> =br= Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/data-protection-officers/does-my-company-organisation-need-have-data-protection-officer-dpo_en:'>link</a>  =he=",
-                        "Oversight mechanisms for data processing (incl. limited access by qualified organisation members, mechanisms for logging data access and modifications)",
-                        "Measures to enhance privacy by design and default (e.g., =gb=encryption, pseudonymisation, aggregation, anonymisation=ge=) =hb=Companies/organisations are encouraged to implement technical and organisational measures, at the earliest stages of the design of the processing operations, in such a way that  safeguards privacy and data protection principles right from the start (‘data protection by design’). By default, companies/organisations should ensure that personal data is processed with the highest privacy protection (for example only the data necessary should be processed, short storage period, limited accessibility) so that by default personal data isn’t made accessible to an indefinite number of persons (‘data protection by default’). =br==br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/what-does-data-protection-design-and-default-mean_en'>link</a> =he=",
-                        "Data minimisation, in particular personal data (incl. special categories of data) =hb=Personal data should only be processed where it isn’t reasonably feasible to carry out the processing in another manner. Where possible, it is preferable to use anonymous data. Where personal data is needed, it should be <b>adequate, relevant, and limited to what is necessary for the purpose (‘data minimisation’)</b>. It’s your company/organisation's responsibility as controller to assess how much data is needed and ensure that irrelevant data isn’t collected. =br= <b>Example</b> =br= Your company / organisation  offers car - sharing services to individuals.For those services it may require the id, address and credit card number of customers and potentially even information on whether the person has a disability(so health data), but not their racial origin =br=<b>References</b> =br= <a href ='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Article 5(1)(c) and Recital(39) of the GDPR</a> =br==br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/principles-gdpr/how-much-data-can-be-collected_en'>link</a>  =he="
+                        { "answer":"=gb=Data Protection Impact Assessment=ge= (DPIA). =hb=A DPIA is required whenever processing is likely to result in a high risk to the rights and freedoms of individuals. A DPIA is required at least in the following cases:<ul><li>a systematic and extensive evaluation of the personal aspects of an individual, including profiling;</li><li>processing of sensitive data on a large scale;</li><li>systematic monitoring of public areas on a large scale.</li></ul><a href='https://ec.europa.eu/commission/sites/beta-political/files/national-data-protection-authorities-jan_2018_en.pdf'>National Data Protection Authorities</a>, in concertation with the < a href ='https://europa.eu/european-union/about-eu/institutions-bodies/european-data-protection-supervisor_en'>European Data Protection Board</a>, may provide lists of cases where a DPIA would be required.The DPIA should be conducted before the processing and should be considered as a living tool, not merely as a one - off exercise.Where there are residual risks that can’t be mitigated by the measures put in place, the DPA must be consulted prior to the start of the processing. =br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/when-data-protection-impact-assessment-dpia-required_en'>link</a> =br= <b>References</b> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=611236'>EDPB Guidelines on Data Protection Impact Assessment(DPIA)</a> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e3546-1-1'>Articles 35 and 36 </a> and <a href ='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'> Recitals(89) to(96) of the GDPR </a> =he=","score":0 },
+                        { "answer":"Designate a =gb=Data Protection Officer=ge= (DPO) and include him/her at an early stage in the development, procurement or use phase of the =gb=AI system=ge= =hb=Your company/organisation needs to appoint a DPO, whether it's a controller or a processor, if its <b>core activities</b> involve processing of <b>sensitive data</b> on a <b>large scale or involve large scale, regular and systematic monitoring</b> of individuals. In that respect, monitoring the behaviour of individuals includes all forms of tracking and profiling on the internet, including for the purposes of behavioural advertising. =br= Public administrations always have an obligation to appoint a DPO(except for courts acting in their judicial capacity). =br= The DPO may be a staff member of your organisation or may be contracted externally on the basis of a service contact.A DPO can be an individual or an organisation =br==br=<b>References</b> =br= <a href='https://ec.europa.eu/newsroom/article29/item-detail.cfm?item_id=612048'>EDPB Guidelines on Data Protection Officers('DPOs')</a> =br= <a href='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Articles 37, 38 and 39 and Recital(97) of the GDPR</a> =br= Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/data-protection-officers/does-my-company-organisation-need-have-data-protection-officer-dpo_en:'>link</a>  =he=","score":0 },
+                        { "answer":"Oversight mechanisms for data processing (incl. limited access by qualified organisation members, mechanisms for logging data access and modifications)","score":0 },
+                        { "answer":"Measures to enhance privacy by design and default (e.g., =gb=encryption, pseudonymisation, aggregation, anonymisation=ge=) =hb=Companies/organisations are encouraged to implement technical and organisational measures, at the earliest stages of the design of the processing operations, in such a way that  safeguards privacy and data protection principles right from the start (‘data protection by design’). By default, companies/organisations should ensure that personal data is processed with the highest privacy protection (for example only the data necessary should be processed, short storage period, limited accessibility) so that by default personal data isn’t made accessible to an indefinite number of persons (‘data protection by default’). =br==br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/obligations/what-does-data-protection-design-and-default-mean_en'>link</a> =he=","score":0 },
+                        { "answer":"Data minimisation, in particular personal data (incl. special categories of data) =hb=Personal data should only be processed where it isn’t reasonably feasible to carry out the processing in another manner. Where possible, it is preferable to use anonymous data. Where personal data is needed, it should be <b>adequate, relevant, and limited to what is necessary for the purpose (‘data minimisation’)</b>. It’s your company/organisation's responsibility as controller to assess how much data is needed and ensure that irrelevant data isn’t collected. =br= <b>Example</b> =br= Your company / organisation  offers car - sharing services to individuals.For those services it may require the id, address and credit card number of customers and potentially even information on whether the person has a disability(so health data), but not their racial origin =br=<b>References</b> =br= <a href ='https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e40-1-1'>Article 5(1)(c) and Recital(39) of the GDPR</a> =br==br=Source: <a href='https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations/principles-gdpr/how-much-data-can-be-collected_en'>link</a>  =he=","score":0 }
                     ]
                 }, {
                     "id": "PDG-Q4-B",
@@ -61,7 +67,8 @@
                     "visibleIf": "{PDG-Q3-B} notempty",
                     "isScored": 0,
                     "answers": [
-                        "Yes", "No"
+                        { "answer":"Yes","score":0 },
+                        { "answer":"No","score":0 }
                     ]
                 }, {
                     "id": "PDG-Q5-B",
@@ -70,7 +77,8 @@
                     "visibleIf": "{PDG-Q4-B} notempty",
                     "isScored": 0,
                     "answers": [
-                        "Yes", "No"
+                        { "answer":"Yes","score":0 },
+                        { "answer":"No","score":0 }
                     ]
                 }, {
                     "id": "PDG-Q6-B",
@@ -79,7 +87,8 @@
                     "visibleIf": "{PDG-Q5-B} notempty",
                     "isScored": 0,
                     "answers": [
-                        "Yes", "No"
+                        { "answer":"Yes","score":0 },
+                        { "answer":"No","score":0 }
                     ]
                 }, {
                     "id": "PDG-Q7-B",
@@ -88,7 +97,8 @@
                     "visibleIf": "{PDG-Q6-B} notempty",
                     "isScored": 0,
                     "answers": [
-                        "Yes", "No"
+                        { "answer":"Yes","score":0 },
+                        { "answer":"No","score":0 }
                     ]
                 }, {
                     "id": "PDG-S1-R",
@@ -97,7 +107,11 @@
                     "visibleIf": "{PDG-Q7-B} notempty",
                     "isScored": 1,
                     "answers": [
-                        "Non-existent", "Completely Inadequate", "Almost adequate", "Adequate", "Fully adequate"
+                        { "answer":"Non-existent","score":0 },
+                        { "answer":"Completely inadequate","score":1 },
+                        { "answer":"Almost adequate","score":2 },
+                        { "answer":"Adequate","score":3 },
+                        { "answer":"Fully adequate","score":4 }
                     ]
                 }
             ]

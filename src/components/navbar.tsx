@@ -40,7 +40,7 @@ interface Props {
 }
 
 export const AI4BelgiumIcon = (): JSX.Element => (
-  <div className='px-3 py-5 flex flex-col justify-center icon-grey-color font-semibold text-lg cursor-pointer'>
+  <div className='px-3 py-3 flex flex-col justify-center icon-grey-color font-semibold text-lg cursor-pointer'>
     <span>
       AI<sub className='icon-blue-color text-lg'>4</sub>Belgium
     </span>

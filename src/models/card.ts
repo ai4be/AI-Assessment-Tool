@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
 import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
 import { getColumnsByProjectId } from '@/src/models/column'
-import { Card, STAGE_VALUES, Question } from '@/src/types/card'
+import { Card, STAGE_VALUES, Question, Answer } from '@/src/types/card'
 import { isEmpty, isEqual } from '@/util/index'
 import Activity from '@/src/models/activity'
 
@@ -203,7 +203,7 @@ export const dataToCards = async (data: any[], projectId?: string | ObjectId, co
         ...q,
         TOCnumber: `${returnCard.TOCnumber}.${i + 1}`,
         title: q.title,
-        ...(q.answers != null ? { answers: q.answers.map((a: any) => typeof a === 'string' ? a.trim() : a) } : {})
+        ...(q.answers != null ? { answers: q.answers.map((a: Answer) => { a.answer = a.answer.trim(); return a }) } : {})
       }))
       cards.push(returnCard)
       idx++

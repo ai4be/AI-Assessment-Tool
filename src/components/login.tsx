@@ -1,4 +1,4 @@
-import React, { MouseEvent, useContext, useEffect, useState } from 'react'
+import React, { KeyboardEvent, MouseEvent, useContext, useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import {
   Flex,
@@ -46,8 +46,8 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
     setDisabled(isEmpty(values.email) || isEmpty(values.password))
   }, [values.email, values.password])
 
-  const loginUser = async (e: MouseEvent): Promise<void> => {
-    e.preventDefault()
+  const loginUser = async (e?: MouseEvent): Promise<void> => {
+    e?.preventDefault()
     if (!isEmailValid(values.email)) {
       showToast({
         title: t('validations:invalid-email'),
@@ -96,6 +96,14 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
       [name]: value
     })
   }
+
+  const handleKeyDown = (e: KeyboardEvent): void => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (!disabled) void loginUser()
+    }
+  }
+
   /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <>
@@ -154,6 +162,7 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
                   onChange={handleChange}
                   autoComplete='off'
                   data-testid='email'
+                  onKeyDown={handleKeyDown}
                 />
 
               </FormControl>
@@ -167,6 +176,7 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
                     autoComplete='off'
                     onChange={handleChange}
                     data-testid='password'
+                    onKeyDown={handleKeyDown}
                   />
                   <InputRightElement>
                     <IconButton

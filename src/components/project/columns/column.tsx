@@ -97,7 +97,7 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
   }
 
   const handleKeyDown = (e: KeyboardEvent): void => {
-    if (e.keyCode === 13) {
+    if (e.key === 'Enter') {
       e.preventDefault()
       setEditBoxVisibility(false)
     }

@@ -26,13 +26,19 @@ export type DisplayCard = Card & {
 export enum QuestionType {
   RADIO = 'radio',
   CHECKBOX = 'checkbox',
-  TEXT = 'text'
+  TEXT = 'text',
+  COMMENT = 'comment'
+}
+
+export interface Answer {
+  answer: string
+  score: number
 }
 
 export interface Question {
   id: string
   title: string
-  answers: string[]
+  answers: Answer[]
   isVisibleIf: string
   type: QuestionType
   isScored: boolean | number

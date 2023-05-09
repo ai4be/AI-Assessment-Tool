@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Box
 } from '@chakra-ui/react'
@@ -68,36 +68,46 @@ const listenerFn = (e: any): void => {
   }
 }
 
-const RadarChart = ({ categories }: { categories: Category[] }): JSX.Element => {
+const RadarChart = ({ categories, scoresPerCatId }: { categories: Category[], scoresPerCatId: { [key: string]: number } }): JSX.Element => {
   const el = useRef<HTMLCanvasElement>(null)
 
-  const datasets: any[] = [{
-    label: 'Dataset 1',
+  const [config, setConfig] = React.useState<any>(defaultConfig)
+  const [labels, setLabels] = useState<string[]>([])
+  const [datasets, setDatasets] = useState<any[]>([{
+    label: 'req-questions',
     data: [],
     borderColor: 'rgb(255, 99, 132)',
     backgroundColor: 'rgba(255, 99, 132, 0.2)',
     lineTension
-  }, {
-    label: 'Dataset 2',
-    data: [],
-    borderColor: 'rgb(54, 162, 235)',
-    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-    lineTension
-  }]
+  }
+  // , {
+  //   label: 'blue-questions',
+  //   data: [],
+  //   borderColor: 'rgb(54, 162, 235)',
+  //   backgroundColor: 'rgba(54, 162, 235, 0.2)',
+  //   lineTension
+  // }
+  ])
 
-  let labels: any[] = []
-  if (Array.isArray(categories)) {
-    labels = categories.map((cat) => cat.name.split(' '))
-    const data1 = categories.map(() => Math.round(Math.random() * 100))
-    const data2 = categories.map(() => Math.round(Math.random() * 100))
-    datasets[0].data = data1
-    datasets[1].data = data2
-  }
-  const data = {
-    labels,
-    datasets
-  }
-  const config = { ...defaultConfig, data }
+  useEffect(() => {
+    let localLabels: any[] = []
+    const localDatasets: any[] = [...datasets]
+    if (Array.isArray(categories)) {
+      localLabels = categories.map((cat) => cat.name.split(' '))
+      localDatasets[0].data = categories.map((c) => (scoresPerCatId?.[c._id] ?? 0) * 100)
+      // localDatasets[1].data = categories.map(() => Math.round(Math.random() * 100))
+      setLabels(localLabels)
+      setDatasets(localDatasets)
+    }
+  }, [categories, scoresPerCatId])
+
+  useEffect(() => {
+    const data = {
+      labels,
+      datasets
+    }
+    setConfig({ ...defaultConfig, data })
+  }, [labels, datasets])
 
   useEffect(() => {
     if (el.current != null) {

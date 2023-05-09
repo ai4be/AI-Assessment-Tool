@@ -1,4 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import useSWR from 'swr'
+import { useTranslation } from 'next-i18next'
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
 import ChecklistTopBar from '@/src/components/project/checklist/top-bar'
 import { Project, Category, Section } from '@/src/types/project'
@@ -9,10 +12,7 @@ import { fetcher } from '@/util/api'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 import { isEmpty } from '@/util/index'
 import { setQuestionCleanTitle } from '@/util/question'
-import { useRouter } from 'next/router'
-import useSWR from 'swr'
-import { Card, Question } from '@/src/types/card'
-import { useTranslation } from 'next-i18next'
+import { Answer, Card, Question, QuestionType } from '@/src/types/card'
 
 interface Props {
   project: Project
@@ -38,6 +38,8 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
   const { data: dataCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
   const [filteredCategories, setFilteredCategories] = useState<Category[]>(categories)
   const [categoriesToShow, setCategoriesToShow] = useState<Category[]>(categories)
+  const [scoredQuestionsPerCategory, setScoredQuestions] = useState<{ [key: string]: Question[] }>({})
+  const [normalizedScoredPerCategory, setNormalizedScoredPerCategory] = useState<{ [key: string]: number }>({})
 
   useEffect(() => {
     if (Array.isArray(categoriesToShow)) {
@@ -54,9 +56,37 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
   }, [categoriesToShow, categoryId])
 
   useEffect(() => {
+    const localNormalizedScorePerCategory: { [key: string]: number } = {}
+    for (const cat of categories) {
+      const catScoredQuestions = scoredQuestionsPerCategory[cat._id]
+      if (catScoredQuestions == null || catScoredQuestions.length === 0) {
+        localNormalizedScorePerCategory[cat._id] = 0
+        continue
+      }
+
+      for (const question of catScoredQuestions) {
+        const { answers, responses } = question
+        let maxQuestionScore: number = 0
+        let catScore: number = 0
+        if (question.type === QuestionType.CHECKBOX) {
+          maxQuestionScore = answers.reduce((acc: number, curr: Answer) => acc + curr.score, 0)
+          catScore = responses?.reduce((acc: number, ansIdx: number) => acc + answers[ansIdx].score, 0) ?? 0
+        } else if (question.type === QuestionType.RADIO) {
+          maxQuestionScore = Math.max(...answers.map(a => a.score))
+          catScore = responses != null && responses.length > 0 ? answers[responses[0]].score : 0
+        }
+        const normalizedScored = maxQuestionScore > 0 ? catScore / maxQuestionScore : 0
+        localNormalizedScorePerCategory[cat._id] = normalizedScored
+      }
+    }
+    setNormalizedScoredPerCategory(localNormalizedScorePerCategory)
+  }, [scoredQuestionsPerCategory, categories])
+
+  useEffect(() => {
     if (Array.isArray(categories) && Array.isArray(dataCards)) {
       dataCards.forEach(c => c.questions.map((q: Question) => setQuestionCleanTitle(q)))
       const catToShow: Category[] = []
+      const localScoredQuestionsPerCategory: { [key: string]: Question[] } = {}
       for (const cat of categories) {
         if (isEmpty(cat.sections)) {
           cat.sections = [{
@@ -72,9 +102,12 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
           }
         }
         const cards = cat.sections.map(s => s.cards).flatMap(c => c ?? [])
+        const catScoredQuestions = cards.flatMap(c => c.questions).filter(q => q.isScored)
+        localScoredQuestionsPerCategory[cat._id] = catScoredQuestions
         if (cards.length > 0) catToShow.push(cat)
       }
       setCategoriesToShow(catToShow)
+      setScoredQuestions(localScoredQuestionsPerCategory)
     }
   }, [categories, dataCards])
 
@@ -84,9 +117,9 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
         <Button backgroundColor='#2811ED' color='white' onClick={() => window?.print()}>{t('buttons:export')}</Button>
       </Flex>
       <Text color='#1C1E20' fontSize='18px' className='hidden print:block'>1. Overview</Text>
-      <OverviewComponent categories={categoriesToShow} />
+      <OverviewComponent categories={categoriesToShow} scoresPerCatId={normalizedScoredPerCategory} />
       <Text color='#1C1E20' fontSize='18px' className='hidden print:block' marginTop='1rem'>2. Assessment</Text>
-      <RadarChart categories={categoriesToShow} />
+      <RadarChart categories={categoriesToShow} scoresPerCatId={normalizedScoredPerCategory} />
       <ChecklistTopBar categories={categoriesToShow} />
       <Box className='hidden print:block break-before-page' />
       <CategoryQuestions project={project} categories={filteredCategories} marginTop='1rem' cards={dataCards} />

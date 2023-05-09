@@ -50,7 +50,7 @@ export const questionEnabler = (questions: DisplayQuestion[]): void => {
           } else if (condition.includes('=')) {
             const res = condition.match(/=\s?'(.+)'/i)
             const [, value] = res ?? []
-            const responsesValues = Array.isArray(q?.responses) ? q?.responses.map((r: any) => q.answers[r]) : []
+            const responsesValues = Array.isArray(q?.responses) ? q?.responses.map((r: number) => q.answers[r]?.answer) : []
             const includesValue: boolean = responsesValues.includes(value)
             isConditionTrue = hasNotBefore ? !includesValue : includesValue
             disabledText = hasNotBefore ? `${q?.TOCnumber as string} equals '${value}'` : `${q?.TOCnumber as string} does not equals '${value}'`

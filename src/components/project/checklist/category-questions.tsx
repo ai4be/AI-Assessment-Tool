@@ -46,7 +46,7 @@ const CategoryQuestions: FC<Props> = ({ project, categories, cards, ...boxProps 
                     </GridItem>
                     <GridItem colSpan={1}>
                       <Text fontWeight='semibold' fontSize='sm' color='var(--main-blue)' textAlign='center' onClick={() => { void setCardQuery(c._id, q.id) }} cursor='pointer'>
-                        {Array.isArray(q.responses) && !isEmpty(q.responses) ? q.answers[q.responses[0]] : '-'}
+                        {Array.isArray(q.responses) && !isEmpty(q.responses) ? q.answers[q.responses[0]].answer : '-'}
                       </Text>
                     </GridItem>
                     <GridItem colSpan={1} height='100%' justifySelf='center' paddingTop='0.5rem' className='hidden print:block'>

@@ -1,10 +1,10 @@
 import sanitize from 'mongo-sanitize'
 import { Db, MongoClient, ObjectId } from 'mongodb'
-import { isEmpty } from '@/util/index'
+import { isEmpty } from '../../util/index'
 
 const { MONGODB_URI, MONGODB_DB } = process.env
 
-if (MONGODB_URI == null || MONGODB_URI === '') {
+if (isEmpty(MONGODB_URI)) {
   throw new Error('Please define the MONGODB_URI environment variable inside the .env files')
 }
 
