@@ -66,6 +66,10 @@ mentions {
   outline: 0;
 }
 
+.mentions__suggestions {
+  z-index: 2 !important;
+}
+
 .mentions__suggestions__list {
   background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.15);
