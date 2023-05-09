@@ -30,7 +30,7 @@
             "id": "1673974585",
             "title": "Does the AI system respect the rights of the child",
             "example" : [
-               "The AI system must be designed to not collect or store any data that could be used to identify an individual child, and must always obtain the informed consent of a parent or guardian before any data is collected.", "The AI system must also be designed to provide a safe and secure environment for children to interact with, and must not allow any third-party access to the data collected or stored by the AI system." 
+               "The AI system must be designed to not collect or store any data that could be used to identify an individual child, and must always obtain the informed consent of a parent or guardian before any data is collected.", "The AI system must also be designed to provide a safe and secure environment for children to interact with, and must not allow any third-party access to the data collected or stored by the AI system."
             ],
             "desc": "",
             "questions": [

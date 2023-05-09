@@ -26,7 +26,8 @@ export type DisplayCard = Card & {
 export enum QuestionType {
   RADIO = 'radio',
   CHECKBOX = 'checkbox',
-  TEXT = 'text'
+  TEXT = 'text',
+  COMMENT = 'comment'
 }
 
 export interface Answer {

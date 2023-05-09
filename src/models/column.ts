@@ -1,9 +1,9 @@
 
-import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
 import sanitize from 'mongo-sanitize'
+import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
 import { isEmpty } from '@/util/index'
-import { deleteCards } from './card'
+import { deleteCards } from '@/src/models/card'
 
 export const TABLE_NAME = 'columns'
 
