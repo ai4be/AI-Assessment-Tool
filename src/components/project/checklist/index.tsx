@@ -117,7 +117,7 @@ const Checklist: FC<Props> = ({ project, categories, sections }): JSX.Element =>
         <Button backgroundColor='#2811ED' color='white' onClick={() => window?.print()}>{t('buttons:export')}</Button>
       </Flex>
       <Text color='#1C1E20' fontSize='18px' className='hidden print:block'>1. Overview</Text>
-      <OverviewComponent categories={categoriesToShow} />
+      <OverviewComponent categories={categoriesToShow} scoresPerCatId={normalizedScoredPerCategory} />
       <Text color='#1C1E20' fontSize='18px' className='hidden print:block' marginTop='1rem'>2. Assessment</Text>
       <RadarChart categories={categoriesToShow} scoresPerCatId={normalizedScoredPerCategory} />
       <ChecklistTopBar categories={categoriesToShow} />
