@@ -1,7 +1,7 @@
 import SignUp from '@/src/components/signup'
 import { getServerSession } from 'next-auth/next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { authOptions } from './api/auth/[...nextauth]'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import sanitize from 'mongo-sanitize'
 import { getUser } from '@/src/models/user'
 import { getToken, TokenStatus } from '@/src/models/token'

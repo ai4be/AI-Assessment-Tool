@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { authOptions } from './api/auth/[...nextauth]'
 import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 
 export function Page (): JSX.Element {
   return (<></>)

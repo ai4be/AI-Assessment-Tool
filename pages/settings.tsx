@@ -1,11 +1,11 @@
-import Settings from '@/src/components/settings'
-import SideBar from '@/src/components/side-bar'
-import { unstable_getServerSession } from 'next-auth/next'
-import { authOptions } from './api/auth/[...nextauth]'
+import { getServerSession } from 'next-auth/next'
+import { Session } from 'next-auth'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useState } from 'react'
 import { Box, useBreakpointValue } from '@chakra-ui/react'
-import { Session } from 'next-auth'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import Settings from '@/src/components/settings'
+import SideBar from '@/src/components/side-bar'
 
 const smVariant = { navigation: 'drawer', navigationButton: true }
 const mdVariant = { navigation: 'sidebar', navigationButton: false }
@@ -35,7 +35,7 @@ export default function SettingsPage ({ session }: { session: Session }): JSX.El
 }
 
 export async function getServerSideProps (ctx: any): Promise<any> {
-  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
+  const session = await getServerSession(ctx.req, ctx.res, authOptions)
 
   if (session == null) {
     return {
