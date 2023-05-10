@@ -40,9 +40,9 @@ export const AltaiSections = (): JSX.Element => {
   return (
     <Box py='20vh' px={['15vh', '35vh']} justifyContent='center' color='white' bgColor='rgba(14, 16, 18)'>
       <div className='centralised-container'>
-        <Heading className='centralised-sunshine-gradient-title'>TOOL DESCRIPTION</Heading>
-        <Text fontSize='1em'>Our tool was designed with a multidisciplinary team in mind, enabling team members with diverse expertise to collaborate and have conversations about key topics related to the trustworthiness of their AI implementation.</Text>
-        <Text fontSize='1em' my='5vh'>The tool consists of eight sections:</Text>
+        <Heading className='centralised-sunshine-gradient-title'>Description</Heading>
+        <Text fontSize='1em'>This tool was designed to enable team members with diverse expertise to collaborate and have conversations about key topics related to the trustworthiness of their AI implementation.</Text>
+        <Text fontSize='1em' my='5vh'>Topics assessed</Text>
         <div className='ksXelq'>
           <div className='jdPXMj'>
             <ul className='loozsJ'>
