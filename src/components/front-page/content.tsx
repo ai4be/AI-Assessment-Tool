@@ -1,14 +1,13 @@
 import React from 'react'
 import { Box, Flex, Text, Center, Image, Wrap, Heading, Spacer } from '@chakra-ui/react'
 import Typed from 'typed.js'
-import checkEnvironment from '@/util/check-environment'
 import { TeamMembersContainer } from './team'
 import { AltaiSections } from './altai-sections'
 import { TryItOutButton } from './try-out-button'
-import { WaveBlackToGray, WavePurple, WavesOutline } from './waves'
-import { Waves2 } from '@/src/components/front-page/waves2'
-
-import style from './content.module.css'
+// import checkEnvironment from '@/util/check-environment'
+// import { WaveBlackToGray, WavePurple, WavesOutline } from './waves'
+// import { Waves2 } from '@/src/components/front-page/waves2'
+// import style from './content.module.css'
 
 export const Content = (): JSX.Element => {
   return (
@@ -50,37 +49,37 @@ const Part1 = (): JSX.Element => {
   )
 }
 
-const Waves = (): JSX.Element => {
-  return (
-    <div>
-      <svg className={style.waves} xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink' viewBox='0 24 150 28' preserveAspectRatio='none' shape-rendering='auto'>
-        <defs>
-          <path id='gentle-wave' d='M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z' />
-        </defs>
-        <g className={style.parallax}>
-          <use xlinkHref='#gentle-wave' x='48' y='0' fill='hsla(265, 60%, 18%, 0.95)' />
-          <use xlinkHref='#gentle-wave' x='48' y='3' fill='hsl(267deg 50% 11%)' />
-          <use xlinkHref='#gentle-wave' x='48' y='5' fill='rgba(255,255,255,0.3)' />
-          <use xlinkHref='#gentle-wave' x='48' y='7' fill='#fff' />
-        </g>
-      </svg>
-    </div>
-  )
-}
+// const Waves = (): JSX.Element => {
+//   return (
+//     <div>
+//       <svg className={style.waves} xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink' viewBox='0 24 150 28' preserveAspectRatio='none' shape-rendering='auto'>
+//         <defs>
+//           <path id='gentle-wave' d='M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z' />
+//         </defs>
+//         <g className={style.parallax}>
+//           <use xlinkHref='#gentle-wave' x='48' y='0' fill='hsla(265, 60%, 18%, 0.95)' />
+//           <use xlinkHref='#gentle-wave' x='48' y='3' fill='hsl(267deg 50% 11%)' />
+//           <use xlinkHref='#gentle-wave' x='48' y='5' fill='rgba(255,255,255,0.3)' />
+//           <use xlinkHref='#gentle-wave' x='48' y='7' fill='#fff' />
+//         </g>
+//       </svg>
+//     </div>
+//   )
+// }
 
 const Part2 = (): JSX.Element => {
   return (
     <Box py='2em' color='white' fontSize='2em' bgColor='rgba(14, 16, 18)' boxSizing='border-box'>
       <Heading fontSize={['1em']} className='heading-gradient-pink-yellow-white'>Highlight Areas of Risk</Heading>
-      <Text fontSize={['1em']} mt='2em'>In today's fast-paced world, organizations are increasingly adopting AI to streamline operations and improve decision-making. However, AI systems must be developed and <Text as='span' >implemented with caution</Text>, ensuring that they do not compromise fundamental human rights or perpetuate bias and discrimination. Our tool provides a comprehensive assessment of your organization's AI implementation, <Text as='span' >highlighting areas of strength and areas for improvement.</Text></Text>
+      <Text fontSize={['1em']} mt='2em'>In today's fast-paced world, organizations are increasingly adopting AI to streamline operations and improve decision-making. However, AI systems must be developed and <Text as='span'>implemented with caution</Text>, ensuring that they do not compromise fundamental human rights or perpetuate bias and discrimination. Our tool provides a comprehensive assessment of your organization's AI implementation, <Text as='span'>highlighting areas of strength and areas for improvement.</Text></Text>
       <Heading mt='2em' className='highlight pink' fontSize={['1em']}>
         Recommendations Report
       </Heading>
-      <Text fontSize={['1em']} mt='2em'>You will also receive detailed <Text as='span'>suggestions and guidance</Text> for improving the trustworthiness of your AI system. This will enable you to build and maintain <Text as='span' >trust</Text> with your customers, employees, and other stakeholders, and <Text as='span' >mitigate the risks</Text> associated with AI implementation.</Text>
+      <Text fontSize={['1em']} mt='2em'>You will also receive detailed <Text as='span'>suggestions and guidance</Text> for improving the trustworthiness of your AI system. This will enable you to build and maintain <Text as='span'>trust</Text> with your customers, employees, and other stakeholders, and <Text as='span'>mitigate the risks</Text> associated with AI implementation.</Text>
       <Heading mt='2em' className='highlight pink' fontSize={['1em']}>You are in control</Heading>
-      <Text fontSize={['1em']} mt='2em'>One of the key benefits of our <Text as='span'>open-source</Text> tool is that it can be <Text as='span' >hosted and fully controlled by your organization</Text>. This means that you can maintain complete ownership and control over your data and assessments.</Text>
-      <Text fontSize={['1em']} mt='2em'>Host the tool on your own servers, you can also ensure that the tool <Text as='span'>meets your</Text> organization's specific <Text as='span' >security and privacy requirements</Text>.</Text>
-      <Text fontSize={['1em']} mt='2em'><Text as='span' textDecoration='underline' fontWeight='bold'>OPEN-SOURCE</Text>, modify and adapt the tool to fit your <Text as='span' >organization's unique needs</Text>.</Text>
+      <Text fontSize={['1em']} mt='2em'>One of the key benefits of our <Text as='span'>open-source</Text> tool is that it can be <Text as='span'>hosted and fully controlled by your organization</Text>. This means that you can maintain complete ownership and control over your data and assessments.</Text>
+      <Text fontSize={['1em']} mt='2em'>Host the tool on your own servers, you can also ensure that the tool <Text as='span'>meets your</Text> organization's specific <Text as='span'>security and privacy requirements</Text>.</Text>
+      <Text fontSize={['1em']} mt='2em'><Text as='span' textDecoration='underline' fontWeight='bold'>OPEN-SOURCE</Text>, modify and adapt the tool to fit your <Text as='span'>organization's unique needs</Text>.</Text>
       <Text fontSize={['1em']} mt='2em'>This flexibility and control make our tool an ideal solution for organizations looking to assess the trustworthiness of their AI systems while maintaining full control over their data and assessments.</Text>
       <Center mt='10vh'>
         <TryItOutButton link='https://github.com/ai4be/AI-Assessment-Tool' label='Install it here' />

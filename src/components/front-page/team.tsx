@@ -44,7 +44,7 @@ const teamMemberData = [
     workTitle: ' Manager BOSA - AI - Minds Team ',
     social: 'https://www.linkedin.com/in/nathanael-ackerman-4715881/',
     quote: 'Nathanaël Ackerman is the managing director of the AI4Belgium coalition and Digital Mind for Belgium appointed by the Secretary of State for Digitalization. He is also head of the “AI – Blockchain & Digital Minds” team for the Belgian Federal Public Service Strategy and Support (BoSa).'
-  },
+  }
 ]
 
 const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTitle } }): JSX.Element => {

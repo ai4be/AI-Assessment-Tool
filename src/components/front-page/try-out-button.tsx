@@ -108,4 +108,3 @@ export const TryItOutButton = ({ link, label }): JSX.Element => {
     </div>
   )
 }
-
