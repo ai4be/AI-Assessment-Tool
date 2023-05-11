@@ -135,7 +135,7 @@ const Login = ({ onSubmit }: { onSubmit?: Function }): JSX.Element => {
         />
         <Box
           p='25px 40px'
-          width={['80%', '60%', '45%', '25%']}
+          width={['80%', '60%', '400px', '400px']}
           borderRadius='3px'
           bg='white'
           boxShadow='rgb(0 0 0 / 10%) 0 0 10px'

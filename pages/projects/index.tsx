@@ -1,12 +1,12 @@
+import { useState } from 'react'
+import useSWR from 'swr'
+import { getServerSession } from 'next-auth/next'
+import { useBreakpointValue } from '@chakra-ui/react'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Projects from '@/src/components/projects'
 import SideBar from '@/src/components/side-bar'
-import { authOptions } from '../api/auth/[...nextauth]'
-import useSWR from 'swr'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { fetcher } from '@/util/api'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getServerSession } from 'next-auth/next'
-import { useState } from 'react'
-import { useBreakpointValue } from '@chakra-ui/react'
 
 const smVariant = { navigation: 'drawer', navigationButton: true }
 const mdVariant = { navigation: 'sidebar', navigationButton: false }

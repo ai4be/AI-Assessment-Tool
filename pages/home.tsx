@@ -1,4 +1,4 @@
-import Page, { getServerSideProps as getServerSidePropsImported } from './projects/index'
+import Page, { getServerSideProps as getServerSidePropsImported } from '@/pages/projects/index'
 
 export default Page
 
