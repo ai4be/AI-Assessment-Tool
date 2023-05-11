@@ -1,0 +1,110 @@
+// team.tsx begin
+.team_member {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  // margin-bottom: 64px;
+  min-width: 520px;
+
+  &:not(:first-child) {
+    margin-top: 64px;
+  }
+
+  figure img {
+    display: block;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    margin: 0 auto 32px;
+    margin-top: 7px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 0px 4px var(--color-background),
+      0px 0px 0px 6px var(--color-gray-700);
+  }
+
+  figure figcaption {
+    margin-top: 32px;
+    text-align: center;
+    color: var(--color-gray-700);
+    a {
+      display: block;
+      font-size: 21px;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: hsl(265deg 100% 80%);
+      margin-bottom: 8px;
+    }
+    a:hover {
+      -webkit-text-decoration: underline;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      -webkit-text-decoration-thickness: 1px;
+      text-decoration-thickness: 1px;
+    }
+  }
+
+  blockquote {
+    position: relative;
+    font-size: var(--font-size, 24px);
+    font-weight: 300;
+    text-align: center;
+    margin: 0 16px;
+    padding: 0 16px;
+    color: #ffffff;
+    @media (max-width: 700px) {
+      & {
+        font-size: 1em;
+      }
+    }
+    strong {
+      color: hsl(45deg 100% 60%);
+    }
+    &.not-safari strong {
+      background-color: #ffb23e;
+      background-image: linear-gradient(
+        182deg,
+        #ffffff 15%,
+        hsl(54deg 100% 70%),
+        hsl(36deg 100% 55%)
+      );
+      background-size: 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -moz-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -moz-text-fill-color: transparent;
+    }
+    &:before, &:after {
+      position: absolute;
+      top: -25px;
+      font-size: 72px;
+      pointer-events: none;
+      opacity: 0.25;
+    }
+    &:before {
+      content: '“';
+      left: 0;
+      -webkit-transform: translateX(-80%);
+      -ms-transform: translateX(-80%);
+      transform: translateX(-80%);
+    }
+    &:after {
+      content: '”';
+      right: 0;
+      -webkit-transform: translateX(80%);
+      -ms-transform: translateX(80%);
+      transform: translateX(80%);
+    }
+  }
+}
+
+.team_container {
+  section {
+    padding-top: 2vw;
+    padding-bottom: 4vw;
+  }
+}

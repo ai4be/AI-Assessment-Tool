@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Box, Text, Image, Stack, Button, useColorModeValue, Container, VisuallyHidden } from '@chakra-ui/react'
-import { FaGithub, FaNewspaper } from 'react-icons/fa'
+import { FaGithub } from 'react-icons/fa'
 
 const Logo = (): JSX.Element => {
   return (
@@ -37,7 +37,7 @@ const SocialButton = ({ children, label, href }: { children: ReactNode, label: s
 
 export const Footer = (): JSX.Element => {
   return (
-    <Box bgColor='rgba(20, 17, 24)' color='white'>
+    <Box bgColor='transparent' color='white' pb='30%' mt='3em'>
       <Container
         as={Stack}
         maxW='6xl'
@@ -48,13 +48,10 @@ export const Footer = (): JSX.Element => {
         align={{ base: 'center', md: 'center' }}
       >
         <Logo />
-        <Text>Made with love ❤️ in Belgium</Text>
+        <Text>With the support of <a href='https://michel.belgium.be/fr/cellule-strat%C3%A9gique-et-secr%C3%A9tariat' target='blank' className='text-pink-600'>cabinet Michel</a> and <a href='https://desutter.belgium.be/fr/contact' target='blank' className='text-pink-600'>cabinet De Sutter</a>.</Text>
         <Stack direction='row' spacing={8}>
-          <SocialButton label='GitHub' href='https://github.com/AI4Belgium/AI-Assessment-Tool'>
+          <SocialButton label='GitHub' href='https://github.com/ai4be/AI-Assessment-Tool'>
             <FaGithub />
-          </SocialButton>
-          <SocialButton label='Docs' href='#'>
-            <FaNewspaper />
           </SocialButton>
         </Stack>
       </Container>

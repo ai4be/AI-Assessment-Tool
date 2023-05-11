@@ -1,5 +1,6 @@
 
 import { Box, Text, Heading } from '@chakra-ui/react'
+import style from './altai-sections.module.scss'
 
 const altaiSections = [
   {
@@ -38,17 +39,17 @@ const altaiSections = [
 
 export const AltaiSections = (): JSX.Element => {
   return (
-    <Box py='20vh' px={['15vh', '35vh']} justifyContent='center' color='white' bgColor='rgba(14, 16, 18)'>
+    <Box justifyContent='center' color='white' bgColor='rgba(14, 16, 18)'>
       <div className='centralised-container'>
-        <Heading className='centralised-sunshine-gradient-title'>Description</Heading>
+        <Heading fontSize={['1em']} className='centralised-sunshine-gradient-title'>Description</Heading>
         <Text fontSize='1em'>This tool was designed to enable team members with diverse expertise to collaborate and have conversations about key topics related to the trustworthiness of their AI implementation.</Text>
-        <Text fontSize='1em' my='5vh'>Topics assessed</Text>
-        <div className='ksXelq'>
-          <div className='jdPXMj'>
-            <ul className='loozsJ'>
+        <Text fontSize='1em' my='2em'>Topics assessed</Text>
+        <Box position='relative' margin='0 -32px'>
+          <div className={style.section_container}>
+            <ul className={style['section-list']}>
               {altaiSections.map((altaiSection, i) => (
-                <li key={i} className='bwvpxK'>
-                  <span className='lkSYSE'>
+                <li key={i} className={style['section-list-element']}>
+                  <span>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
                       width='20'
@@ -71,10 +72,10 @@ export const AltaiSections = (): JSX.Element => {
               ))}
             </ul>
           </div>
-          <div className='kWZXb' />
-        </div>
-        <div className='gradient-fade-section bmXsqC' />
-        <div className='gradient-fade-section cRgQMO' />
+          <div className={style.right_gradient} />
+        </Box>
+        <div className='gradient-fade-section gradient-position-bottom-400' />
+        <div className='gradient-fade-section gradient-position-bottom' />
       </div>
     </Box>
   )

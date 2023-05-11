@@ -1,8 +1,9 @@
-import { Box } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import React from 'react'
 import { Content } from './content'
 import { Footer } from './footer'
 import { AI4BelgiumHeader } from './header'
+import { Waves2 } from './waves2'
 
 /* TODO frontpage
 Test page using different dimension. I've used iPhone SE resolution for mobile test.
@@ -34,10 +35,11 @@ const FrontPage = (): JSX.Element => {
         {css}
       </style>
       <AI4BelgiumHeader />
-      <Box height='100%'>
+      <Flex height='100%' flexDirection='column' alignItems='center' boxSizing='border-box'>
         <Content />
         <Footer />
-      </Box>
+      </Flex>
+      <Waves2 />
     </>
   )
 }

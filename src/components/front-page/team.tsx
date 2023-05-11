@@ -1,5 +1,6 @@
 import React from 'react'
 import { Box, Center, Heading, Flex, Wrap } from '@chakra-ui/react'
+import style from './team.module.scss'
 
 const teamMemberData = [
   {
@@ -48,13 +49,13 @@ const teamMemberData = [
 
 const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTitle } }): JSX.Element => {
   return (
-    <Box className='dKpDmq'>
+    <Box className={style.team_member}>
       <figure>
-        <img src={src} className='fbemPN' />
-        <blockquote className='izllJD not-safari'>
+        <img src={src} />
+        <figcaption className='XeeXd'><a href={social}>{name}</a>{workTitle}</figcaption>
+        <blockquote className='not-safari'>
           {quote}
         </blockquote>
-        <figcaption className='XeeXd'><a href={social}>{name}</a>{workTitle}</figcaption>
       </figure>
     </Box>
   )
@@ -62,25 +63,17 @@ const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTit
 
 export const TeamMembersContainer = (): JSX.Element => {
   return (
-    <Box py='20vh' px={['5vh', '15vh']} fontSize='2em' bgColor='rgba(20, 17, 24)'>
-      <section>
-        <section className='kxXjAn'>
-          <div className='sLKkl'>
-            <div className='gupFpE'>
-              <Center>
-                <Heading fontSize={['2em', '1em']} className='highlight dark-yellow'>MEET OUR TEAM</Heading>
-              </Center>
-              <Flex mt='10vh'>
-                <Wrap>
-                  {teamMemberData.map((tm, i) => (
-                    <TeamMemberAvatarBlock key={i} teamMember={tm} />
-                  ))}
-                </Wrap>
-              </Flex>
-            </div>
-          </div>
-        </section>
-      </section>
+    <Box py='20vh' px={['5vh', '15vh']} fontSize='2em' className={style.team_container}>
+      <Box as='section' position='relative' zIndex='2'>
+        <Center>
+          <Heading fontSize={['2em', '1em']} className='highlight dark-yellow'>Meet the <span className='text-white'>AI</span><span className='text-sky-600'>4</span><span className='text-white'>Belgium</span> Ethics <span className='text-base'>&</span> Law <span className='text-white'>advisory board</span></Heading>
+        </Center>
+        <Flex mt='10vh'>
+          <Wrap>
+            {teamMemberData.map((tm, i) => <TeamMemberAvatarBlock key={i} teamMember={tm} />)}
+          </Wrap>
+        </Flex>
+      </Box>
     </Box>
   )
 }

@@ -7,20 +7,20 @@ const AI4BelgiumIcon = (): JSX.Element => (
   </Box>
 )
 
-export const AI4BelgiumHeader = (): JSX.Element => (
-  <Flex minWidth='max-content' alignItems='center' gap='2' p='2' bgColor='rgba(14,16,18)'>
-    <AI4BelgiumIcon />
-    <Spacer />
-    <Breadcrumb color='white' opacity='0.75' px='3' py='5' fontWeight='medium' fontSize={['4xl', 'lg']}>
-      <BreadcrumbItem>
-        <BreadcrumbLink href='#'>Docs</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbItem>
-        <BreadcrumbLink href='https://github.com/AI4Belgium/AI-Assessment-Tool'>Source</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbItem isCurrentPage>
-        <BreadcrumbLink href={checkEnvironment()}>Demo</BreadcrumbLink>
-      </BreadcrumbItem>
-    </Breadcrumb>
-  </Flex>
-)
+export const AI4BelgiumHeader = (): JSX.Element => {
+  const url = `${checkEnvironment()}/login`
+  return (
+    <Flex minWidth='max-content' alignItems='center' gap='2' p='2' bgColor='rgba(14,16,18)'>
+      <AI4BelgiumIcon />
+      <Spacer />
+      <Breadcrumb color='white' opacity='0.75' px='3' py='5' fontWeight='medium' fontSize={['4xl', 'lg']}>
+        <BreadcrumbItem>
+          <BreadcrumbLink href='https://github.com/AI4Belgium/AI-Assessment-Tool'>Source</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink href={url}>Demo</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
+    </Flex>
+  )
+}
