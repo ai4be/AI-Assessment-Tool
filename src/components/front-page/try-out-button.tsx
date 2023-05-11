@@ -1,4 +1,4 @@
-export const TryItOutButton = ({ link, label }): JSX.Element => {
+export const TryItOutButton = ({ link, label }: { link: string, label: string }): JSX.Element => {
   const css = `b {
     position: relative;
     display: block;

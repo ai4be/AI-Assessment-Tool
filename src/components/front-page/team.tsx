@@ -47,12 +47,12 @@ const teamMemberData = [
   }
 ]
 
-const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTitle } }): JSX.Element => {
+const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTitle } }: { teamMember: { src: string, quote: string, social: string, name: string, workTitle: string } }): JSX.Element => {
   return (
     <Box className={style.team_member}>
       <figure>
         <img src={src} />
-        <figcaption className='XeeXd'><a href={social}>{name}</a>{workTitle}</figcaption>
+        <figcaption><a href={social}>{name}</a>{workTitle}</figcaption>
         <blockquote className='not-safari'>
           {quote}
         </blockquote>
