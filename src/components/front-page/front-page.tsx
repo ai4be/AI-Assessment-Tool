@@ -3,7 +3,7 @@ import React from 'react'
 import { Content } from './content'
 import { Footer } from './footer'
 import { AI4BelgiumHeader } from './header'
-import { Waves2 } from './waves2'
+import { Waves } from './waves'
 
 /* TODO frontpage
 Test page using different dimension. I've used iPhone SE resolution for mobile test.
@@ -27,7 +27,10 @@ In case you need to clone Josh website for reference, use: https://saveweb2zip.c
 */
 const FrontPage = (): JSX.Element => {
   const css = `body {
-    background-color: rgba(14,16,18)
+    background-color: rgba(14,16,18);
+  }
+  * {
+    box-sizing: border-box;
   }`
   return (
     <>
@@ -35,11 +38,11 @@ const FrontPage = (): JSX.Element => {
         {css}
       </style>
       <AI4BelgiumHeader />
-      <Flex height='100%' flexDirection='column' alignItems='center' boxSizing='border-box'>
+      <Flex flexDirection='column' alignItems='center'>
         <Content />
         <Footer />
       </Flex>
-      <Waves2 />
+      <Waves />
     </>
   )
 }

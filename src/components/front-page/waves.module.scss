@@ -4,9 +4,12 @@
   bottom: 0;
   left: 0;
   text-align: center;
-  min-height: 30%;
+  height: 25%;
   @media (max-width: 450px) {
-    max-height: 20%;
+    max-height: 15%;
+  }
+  @media (orientation:landscape) {
+    max-height: 15%;
   }
 }
 
