@@ -3,8 +3,15 @@
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  box-sizing: border-box;
+  display: block;
+
+  @media (min-width: 900px) {
+    max-width: 520px;
+  }
+
   // margin-bottom: 64px;
-  min-width: 520px;
+  // min-width: 520px;
 
   &:not(:first-child) {
     margin-top: 64px;
@@ -48,6 +55,7 @@
   }
 
   blockquote {
+    box-sizing: border-box;
     position: relative;
     font-size: var(--font-size, 24px);
     font-weight: 300;
@@ -103,6 +111,7 @@
 }
 
 .team_container {
+  box-sizing: border-box;
   section {
     padding-top: 2vw;
     padding-bottom: 4vw;

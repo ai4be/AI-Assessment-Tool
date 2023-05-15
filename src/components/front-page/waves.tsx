@@ -1,6 +1,6 @@
-import style from './waves2.module.scss'
+import style from './waves.module.scss'
 
-export const Waves2 = (): JSX.Element => {
+export const Waves = (): JSX.Element => {
   return (
     <div className={style.waves}>
       <svg className={style.waves} xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink' viewBox='0 25 150 30' preserveAspectRatio='none' shapeRendering='auto'>

@@ -6,8 +6,12 @@ const Logo = (): JSX.Element => {
   return (
     <>
       <div className='px-3 py-5 flex font-semibold text-lg cursor-pointer'>
-        <Image src='/frontpage/bosa-logo.svg' alt='BOSA logo' height='30px' mr='2vh' />
-        <Text> AI<sub className='icon-blue-color text-lg'>4</sub>Belgium</Text>
+        <a href='https://bosa.belgium.be' target='_blank' rel='noreferrer'>
+          <Image src='/frontpage/bosa-logo.svg' alt='BOSA logo' height='30px' mr='2vh' />
+        </a>
+        <a href='https://ai4belgium.be' target='_blank' rel='noreferrer'>
+          <Text> AI<sub className='icon-blue-color text-lg'>4</sub>Belgium</Text>
+        </a>
       </div>
     </>
   )

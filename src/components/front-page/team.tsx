@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Center, Heading, Flex, Wrap } from '@chakra-ui/react'
+import { Box, Center, Heading, Flex } from '@chakra-ui/react'
 import style from './team.module.scss'
 
 const teamMemberData = [
@@ -63,15 +63,13 @@ const TeamMemberAvatarBlock = ({ teamMember: { src, quote, social, name, workTit
 
 export const TeamMembersContainer = (): JSX.Element => {
   return (
-    <Box py='20vh' px={['5vh', '15vh']} fontSize='2em' className={style.team_container}>
+    <Box py={['2em', '4em']} fontSize='2em' className={style.team_container}>
       <Box as='section' position='relative' zIndex='2'>
         <Center>
-          <Heading fontSize={['2em', '1em']} className='highlight dark-yellow'>Meet the <span className='text-white'>AI</span><span className='text-sky-600'>4</span><span className='text-white'>Belgium</span> Ethics <span className='text-base'>&</span> Law <span className='text-white'>advisory board</span></Heading>
+          <Heading fontSize={['1.5em', '2em']} className='highlight dark-yellow'>Meet the <span className='text-white'>AI</span><span className='text-sky-600'>4</span><span className='text-white'>Belgium</span> Ethics <span className='text-base'>&</span> Law <span className='text-white'>advisory board</span></Heading>
         </Center>
-        <Flex mt='10vh'>
-          <Wrap>
-            {teamMemberData.map((tm, i) => <TeamMemberAvatarBlock key={i} teamMember={tm} />)}
-          </Wrap>
+        <Flex mt='10vh' flexDirection='column' alignItems='center'>
+          {teamMemberData.map((tm, i) => <TeamMemberAvatarBlock key={i} teamMember={tm} />)}
         </Flex>
       </Box>
     </Box>

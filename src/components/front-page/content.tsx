@@ -11,7 +11,7 @@ import { TryItOutButton } from './try-out-button'
 
 export const Content = (): JSX.Element => {
   return (
-    <Flex id='content-div' flexDirection='column' boxSizing='border-box' maxWidth={['100%', '100%', '1000px', '1200px']} justifyContent='center' alignItems='center' px={['2em', '3em']}>
+    <Flex flexDirection='column' boxSizing='border-box' justifyContent='center' alignItems='center' px={['2em', '3em']}>
       <Part1 />
       {/* <WavesOutline /> */}
       <Part2 />
@@ -32,9 +32,7 @@ const Part1 = (): JSX.Element => {
     <Box py='2em' color='white' fontSize='2em' textAlign={['center', 'left']} bgColor='rgba(20, 17, 24)' boxSizing='border-box'>
       <Flex flexDirection='column' justifyContent='space-between' mt='5vh'>
         <Wrap>
-          <Box maxWidth='40vh'>
-            <TypingEffect texts={['ethical?', 'trustworthy?', 'racially unbiased?']} />
-          </Box>
+          <TypingEffect texts={['ethical?', 'trustworthy?', 'racially unbiased?']} />
           <Spacer />
           <Box>
             <Image src='/frontpage/demo1.png' alt='Demo image' height='30vh' width='50vh' />
@@ -42,8 +40,8 @@ const Part1 = (): JSX.Element => {
         </Wrap>
       </Flex>
       <Box mt='10vh'>
-        <Text fontSize={['2em', '1em']}>Welcome to our <span className='text-gradient-purple-light-blue'>Open Source</span> <span className='wave-underline yellow'>multidisciplinary</span> and <span className='wave-underline green'>interactive</span> online tool for assessing the trustworthiness of an organization's AI implementation.</Text>
-        <Text fontSize={['2em', '1em']} mt='5vh'>The tool is based on the <span className='wave-underline purple'>ALTAI</span> recommendations published by the <span className='text-gradient-light-blue-purple'>European Commission</span> and is designed to help organizations ensure their AI systems are transparent, robust, and trustworthy.</Text>
+        <Text fontSize={['1em', '1.5em']}>Welcome to our <span className='text-gradient-purple-light-blue'>Open Source</span> <span className='wave-underline yellow'>multidisciplinary</span> and <span className='wave-underline green'>interactive</span> online tool for assessing the trustworthiness of an organization's AI implementation.</Text>
+        <Text fontSize={['1em', '1.5em']} mt='5vh'>The tool is based on the <span className='wave-underline purple'>ALTAI</span> recommendations published by the <span className='text-gradient-light-blue-purple'>European Commission</span> and is designed to help organizations ensure their AI systems are transparent, robust, and trustworthy.</Text>
       </Box>
     </Box>
   )
@@ -131,7 +129,7 @@ const TypingEffect = ({ texts }: { texts: string[] }): JSX.Element => {
   }, [])
 
   return (
-    <Box w='12em' h={['350px', '250px']}>
+    <Box w='50%' h={['350px', '250px']}>
       <Text className='text-gradient-purple-light-blue' style={{ fontSize: '2em' }}>Is your AI</Text>
       <span className='text-gradient-purple-light-blue' style={{ fontSize: '2em', width: 'fit-content' }} ref={el} />
     </Box>
