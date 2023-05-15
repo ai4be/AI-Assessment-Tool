@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import React from 'react'
 import { Content } from './content'
 import { Footer } from './footer'
@@ -37,12 +37,14 @@ const FrontPage = (): JSX.Element => {
       <style>
         {css}
       </style>
-      <AI4BelgiumHeader />
-      <Flex flexDirection='column' alignItems='center'>
-        <Content />
-        <Footer />
-      </Flex>
-      <Waves />
+      <Box width='100%' maxWidth='1200px' margin='0 auto'>
+        <AI4BelgiumHeader />
+        <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+          <Content />
+          <Footer />
+        </Flex>
+        <Waves />
+      </Box>
     </>
   )
 }
