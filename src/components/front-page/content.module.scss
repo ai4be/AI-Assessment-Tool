@@ -51,3 +51,34 @@
       min-height: 40px;
   }
 }
+
+.content {
+  @media (min-width: 1200px) {
+    max-width: 1000px;
+  }
+}
+
+.part1 {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  .intro {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    div:first-child {
+      margin-bottom: 2em;
+    }
+  }
+  @media (min-width: 768px) {
+    padding-top: 2em;
+    padding-bottom: 2em;
+    .intro {
+      flex-direction: row;
+      // justify-content: space-between;
+      align-items: center;
+      & > * {
+        width: 45%;
+      }
+    }
+  }
+}
