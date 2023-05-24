@@ -1,10 +1,11 @@
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, MouseEvent, useContext, useEffect, useState } from 'react'
 import {
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  BoxProps,
   Flex,
   Modal,
   ModalBody,
@@ -14,7 +15,9 @@ import {
   Text,
   Box,
   Select,
-  Avatar
+  Avatar,
+  useBreakpointValue,
+  IconButton
 } from '@chakra-ui/react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import ProjectContext from '@/src/store/project-context'
@@ -31,6 +34,7 @@ import QuestionAndComments from '@/src/components/project/modals/question-and-co
 import { Comment } from '@/src/types/comment'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
 // ugly hack to get around the fact that the SingleDatepicker  Property 'children' does not exist on type 'IntrinsicAttributes & SingleDatepickerProps'.
 const SingleDatepicker2 = SingleDatepicker as any
@@ -55,11 +59,11 @@ const AccordionItemStyled = ({ title, desc }: { title: string, desc: string | st
         }}
         _focus={{ boxShadow: 'none !important' }}
       >
-        <Text color='var(--main-blue)' fontSize='sm' as='b'>{title}</Text>
+        <Text color='var(--main-blue)' fontSize={['xs', 'xs', 'sm']} as='b'>{title}</Text>
         <AccordionIcon />
       </AccordionButton>
-      <AccordionPanel pb={4} border='none'>
-        {desc}
+      <AccordionPanel pb={[2, 2, 4]} border='none' fontSize={['xs', 'xs', 'sm']}>
+        <Text fontSize={['xs', 'xs', 'sm']}>{desc}</Text>
       </AccordionPanel>
     </AccordionItem>
   )
@@ -135,66 +139,64 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
   }, [unscoredQuestions, questionId, commentsFetched])
 
   return (
-    <Modal size='xl' onClose={onClose} isOpen={isOpen} isCentered>
+    <Modal size={['full', 'full', '3xl', '4xl', '6xl']} onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay maxHeight='100%' />
       {/* https://github.com/chakra-ui/chakra-ui/discussions/2676 */}
-      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100vh', '90vh']} position='relative' mr='2' ml='2'>
-        <ModalBody p='0' height='100%' display='flex' width='100%' overflowY='scroll' position='relative'>
-          <Flex flexDirection='column' height='100%' width='100%' justifyContent='space-between'>
-            <Box display='flex'>
-              <Box width='100%' marginTop='2rem' marginX='4'>
-                <Box ml='-4' position='relative'>
-                  <Box width='4px' bgColor='var(--main-blue)' borderRightRadius='15px' height='100%' position='absolute' left='0' top='0' />
-                  <Text fontSize={[16, 20]} fontWeight='400' px='4'>
-                    {card.TOCnumber} {card.title.replace(/=g(b|e)=/g, '')}
-                  </Text>
-                </Box>
-                {card.example != null &&
-                  <Accordion allowToggle allowMultiple>
-                    {Array.isArray(card.example) && <AccordionItemStyled title={`${t('titles:example')}`} desc={card.example.map((txt, idx) => <p key={idx}>{txt}</p>)} />}
-                    {typeof card.example === 'string' && <AccordionItemStyled title={`${t('titles:example')}`} desc={card.example} />}
-                    {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
-                  </Accordion>}
+      <ModalContent maxW='64rem' overflow='hidden' minHeight='50vh' maxHeight={['100dvh', '100dvh', '90vh']} position='relative' px={[0, 0, '2']}>
+        <ModalBody p='0' height='100%' display='flex' flexDirection='column' justifyContent='space-between' width='100%' overflowY='scroll' position='relative' overflowX='hidden'>
+          <Box display='flex' height='100%'>
+            <Box pt='2rem' px={[0, 0, '4']} minW='0'>
+              <Box ml={[0, 0, '-4']} position='relative'>
+                <Box width='4px' bgColor='var(--main-blue)' borderRightRadius='15px' height='100%' position='absolute' left='0' top='0' />
+                <Text fontSize={[14, 16, 20]} fontWeight='400' px='4'>
+                  {card.TOCnumber} {card.title.replace(/=g(b|e)=/g, '')}
+                </Text>
+              </Box>
+              {card.example != null &&
+                <Accordion allowToggle allowMultiple>
+                  {Array.isArray(card.example) && <AccordionItemStyled title={`${t('titles:example')}`} desc={card.example.map((txt, idx) => <p key={idx}>{txt}</p>)} />}
+                  {typeof card.example === 'string' && <AccordionItemStyled title={`${t('titles:example')}`} desc={card.example} />}
+                  {/* <AccordionItemStyled title='Recommendation' desc={loremIpsum} /> */}
+                </Accordion>}
 
-                <Accordion defaultIndex={0} allowToggle borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' marginY='1rem'>
-                  <AccordionItem
-                    border='none'
-                    isFocusable={false}
+              <Accordion defaultIndex={0} allowToggle borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' marginY='1rem' mx={['5px', '5px', 0]}>
+                <AccordionItem
+                  border='none'
+                  isFocusable={false}
+                  _hover={{
+                    boxShadow: 'none',
+                    border: 'none'
+                  }}
+                  _focus={{ boxShadow: 'none !important' }}
+                  _expanded={{ boxShadow: 'none' }}
+                >
+                  <AccordionButton
+                    display='flex' alignItems='center' justifyContent='space-between' boxShadow='none'
                     _hover={{
                       boxShadow: 'none',
                       border: 'none'
                     }}
                     _focus={{ boxShadow: 'none !important' }}
-                    _expanded={{ boxShadow: 'none' }}
                   >
-                    <AccordionButton
-                      display='flex' alignItems='center' justifyContent='space-between' boxShadow='none'
-                      _hover={{
-                        boxShadow: 'none',
-                        border: 'none'
-                      }}
-                      _focus={{ boxShadow: 'none !important' }}
-                    >
-                      <Text fontSize={[12, 16]} color='var(--text-gray)' fontWeight='200' px='4' display='inline'>
-                        The following questions will help you in your evaluation
-                      </Text>
-                      <AccordionIcon />
-                    </AccordionButton>
-                    <AccordionPanel pb={4} border='none'>
-                      {unscoredQuestions.map((q: DisplayQuestion, index: number) =>
-                        <QuestionAndComments key={`${cardId}-${q.id}-${index}`} p={3} question={q} cardId={cardId} projectId={projectId} questionSaveCallback={recalculateEnableing} />)}
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-                {scoredQuestions?.length > 0 &&
-                  <Box marginBottom='1rem' borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' paddingY='1rem'>
-                    {scoredQuestions.map((q: DisplayQuestion, index: number) =>
+                    <Text fontSize={[10, 12, 16]} color='var(--text-gray)' fontWeight='200' px='4' display='inline'>
+                      The following questions will help you in your evaluation
+                    </Text>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel pb={4} border='none'>
+                    {unscoredQuestions.map((q: DisplayQuestion, index: number) =>
                       <QuestionAndComments key={`${cardId}-${q.id}-${index}`} p={3} question={q} cardId={cardId} projectId={projectId} questionSaveCallback={recalculateEnableing} />)}
-                  </Box>}
-              </Box>
-              <Sidebar card={card} />
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+              {scoredQuestions?.length > 0 &&
+                <Box marginBottom='1rem' borderRadius='lg' className='shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]' border='1px solid var(--main-blue)' paddingY='1rem' mx={['5px', '5px', 0]}>
+                  {scoredQuestions.map((q: DisplayQuestion, index: number) =>
+                    <QuestionAndComments key={`${cardId}-${q.id}-${index}`} p={3} question={q} cardId={cardId} projectId={projectId} questionSaveCallback={recalculateEnableing} />)}
+                </Box>}
             </Box>
-          </Flex>
+            <Sidebar card={card} minWidth={['140px', ' 180px', '241px']} flexBasis='auto' />
+          </Box>
         </ModalBody>
       </ModalContent>
     </Modal>
@@ -203,7 +205,11 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
 
 export default CardDetailsModal
 
-const Sidebar = ({ card }: { card: Card }): JSX.Element => {
+interface SidebarProps extends BoxProps {
+  card: Card
+}
+
+const Sidebar = ({ card, ...boxProps }: SidebarProps): JSX.Element => {
   const { t } = useTranslation()
   const cardId = String(card._id)
   const projectId = String(card.projectId)
@@ -213,6 +219,9 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
   const [assignedUsers, setAssignedUsers] = useState<any[]>([])
   const [, setIsLoading] = useState(false)
   const { nonDeletedUsers } = useContext(ProjectContext)
+  const [collapsed, setCollapsed] = useState(true)
+
+  const isMobile: boolean = useBreakpointValue({ base: true, sm: true, md: false }) ?? true
 
   const saveCard = async (data: Partial<Card>): Promise<void> => {
     setIsLoading(true)
@@ -279,12 +288,48 @@ const Sidebar = ({ card }: { card: Card }): JSX.Element => {
     setAssignedUsers(nonDeletedUsers?.filter(user => userIds.includes(user._id)) ?? [])
   }, [card.userIds, renderTrigger])
 
+  const props = {
+    ...boxProps
+  }
+  const boxProps2: BoxProps = {
+
+  }
+  props.transition = 'max-width 1s ease-in-out'
+  if (isMobile && collapsed) {
+    props.maxW = '30px !important'
+    props.minW = 'unset'
+    props.minWidth = 'unset'
+    if (boxProps.minW != null || boxProps.minWidth != null) {
+      boxProps2.minW = boxProps.minW
+      boxProps2.minWidth = boxProps.minWidth
+    }
+  }
+
+  const toggleCollapse = (e: MouseEvent): void => {
+    e.stopPropagation()
+    e.preventDefault()
+    setCollapsed(!collapsed)
+  }
+
   return (
-    <Flex flexDirection='column' minWidth='241px' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt='0'>
-      <Box position='sticky' top='0'>
-        <Flex flexDirection='column'>
+    <Flex flexDirection='column' backgroundColor='#FAFAFA' justifyContent='space-between' p={3} pt={[0]} {...props}>
+      <Box position='sticky' top='0' {...boxProps2}>
+        <Flex flexDirection='column' position='relative'>
+          {isMobile &&
+            <Box left={-4} mr={4} position='absolute'>
+              <IconButton
+                zIndex='1'
+                size='xs'
+                aria-label='Collapse sidebar'
+                isRound
+                icon={collapsed ? <ChevronLeftIcon w={4} h={4} /> : <ChevronRightIcon w={4} h={4} />}
+                variant='outline'
+                backgroundColor='transparent'
+                onClick={toggleCollapse}
+              />
+            </Box>}
           <Flex justifyContent='flex-end'>
-            <ModalCloseButton position='relative' />
+            <ModalCloseButton position='relative' {...(isMobile ? { top: 0, right: 0 } : {})} />
           </Flex>
           <Flex justifyContent='space-between' alignItems='center'>
             <Text color='var(--main-blue)' fontSize='sm' as='b' mb='2'>{t('sidebar:due-date')}</Text>

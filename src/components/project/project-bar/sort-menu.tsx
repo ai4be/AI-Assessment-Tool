@@ -4,7 +4,8 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem
+  MenuItem,
+  useBreakpointValue
 } from '@chakra-ui/react'
 import { BiSortUp, BiSortDown } from 'react-icons/bi'
 import { useRouter } from 'next/router'
@@ -31,6 +32,13 @@ export const SortMenu = (props: SortMenuProps): JSX.Element => {
   const [sortIcon, setSortIcon] = useState<JSX.Element>(<BiSortDown />)
   const [oppositeSortIcon, setOpositeSortIcon] = useState<JSX.Element>(<BiSortUp />)
   const [selectedSort, setSelectedSort] = useState<Sort>(Sort.NUMBER)
+
+  const isMobile: boolean = useBreakpointValue({
+    base: true,
+    xs: true,
+    sm: true,
+    md: false
+  }) ?? true
 
   const SortLabelMapping = {
     [Sort.DUE_DATA]: `${t('filter-sort:sort.due-date')}`,
@@ -59,8 +67,8 @@ export const SortMenu = (props: SortMenuProps): JSX.Element => {
 
   return (
     <Menu>
-      <MenuButton {...props} as={Button} rightIcon={sortIcon} variant='outline' color='var(--main-blue)' size='sm'>
-        {SortLabelMapping[selectedSort]}
+      <MenuButton {...props} as={Button} rightIcon={sortIcon} variant='outline' color='var(--main-blue)' size={['xs', 'sm']}>
+        {isMobile ? '' : SortLabelMapping[selectedSort]}
       </MenuButton>
       <MenuList>
         <MenuItem icon={selectedSort === Sort.NUMBER ? oppositeSortIcon : <BiSortDown />} onClick={(e) => clickHandler(e, Sort.NUMBER)}>

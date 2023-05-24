@@ -6,7 +6,7 @@ import { getUserDisplayName } from '@/util/users'
 import { Card } from '@/src/types/card'
 
 interface Props {
-  showCardDetail: (cardId: string) => void
+  showCardDetail: (cardId: string) => void | Promise<void>
   cardIndex: number
   card: Card
 }
@@ -52,7 +52,7 @@ const CardComponent: FC<Props> = ({ cardIndex, showCardDetail, card }) => {
           _hover={{
             backgroundColor: 'lightblue'
           }}
-          onClick={() => showCardDetail(card._id)}
+          onClick={() => { void showCardDetail(card._id) }}
         >
           <Text fontSize='sm'>{card.TOCnumber} {card.title?.replace(/(=g(b|e)=)/g, '')}</Text>
           {loadAssignedToUser()}

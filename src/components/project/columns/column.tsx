@@ -2,7 +2,8 @@ import React, { useState, useCallback, useEffect, KeyboardEvent, ChangeEvent } f
 import {
   Box,
   Heading,
-  Input
+  Input,
+  BoxProps
 } from '@chakra-ui/react'
 import { Droppable } from 'react-beautiful-dnd'
 import { debounce } from '@/util/index'
@@ -15,6 +16,7 @@ import {
   updateColumn
 } from '@/util/columns'
 import { useTranslation } from 'next-i18next'
+import { Card as CardType } from '@/src/types/card'
 
 enum SortKeys {
   NUMBER = 'number',
@@ -55,7 +57,15 @@ function sortCards (cards: any[], sort: Sort, order: Order): any[] {
   return copy
 }
 
-const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColumns, fetchCards }: any): JSX.Element => {
+interface Props extends BoxProps {
+  showCardDetail: (cardId: string) => void | Promise<void>
+  column: any
+  index: number
+  cards: CardType[]
+  projectId: string
+}
+
+const Column = ({ showCardDetail, column, index, cards, projectId, ...boxProps }: Props): JSX.Element => {
   const { t } = useTranslation()
   // const { data } = useSession()
   const router = useRouter()
@@ -103,25 +113,11 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
     }
   }
 
-  // const handleCardAdd = async (): Promise<void> => {
-  //   setIsLoading(true)
-  //   await addCard(id, projectId, user.id, cards)
-  //   await fetchCards()
-  //   setIsLoading(false)
-  // }
-
   const handleChange = (e: ChangeEvent): void => {
     const val = (e.target as any).value
     setColumnName(val)
     handleColumnNameChange(val)
   }
-
-  // const handleColumnDelete = async (): Promise<void> => {
-  //   setIsLoading(true)
-  //   await deleteColumn(id, projectId)
-  //   await fetchColumns()
-  //   setIsLoading(false)
-  // }
 
   const handleColumnNameChange = useCallback(
     debounce(async (value: string) => await nameChange(value), 800),
@@ -142,45 +138,43 @@ const Column = ({ showCardDetail, column, index, id, cards, projectId, fetchColu
   return (
     <Box
       key={index}
-      width='272px'
       height='calc(100vh - 70px)'
       overflowY='auto'
-      mt='10px'
-      mr='10px'
-      ml={index === 0 ? '0' : '10px'}
-      className='background-light-blue rounded-lg'
+      className='background-light-blue'
+      {...boxProps}
+      rounded='lg'
+      display='flex'
+      flexDirection='column'
     >
-      <Box pb='5px' rounded='lg' display='flex' flexDirection='column' height='100%'>
-        <Box display='flex' alignItems='center' justifyContent='center' className='mt-1.5'>
-          {loadColumnTitle()}
-        </Box>
-        <Droppable2 droppableId={column._id} type='card'>
-          {(provided: any) => (
-            // 2px height is needed to make the drop work when there is no card.
-            <Box ref={provided.innerRef} {...provided.droppableProps} flexGrow={1}>
-              {cardsInSortedSequence?.map((card, index) => (
-                <Card key={index} card={card} cardIndex={index} showCardDetail={showCardDetail} />
-              ))}
-              {provided.placeholder}
-            </Box>
-          )}
-        </Droppable2>
-        {/* <Button
-          size='xs'
-          my='10px'
-          mx='auto'
-          width='80%'
-          color='black'
-          variant='ghost'
-          disabled={isLoading}
-          isLoading={isLoading}
-          display='flex'
-          loadingText='Adding card'
-          onClick={handleCardAdd}
-        >
-          + Add a card
-        </Button> */}
+      <Box display='flex' alignItems='center' justifyContent='center' className='mt-1.5'>
+        {loadColumnTitle()}
       </Box>
+      <Droppable2 droppableId={column._id} type='card'>
+        {(provided: any) => (
+          // 2px height is needed to make the drop work when there is no card.
+          <Box ref={provided.innerRef} {...provided.droppableProps} flexGrow={1}>
+            {cardsInSortedSequence?.map((card, index) => (
+              <Card key={index} card={card} cardIndex={index} showCardDetail={showCardDetail} />
+            ))}
+            {provided.placeholder}
+          </Box>
+        )}
+      </Droppable2>
+      {/* <Button
+        size='xs'
+        my='10px'
+        mx='auto'
+        width='80%'
+        color='black'
+        variant='ghost'
+        disabled={isLoading}
+        isLoading={isLoading}
+        display='flex'
+        loadingText='Adding card'
+        onClick={handleCardAdd}
+      >
+        + Add a card
+      </Button> */}
     </Box>
   )
 }

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { NextRouter, useRouter } from 'next/router'
-import { Flex } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
 import { STAGE_VALUES } from '@/src/types/card'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 
@@ -23,21 +23,21 @@ function stageClickHandler (router: NextRouter, stage: string | null): void {
   }, undefined, { shallow: true })
 }
 
-const ProgressBar: FC<any> = (): JSX.Element => {
+const ProgressBar: FC<any> = ({ ...flexProps }: FlexProps): JSX.Element => {
   const router = useRouter()
   const { [QueryFilterKeys.STAGE]: stage = null } = router.query ?? {}
   const SECTIONS: string[] = [SECTION_ALL, ...STAGE_VALUES, SECTION_CHECKLIST]
   const SECTIONS_MAX_IDX = SECTIONS.length - 1
 
   return (
-    <Flex width='100%' justifyContent='center' alignItems='center' backgroundColor='white' className='print:hidden'>
+    <Flex width='100%' justifyContent='center' alignItems='center' backgroundColor='white' className='print:hidden' maxW={['100%', '100%', 'calc(272px * 4)']} {...flexProps}>
       {SECTIONS.map((s, idx) => (
         <Flex
           onClick={(): void => stageClickHandler(router, s === SECTION_ALL ? null : s.toUpperCase())}
           cursor='pointer'
           key={s + String(idx)}
           width={idx > 0 ? `calc(${100 / SECTIONS.length}% + ${marginLeft})` : `${100 / SECTIONS.length}%`}
-          height='38px'
+          height={['28px', '38px']}
           justifyContent='center'
           alignItems='center'
           className='capitalize'
@@ -45,7 +45,7 @@ const ProgressBar: FC<any> = (): JSX.Element => {
           lineHeight='32px'
           color={String(stage).toUpperCase() === s.toUpperCase() || (stage == null && s === SECTION_ALL) ? 'white' : '#6B6B6B'}
           fontFamily='Noto Sans'
-          fontSize='16px'
+          fontSize={['0.6rem', '1rem']}
           fontStyle='normal'
           fontWeight='500'
           borderWidth={borderWidth}

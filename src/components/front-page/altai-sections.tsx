@@ -41,10 +41,10 @@ export const AltaiSections = (): JSX.Element => {
   return (
     <Box justifyContent='center' color='white' bgColor='rgba(14, 16, 18)'>
       <div className={style.centralised_container}>
-        <Heading fontSize={['1em']} className={style['centralised-sunshine-gradient-title']}>Description</Heading>
-        <Text fontSize='1em'>This tool was designed to enable team members with diverse expertise to collaborate and have conversations about key topics related to the trustworthiness of their AI implementation.</Text>
-        <Text fontSize='1em' my='2em'>Topics assessed</Text>
-        <Box position='relative' margin='0 -32px'>
+        <Heading fontSize={['0.8em', '1,2em']} className={style['centralised-sunshine-gradient-title']}>Description</Heading>
+        <Text fontSize={['0.7em', '1em']}>This tool was designed to enable team members with diverse expertise to collaborate and have conversations about key topics related to the trustworthiness of their AI implementation.</Text>
+        <Text fontSize={['0.7em', '1em']} my='2em'>Topics assessed</Text>
+        <Box position='relative'>
           <div className={style.section_container}>
             <ul className={style['section-list']}>
               {altaiSections.map((altaiSection, i) => (

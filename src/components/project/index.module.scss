@@ -1,0 +1,18 @@
+
+.container {
+  box-sizing: border-box;
+  padding: 0 2rem;
+  margin: 1% auto;
+  & > div:first-child {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  @media (max-width: 1000px) {
+    overflow: hidden;
+    padding: 0 0;
+    & > div:first-child {
+      background-color: white;
+      padding: 0 0.5rem;
+    }
+  }
+}

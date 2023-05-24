@@ -28,16 +28,13 @@ In case you need to clone Josh website for reference, use: https://saveweb2zip.c
 const FrontPage = (): JSX.Element => {
   const css = `body {
     background-color: rgba(14,16,18);
-  }
-  * {
-    box-sizing: border-box;
   }`
   return (
     <>
       <style>
         {css}
       </style>
-      <Box width='100%' maxWidth='1200px' margin='0 auto'>
+      <Box maxWidth='1200px' margin='0 auto' width='100%'>
         <AI4BelgiumHeader />
         <Flex flexDirection='column' alignItems='center' justifyContent='center'>
           <Content />

@@ -9,6 +9,7 @@ import ProgressBar, { SECTION_CHECKLIST } from '@/src/components/project/progres
 import { Category, Project, Section } from '@/src/types/project'
 import { QueryFilterKeys } from '@/src/components/project/project-bar/filter-menu'
 import Checklist from '@/src/components/project/checklist'
+import style from './index.module.scss'
 
 const smVariant = { navigation: 'menu', navigationButton: true }
 const mdVariant = { navigation: 'sidebar', navigationButton: false }
@@ -24,10 +25,10 @@ const ProjectComponent: FC<Props> = (props): JSX.Element => {
   const router = useRouter()
   const { [QueryFilterKeys.STAGE]: stage } = router.query ?? {}
   const [isSidebarOpen] = useState(false)
-  const variants = useBreakpointValue({ base: smVariant, md: mdVariant })
+  const variants = useBreakpointValue({ base: smVariant, md: smVariant, lg: mdVariant })
 
   const el = (
-    <Box boxShadow='base' rounded='lg' p='1em' pl='0' bgColor='white'>
+    <Box boxShadow='base' rounded='lg' bgColor='white' width={['100%', '100%', 'auto']}>
       <Box display='flex' position='relative'>
         <SideBar
           page='projects'
@@ -41,14 +42,12 @@ const ProjectComponent: FC<Props> = (props): JSX.Element => {
   )
 
   return (
-    <Box bgColor='#F7F7F7'>
+    <Box bgColor='#F7F7F7' width='100%' id='teadfadsf'>
       {props.project != null &&
         <ProjectContextProvider {...props}>
           <NavBar showSidebarButton={false} bg='white' />
-          <Box display='flex' alignItems='center' flexDirection='column' ml='2rem' mr='2rem' className='print:m-0'>
-            <Box width='100%' my='1%' className='print:hidden'>
-              <ProgressBar />
-            </Box>
+          <Box display='flex' alignItems='center' flexDirection='column' className={style.container + ' print:m-0'} width='100%'>
+            <ProgressBar my='1%' />
             {stage === SECTION_CHECKLIST.toUpperCase()
               ? <Checklist project={props.project} categories={props.categories} sections={props.sections} />
               : el}

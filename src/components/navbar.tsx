@@ -200,7 +200,7 @@ const NavaBarInner = ({ bg, showSidebarButton = true, onShowSidebar }: Props): J
             />
           </Box>
         )}
-        <Box onClick={() => { void router.push('/home') }}>
+        <Box onClick={() => { void router.push('/home') }} margin='auto 0'>
           <AI4BelgiumIcon />
         </Box>
         <Spacer />
