@@ -52,7 +52,7 @@ export const QuestionHelp = ({ question }: { question: Question }): JSX.Element 
           <PopoverContent opacity='1'>
             <PopoverArrow />
             <PopoverCloseButton />
-            <PopoverBody opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
+            <PopoverBody fontSize={['xs', 'xs', 'sm']} opacity={1} dangerouslySetInnerHTML={{ __html: help }} color='var(--chakra-colors-gray-800)' fontWeight='light' />
           </PopoverContent>
         </Popover>}
     </>
@@ -79,11 +79,11 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
     const radioGroupProps = boxProps as RadioGroupProps
     return (
       <RadioGroup {...radioGroupProps} onChange={valueHandler} value={value[0]} name={question.id}>
-        <Stack direction='row'>
+        <Stack direction='row' flexWrap='wrap'>
           {question?.answers?.map((a: Answer, idx) => (
             <Radio
-              key={idx} value={`${String(idx)}`} disabled={question.enabled !== true} size='sm' fontSize='sm'
-              opacity={question.enabled === true ? 1 : 0.5}
+              key={idx} value={`${String(idx)}`} disabled={question.enabled !== true} size='sm' fontSize={['xs', 'xs', 'sm']}
+              opacity={question.enabled === true ? 1 : 0.5} ml='0' marginInlineStart='0 !important' marginInlineEnd='0.5rem'
             >
               <Box display='inline' color='var(--text-grey)'>{a?.answer.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Radio>
@@ -96,11 +96,11 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
     const valueCheck: StringOrNumber[] = (Array.isArray(value) ? value : [value]) as StringOrNumber[]
     return (
       <CheckboxGroup {...checkoxGroupProps} onChange={valueHandler} value={valueCheck}>
-        <Stack direction='row'>
+        <Stack direction='row' flexWrap='wrap'>
           {question?.answers?.map((a: Answer, idx) => (
             <Checkbox
-              size='sm' key={idx} value={`${idx}`} disabled={question.enabled !== true} fontSize='sm'
-              opacity={question.enabled === true ? 1 : 0.5}
+              size='sm' key={idx} value={`${idx}`} disabled={question.enabled !== true} fontSize={['xs', 'xs', 'sm']}
+              opacity={question.enabled === true ? 1 : 0.5} ml='0' marginInlineStart='0 !important' marginInlineEnd='0.5rem'
             >
               <Box display='inline' color='var(--text-grey)'>{a?.answer.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Checkbox>
@@ -137,7 +137,7 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
 
   return (
     <>
-      <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled === true ? 1 : 0.5} ref={element}>
+      <Text color='var(--main-blue)' fontSize={['xs', 'sm']} as='b' display='block' opacity={question.enabled === true ? 1 : 0.5} ref={element}>
         {`${question.TOCnumber as string} ${question.title?.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}`}
         <QuestionHelp question={question} />
       </Text>
@@ -145,15 +145,16 @@ export const QuestionComp = ({ question, onChange, ...rest }: { question: Displa
         <Text color='var(--main-blue)' fontSize='xs' as='b' textDecoration='underline' display='block'>
           {question.enabledCondition?.disabledText}
         </Text>}
-      <Box ml='1.5'>
+      <Box pl={[0, 0, '1.5']}>
         <QuestionAnswers question={question} onChange={(value: any) => onChange(question, value)} marginY='1rem' />
-        <Text color='var(--main-blue)' fontSize='sm' as='b' display='block' opacity={question.enabled === true ? 1 : 0.5}>
+        <Text color='var(--main-blue)' fontSize={['xs', 'sm']} as='b' display='block' opacity={question.enabled === true ? 1 : 0.5}>
           Justification
         </Text>
         <Textarea
           disabled={question.enabled !== true}
           placeholder={`${t('placeholders:motivate-answer')}`}
           size='sm'
+          fontSize={['xs', 'sm']}
           style={{ resize: 'none' }}
           value={conclusion}
           onChange={(e) => setConclusion(e.target.value)}

@@ -27,6 +27,8 @@ interface IProps {
 // defined to avoid style issues while columns are loading
 const dummyData = { projectId: '', createdAt: new Date(), createdBy: '' }
 
+const colWidth = '272'
+
 const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
   const { t } = useTranslation()
   const defaultColumns: Column[] = [
@@ -43,8 +45,8 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
     [QueryFilterKeys.DUE_DATE]: dueDate,
     [QueryFilterKeys.ASSIGNMENT]: assignment
   } = router.query
-  const { data, mutate } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
-  const { data: dataCards, mutate: mutateCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
+  const { data } = useSWR(`/api/projects/${projectId}/columns`, fetcher)
+  const { data: dataCards } = useSWR(`/api/projects/${projectId}/cards`, fetcher)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [columns, setColumns] = useState<Column[]>(defaultColumns)
   const [cards, setCards] = useState<Card[]>([])
@@ -142,23 +144,38 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
   }
 
   return (
-    <Box>
-      <ProjectBar project={project} />
+    <Box width='100%' maxWidth={['100vw', '100vw', 'unset']}>
+      <ProjectBar project={project} ml={['30px', '30px', '0']} />
       <DragDropContext2 onDragEnd={onDragEnd}>
         <Droppable2 droppableId='all-collumns' direction='horizontal' type='column'>
           {(provided: any) => (
-            <Box ref={provided.innerRef} {...provided.droppableProps} display='flex'>
+            <Box
+              width='100%'
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              display='flex'
+              overflowX={['scroll', 'scroll', 'hidden']}
+              flexWrap='nowrap'
+              flexShrink='1 0 auto'
+              scrollSnapType={['x mandatory', 'x mandatory', 'none']}
+              pt={[0, 0, '5px']}
+            >
               {Array.isArray(columns) && columns.map((column, index) => (
                 <ColumnComponent
                   key={column._id}
                   column={column}
                   id={column._id}
                   index={index}
+                  ml={index === 0 ? '10px' : '5px'}
+                  mr={index === columns.length - 1 ? '10px' : '5px'}
                   cards={filterCards(column._id)}
                   showCardDetail={setCardQuery}
                   projectId={project?._id}
-                  fetchColumns={mutate}
-                  fetchCards={mutateCards}
+                  minW={['calc(100vw - 20px)', 'calc(100vw - 20px)', 'unset']}
+                  width={['calc(100vw - 20px)', 'calc(100vw - 20px)', `${colWidth}px`]}
+                  scrollSnapAlign={['center', 'center', 'none']}
+                  scrollSnapStop={['always', 'always', 'unset']}
+
                 />
               ))}
               {provided.placeholder}

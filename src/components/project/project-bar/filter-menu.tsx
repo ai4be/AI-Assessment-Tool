@@ -11,7 +11,8 @@ import {
   MenuItem,
   MenuList,
   MenuOptionGroup,
-  MenuItemOption
+  MenuItemOption,
+  useBreakpointValue
 } from '@chakra-ui/react'
 import { FiFilter } from 'react-icons/fi'
 import { useRouter } from 'next/router'
@@ -54,6 +55,13 @@ export const FilterMenu = (props: any): JSX.Element => {
   const [assignment, setAssigment] = useState<Assignment | String>('')
   const [dueDate, setDueDate] = useState<DueDate | String>('')
   const [filterCounter, setFilterCounter] = useState(0)
+
+  const isMobile: boolean = useBreakpointValue({
+    base: true,
+    xs: true,
+    sm: true,
+    md: false
+  }) ?? true
 
   // initial load!!!
   useEffect(() => {
@@ -157,8 +165,8 @@ export const FilterMenu = (props: any): JSX.Element => {
 
   return (
     <Menu key='filter-menu' closeOnSelect={false}>
-      <MenuButton {...props} as={Button} rightIcon={<FiFilter />} variant='outline' color='var(--main-blue)' size='sm'>
-        {t('filter-sort:filter.filter')}
+      <MenuButton {...props} as={Button} rightIcon={<FiFilter />} variant='outline' color='var(--main-blue)' size={['xs', 'sm']}>
+        {isMobile ? '' : t('filter-sort:filter.filter')}
         {filterCounter > 0 &&
           <Badge ml='1' size='sm' variant='solid' colorScheme='green' borderRadius='full'>
             {filterCounter}

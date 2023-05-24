@@ -171,17 +171,17 @@ mentions {
   color: #333;
 }
 
-h1 {
-  font-size: 50px;
-}
+// h1 {
+//   font-size: 50px;
+// }
 
-p {
-  font-size: 18px;
-}
-p small {
-  font-size: 80%;
-  color: #666;
-}
+// p {
+//   font-size: 18px;
+// }
+// p small {
+//   font-size: 80%;
+//   color: #666;
+// }
 
 .highlight-container,
 .highlight {
@@ -248,3 +248,7 @@ p small {
     color: rgb(237, 109, 87);
   }
 }
+
+// * {
+//   outline: 1px solid #f00 !important;
+// }
