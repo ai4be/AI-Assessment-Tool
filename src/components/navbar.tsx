@@ -161,7 +161,7 @@ const RenderButtons = ({ user }: { user: User | null }): JSX.Element => {
               <RiArrowDropDownLine color='#F0EEF9' size='20' />
             </Flex>
           </MenuButton>
-          <MenuList backgroundColor='white'>
+          <MenuList backgroundColor='white' zIndex='6'>
             <MenuItem onClick={() => { void router.push('/settings') }} className='icon-blue-color' color='#0000E6'>{t('buttons:settings')}</MenuItem>
             <MenuItem onClick={logout} className='icon-blue-color' color='#0000E6'>{t('buttons:log-out')}</MenuItem>
           </MenuList>
