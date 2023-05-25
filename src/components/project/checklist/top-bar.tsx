@@ -34,6 +34,7 @@ const ChecklistTopBar = (props: Props): JSX.Element => {
         fontSize={['10px', '10px', '10px', '10px', '12px']}
         borderRadius='0'
         borderWidth='0'
+        maxW={['100px', '100px', 'unset']}
         className='capitalize whitespace-normal'
         bgColor={cat._id === selectedCategoryId ? 'var(--main-light-blue)' : 'white'}
         color={cat._id === selectedCategoryId ? '#25282B' : 'var(--text-grey)'}
@@ -51,7 +52,7 @@ const ChecklistTopBar = (props: Props): JSX.Element => {
     : null
 
   return (
-    <Box display='flex' mt='1rem' className='print:hidden'>
+    <Box display='flex' flexWrap={['wrap', 'wrap', 'initial']} mt={['0.5rem', '0.5rem', '1rem']} className='print:hidden'>
       {content}
     </Box>
   )
