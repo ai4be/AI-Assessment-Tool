@@ -19,7 +19,7 @@
 
 This application is an improvement on the [ALTAI tool](https://futurium.ec.europa.eu/en/european-ai-alliance/pages/welcome-altai-portal) with some additional features.
 
-### [Demo](https://ai-assessment-tool-ai4belgium.vercel.app/)
+### [Demo](https://altai.ai4belgium.be/)
 
 ## Features 🤩
 
