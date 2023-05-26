@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb'
-import sanitize from 'mongo-sanitize'
-import { connectToDatabase, toObjectId } from '@/src/models/mongodb'
+import { connectToDatabase, toObjectId, sanitize } from '@/src/models/mongodb'
 import { getColumnsByProjectId } from '@/src/models/column'
 import { Card, STAGE_VALUES, Question, Answer } from '@/src/types/card'
 import { isEmpty, isEqual } from '@/util/index'

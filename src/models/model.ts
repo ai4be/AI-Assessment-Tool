@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { connectToDatabase, toObjectId } from './mongodb'
-import sanitize from 'mongo-sanitize'
+import { sanitize } from '@/src/models/mongodb'
 import clonedeep from 'lodash.clonedeep'
 // import { isEmpty } from '@/util/index'
 

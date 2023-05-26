@@ -1,7 +1,6 @@
 
 import { ObjectId } from 'mongodb'
-import sanitize from 'mongo-sanitize'
-import { cleanText, connectToDatabase, toObjectId } from '@/src/models/mongodb'
+import { cleanText, connectToDatabase, toObjectId, sanitize } from '@/src/models/mongodb'
 import { getUsers } from '@/src/models/user'
 import { isEmpty } from '@/util/index'
 import { deleteProjectCards, createCards } from '@/src/models/card'

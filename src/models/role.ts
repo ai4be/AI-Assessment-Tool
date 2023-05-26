@@ -1,4 +1,4 @@
-import sanitize from 'mongo-sanitize'
+import { sanitize } from '@/src/models/mongodb'
 import { ObjectId } from 'mongodb'
 import { TABLE_NAME } from './project'
 import { toObjectId, connectToDatabase } from './mongodb'

@@ -1,4 +1,3 @@
-import sanitize from 'mongo-sanitize'
 import { Db, MongoClient, ObjectId } from 'mongodb'
 import { isEmpty } from '@/util/index'
 
@@ -66,6 +65,25 @@ export async function connectToDatabase (mongoDbUri?: string, dbName?: string | 
   }
   cached.conn = await cached.promise
   return cached.conn
+}
+
+const REGEX_TO_MATCH = /(^\$.)|((.+)?\.\$.)/
+
+export function sanitize (v: any): any {
+  if (v instanceof ObjectId) return v
+  if (v instanceof Object) {
+    for (const key in v) {
+      if (REGEX_TO_MATCH.test(key)) {
+        const val = v[key]
+        const newKey = key.replace(/^\$/gm, '').replace(/\.\$/gm, '.')
+        v[newKey] = sanitize(val)
+        delete v[key] // eslint-disable-line @typescript-eslint/no-dynamic-delete
+      } else {
+        v[key] = sanitize(v[key])
+      }
+    }
+  }
+  return v
 }
 
 export const toObjectId = (_id: string | ObjectId): ObjectId => typeof _id === 'string' ? ObjectId(sanitize(_id)) : _id

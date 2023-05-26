@@ -1,6 +1,6 @@
 import { connectToDatabase, toObjectId } from './mongodb'
 import { ObjectId } from 'mongodb'
-import sanitize from 'mongo-sanitize'
+import { sanitize } from '@/src/models/mongodb'
 import { Comment as CommentTypeDef } from '@/src/types/comment'
 import Activity from '@/src/models/activity'
 import Model, { generatePaginationQuery } from '@/src/models/model'
