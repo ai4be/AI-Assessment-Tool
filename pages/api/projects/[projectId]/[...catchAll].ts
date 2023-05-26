@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { toObjectId } from '@/src/models/mongodb'
-import sanitize from 'mongo-sanitize'
+import { toObjectId, sanitize } from '@/src/models/mongodb'
 import { TokenStatus, getProjectInvites, deleteToken } from '@/src/models/token'
 import { isConnected, hasProjectAccess } from '@/util/custom-middleware'
 

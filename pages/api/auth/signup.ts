@@ -1,6 +1,5 @@
 import { hashPassword } from '@/util/auth'
-import { cleanEmail } from '@/src/models/mongodb'
-import sanitize from 'mongo-sanitize'
+import { cleanEmail, sanitize } from '@/src/models/mongodb'
 import { invitedUserHandler, createEmailVerificationToken } from '@/src/models/token'
 import { createUser, getUser } from '@/src/models/user'
 import { isEmailValid, isPasswordValid } from '@/util/validator'

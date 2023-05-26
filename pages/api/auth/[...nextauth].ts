@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { NextApiRequest } from 'next'
 import { verifyPassword } from '@/util/auth'
 import { invitedUserHandler } from '@/src/models/token'
-import sanitize from 'mongo-sanitize'
+import { sanitize } from '@/src/models/mongodb'
 import { getUser } from '@/src/models/user'
 import { isEmpty } from '@/util/index'
 

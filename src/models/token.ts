@@ -1,7 +1,6 @@
-import { connectToDatabase, toObjectId, cleanEmail } from '@/src/models/mongodb'
-import sanitize from 'mongo-sanitize'
 import { ObjectId } from 'mongodb'
 import uniqid from 'uniqid'
+import { connectToDatabase, toObjectId, cleanEmail, sanitize } from '@/src/models/mongodb'
 import { getUser, updateUser } from '@/src/models/user'
 import { isEmpty, randomIntFromInterval } from '@/util/index'
 import { addUser, getUserProjects, removeUserInactive } from '@/src/models/project'
