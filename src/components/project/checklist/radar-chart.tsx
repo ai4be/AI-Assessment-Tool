@@ -118,7 +118,7 @@ const RadarChart = ({ categories, scoresPerCatId }: { categories: Category[], sc
         radarChartCtxObj.chart = null
       }
     }
-  }, [el])
+  }, [el, config])
 
   useEffect(() => {
     window.addEventListener('beforeprint', listenerFn)
