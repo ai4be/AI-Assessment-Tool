@@ -113,6 +113,12 @@ const getProjectLinkComp = (displayActivity: DisplayActivity, content: any, card
   return (<>{content}</>)
 }
 
+function formatDueDate (dueDateInput: any): Date | any {
+  let dueDate = dueDateInput
+  if (dueDate != null && (typeof dueDate === 'string' || typeof dueDate === 'number')) dueDate = new Date(dueDate)
+  return dueDate
+}
+
 function activityRenderer (displayActivity: DisplayActivity, currentUser?: User): JSX.Element {
   const { question } = displayActivity
   switch (displayActivity.type) {
@@ -159,11 +165,13 @@ function activityRenderer (displayActivity: DisplayActivity, currentUser?: User)
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId)
     }
     case ActivityType.CARD_DUE_DATE_ADD: {
-      const text = `added due date to card: "${format(displayActivity.data?.dueDate, 'd MMM yyyy')}"`
+      const dueDate = formatDueDate(displayActivity.data?.dueDate)
+      const text = `added due date to card: "${dueDate instanceof Date ? format(dueDate, 'd MMM yyyy') : String(dueDate ?? '')}"`
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId)
     }
     case ActivityType.CARD_DUE_DATE_UPDATE: {
-      const text = `updated due date of card: "${format(displayActivity.data?.dueDate, 'd MMM yyyy')}"`
+      const dueDate = formatDueDate(displayActivity.data?.dueDate)
+      const text = `updated due date of card: "${dueDate instanceof Date ? format(dueDate, 'd MMM yyyy') : String(dueDate ?? '')}"`
       return getProjectLinkComp(displayActivity, text, displayActivity.cardId)
     }
     case ActivityType.CARD_DUE_DATE_DELETE: {

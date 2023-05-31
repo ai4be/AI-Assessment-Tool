@@ -236,7 +236,7 @@
                     "type": "radio",
                     "id": "DNF-Q2.2-B",
                     "visibleIf": "",
-                    "title": "Did you assess whether the =gb=AI system=ge='s user interface is usable by those with special needs or disabilities or those at risk of exclusion?=hb=Goes together with the principle of UD to involve all the possible target groups from the scratch. Assistive Technologies are products like Screenreaders, Magnifiers, Text2Speed Software.<br/>EGTAI p 18",
+                    "title": "Did you assess whether the =gb=AI system=ge='s user interface is usable by those with special needs or disabilities or those at risk of exclusion?=hb=Goes together with the principle of UD to involve all the possible target groups from the scratch. Assistive Technologies are products like Screenreaders, Magnifiers, Text2Speed Software.<br/>EGTAI p 18=he=",
                     "isScored": 0,
                     "answers": [
                         { "answer":"Yes","score":0 },
