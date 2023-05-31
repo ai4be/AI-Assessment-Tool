@@ -163,7 +163,7 @@
                 },
                 {
                     "id": "SEW-Q2.6-B",
-                    "title": "Did you ensure that workers understand how the system operates, which capabilities it has and which not?  =hb==The AI system’s capabilities and limitations should be communicated to AI practitioners or end-users in a manner appropriate to the use case at hand. This could encompass communication of the AI system's level of accuracy, as well as its limitations.he=",
+                    "title": "Did you ensure that workers understand how the system operates, which capabilities it has and which not?  =hb=The AI system’s capabilities and limitations should be communicated to AI practitioners or end-users in a manner appropriate to the use case at hand. This could encompass communication of the AI system's level of accuracy, as well as its limitations.=he=",
                     "type": "radio",
                     "visibleIf": "",
                     "isScored": 0,

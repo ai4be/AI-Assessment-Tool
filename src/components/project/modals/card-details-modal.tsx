@@ -109,6 +109,10 @@ const CardDetailsModal: FC<Props> = ({ onClose, isOpen, card }) => {
   }
 
   useEffect(() => {
+    if (card?.dueDate != null && typeof card.dueDate === 'string') card.dueDate = new Date(card.dueDate)
+  }, [card, card.dueDate])
+
+  useEffect(() => {
     if (isOpen) void fetchComments()
   }, [isOpen])
 

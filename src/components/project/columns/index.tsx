@@ -63,6 +63,11 @@ const ProjectColumns: FC<IProps> = ({ project }): JSX.Element => {
   }, [data])
 
   useEffect(() => {
+    if (Array.isArray(dataCards)) {
+      dataCards.forEach(card => {
+        if (card?.dueDate != null && typeof card.dueDate === 'string') card.dueDate = new Date(card.dueDate)
+      })
+    }
     setCards(dataCards ?? [])
   }, [dataCards])
 

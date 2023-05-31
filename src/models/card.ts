@@ -9,6 +9,10 @@ export const TABLE_NAME = 'cards'
 
 const UPDATABLE_FIELDS = ['title', 'desc', 'sequence', 'columnId', 'label', 'dueDate', 'stage']
 
+const ISODATETIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/
+const UNIX_TIMESTAMP_REGEX = /^\d{10}$/
+const UNIX_TIMESTAMP_MS_REGEX = /^\d{13}$/
+
 export const getCard = async (_id: string | ObjectId): Promise<Card> => {
   const { db } = await connectToDatabase()
   const where: any = {
@@ -86,6 +90,12 @@ export const cardDataSanitizer = async (cardId: string, data: any): Promise<any>
   if (updatableFields.columnId != null) updatableFields.columnId = toObjectId(updatableFields.columnId)
   if (typeof updatableFields.stage === 'string' && !STAGE_VALUES.includes(updatableFields.stage.toLowerCase())) throw new Error('Invalid stage')
   if (updatableFields.stage != null) updatableFields.stage = updatableFields.stage.toUpperCase()
+  if (updatableFields.dueDate != null && !(updatableFields.dueDate instanceof Date)) {
+    if (typeof updatableFields.dueDate === 'string' && ISODATETIME_REGEX.test(updatableFields.dueDate)) updatableFields.dueDate = new Date(updatableFields.dueDate)
+    else if ((typeof updatableFields.dueDate === 'string' || typeof updatableFields.dueDate === 'number') && UNIX_TIMESTAMP_REGEX.test(`${String(updatableFields.dueDate)}`)) updatableFields.dueDate = new Date(+`${updatableFields.dueDate as string}000`)
+    else if ((typeof updatableFields.dueDate === 'string' || typeof updatableFields.dueDate === 'number') && UNIX_TIMESTAMP_MS_REGEX.test(`${String(updatableFields.dueDate)}`)) updatableFields.dueDate = new Date(+updatableFields.dueDate)
+    else throw new Error('Invalid dueDate')
+  }
   return updatableFields
 }
 
