@@ -11,7 +11,7 @@ import { User } from '@/src/types/user'
 
 describe('Card', () => {
   setupMongoDB()
-  describe('dataToCards()', () => {
+  describe('.dataToCards()', () => {
     let cards: Card[]
     let cards2: Card[]
     beforeAll(async () => {
@@ -52,7 +52,7 @@ describe('Card', () => {
       expect(cards2.every(card => card.columnId != null)).toBeTruthy()
     })
   })
-  describe('cardDataSanitizer()', () => {
+  describe('.cardDataSanitizer()', () => {
     let cards: Card[]
     let card: Card
     let project: Project

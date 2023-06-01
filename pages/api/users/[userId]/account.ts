@@ -3,7 +3,7 @@ import { isConnected, isCurrentUser } from '@/util/custom-middleware'
 import templates from '@/util/mail/templates'
 import { sendMail } from '@/util/mail'
 import { getUser, getUsers, updateToDeletedUser } from '@/src/models/user'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { getUserProjects, removeUser } from '@/src/models/project'
 import { Project } from '@/src/types/project'
@@ -15,7 +15,7 @@ interface SendEmailUserRemoved {
 }
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions)
   const user: any = await getUser({ _id: String(session?.user?.name) })
   const { userId } = req.query
 
