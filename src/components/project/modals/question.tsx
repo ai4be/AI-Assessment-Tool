@@ -20,15 +20,20 @@ import {
   RadioGroupProps,
   CheckboxGroupProps
 } from '@chakra-ui/react'
-import { isEmpty } from '@/util/index'
-import { GiCancel } from 'react-icons/gi'
-import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { Question, DisplayQuestion, QuestionType, Answer } from '@/src/types/card'
 import { useRouter } from 'next/router'
+import { GiCancel } from 'react-icons/gi'
 import { StringOrNumber } from '@chakra-ui/utils'
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { useTranslation } from 'next-i18next'
+import { isEmpty } from '@/util/index'
+import { Question, DisplayQuestion, QuestionType, Answer } from '@/src/types/card'
 
-export const QuestionHelp = ({ question }: { question: Question }): JSX.Element => {
+interface QuestionHelpProps {
+  question: Question
+  boxProps?: BoxProps
+}
+
+export const QuestionHelp = ({ question, ...boxProps }: QuestionHelpProps): JSX.Element => {
   const [help, setHelp] = useState('')
 
   useEffect(() => {
@@ -47,7 +52,9 @@ export const QuestionHelp = ({ question }: { question: Question }): JSX.Element 
       {!isEmpty(help) &&
         <Popover>
           <PopoverTrigger>
-            <AiOutlineQuestionCircle cursor='pointer' display='inline-block' style={{ display: 'inline-block' }} />
+            <Box display='inline-block' style={{ display: 'inline-block' }} {...(boxProps ?? {})}>
+              <AiOutlineQuestionCircle cursor='pointer' />
+            </Box>
           </PopoverTrigger>
           <PopoverContent opacity='1'>
             <PopoverArrow />
