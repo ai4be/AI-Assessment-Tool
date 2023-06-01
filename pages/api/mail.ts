@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth'
 import { cleanEmail, toObjectId } from '@/src/models/mongodb'
 import { inviteUser } from '@/src/models/token'
 import { getUser } from '@/src/models/user'
-import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './auth/[...nextauth]'
 import { isEmailValid } from '@/util/validator'
 import { sendMail } from '@/util/mail'
@@ -10,7 +10,7 @@ import templates from '@/util/mail/templates'
 import { isConnected, hasProjectAccess } from '@/util/custom-middleware'
 
 async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions)
 
   switch (req.method) {
     case 'POST': {
@@ -27,7 +27,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<void
       }
       const user = await getUser({ email })
       const page = user != null ? 'login' : 'signup'
-      const html = templates.getInvitationHtml(page, tokenInstance.token, email, projectId, String(req.headers.origin))
+      const html = templates.getInvitationHtml(page, tokenInstance.token, email, projectId)
       await sendMail(email, 'Invitation to AI4Belgium', html)
       return res.status(200).send(null)
     }

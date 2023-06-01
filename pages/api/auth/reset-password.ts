@@ -42,7 +42,7 @@ async function handler (req: NextApiRequest, res: NextApiResponse): Promise<any>
         return res.status(400).json({ code: 10008 })
       }
       const tokenEnt2 = await createResetPasswordToken(user._id)
-      const htmlContent = templates.getResetPasswordHtml(tokenEnt2.token, String(req.headers.origin))
+      const htmlContent = templates.getResetPasswordHtml(tokenEnt2.token)
       // const result =
       await sendMail(user.email, 'Reset password', htmlContent)
       return res.status(200).json({ code: 10009 })
