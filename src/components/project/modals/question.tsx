@@ -90,7 +90,7 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
           {question?.answers?.map((a: Answer, idx) => (
             <Radio
               key={idx} value={`${String(idx)}`} disabled={question.enabled !== true} size='sm' fontSize={['xs', 'xs', 'sm']}
-              opacity={question.enabled === true ? 1 : 0.5} ml='0' marginInlineStart='0 !important' marginInlineEnd='0.5rem'
+              opacity={question.enabled === true ? 1 : 0.5} ml='0' marginInlineStart='0 !important' marginInlineEnd='0.5rem !important'
             >
               <Box display='inline' color='var(--text-grey)'>{a?.answer.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Radio>
@@ -107,7 +107,7 @@ export const QuestionAnswers = ({ question, onChange, ...boxProps }: QuestionAns
           {question?.answers?.map((a: Answer, idx) => (
             <Checkbox
               size='sm' key={idx} value={`${idx}`} disabled={question.enabled !== true} fontSize={['xs', 'xs', 'sm']}
-              opacity={question.enabled === true ? 1 : 0.5} ml='0' marginInlineStart='0 !important' marginInlineEnd='0.5rem'
+              opacity={question.enabled === true ? 1 : 0.5} ml='0' marginInlineStart='0 !important' marginInlineEnd='0.5rem !important'
             >
               <Box display='inline' color='var(--text-grey)'>{a?.answer.replace(/=g(b|e)=/g, '').replace(/=hb=.*=he=/g, '')}</Box>
             </Checkbox>
